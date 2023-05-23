@@ -1,6 +1,6 @@
 ﻿# Sistema de seguridad para el control remoto de equipos de cómputo
  
- ##Descripción del proyecto: Implementar un sistema de información que permita al área encargada de los equipos de cómputo de la organización mejorar la seguridad e integridad del equipo y la información de la empresa.
+ ## Descripción del proyecto: Implementar un sistema de información que permita al área encargada de los equipos de cómputo de la organización mejorar la seguridad e integridad del equipo y la información de la empresa.
  
  
  Se necesita desarrollar un sistema de información que permita al área encargada de los equipos de cómputo de la empresa mejorar la seguridad e integridad de los dispositivos a través de la implementación de un software que se encargue del monitoreo de los dispositivos, así como el control remoto de los mismos, el control remoto permitirá a la empresa poder mitigar de manera efectiva distintos riesgos como el robo o ataque a la información bloqueando o denegando accesos.
