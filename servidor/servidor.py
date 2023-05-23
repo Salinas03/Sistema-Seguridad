@@ -75,18 +75,27 @@ def guardar_conexiones(conn, addr):
 
 
 #2do Hilo: Encargado de administrar y manejar las funcionalidades de los usuarios ya existentes
-def panel_operaciones():
+def panel_administrador():
     #Núcleo de la problemática
     #
+    conn = None
+    addr = None
+    bandera = True
+
     while True:
         if conexion_administrador:
-            conn = conexion_administrador[0]
-            addr = conexion_administrador[1]
+            if bandera:
+                conn = conexion_administrador[0]
+                addr = conexion_administrador[1]
+                conn.send(f'Bienvenido administrador {conn.gethostname()}'.encode())
+                bandera = False
 
-            conn.send(f'Bienvenido administrador {conn.gethostname()}'.encode())
-            conn.recv(HEADER).decode(FORMAT, errors='ignore')
 
-            #si hay conexión con el administrador enviar la mensajería con el mismo
+            conn.recv(HEADER).decode(FORMAT, errors='ignore') #Bloqueo
+
+            #Si hay conexión con el administrador enviar la mensajería con el mismo
+            #El servidor hará lo que el administrador le ordene
+            #Realizar las operaciones
 
 def listar_equipos():
     pass
