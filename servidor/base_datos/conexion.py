@@ -1,15 +1,16 @@
 import mysql.connector
 from mysql.connector import Error
+from decouple import config
 
 class BaseDatos:
     def __init__ (self):
         try:
             self.conexion = mysql.connector.connect(
-                host='localhost',
-                port='3306',
-                user='root',
-                password='root',
-                database='sistema_seguridad',
+                host=config('MYSQLHOST'),
+                port=config('MYSQLPORT'),
+                user=config('MYSQLUSER'),
+                password=config('MYSQLPASSWORD'),
+                database=config('MYSQLDATABASE'),
                 auth_plugin='mysql_native_password'
             )
             print('Conexión exitosa')
