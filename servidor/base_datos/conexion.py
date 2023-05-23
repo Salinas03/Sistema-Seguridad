@@ -27,5 +27,26 @@ class BaseDatos:
             except Error as err:
                 print(f'Error al intentar la conexión {err}')
 
+    def obtenerEquipoPorNombre(self, nombre):
+        if self.conexion.is_connected():
+            try:
+                cursor = self.conexion.cursor()
+                cursor.execute(f'SELECT * FROM equipos WHERE nombre_equipo="{nombre}"')
+                resultado = cursor.fetchall()
+                return resultado
+            except Error as err:
+                print(f'Error al intentar la conexión {err}')
+
+    def obtenerEquiposAdministradorPorNombre(self, nombre):
+        if self.conexion.is_connected():
+            try:
+                cursor = self.conexion.cursor()
+                cursor.execute(f'SELECT * FROM equipos WHERE nombre_equipo="{nombre}" AND rol={1}')
+                resultado = cursor.fetchall()
+                return resultado
+            except Error as err:
+                print(f'Error al intentar la conexión {err}')
+
+
 
 
