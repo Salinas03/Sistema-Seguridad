@@ -38,7 +38,7 @@ class BaseDatos:
             except Error as err:
                 print(f'Error al intentar la conexión {err}')
 
-    def obtener_equipos_por_nombre(self, nombre):
+    def obtener_equipo_por_nombre(self, nombre):
         if self.conexion.is_connected():
             try:
                 cursor = self.conexion.cursor()
@@ -48,7 +48,7 @@ class BaseDatos:
             except Error as err:
                 print(f'Error al intentar la conexión {err}')
 
-    def obtener_equipos_admin_por_nombre(self, nombre):
+    def obtener_equipo_admin_por_nombre(self, nombre):
         if self.conexion.is_connected():
             try:
                 cursor = self.conexion.cursor()
