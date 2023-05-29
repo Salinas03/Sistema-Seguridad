@@ -13,13 +13,22 @@ cliente.connect(ADDR) #Linea de bloqueo de código
 respuesta_servidor = cliente.recv(HEADER).decode(FORMAT)
 print(respuesta_servidor)
 
-while True:
+#Se envia el hostname de la computadora o un identificador
+cliente.send(socket.gethostname().encode())
 
+#Mensaje de segunda conexión con el servidor
+#Aqui tanto se puede conectar como no se puede conectar
+respuesta_servidor = cliente.recv(HEADER).decode(FORMAT)
+print(respuesta_servidor)
+
+while True:
     #Enviar la operación
-    entrada_cliente = input('Ingrese la operación que desea realizar')
+    entrada_cliente = input('Ingrese la operación que desea realizar: \n>')
     cliente.send(entrada_cliente.encode())
 
     #Recibir lo que el servidor obtenga y mostrarlo
+    respuesta_servidor = cliente.recv(HEADER).decode(FORMAT)
+    print(respuesta_servidor)
 
 
     
