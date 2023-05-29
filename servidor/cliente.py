@@ -20,3 +20,8 @@ cliente.send(socket.gethostname().encode())
 #Aqui tanto se puede conectar como no se puede conectar
 respuesta_servidor = cliente.recv(HEADER).decode(FORMAT)
 print(respuesta_servidor)
+print('Esperando instrucciones...')
+
+while True:
+    respuesta_servidor = cliente.recv(HEADER).decode(FORMAT)
+    print(respuesta_servidor)
