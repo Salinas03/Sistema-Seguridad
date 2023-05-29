@@ -17,7 +17,7 @@ class Principal(QMainWindow, object):
     def setupUi(self, Principal):
         if not Principal.objectName():
             Principal.setObjectName(u"Principal")
-        Principal.resize(1172, 848)
+        Principal.resize(1241, 848)
         self.centralwidget = QWidget(Principal)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -370,38 +370,6 @@ class Principal(QMainWindow, object):
         self.page_4.setObjectName(u"page_4")
         self.gridLayout_4 = QGridLayout(self.page_4)
         self.gridLayout_4.setObjectName(u"gridLayout_4")
-        self.frame_7 = QFrame(self.page_4)
-        self.frame_7.setObjectName(u"frame_7")
-        self.frame_7.setFrameShape(QFrame.StyledPanel)
-        self.frame_7.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_7 = QVBoxLayout(self.frame_7)
-        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
-        self.verticalSpacer_5 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.verticalLayout_7.addItem(self.verticalSpacer_5)
-
-        self.modificar_btn = QPushButton(self.frame_7)
-        self.modificar_btn.setObjectName(u"modificar_btn")
-
-        self.verticalLayout_7.addWidget(self.modificar_btn)
-
-        self.guardar_btn = QPushButton(self.frame_7)
-        self.guardar_btn.setObjectName(u"guardar_btn")
-        icon7 = QIcon()
-        icon7.addFile(u"./assets/icons/save.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.guardar_btn.setIcon(icon7)
-
-        self.verticalLayout_7.addWidget(self.guardar_btn)
-
-        self.cancelar_btn = QPushButton(self.frame_7)
-        self.cancelar_btn.setObjectName(u"cancelar_btn")
-        self.cancelar_btn.setIcon(icon6)
-
-        self.verticalLayout_7.addWidget(self.cancelar_btn)
-
-
-        self.gridLayout_4.addWidget(self.frame_7, 1, 1, 1, 1)
-
         self.frame_6 = QFrame(self.page_4)
         self.frame_6.setObjectName(u"frame_6")
         self.frame_6.setFrameShape(QFrame.StyledPanel)
@@ -473,19 +441,64 @@ class Principal(QMainWindow, object):
         self.frame_8.setFrameShadow(QFrame.Raised)
         self.verticalLayout_8 = QVBoxLayout(self.frame_8)
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
-        self.verticalSpacer_6 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.verticalLayout_8.addItem(self.verticalSpacer_6)
-
         self.agregar_admin_btn = QPushButton(self.frame_8)
         self.agregar_admin_btn.setObjectName(u"agregar_admin_btn")
         self.agregar_admin_btn.setMinimumSize(QSize(150, 150))
         self.agregar_admin_btn.setMaximumSize(QSize(150, 16777215))
+        self.agregar_admin_btn.setFont(font)
 
         self.verticalLayout_8.addWidget(self.agregar_admin_btn)
 
 
-        self.gridLayout_4.addWidget(self.frame_8, 1, 0, 1, 1, Qt.AlignHCenter)
+        self.gridLayout_4.addWidget(self.frame_8, 3, 0, 1, 1, Qt.AlignRight|Qt.AlignBottom)
+
+        self.frame_7 = QFrame(self.page_4)
+        self.frame_7.setObjectName(u"frame_7")
+        self.frame_7.setMaximumSize(QSize(150, 16777215))
+        self.frame_7.setFrameShape(QFrame.StyledPanel)
+        self.frame_7.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_7 = QVBoxLayout(self.frame_7)
+        self.verticalLayout_7.setSpacing(0)
+        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
+        self.verticalLayout_7.setContentsMargins(0, 0, 0, 30)
+        self.modificar_btn = QPushButton(self.frame_7)
+        self.modificar_btn.setObjectName(u"modificar_btn")
+
+        self.verticalLayout_7.addWidget(self.modificar_btn)
+
+        self.guardar_btn = QPushButton(self.frame_7)
+        self.guardar_btn.setObjectName(u"guardar_btn")
+        icon7 = QIcon()
+        icon7.addFile(u"./assets/icons/save.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.guardar_btn.setIcon(icon7)
+
+        self.verticalLayout_7.addWidget(self.guardar_btn)
+
+        self.cancelar_btn = QPushButton(self.frame_7)
+        self.cancelar_btn.setObjectName(u"cancelar_btn")
+        self.cancelar_btn.setIcon(icon6)
+
+        self.verticalLayout_7.addWidget(self.cancelar_btn)
+
+
+        self.gridLayout_4.addWidget(self.frame_7, 3, 1, 1, 1, Qt.AlignBottom)
+
+        self.frame_10 = QFrame(self.page_4)
+        self.frame_10.setObjectName(u"frame_10")
+        self.frame_10.setMinimumSize(QSize(700, 0))
+        self.frame_10.setMaximumSize(QSize(16777215, 50))
+        self.frame_10.setStyleSheet(u"")
+        self.frame_10.setFrameShape(QFrame.StyledPanel)
+        self.frame_10.setFrameShadow(QFrame.Raised)
+        self.gridLayout_9 = QGridLayout(self.frame_10)
+        self.gridLayout_9.setObjectName(u"gridLayout_9")
+        self.cerrar_sesion_btn = QPushButton(self.frame_10)
+        self.cerrar_sesion_btn.setObjectName(u"cerrar_sesion_btn")
+
+        self.gridLayout_9.addWidget(self.cerrar_sesion_btn, 0, 0, 1, 1)
+
+
+        self.gridLayout_4.addWidget(self.frame_10, 4, 0, 1, 1, Qt.AlignHCenter)
 
         self.stackedWidget.addWidget(self.page_4)
         self.page_2 = QWidget()
@@ -671,7 +684,7 @@ class Principal(QMainWindow, object):
         self.retranslateUi(Principal)
         self.pushButton_4.clicked.connect(Principal.close)
 
-        self.stackedWidget.setCurrentIndex(1)
+        self.stackedWidget.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(Principal)
@@ -698,19 +711,17 @@ class Principal(QMainWindow, object):
         self.guardad_computadora_btn.setText("")
         self.cancelar_registro_btn.setText("")
         self.label_5.setText(QCoreApplication.translate("Principal", u"Ayuda", None))
-        self.label_15.setText(QCoreApplication.translate("Principal", u"- Obtener la IP de la computadora que va a ser registrada \n"
-"- Para poder registrar una nueva computadora, se debe registrar primeramente en la secci\u00f3n de agregar  \n"
-"computadoras. \n"
-"-Instalar la segunda aplicaci\u00f3n en la computadora que se va a monitorear", None))
-        self.modificar_btn.setText(QCoreApplication.translate("Principal", u"Modificar informaci\u00f3n", None))
-        self.guardar_btn.setText("")
-        self.cancelar_btn.setText("")
+        self.label_15.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p>- Obtener la MAC ADRESS de la computadora que va a ser registrada. </p><p><br/></p><p>- Para poder registrar una nueva computadora, se debe registrar primeramente en la secci\u00f3n de agregar </p><p>computadoras. </p><p><br/></p><p>-Instalar la segunda aplicaci\u00f3n en la computadora que se va a monitorear. </p><p><br/></p><p>-Asegurese que ambas aplicaciones cuenten con una conexi\u00f3n a internet, si no, el programa no podra ser utilizado </p><p>correctamente.</p></body></html>", None))
         self.label_9.setText(QCoreApplication.translate("Principal", u"Correo", None))
         self.label_6.setText(QCoreApplication.translate("Principal", u"Nombre", None))
         self.label_7.setText(QCoreApplication.translate("Principal", u"Apellidos", None))
         self.label_8.setText(QCoreApplication.translate("Principal", u"Tel\u00e9fono", None))
         self.agregar_admin_btn.setText(QCoreApplication.translate("Principal", u"Agregar nuevo \n"
 "Administrador", None))
+        self.modificar_btn.setText(QCoreApplication.translate("Principal", u"Modificar informaci\u00f3n", None))
+        self.guardar_btn.setText("")
+        self.cancelar_btn.setText("")
+        self.cerrar_sesion_btn.setText(QCoreApplication.translate("Principal", u"Cerrar Sesi\u00f3n", None))
         self.label_2.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p><span style=\" font-size:12pt;\">Computadoras </span><span style=\" font-size:12pt; color:#00aa00;\">activas</span></p></body></html>", None))
         ___qtablewidgetitem = self.tabla_computadoras_activas.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("Principal", u"Desktop", None));
