@@ -1,2 +1,3 @@
 .env
 /servidor/test.py
+/servidor/base_datos/__pycache__
