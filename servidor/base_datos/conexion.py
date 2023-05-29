@@ -13,7 +13,7 @@ class BaseDatos:
                 database=config('MYSQLDATABASE'),
                 auth_plugin='mysql_native_password'
             )
-            print('Conexión exitosa')
+            print('Conexión exitosa con la base de datos MYSQL railway')
 
         except Error as err:
             print(f'Error al intentar la conexión {err}')
