@@ -86,7 +86,7 @@ class Principal(QMainWindow, object):
         self.settings_btn = QPushButton(self.menu_widget)
         self.settings_btn.setObjectName(u"settings_btn")
         icon2 = QIcon()
-        icon2.addFile(u"./assets/icons/settings-3.ico", QSize(), QIcon.Normal, QIcon.Off)
+        icon2.addFile(u"./assets/icons/help-circle.svg", QSize(), QIcon.Normal, QIcon.Off)
         self.settings_btn.setIcon(icon2)
         self.settings_btn.setCheckable(False)
         self.settings_btn.setAutoExclusive(False)
@@ -109,7 +109,31 @@ class Principal(QMainWindow, object):
 
         self.body_widget = QWidget(self.frame)
         self.body_widget.setObjectName(u"body_widget")
-        self.body_widget.setStyleSheet(u"")
+        self.body_widget.setStyleSheet(u"QPushButton#guardad_computadora_btn,\n"
+"#cancelar_registro_btn,\n"
+"#modificar_btn,\n"
+"#guardar_btn,\n"
+"#cancelar_btn,\n"
+"#agregar_admin_btn,\n"
+"#user_btn{\n"
+"background-color: transparent;\n"
+"\n"
+"}\n"
+"\n"
+"QPushButton#guardad_computadora_btn:hover,\n"
+"#cancelar_registro_btn:hover,\n"
+"#modificar_btn:hover,\n"
+"#guardar_btn:hover,\n"
+"#cancelar_btn:hover,\n"
+"#agregar_admin_btn:hover,\n"
+"#user_btn:hover{\n"
+"border:1px solid #2372B4;\n"
+"border-radius:10px;\n"
+"background-color: rgba(0, 85, 255,0.5);\n"
+"color:white;\n"
+"font:15px;\n"
+"}\n"
+"")
         self.verticalLayout = QVBoxLayout(self.body_widget)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -128,7 +152,7 @@ class Principal(QMainWindow, object):
 
         self.user_btn = QPushButton(self.frame_2)
         self.user_btn.setObjectName(u"user_btn")
-        self.user_btn.setStyleSheet(u"background-color: rgb(85, 170, 255);")
+        self.user_btn.setStyleSheet(u"")
         icon4 = QIcon()
         icon4.addFile(u"./assets/icons/user-5.ico", QSize(), QIcon.Normal, QIcon.Off)
         self.user_btn.setIcon(icon4)
@@ -195,6 +219,7 @@ class Principal(QMainWindow, object):
         self.widget_7.setStyleSheet(u"")
         self.formLayout = QFormLayout(self.widget_7)
         self.formLayout.setObjectName(u"formLayout")
+        self.formLayout.setContentsMargins(100, -1, 50, -1)
         self.label_10 = QLabel(self.widget_7)
         self.label_10.setObjectName(u"label_10")
         self.label_10.setMinimumSize(QSize(0, 50))
@@ -302,9 +327,44 @@ class Principal(QMainWindow, object):
         self.stackedWidget.addWidget(self.page)
         self.page_3 = QWidget()
         self.page_3.setObjectName(u"page_3")
-        self.label_5 = QLabel(self.page_3)
+        self.verticalLayout_12 = QVBoxLayout(self.page_3)
+        self.verticalLayout_12.setObjectName(u"verticalLayout_12")
+        self.widget_9 = QWidget(self.page_3)
+        self.widget_9.setObjectName(u"widget_9")
+        self.widget_9.setMaximumSize(QSize(16777215, 50))
+        self.gridLayout_7 = QGridLayout(self.widget_9)
+        self.gridLayout_7.setSpacing(0)
+        self.gridLayout_7.setObjectName(u"gridLayout_7")
+        self.gridLayout_7.setContentsMargins(0, 0, 0, 0)
+        self.label_5 = QLabel(self.widget_9)
         self.label_5.setObjectName(u"label_5")
-        self.label_5.setGeometry(QRect(680, 290, 55, 16))
+        font2 = QFont()
+        font2.setPointSize(26)
+        font2.setBold(True)
+        font2.setWeight(75)
+        self.label_5.setFont(font2)
+        self.label_5.setAlignment(Qt.AlignCenter)
+
+        self.gridLayout_7.addWidget(self.label_5, 0, 0, 1, 1)
+
+
+        self.verticalLayout_12.addWidget(self.widget_9)
+
+        self.widget_10 = QWidget(self.page_3)
+        self.widget_10.setObjectName(u"widget_10")
+        self.gridLayout_8 = QGridLayout(self.widget_10)
+        self.gridLayout_8.setObjectName(u"gridLayout_8")
+        self.gridLayout_8.setContentsMargins(50, 60, -1, -1)
+        self.label_15 = QLabel(self.widget_10)
+        self.label_15.setObjectName(u"label_15")
+        self.label_15.setFont(font1)
+        self.label_15.setAlignment(Qt.AlignJustify|Qt.AlignTop)
+
+        self.gridLayout_8.addWidget(self.label_15, 0, 0, 1, 1)
+
+
+        self.verticalLayout_12.addWidget(self.widget_10)
+
         self.stackedWidget.addWidget(self.page_3)
         self.page_4 = QWidget()
         self.page_4.setObjectName(u"page_4")
@@ -347,58 +407,60 @@ class Principal(QMainWindow, object):
         self.frame_6.setFrameShape(QFrame.StyledPanel)
         self.frame_6.setFrameShadow(QFrame.Raised)
         self.gridLayout_5 = QGridLayout(self.frame_6)
+        self.gridLayout_5.setSpacing(0)
         self.gridLayout_5.setObjectName(u"gridLayout_5")
+        self.gridLayout_5.setContentsMargins(50, 0, 50, 0)
         self.label_9 = QLabel(self.frame_6)
         self.label_9.setObjectName(u"label_9")
-        font2 = QFont()
-        font2.setPointSize(14)
-        font2.setBold(True)
-        font2.setWeight(75)
-        self.label_9.setFont(font2)
+        font3 = QFont()
+        font3.setPointSize(14)
+        font3.setBold(True)
+        font3.setWeight(75)
+        self.label_9.setFont(font3)
 
         self.gridLayout_5.addWidget(self.label_9, 4, 0, 1, 1)
 
         self.label_6 = QLabel(self.frame_6)
         self.label_6.setObjectName(u"label_6")
-        self.label_6.setFont(font2)
+        self.label_6.setFont(font3)
 
         self.gridLayout_5.addWidget(self.label_6, 0, 0, 1, 1)
 
         self.nombre_txt = QLineEdit(self.frame_6)
         self.nombre_txt.setObjectName(u"nombre_txt")
-        font3 = QFont()
-        font3.setPointSize(14)
-        self.nombre_txt.setFont(font3)
+        font4 = QFont()
+        font4.setPointSize(14)
+        self.nombre_txt.setFont(font4)
 
         self.gridLayout_5.addWidget(self.nombre_txt, 0, 1, 1, 1)
 
         self.apellidos_txt = QLineEdit(self.frame_6)
         self.apellidos_txt.setObjectName(u"apellidos_txt")
-        self.apellidos_txt.setFont(font3)
+        self.apellidos_txt.setFont(font4)
 
         self.gridLayout_5.addWidget(self.apellidos_txt, 2, 1, 1, 1)
 
         self.telefono_txt = QLineEdit(self.frame_6)
         self.telefono_txt.setObjectName(u"telefono_txt")
-        self.telefono_txt.setFont(font3)
+        self.telefono_txt.setFont(font4)
 
         self.gridLayout_5.addWidget(self.telefono_txt, 3, 1, 1, 1)
 
         self.label_7 = QLabel(self.frame_6)
         self.label_7.setObjectName(u"label_7")
-        self.label_7.setFont(font2)
+        self.label_7.setFont(font3)
 
         self.gridLayout_5.addWidget(self.label_7, 2, 0, 1, 1)
 
         self.label_8 = QLabel(self.frame_6)
         self.label_8.setObjectName(u"label_8")
-        self.label_8.setFont(font2)
+        self.label_8.setFont(font3)
 
         self.gridLayout_5.addWidget(self.label_8, 3, 0, 1, 1)
 
         self.correo_txt = QLineEdit(self.frame_6)
         self.correo_txt.setObjectName(u"correo_txt")
-        self.correo_txt.setFont(font3)
+        self.correo_txt.setFont(font4)
 
         self.gridLayout_5.addWidget(self.correo_txt, 4, 1, 1, 1)
 
@@ -428,6 +490,28 @@ class Principal(QMainWindow, object):
         self.stackedWidget.addWidget(self.page_4)
         self.page_2 = QWidget()
         self.page_2.setObjectName(u"page_2")
+        self.page_2.setStyleSheet(u"QPushButton#activar_btn,\n"
+"#activar_compus_btn,\n"
+"#desactivar_btn,\n"
+"#desactivar_compus_btn{\n"
+"	background-color: transparent;\n"
+"}\n"
+"\n"
+"QPushButton#activar_btn:hover,\n"
+"#activar_compus_btn:hover{\n"
+"	background-color: rgb(0, 170, 0);\n"
+"	color:white;\n"
+"	font:15px;\n"
+"}\n"
+"\n"
+"QPushButton#desactivar_btn:hover,\n"
+"#desactivar_compus_btn:hover{\n"
+"	background-color: rgb(255, 0, 0);\n"
+"	color:white;\n"
+"	font:15px;\n"
+"}\n"
+"\n"
+"")
         self.horizontalLayout_4 = QHBoxLayout(self.page_2)
         self.horizontalLayout_4.setSpacing(0)
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
@@ -587,7 +671,7 @@ class Principal(QMainWindow, object):
         self.retranslateUi(Principal)
         self.pushButton_4.clicked.connect(Principal.close)
 
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(Principal)
@@ -613,7 +697,11 @@ class Principal(QMainWindow, object):
         self.label_14.setText("")
         self.guardad_computadora_btn.setText("")
         self.cancelar_registro_btn.setText("")
-        self.label_5.setText(QCoreApplication.translate("Principal", u"Settings", None))
+        self.label_5.setText(QCoreApplication.translate("Principal", u"Ayuda", None))
+        self.label_15.setText(QCoreApplication.translate("Principal", u"- Obtener la IP de la computadora que va a ser registrada \n"
+"- Para poder registrar una nueva computadora, se debe registrar primeramente en la secci\u00f3n de agregar  \n"
+"computadoras. \n"
+"-Instalar la segunda aplicaci\u00f3n en la computadora que se va a monitorear", None))
         self.modificar_btn.setText(QCoreApplication.translate("Principal", u"Modificar informaci\u00f3n", None))
         self.guardar_btn.setText("")
         self.cancelar_btn.setText("")
