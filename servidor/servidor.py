@@ -1,5 +1,6 @@
 import socket
 import threading
+from queue import Queue
 from base_datos import conexion
 
 #Variables globales para la configuración del socket
@@ -8,8 +9,14 @@ HEADER = 20480
 HOST = socket.gethostbyname(socket.gethostname())
 PORT = 5050
 ADDR = (HOST, PORT)
+
 #Objeto base de datos
 bd = conexion.BaseDatos()
+
+#Configuración de variables para los hilos
+NUMERO_HILOS = 2
+NUMERO_TAREAS = [1,2]
+queue = Queue()
 
 #Arreglo de equipos de cómputo de la base de datos
 equipos_computo = bd.obtener_equipos_computo()
@@ -41,30 +48,41 @@ def vincular_socket():
         vincular_socket()
 
 def aceptar_conexiones():
+    #Cerrar todas las conexiones al iniciar el servidor
+    for conexion in conexiones_activas:
+        conexion.close()
+
+    #Borrar los datos de las conexiónes y direcciones
+    del conexiones_activas[:]
+    del direcciones_activas[:]
+
     while True:
         try:
             conn, addr = servidor.accept() #Linea que bloquea el flujo del programa
             servidor.setblocking(1) #Evita el tiempo de espera de las conexiones, (el servidor no se cierra)
 
-            #Guardar las conexiones y direcciones del cliente o administrador
-            guardar_conexiones(conn,addr)
+            #Conexión temporal establecida para obtener información del cliente que se conecto
+            conn.send('Conexión temporal establecida...'.encode())
+            identificador_cliente = conn.recv(HEADER).decode(FORMAT)
+            print(f'Dispositivo conectado temporalmente: {identificador_cliente}')
 
-            print(f'Se ha establecido la conexión con {addr}')
+            #Hacer validación si el cliente que se conecto esta en la base de datos o no
+            #Si esta en l abase de datos se determina si es administrador o cliente
+            guardar_conexiones(conn,addr, identificador_cliente)
 
         except:
             print('Error al aceptar la conexión :(')
 
-def guardar_conexiones(conn, addr):
-
+def guardar_conexiones(conn, addr, hostname):
     #Verificar si el usuario o administrador esta registrado en la base de datos
-    resultado = bd.obtener_equipo_por_nombre(conn.gethostname())
+    resultado = bd.obtener_equipo_por_nombre(hostname)
     if not resultado:
         conn.send('Conexión denegada'.encode(FORMAT))
         conn.close()
 
     #Verificar si el dispositvo que se esta conectando es un administrador o un usuario
     #dependiendo de la tabla SQL
-    resultado = bd.obtener_equipo_admin_por_nombre(conn.gethostname())
+    resultado = bd.obtener_equipo_admin_por_nombre(hostname)
     if not resultado:
         conexiones_activas.append(conn)
         direcciones_activas.append(addr)
@@ -72,6 +90,7 @@ def guardar_conexiones(conn, addr):
         if not conexion_administrador:
             conexion_administrador.append(conn)
             conexion_administrador.append(addr)
+            conexion_administrador.append(hostname)
         else:
             conn.send('Conexión denegada, administrador ya conectado'.encode(FORMAT))
             conn.close()
@@ -91,10 +110,11 @@ def panel_administrador():
             if bandera:
                 conn_admin = conexion_administrador[0]
                 addr_admin = conexion_administrador[1]
-
-                conn_admin.send('Conexión exitosa :)'.encode())
-                conn_admin.send(f'Bienvenido administrador {conn_admin.gethostname()}'.encode())
-                conn_admin.send(f'Su dirección IP es {addr_admin}')
+                nombre_admin = conexion_administrador[2]
+                
+                conn_admin.send(f'Conexión exitosa :) \n Bienvenido administrador {nombre_admin} \n Su dirección IP es {addr_admin}'.encode())
+                print('Conexión exitosa :)')
+                print('A sus ordenes administrador...')
                 bandera = False
 
             #Esperar instrucción de la computadora administradora
@@ -110,8 +130,10 @@ def listar_equipos(conexion_admin):
     #Se tienen que listar los equipos que estan activos 
     #Pero en la UI se tienen que ver tanto activos como inactivos
 
-    cadena_equipos_activos = ''
-    cadena_equipos_inactivos = ''
+    cadena_equipos_activos = 'ACTIVOS \n'
+    cadena_equipos_inactivos = 'INACTIVOS \n'
+
+    #Copiar los equipos de cómputo a la variable de equipos inactivos
     equipos_inactivos = equipos_computo[:]
 
     #Crar cadena de texto de los equipos activos e inactivos
@@ -128,7 +150,7 @@ def listar_equipos(conexion_admin):
             del direcciones_activas[i]
             continue
         
-        cadena_equipos_activos = str(i) + '  IP:  ' + str(conexiones_activas[i][0]) + '  TCP_PORT:  ' + str(direcciones_activas[i][1]) + '\n'
+        cadena_equipos_activos = str(i) +'  IP:  ' + str(conexiones_activas[i][0]) + '  TCP_PORT:  ' + str(direcciones_activas[i][1]) + '\n'
 
         #Obtener los equipos de cómputo inactivos
         for x, equipo_computo in enumerate(equipos_computo):
@@ -138,13 +160,48 @@ def listar_equipos(conexion_admin):
     #Crear cadena de los equipos de cómputo inactivos
     for z, equipo_inactivo in enumerate(equipos_inactivos):
         if equipo_inactivo is not None:
-            cadena_equipos_inactivos = str(z) + '  IP:  ' + str(equipo_inactivo[0]) + '  TCP_PORT:  ' + str(equipo_inactivo[1]) + '\n'
-
-    conexion_admin.send(cadena_equipos_activos.encode())
-    conexion_admin.send(cadena_equipos_inactivos.encode())
+            cadena_equipos_inactivos += str(z) + '  IP:  ' + str(equipo_inactivo[0]) + '  TCP_PORT:  ' + str(equipo_inactivo[1]) + '\n'
+    
+    cadena_equipos = cadena_equipos_activos + cadena_equipos_inactivos
+    conexion_admin.send(cadena_equipos.encode())
     
 def conectar_con_equipo():
     pass
 
 def manejar_operaciones():
     pass
+
+def crear_hilos(): 
+    for _ in range(NUMERO_HILOS):
+        thread = threading.Thread(target=tarea)
+        #Cuando el hilo se cierre se tiene que cerrar en todo el programa
+        thread.daemon = True
+        #Iniciar hilo
+        thread.start()
+
+def crear_tareas():
+    #Crear la cola de tareas
+    for tarea in NUMERO_TAREAS:
+        queue.put(tarea)
+
+    #Iniciar la cola de tareas
+    queue.join()
+
+#Asignar las tareas que estan en la cola
+#1.-El primer hilo encenderá el canal del socket y manejará las conexiones que se vayan realizando
+#2.-El segundo hilo manejará las manejará los comandos del administrador y clientes ya conectados
+def tarea():
+    while True:
+        tarea = queue.get()
+        if tarea == 1:
+            crear_socket()
+            vincular_socket()
+            aceptar_conexiones()
+
+        if tarea == 2:
+            panel_administrador()
+
+        queue.task_done()
+
+crear_hilos()
+crear_tareas()
