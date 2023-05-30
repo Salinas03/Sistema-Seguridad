@@ -24,6 +24,7 @@ equipos_computo = bd.obtener_equipos_computo()
 #Arreglo de conexiones realizadas en tiempo real
 conexiones_activas = []
 direcciones_activas = []
+hostnames_activos = []
 
 #Por el momento solo habra un administrador (Prueba)
 conexion_administrador = []
@@ -86,6 +87,9 @@ def guardar_conexiones(conn, addr, hostname):
     if not resultado:
         conexiones_activas.append(conn)
         direcciones_activas.append(addr)
+        hostnames_activos.append(hostname)
+        print('Conexión con cliente :)')
+        conn.send('Conexión con servidor exitosa :)'.encode())
     else:
         if not conexion_administrador:
             conexion_administrador.append(conn)
@@ -150,11 +154,12 @@ def listar_equipos(conexion_admin):
             del direcciones_activas[i]
             continue
         
-        cadena_equipos_activos = str(i) +'  IP:  ' + str(conexiones_activas[i][0]) + '  TCP_PORT:  ' + str(direcciones_activas[i][1]) + '\n'
+        cadena_equipos_activos += str(i) +'  IP:  ' + str(direcciones_activas[i][0]) + '  TCP_PORT:  ' + str(direcciones_activas[i][1]) + '\n'
 
         #Obtener los equipos de cómputo inactivos
         for x, equipo_computo in enumerate(equipos_computo):
-            if conexion_activa.gethostname() == equipo_computo[1]:
+            #Aqui se tiene que cambiar
+            if hostnames_activos[i] == equipo_computo[1]:
                 equipos_inactivos[x] = None
     
     #Crear cadena de los equipos de cómputo inactivos
