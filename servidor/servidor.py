@@ -155,8 +155,8 @@ def listar_equipos(conexion_admin):
             continue
         
         ip_cliente = cliente_activo.get_direccion()[0]
-        puerto_tcp = cliente_activo.get_direccion()[1]
-        cadena_equipos_activos += str(i) +'  IP:  ' + str(ip_cliente) + '  TCP_PORT:  ' + str(puerto_tcp) + '\n'
+        nombre_host = cliente_activo.get_nombre_host()
+        cadena_equipos_activos += str(i) +'  Nombre-host:  ' + str(nombre_host) + '  IP:  ' + str(ip_cliente) + '\n'
 
         #Obtener los equipos de cómputo inactivos
         for x, equipo_computo in enumerate(equipos_computo):
@@ -206,7 +206,6 @@ def manejar_operaciones(cliente_seleccionado):
             #Notificar al administrador que el mensaje se ha enviado con éxito
             admin_conn.send(f'Mensaje enviado con éxito'.encode())
 
-            print(operacion)
             if operacion == 'salir': 
                 break
 
