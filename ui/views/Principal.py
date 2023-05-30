@@ -17,7 +17,7 @@ class Principal(QMainWindow, object):
     def setupUi(self, Principal):
         if not Principal.objectName():
             Principal.setObjectName(u"Principal")
-        Principal.resize(1241, 848)
+        Principal.resize(1174, 843)
         self.centralwidget = QWidget(Principal)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -116,8 +116,9 @@ class Principal(QMainWindow, object):
 "#cancelar_btn,\n"
 "#agregar_admin_btn,\n"
 "#user_btn{\n"
-"background-color: transparent;\n"
-"\n"
+"background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(20, 47, 78, 219), stop:1 rgba(85, 98, 112, 226));\n"
+"color:rgba(255, 255, 255, 210);\n"
+"border-radius:5px;\n"
 "}\n"
 "\n"
 "QPushButton#guardad_computadora_btn:hover,\n"
@@ -127,11 +128,20 @@ class Principal(QMainWindow, object):
 "#cancelar_btn:hover,\n"
 "#agregar_admin_btn:hover,\n"
 "#user_btn:hover{\n"
-"border:1px solid #2372B4;\n"
-"border-radius:10px;\n"
-"background-color: rgba(0, 85, 255,0.5);\n"
-"color:white;\n"
-"font:15px;\n"
+"background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(40, 67, 98, 219), stop:1 rgba(105, 118, 132, 226));\n"
+"}\n"
+"\n"
+"QPushButton#guardad_computadora_btn:pressed,\n"
+"#cancelar_registro_btn:pressed,\n"
+"#modificar_btn:pressed,\n"
+"#guardar_btn:pressed,\n"
+"#cancelar_btn:pressed,\n"
+"#agregar_admin_btn:pressed,\n"
+"#user_btn:pressed{\n"
+"padding-left:5px;\n"
+"padding-top:5px;\n"
+"background-c"
+                        "olor:rgba(105, 118, 132, 200);\n"
 "}\n"
 "")
         self.verticalLayout = QVBoxLayout(self.body_widget)
@@ -154,7 +164,7 @@ class Principal(QMainWindow, object):
         self.user_btn.setObjectName(u"user_btn")
         self.user_btn.setStyleSheet(u"")
         icon4 = QIcon()
-        icon4.addFile(u"./assets/icons/user-5.ico", QSize(), QIcon.Normal, QIcon.Off)
+        icon4.addFile(u"./assets/icons/user-4.ico", QSize(), QIcon.Normal, QIcon.Off)
         self.user_btn.setIcon(icon4)
 
         self.horizontalLayout_2.addWidget(self.user_btn)
@@ -287,7 +297,7 @@ class Principal(QMainWindow, object):
         self.verticalLayout_11 = QVBoxLayout(self.widget_8)
         self.verticalLayout_11.setSpacing(0)
         self.verticalLayout_11.setObjectName(u"verticalLayout_11")
-        self.verticalLayout_11.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_11.setContentsMargins(0, 0, 10, 0)
         self.label_14 = QLabel(self.widget_8)
         self.label_14.setObjectName(u"label_14")
         self.label_14.setPixmap(QPixmap(u"./assets/files/ok.png"))
@@ -302,18 +312,29 @@ class Principal(QMainWindow, object):
         self.guardad_computadora_btn.setObjectName(u"guardad_computadora_btn")
         self.guardad_computadora_btn.setMinimumSize(QSize(0, 50))
         icon5 = QIcon()
-        icon5.addFile(u"./assets/icons/save-3.ico", QSize(), QIcon.Normal, QIcon.Off)
+        icon5.addFile(u"./assets/icons/save-2.ico", QSize(), QIcon.Normal, QIcon.Off)
         self.guardad_computadora_btn.setIcon(icon5)
 
         self.verticalLayout_11.addWidget(self.guardad_computadora_btn)
 
+        self.label_16 = QLabel(self.widget_8)
+        self.label_16.setObjectName(u"label_16")
+
+        self.verticalLayout_11.addWidget(self.label_16)
+
         self.cancelar_registro_btn = QPushButton(self.widget_8)
         self.cancelar_registro_btn.setObjectName(u"cancelar_registro_btn")
+        self.cancelar_registro_btn.setMinimumSize(QSize(0, 30))
         icon6 = QIcon()
-        icon6.addFile(u"./assets/icons/cancel-3.ico", QSize(), QIcon.Normal, QIcon.Off)
+        icon6.addFile(u"./assets/icons/cancel-2.ico", QSize(), QIcon.Normal, QIcon.Off)
         self.cancelar_registro_btn.setIcon(icon6)
 
         self.verticalLayout_11.addWidget(self.cancelar_registro_btn)
+
+        self.label_17 = QLabel(self.widget_8)
+        self.label_17.setObjectName(u"label_17")
+
+        self.verticalLayout_11.addWidget(self.label_17)
 
 
         self.horizontalLayout_7.addWidget(self.widget_8)
@@ -370,71 +391,6 @@ class Principal(QMainWindow, object):
         self.page_4.setObjectName(u"page_4")
         self.gridLayout_4 = QGridLayout(self.page_4)
         self.gridLayout_4.setObjectName(u"gridLayout_4")
-        self.frame_6 = QFrame(self.page_4)
-        self.frame_6.setObjectName(u"frame_6")
-        self.frame_6.setFrameShape(QFrame.StyledPanel)
-        self.frame_6.setFrameShadow(QFrame.Raised)
-        self.gridLayout_5 = QGridLayout(self.frame_6)
-        self.gridLayout_5.setSpacing(0)
-        self.gridLayout_5.setObjectName(u"gridLayout_5")
-        self.gridLayout_5.setContentsMargins(50, 0, 50, 0)
-        self.label_9 = QLabel(self.frame_6)
-        self.label_9.setObjectName(u"label_9")
-        font3 = QFont()
-        font3.setPointSize(14)
-        font3.setBold(True)
-        font3.setWeight(75)
-        self.label_9.setFont(font3)
-
-        self.gridLayout_5.addWidget(self.label_9, 4, 0, 1, 1)
-
-        self.label_6 = QLabel(self.frame_6)
-        self.label_6.setObjectName(u"label_6")
-        self.label_6.setFont(font3)
-
-        self.gridLayout_5.addWidget(self.label_6, 0, 0, 1, 1)
-
-        self.nombre_txt = QLineEdit(self.frame_6)
-        self.nombre_txt.setObjectName(u"nombre_txt")
-        font4 = QFont()
-        font4.setPointSize(14)
-        self.nombre_txt.setFont(font4)
-
-        self.gridLayout_5.addWidget(self.nombre_txt, 0, 1, 1, 1)
-
-        self.apellidos_txt = QLineEdit(self.frame_6)
-        self.apellidos_txt.setObjectName(u"apellidos_txt")
-        self.apellidos_txt.setFont(font4)
-
-        self.gridLayout_5.addWidget(self.apellidos_txt, 2, 1, 1, 1)
-
-        self.telefono_txt = QLineEdit(self.frame_6)
-        self.telefono_txt.setObjectName(u"telefono_txt")
-        self.telefono_txt.setFont(font4)
-
-        self.gridLayout_5.addWidget(self.telefono_txt, 3, 1, 1, 1)
-
-        self.label_7 = QLabel(self.frame_6)
-        self.label_7.setObjectName(u"label_7")
-        self.label_7.setFont(font3)
-
-        self.gridLayout_5.addWidget(self.label_7, 2, 0, 1, 1)
-
-        self.label_8 = QLabel(self.frame_6)
-        self.label_8.setObjectName(u"label_8")
-        self.label_8.setFont(font3)
-
-        self.gridLayout_5.addWidget(self.label_8, 3, 0, 1, 1)
-
-        self.correo_txt = QLineEdit(self.frame_6)
-        self.correo_txt.setObjectName(u"correo_txt")
-        self.correo_txt.setFont(font4)
-
-        self.gridLayout_5.addWidget(self.correo_txt, 4, 1, 1, 1)
-
-
-        self.gridLayout_4.addWidget(self.frame_6, 0, 0, 1, 2)
-
         self.frame_8 = QFrame(self.page_4)
         self.frame_8.setObjectName(u"frame_8")
         self.frame_8.setFrameShape(QFrame.StyledPanel)
@@ -452,37 +408,6 @@ class Principal(QMainWindow, object):
 
         self.gridLayout_4.addWidget(self.frame_8, 3, 0, 1, 1, Qt.AlignRight|Qt.AlignBottom)
 
-        self.frame_7 = QFrame(self.page_4)
-        self.frame_7.setObjectName(u"frame_7")
-        self.frame_7.setMaximumSize(QSize(150, 16777215))
-        self.frame_7.setFrameShape(QFrame.StyledPanel)
-        self.frame_7.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_7 = QVBoxLayout(self.frame_7)
-        self.verticalLayout_7.setSpacing(0)
-        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
-        self.verticalLayout_7.setContentsMargins(0, 0, 0, 30)
-        self.modificar_btn = QPushButton(self.frame_7)
-        self.modificar_btn.setObjectName(u"modificar_btn")
-
-        self.verticalLayout_7.addWidget(self.modificar_btn)
-
-        self.guardar_btn = QPushButton(self.frame_7)
-        self.guardar_btn.setObjectName(u"guardar_btn")
-        icon7 = QIcon()
-        icon7.addFile(u"./assets/icons/save.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.guardar_btn.setIcon(icon7)
-
-        self.verticalLayout_7.addWidget(self.guardar_btn)
-
-        self.cancelar_btn = QPushButton(self.frame_7)
-        self.cancelar_btn.setObjectName(u"cancelar_btn")
-        self.cancelar_btn.setIcon(icon6)
-
-        self.verticalLayout_7.addWidget(self.cancelar_btn)
-
-
-        self.gridLayout_4.addWidget(self.frame_7, 3, 1, 1, 1, Qt.AlignBottom)
-
         self.frame_10 = QFrame(self.page_4)
         self.frame_10.setObjectName(u"frame_10")
         self.frame_10.setMinimumSize(QSize(700, 0))
@@ -499,6 +424,116 @@ class Principal(QMainWindow, object):
 
 
         self.gridLayout_4.addWidget(self.frame_10, 4, 0, 1, 1, Qt.AlignHCenter)
+
+        self.frame_7 = QFrame(self.page_4)
+        self.frame_7.setObjectName(u"frame_7")
+        self.frame_7.setMaximumSize(QSize(150, 16777215))
+        self.frame_7.setFrameShape(QFrame.StyledPanel)
+        self.frame_7.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_7 = QVBoxLayout(self.frame_7)
+        self.verticalLayout_7.setSpacing(0)
+        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
+        self.verticalLayout_7.setContentsMargins(0, 0, 0, 30)
+        self.modificar_btn = QPushButton(self.frame_7)
+        self.modificar_btn.setObjectName(u"modificar_btn")
+        self.modificar_btn.setMinimumSize(QSize(0, 40))
+        font3 = QFont()
+        font3.setPointSize(10)
+        self.modificar_btn.setFont(font3)
+
+        self.verticalLayout_7.addWidget(self.modificar_btn)
+
+        self.label_18 = QLabel(self.frame_7)
+        self.label_18.setObjectName(u"label_18")
+
+        self.verticalLayout_7.addWidget(self.label_18)
+
+        self.guardar_btn = QPushButton(self.frame_7)
+        self.guardar_btn.setObjectName(u"guardar_btn")
+        self.guardar_btn.setMinimumSize(QSize(0, 30))
+        self.guardar_btn.setIcon(icon5)
+
+        self.verticalLayout_7.addWidget(self.guardar_btn)
+
+        self.label_19 = QLabel(self.frame_7)
+        self.label_19.setObjectName(u"label_19")
+
+        self.verticalLayout_7.addWidget(self.label_19)
+
+        self.cancelar_btn = QPushButton(self.frame_7)
+        self.cancelar_btn.setObjectName(u"cancelar_btn")
+        self.cancelar_btn.setMinimumSize(QSize(0, 30))
+        self.cancelar_btn.setIcon(icon6)
+
+        self.verticalLayout_7.addWidget(self.cancelar_btn)
+
+
+        self.gridLayout_4.addWidget(self.frame_7, 3, 1, 1, 1, Qt.AlignBottom)
+
+        self.frame_6 = QFrame(self.page_4)
+        self.frame_6.setObjectName(u"frame_6")
+        self.frame_6.setFrameShape(QFrame.StyledPanel)
+        self.frame_6.setFrameShadow(QFrame.Raised)
+        self.gridLayout_5 = QGridLayout(self.frame_6)
+        self.gridLayout_5.setSpacing(0)
+        self.gridLayout_5.setObjectName(u"gridLayout_5")
+        self.gridLayout_5.setContentsMargins(50, 0, 50, 0)
+        self.label_9 = QLabel(self.frame_6)
+        self.label_9.setObjectName(u"label_9")
+        font4 = QFont()
+        font4.setPointSize(14)
+        font4.setBold(True)
+        font4.setWeight(75)
+        self.label_9.setFont(font4)
+
+        self.gridLayout_5.addWidget(self.label_9, 4, 0, 1, 1)
+
+        self.label_6 = QLabel(self.frame_6)
+        self.label_6.setObjectName(u"label_6")
+        self.label_6.setFont(font4)
+
+        self.gridLayout_5.addWidget(self.label_6, 0, 0, 1, 1)
+
+        self.nombre_txt = QLineEdit(self.frame_6)
+        self.nombre_txt.setObjectName(u"nombre_txt")
+        font5 = QFont()
+        font5.setPointSize(14)
+        self.nombre_txt.setFont(font5)
+
+        self.gridLayout_5.addWidget(self.nombre_txt, 0, 1, 1, 1)
+
+        self.apellidos_txt = QLineEdit(self.frame_6)
+        self.apellidos_txt.setObjectName(u"apellidos_txt")
+        self.apellidos_txt.setFont(font5)
+
+        self.gridLayout_5.addWidget(self.apellidos_txt, 2, 1, 1, 1)
+
+        self.telefono_txt = QLineEdit(self.frame_6)
+        self.telefono_txt.setObjectName(u"telefono_txt")
+        self.telefono_txt.setFont(font5)
+
+        self.gridLayout_5.addWidget(self.telefono_txt, 3, 1, 1, 1)
+
+        self.label_7 = QLabel(self.frame_6)
+        self.label_7.setObjectName(u"label_7")
+        self.label_7.setFont(font4)
+
+        self.gridLayout_5.addWidget(self.label_7, 2, 0, 1, 1)
+
+        self.label_8 = QLabel(self.frame_6)
+        self.label_8.setObjectName(u"label_8")
+        self.label_8.setFont(font4)
+
+        self.gridLayout_5.addWidget(self.label_8, 3, 0, 1, 1)
+
+        self.correo_txt = QLineEdit(self.frame_6)
+        self.correo_txt.setObjectName(u"correo_txt")
+        self.correo_txt.setFont(font5)
+
+        self.gridLayout_5.addWidget(self.correo_txt, 4, 1, 1, 1)
+
+
+        self.gridLayout_4.addWidget(self.frame_6, 0, 0, 1, 2)
 
         self.stackedWidget.addWidget(self.page_4)
         self.page_2 = QWidget()
@@ -684,7 +719,7 @@ class Principal(QMainWindow, object):
         self.retranslateUi(Principal)
         self.pushButton_4.clicked.connect(Principal.close)
 
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentIndex(3)
 
 
         QMetaObject.connectSlotsByName(Principal)
@@ -709,19 +744,24 @@ class Principal(QMainWindow, object):
         self.ip_txt.setPlaceholderText(QCoreApplication.translate("Principal", u"0.0.0.0", None))
         self.label_14.setText("")
         self.guardad_computadora_btn.setText("")
+        self.label_16.setText("")
         self.cancelar_registro_btn.setText("")
+        self.label_17.setText("")
         self.label_5.setText(QCoreApplication.translate("Principal", u"Ayuda", None))
         self.label_15.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p>- Obtener la MAC ADRESS de la computadora que va a ser registrada. </p><p><br/></p><p>- Para poder registrar una nueva computadora, se debe registrar primeramente en la secci\u00f3n de agregar </p><p>computadoras. </p><p><br/></p><p>-Instalar la segunda aplicaci\u00f3n en la computadora que se va a monitorear. </p><p><br/></p><p>-Asegurese que ambas aplicaciones cuenten con una conexi\u00f3n a internet, si no, el programa no podra ser utilizado </p><p>correctamente.</p></body></html>", None))
+        self.agregar_admin_btn.setText(QCoreApplication.translate("Principal", u"Agregar nuevo \n"
+"Administrador", None))
+        self.cerrar_sesion_btn.setText(QCoreApplication.translate("Principal", u"Cerrar Sesi\u00f3n", None))
+        self.modificar_btn.setText(QCoreApplication.translate("Principal", u"Modificar \n"
+"informaci\u00f3n", None))
+        self.label_18.setText("")
+        self.guardar_btn.setText("")
+        self.label_19.setText("")
+        self.cancelar_btn.setText("")
         self.label_9.setText(QCoreApplication.translate("Principal", u"Correo", None))
         self.label_6.setText(QCoreApplication.translate("Principal", u"Nombre", None))
         self.label_7.setText(QCoreApplication.translate("Principal", u"Apellidos", None))
         self.label_8.setText(QCoreApplication.translate("Principal", u"Tel\u00e9fono", None))
-        self.agregar_admin_btn.setText(QCoreApplication.translate("Principal", u"Agregar nuevo \n"
-"Administrador", None))
-        self.modificar_btn.setText(QCoreApplication.translate("Principal", u"Modificar informaci\u00f3n", None))
-        self.guardar_btn.setText("")
-        self.cancelar_btn.setText("")
-        self.cerrar_sesion_btn.setText(QCoreApplication.translate("Principal", u"Cerrar Sesi\u00f3n", None))
         self.label_2.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p><span style=\" font-size:12pt;\">Computadoras </span><span style=\" font-size:12pt; color:#00aa00;\">activas</span></p></body></html>", None))
         ___qtablewidgetitem = self.tabla_computadoras_activas.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("Principal", u"Desktop", None));

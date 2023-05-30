@@ -1,18 +1,9 @@
-from mysql import connector
+import mysql.connector
 
-config = {
-    'user' : 'root',
-    'passwors' : '',
-    'host' : 'localhost',
-    'database' : 'sistema_seguridad'
-
-}
-
-def crear_conexion():
-    conn = None
-    try:
-        conn = connector.connect(**config)
-    except connector.Error as err:
-        print('Error en la conexion: {err.msg}')
-    return conn
-    
+def conexion():
+    conexion = mysql.connector.connect(host = 'localhost',
+                            database = 'sistema_seguridad',
+                            user = 'root',
+                            password = '')
+    print('Base de datos conectada')
+    return conexion

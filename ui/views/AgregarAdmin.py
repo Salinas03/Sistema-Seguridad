@@ -89,14 +89,27 @@ class AgregarAdmin(QMainWindow, object):
         self.widget_3.setStyleSheet(u"")
         self.gridLayout_3 = QGridLayout(self.widget_3)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
-        self.gridLayout_3.setContentsMargins(100, -1, 100, -1)
-        self.label_5 = QLabel(self.widget_3)
-        self.label_5.setObjectName(u"label_5")
+        self.gridLayout_3.setContentsMargins(69, -1, 100, -1)
+        self.telefono_admin_txt = QLineEdit(self.widget_3)
+        self.telefono_admin_txt.setObjectName(u"telefono_admin_txt")
         font1 = QFont()
         font1.setPointSize(12)
-        self.label_5.setFont(font1)
+        self.telefono_admin_txt.setFont(font1)
 
-        self.gridLayout_3.addWidget(self.label_5, 2, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.telefono_admin_txt, 2, 2, 1, 1)
+
+        self.apellido_admin_txt = QLineEdit(self.widget_3)
+        self.apellido_admin_txt.setObjectName(u"apellido_admin_txt")
+        self.apellido_admin_txt.setFont(font1)
+
+        self.gridLayout_3.addWidget(self.apellido_admin_txt, 1, 2, 1, 1)
+
+        self.password_admin_txt = QLineEdit(self.widget_3)
+        self.password_admin_txt.setObjectName(u"password_admin_txt")
+        self.password_admin_txt.setFont(font1)
+        self.password_admin_txt.setEchoMode(QLineEdit.Password)
+
+        self.gridLayout_3.addWidget(self.password_admin_txt, 4, 2, 1, 1)
 
         self.nombre_admin_txt = QLineEdit(self.widget_3)
         self.nombre_admin_txt.setObjectName(u"nombre_admin_txt")
@@ -110,25 +123,6 @@ class AgregarAdmin(QMainWindow, object):
 
         self.gridLayout_3.addWidget(self.label_3, 0, 0, 1, 1)
 
-        self.apellido_admin_txt = QLineEdit(self.widget_3)
-        self.apellido_admin_txt.setObjectName(u"apellido_admin_txt")
-        self.apellido_admin_txt.setFont(font1)
-
-        self.gridLayout_3.addWidget(self.apellido_admin_txt, 1, 2, 1, 1)
-
-        self.telefono_admin_txt = QLineEdit(self.widget_3)
-        self.telefono_admin_txt.setObjectName(u"telefono_admin_txt")
-        self.telefono_admin_txt.setFont(font1)
-
-        self.gridLayout_3.addWidget(self.telefono_admin_txt, 2, 2, 1, 1)
-
-        self.password_admin_txt = QLineEdit(self.widget_3)
-        self.password_admin_txt.setObjectName(u"password_admin_txt")
-        self.password_admin_txt.setFont(font1)
-        self.password_admin_txt.setEchoMode(QLineEdit.Password)
-
-        self.gridLayout_3.addWidget(self.password_admin_txt, 4, 2, 1, 1)
-
         self.correo_admin_txt = QLineEdit(self.widget_3)
         self.correo_admin_txt.setObjectName(u"correo_admin_txt")
         self.correo_admin_txt.setFont(font1)
@@ -141,21 +135,35 @@ class AgregarAdmin(QMainWindow, object):
 
         self.gridLayout_3.addWidget(self.label_6, 3, 0, 1, 1)
 
-        self.label_11 = QLabel(self.widget_3)
-        self.label_11.setObjectName(u"label_11")
-        self.label_11.setFont(font1)
-
-        self.gridLayout_3.addWidget(self.label_11, 4, 0, 1, 1)
-
         self.label_4 = QLabel(self.widget_3)
         self.label_4.setObjectName(u"label_4")
         self.label_4.setFont(font1)
 
         self.gridLayout_3.addWidget(self.label_4, 1, 0, 1, 1)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.label_5 = QLabel(self.widget_3)
+        self.label_5.setObjectName(u"label_5")
+        self.label_5.setFont(font1)
 
-        self.gridLayout_3.addItem(self.verticalSpacer, 5, 2, 1, 1)
+        self.gridLayout_3.addWidget(self.label_5, 2, 0, 1, 1)
+
+        self.label_11 = QLabel(self.widget_3)
+        self.label_11.setObjectName(u"label_11")
+        self.label_11.setFont(font1)
+
+        self.gridLayout_3.addWidget(self.label_11, 4, 0, 1, 1)
+
+        self.confirma_contrasenia_btn = QLineEdit(self.widget_3)
+        self.confirma_contrasenia_btn.setObjectName(u"confirma_contrasenia_btn")
+
+        self.gridLayout_3.addWidget(self.confirma_contrasenia_btn, 5, 2, 1, 1)
+
+        self.label_7 = QLabel(self.widget_3)
+        self.label_7.setObjectName(u"label_7")
+        self.label_7.setMinimumSize(QSize(0, 30))
+        self.label_7.setFont(font1)
+
+        self.gridLayout_3.addWidget(self.label_7, 5, 0, 1, 1)
 
 
         self.verticalLayout_3.addWidget(self.widget_3)
@@ -169,15 +177,15 @@ class AgregarAdmin(QMainWindow, object):
         self.horizontalLayout.setSpacing(0)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.horizontalLayout.setContentsMargins(0, 90, 10, 0)
-        self.pushButton_2 = QPushButton(self.widget_4)
-        self.pushButton_2.setObjectName(u"pushButton_2")
+        self.cancelar_admin_btn = QPushButton(self.widget_4)
+        self.cancelar_admin_btn.setObjectName(u"cancelar_admin_btn")
 
-        self.horizontalLayout.addWidget(self.pushButton_2)
+        self.horizontalLayout.addWidget(self.cancelar_admin_btn)
 
-        self.pushButton = QPushButton(self.widget_4)
-        self.pushButton.setObjectName(u"pushButton")
+        self.agregar_admin_btn = QPushButton(self.widget_4)
+        self.agregar_admin_btn.setObjectName(u"agregar_admin_btn")
 
-        self.horizontalLayout.addWidget(self.pushButton)
+        self.horizontalLayout.addWidget(self.agregar_admin_btn)
 
 
         self.verticalLayout_3.addWidget(self.widget_4, 0, Qt.AlignRight)
@@ -196,12 +204,13 @@ class AgregarAdmin(QMainWindow, object):
         AgregarAdmin.setWindowTitle(QCoreApplication.translate("AgregarAdmin", u"MainWindow", None))
         self.label.setText(QCoreApplication.translate("AgregarAdmin", u"Agregar Administrador", None))
         self.label_2.setText(QCoreApplication.translate("AgregarAdmin", u"<html><head/><body><p><span style=\" font-size:10pt; font-weight:600; color:#ff0000;\">ADVERTENCIA</span><span style=\" font-size:10pt;\">: Si agregar a un administrador, debes de saber que el tambien tendra </span></p><p><span style=\" font-size:10pt;\">acceso a las computadoras que se hayan registrado, esto para el acceso remoto</span></p><p><span style=\" font-size:10pt;\">a ellas.</span></p></body></html>", None))
-        self.label_5.setText(QCoreApplication.translate("AgregarAdmin", u"Tel\u00e9fono", None))
         self.label_3.setText(QCoreApplication.translate("AgregarAdmin", u"Nombre", None))
         self.label_6.setText(QCoreApplication.translate("AgregarAdmin", u"Correo", None))
-        self.label_11.setText(QCoreApplication.translate("AgregarAdmin", u"Contrase\u00f1a", None))
         self.label_4.setText(QCoreApplication.translate("AgregarAdmin", u"Apellidos", None))
-        self.pushButton_2.setText(QCoreApplication.translate("AgregarAdmin", u"Cancelar", None))
-        self.pushButton.setText(QCoreApplication.translate("AgregarAdmin", u"Agregar", None))
+        self.label_5.setText(QCoreApplication.translate("AgregarAdmin", u"Tel\u00e9fono", None))
+        self.label_11.setText(QCoreApplication.translate("AgregarAdmin", u"Contrase\u00f1a", None))
+        self.label_7.setText(QCoreApplication.translate("AgregarAdmin", u"Confirma Contrase\u00f1a", None))
+        self.cancelar_admin_btn.setText(QCoreApplication.translate("AgregarAdmin", u"Cancelar", None))
+        self.agregar_admin_btn.setText(QCoreApplication.translate("AgregarAdmin", u"Agregar", None))
     # retranslateUi
 
