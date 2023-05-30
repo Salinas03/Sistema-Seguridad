@@ -16,6 +16,6 @@ Funcionalidades meta del servidor:
 * Servir las peticiones del administrador
 * Aceptar las nuevas conexiones al canal
 * Realizar las operaciones necesarias con los clientes
-
+* Manejar errores para no tronar el servidor (más importante)
 
 
