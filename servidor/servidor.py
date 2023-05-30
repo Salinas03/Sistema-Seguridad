@@ -91,7 +91,7 @@ def guardar_conexiones(conn, addr, hostname):
             administrador = persona.PersonaConectada(conn, addr, hostname, 'x')
             administrador_activo.append(administrador)
         else:
-            conn.send('Conexión denegada, administrador ya conectado'.encode(FORMAT))
+            conn.send('Conexión denegada, administrador ya conectado'.encode())
             conn.close()
 
 
@@ -113,12 +113,21 @@ def panel_administrador():
                 print('A sus ordenes administrador...')
                 bandera = False
 
+            #Enviar el prompt del administrador (esto va a cambiar)
+            conn_admin.send('administrador/servidor>'.encode())
+
             #Esperar instrucción de la computadora administradora
             operacion = conn_admin.recv(HEADER).decode(FORMAT, errors='ignore') #Línea que bloque el código
 
             #Realizar operaciones de administrador
             if operacion == 'listar':
                 listar_equipos(conn_admin)
+
+            elif 'seleccionar' in operacion:
+                cliente_seleccionado = conectar_con_equipo(operacion)
+                if cliente_seleccionado is not None:
+                    manejar_operaciones(cliente_seleccionado)
+                    
             else:
                 conn_admin.send('Comando no reconocido'.encode())
 
@@ -158,16 +167,56 @@ def listar_equipos(conexion_admin):
     #Crear cadena de los equipos de cómputo inactivos
     for z, equipo_inactivo in enumerate(equipos_inactivos):
         if equipo_inactivo is not None:
-            cadena_equipos_inactivos += str(z) + '  IP:  ' + str(equipo_inactivo[0]) + '  TCP_PORT:  ' + str(equipo_inactivo[1]) + '\n'
+            cadena_equipos_inactivos += str(z) + '  Nombre-Host:  ' + str(equipo_inactivo[0]) + '  IP:  ' + str(equipo_inactivo[1]) + '\n'
     
     cadena_equipos = cadena_equipos_activos + cadena_equipos_inactivos
     conexion_admin.send(cadena_equipos.encode())
     
-def conectar_con_equipo():
-    pass
+def conectar_con_equipo(operacion):
+    try: 
+        posicion = operacion.replace('seleccionar', '')
+        posicion = int(posicion)
+        objeto_cliente_activo = clientes_activos[posicion]
 
-def manejar_operaciones():
-    pass
+         #Obtener la variable de conexión del administrador
+        admin_conn = administrador_activo[0].get_conexion()
+        #Notificar al administrador que se hizo la conexión con el dispositivo
+        admin_conn.send(f'Conexión con el usuario {objeto_cliente_activo.get_direccion()[0]}'.encode())
+        #Notificar
+        print(f'Conexión con el usuario {objeto_cliente_activo.get_direccion()[0]}')
+        #Regresar objeto de conexión
+        return objeto_cliente_activo
+
+    except:
+        admin_conn.send('Selección no válida :/'.encode())
+        print('Selección no válida :/')
+        return None
+    
+def manejar_operaciones(cliente_seleccionado):
+    #La variable de conexión es la variable de conexión del usuario con el que se conectó el servidor
+    admin_conn = administrador_activo[0].get_conexion()
+    while True:
+        try:
+            #Dibujar prompt para el administrador
+            admin_conn.send(f'administrador/{cliente_seleccionado.get_nombre_host()}>'.encode())
+
+            #Tomar la instrucción del administrador
+            operacion = admin_conn.recv(HEADER).decode(FORMAT, errors='ignore')
+
+            #Notificar al administrador que el mensaje se ha enviado con éxito
+            admin_conn.send(f'Mensaje enviado con éxito'.encode())
+
+            print(operacion)
+            if operacion == 'salir': 
+                break
+
+            #Enviar la insturcción al cliente
+            cliente_seleccionado.get_conexion().send(operacion.encode())
+        
+        except:
+            
+            print('Error al enviar el comando')
+            break
 
 def crear_hilos(): 
     for _ in range(NUMERO_HILOS):
