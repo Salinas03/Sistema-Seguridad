@@ -2,6 +2,7 @@ import socket
 import threading
 from queue import Queue
 from base_datos import conexion
+from clases import persona
 
 #Variables globales para la configuración del socket
 FORMAT = 'utf-8'
@@ -21,13 +22,11 @@ queue = Queue()
 #Arreglo de equipos de cómputo de la base de datos
 equipos_computo = bd.obtener_equipos_computo()
 
-#Arreglo de conexiones realizadas en tiempo real
-conexiones_activas = []
-direcciones_activas = []
-hostnames_activos = []
+#Arreglo de conexiones de clientes realizadas en tiempo real
+clientes_activos = []
 
 #Por el momento solo habra un administrador (Prueba)
-conexion_administrador = []
+administrador_activo = []
 
 #1er Hilo: Realizar el levantado del canal (socket) y aceptar nuevas conexiones
 #obtener información de la base de datos
@@ -50,12 +49,11 @@ def vincular_socket():
 
 def aceptar_conexiones():
     #Cerrar todas las conexiones al iniciar el servidor
-    for conexion in conexiones_activas:
-        conexion.close()
+    for cliente in clientes_activos:
+        cliente.get_conexion().close()
 
     #Borrar los datos de las conexiónes y direcciones
-    del conexiones_activas[:]
-    del direcciones_activas[:]
+    del clientes_activos[:]
 
     while True:
         try:
@@ -64,12 +62,11 @@ def aceptar_conexiones():
 
             #Conexión temporal establecida para obtener información del cliente que se conecto
             conn.send('Conexión temporal establecida...'.encode())
-            identificador_cliente = conn.recv(HEADER).decode(FORMAT)
-            print(f'Dispositivo conectado temporalmente: {identificador_cliente}')
-
+            nombre_host = conn.recv(HEADER).decode(FORMAT)
+            print(f'Dispositivo conectado temporalmente: {nombre_host}')
             #Hacer validación si el cliente que se conecto esta en la base de datos o no
             #Si esta en l abase de datos se determina si es administrador o cliente
-            guardar_conexiones(conn,addr, identificador_cliente)
+            guardar_conexiones(conn,addr, nombre_host)
 
         except:
             print('Error al aceptar la conexión :(')
@@ -85,16 +82,14 @@ def guardar_conexiones(conn, addr, hostname):
     #dependiendo de la tabla SQL
     resultado = bd.obtener_equipo_admin_por_nombre(hostname)
     if not resultado:
-        conexiones_activas.append(conn)
-        direcciones_activas.append(addr)
-        hostnames_activos.append(hostname)
+        cliente = persona.PersonaConectada(conn, addr, hostname, 'x')
+        clientes_activos.append(cliente)
         print('Conexión con cliente :)')
         conn.send('Conexión con servidor exitosa :)'.encode())
     else:
-        if not conexion_administrador:
-            conexion_administrador.append(conn)
-            conexion_administrador.append(addr)
-            conexion_administrador.append(hostname)
+        if not administrador_activo:
+            administrador = persona.PersonaConectada(conn, addr, hostname, 'x')
+            administrador_activo.append(administrador)
         else:
             conn.send('Conexión denegada, administrador ya conectado'.encode(FORMAT))
             conn.close()
@@ -104,19 +99,16 @@ def guardar_conexiones(conn, addr, hostname):
 #desde la computadora del administrador
 def panel_administrador():
     #Núcleo de la problemática
-    conn_admin = None
-    addr_admin = None
     bandera = True
 
     while True:
         #Estar checando si se ha conectado un administrador
-        if conexion_administrador:
+        if administrador_activo:
             if bandera:
-                conn_admin = conexion_administrador[0]
-                addr_admin = conexion_administrador[1]
-                nombre_admin = conexion_administrador[2]
-                
-                conn_admin.send(f'Conexión exitosa :) \n Bienvenido administrador {nombre_admin} \n Su dirección IP es {addr_admin}'.encode())
+                conn_admin = administrador_activo[0].get_conexion()
+                addr_admin = administrador_activo[0].get_direccion()
+                nombre_host = administrador_activo[0].get_nombre_host()
+                conn_admin.send(f'Conexión exitosa :) \n Bienvenido administrador {nombre_host} \n Su dirección IP es {addr_admin}'.encode())
                 print('Conexión exitosa :)')
                 print('A sus ordenes administrador...')
                 bandera = False
@@ -141,25 +133,26 @@ def listar_equipos(conexion_admin):
     equipos_inactivos = equipos_computo[:]
 
     #Crar cadena de texto de los equipos activos e inactivos
-    for i,conexion_activa in enumerate(conexiones_activas):
+    for i,cliente_activo in enumerate(clientes_activos):
         #Mostrar solo aquellas conexiones que estan activas
-        try:
-            conexion_activa.send(' '.encode())
-            conexion_activa.recv(HEADER)
+        # try:
+        #     cliente_activo.conexion().send(' '.encode())
+        #     cliente_activo.conexion().recv(HEADER)
 
-        except:
-            #Las conexiones que no esten activas serán eliminadas
-            #El arreglo se recorre al borrar estos elementos (podría estar mal)
-            del conexiones_activas[i]
-            del direcciones_activas[i]
-            continue
+        # except:
+        #     #Las conexiones que no esten activas serán eliminadas
+        #     #El arreglo se recorre al borrar estos elementos (podría estar mal)
+        #     del clientes_activos[i]
+        #     continue
         
-        cadena_equipos_activos += str(i) +'  IP:  ' + str(direcciones_activas[i][0]) + '  TCP_PORT:  ' + str(direcciones_activas[i][1]) + '\n'
+        ip_cliente = cliente_activo.get_direccion()[0]
+        puerto_tcp = cliente_activo.get_direccion()[1]
+        cadena_equipos_activos += str(i) +'  IP:  ' + str(ip_cliente) + '  TCP_PORT:  ' + str(puerto_tcp) + '\n'
 
         #Obtener los equipos de cómputo inactivos
         for x, equipo_computo in enumerate(equipos_computo):
             #Aqui se tiene que cambiar
-            if hostnames_activos[i] == equipo_computo[1]:
+            if cliente_activo.get_nombre_host() == equipo_computo[1]:
                 equipos_inactivos[x] = None
     
     #Crear cadena de los equipos de cómputo inactivos
