@@ -135,15 +135,15 @@ def listar_equipos(conexion_admin):
     #Crar cadena de texto de los equipos activos e inactivos
     for i,cliente_activo in enumerate(clientes_activos):
         #Mostrar solo aquellas conexiones que estan activas
-        # try:
-        #     cliente_activo.conexion().send(' '.encode())
-        #     cliente_activo.conexion().recv(HEADER)
+        try:
+            cliente_activo.get_conexion().send(' '.encode())
+            cliente_activo.get_conexion().recv(HEADER)
 
-        # except:
-        #     #Las conexiones que no esten activas serán eliminadas
-        #     #El arreglo se recorre al borrar estos elementos (podría estar mal)
-        #     del clientes_activos[i]
-        #     continue
+        except:
+            #Las conexiones que no esten activas serán eliminadas
+            #El arreglo se recorre al borrar estos elementos (podría estar mal)
+            del clientes_activos[i]
+            continue
         
         ip_cliente = cliente_activo.get_direccion()[0]
         puerto_tcp = cliente_activo.get_direccion()[1]
