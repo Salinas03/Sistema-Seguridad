@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1241</width>
-    <height>848</height>
+    <width>1174</width>
+    <height>843</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -214,8 +214,9 @@
 #cancelar_btn,
 #agregar_admin_btn,
 #user_btn{
-background-color: transparent;
-
+background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(20, 47, 78, 219), stop:1 rgba(85, 98, 112, 226));
+color:rgba(255, 255, 255, 210);
+border-radius:5px;
 }
 
 QPushButton#guardad_computadora_btn:hover,
@@ -225,11 +226,19 @@ QPushButton#guardad_computadora_btn:hover,
 #cancelar_btn:hover,
 #agregar_admin_btn:hover,
 #user_btn:hover{
-border:1px solid #2372B4;
-border-radius:10px;
-background-color: rgba(0, 85, 255,0.5);
-color:white;
-font:15px;
+background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(40, 67, 98, 219), stop:1 rgba(105, 118, 132, 226));
+}
+
+QPushButton#guardad_computadora_btn:pressed,
+#cancelar_registro_btn:pressed,
+#modificar_btn:pressed,
+#guardar_btn:pressed,
+#cancelar_btn:pressed,
+#agregar_admin_btn:pressed,
+#user_btn:pressed{
+padding-left:5px;
+padding-top:5px;
+background-color:rgba(105, 118, 132, 200);
 }
 </string>
          </property>
@@ -290,7 +299,7 @@ font:15px;
                </property>
                <property name="icon">
                 <iconset>
-                 <normaloff>../assets/icons/user-5.ico</normaloff>../assets/icons/user-5.ico</iconset>
+                 <normaloff>../assets/icons/user-4.ico</normaloff>../assets/icons/user-4.ico</iconset>
                </property>
               </widget>
              </item>
@@ -327,7 +336,7 @@ font:15px;
              <item>
               <widget class="QStackedWidget" name="stackedWidget">
                <property name="currentIndex">
-                <number>2</number>
+                <number>3</number>
                </property>
                <widget class="QWidget" name="page">
                 <layout class="QGridLayout" name="gridLayout_6">
@@ -600,7 +609,7 @@ font:15px;
                            <number>0</number>
                           </property>
                           <property name="rightMargin">
-                           <number>0</number>
+                           <number>10</number>
                           </property>
                           <property name="bottomMargin">
                            <number>0</number>
@@ -641,18 +650,38 @@ font:15px;
                             </property>
                             <property name="icon">
                              <iconset>
-                              <normaloff>../assets/icons/save-3.ico</normaloff>../assets/icons/save-3.ico</iconset>
+                              <normaloff>../assets/icons/save-2.ico</normaloff>../assets/icons/save-2.ico</iconset>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QLabel" name="label_16">
+                            <property name="text">
+                             <string/>
                             </property>
                            </widget>
                           </item>
                           <item>
                            <widget class="QPushButton" name="cancelar_registro_btn">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>30</height>
+                             </size>
+                            </property>
                             <property name="text">
                              <string/>
                             </property>
                             <property name="icon">
                              <iconset>
-                              <normaloff>../assets/icons/cancel-3.ico</normaloff>../assets/icons/cancel-3.ico</iconset>
+                              <normaloff>../assets/icons/cancel-2.ico</normaloff>../assets/icons/cancel-2.ico</iconset>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QLabel" name="label_17">
+                            <property name="text">
+                             <string/>
                             </property>
                            </widget>
                           </item>
@@ -744,6 +773,179 @@ font:15px;
                </widget>
                <widget class="QWidget" name="page_4">
                 <layout class="QGridLayout" name="gridLayout_4">
+                 <item row="3" column="0" alignment="Qt::AlignRight|Qt::AlignBottom">
+                  <widget class="QFrame" name="frame_8">
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_8">
+                    <item>
+                     <widget class="QPushButton" name="agregar_admin_btn">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>150</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>12</pointsize>
+                        <weight>75</weight>
+                        <bold>true</bold>
+                       </font>
+                      </property>
+                      <property name="text">
+                       <string>Agregar nuevo 
+Administrador</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item row="4" column="0" alignment="Qt::AlignHCenter">
+                  <widget class="QFrame" name="frame_10">
+                   <property name="minimumSize">
+                    <size>
+                     <width>700</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>50</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true"/>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <layout class="QGridLayout" name="gridLayout_9">
+                    <item row="0" column="0">
+                     <widget class="QPushButton" name="cerrar_sesion_btn">
+                      <property name="text">
+                       <string>Cerrar Sesión</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item row="3" column="1" alignment="Qt::AlignBottom">
+                  <widget class="QFrame" name="frame_7">
+                   <property name="maximumSize">
+                    <size>
+                     <width>150</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_7">
+                    <property name="spacing">
+                     <number>0</number>
+                    </property>
+                    <property name="leftMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>30</number>
+                    </property>
+                    <item>
+                     <widget class="QPushButton" name="modificar_btn">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>10</pointsize>
+                       </font>
+                      </property>
+                      <property name="text">
+                       <string>Modificar 
+información</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="label_18">
+                      <property name="text">
+                       <string/>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="guardar_btn">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>30</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string/>
+                      </property>
+                      <property name="icon">
+                       <iconset>
+                        <normaloff>../assets/icons/save-2.ico</normaloff>../assets/icons/save-2.ico</iconset>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="label_19">
+                      <property name="text">
+                       <string/>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="cancelar_btn">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>30</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string/>
+                      </property>
+                      <property name="icon">
+                       <iconset>
+                        <normaloff>../assets/icons/cancel-2.ico</normaloff>../assets/icons/cancel-2.ico</iconset>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
                  <item row="0" column="0" colspan="2">
                   <widget class="QFrame" name="frame_6">
                    <property name="frameShape">
@@ -857,141 +1059,6 @@ font:15px;
                        <font>
                         <pointsize>14</pointsize>
                        </font>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item row="3" column="0" alignment="Qt::AlignRight|Qt::AlignBottom">
-                  <widget class="QFrame" name="frame_8">
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Raised</enum>
-                   </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_8">
-                    <item>
-                     <widget class="QPushButton" name="agregar_admin_btn">
-                      <property name="minimumSize">
-                       <size>
-                        <width>150</width>
-                        <height>150</height>
-                       </size>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>150</width>
-                        <height>16777215</height>
-                       </size>
-                      </property>
-                      <property name="font">
-                       <font>
-                        <pointsize>12</pointsize>
-                        <weight>75</weight>
-                        <bold>true</bold>
-                       </font>
-                      </property>
-                      <property name="text">
-                       <string>Agregar nuevo 
-Administrador</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item row="3" column="1" alignment="Qt::AlignBottom">
-                  <widget class="QFrame" name="frame_7">
-                   <property name="maximumSize">
-                    <size>
-                     <width>150</width>
-                     <height>16777215</height>
-                    </size>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Raised</enum>
-                   </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_7">
-                    <property name="spacing">
-                     <number>0</number>
-                    </property>
-                    <property name="leftMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="topMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="rightMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="bottomMargin">
-                     <number>30</number>
-                    </property>
-                    <item>
-                     <widget class="QPushButton" name="modificar_btn">
-                      <property name="text">
-                       <string>Modificar información</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="guardar_btn">
-                      <property name="text">
-                       <string/>
-                      </property>
-                      <property name="icon">
-                       <iconset>
-                        <normaloff>../assets/icons/save.svg</normaloff>../assets/icons/save.svg</iconset>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="cancelar_btn">
-                      <property name="text">
-                       <string/>
-                      </property>
-                      <property name="icon">
-                       <iconset>
-                        <normaloff>../assets/icons/cancel-3.ico</normaloff>../assets/icons/cancel-3.ico</iconset>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item row="4" column="0" alignment="Qt::AlignHCenter">
-                  <widget class="QFrame" name="frame_10">
-                   <property name="minimumSize">
-                    <size>
-                     <width>700</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                   <property name="maximumSize">
-                    <size>
-                     <width>16777215</width>
-                     <height>50</height>
-                    </size>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true"/>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Raised</enum>
-                   </property>
-                   <layout class="QGridLayout" name="gridLayout_9">
-                    <item row="0" column="0">
-                     <widget class="QPushButton" name="cerrar_sesion_btn">
-                      <property name="text">
-                       <string>Cerrar Sesión</string>
                       </property>
                      </widget>
                     </item>
