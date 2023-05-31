@@ -155,6 +155,7 @@ class AgregarAdmin(QMainWindow, object):
 
         self.confirma_contrasenia_btn = QLineEdit(self.widget_3)
         self.confirma_contrasenia_btn.setObjectName(u"confirma_contrasenia_btn")
+        self.confirma_contrasenia_btn.setEchoMode(QLineEdit.PasswordEchoOnEdit)
 
         self.gridLayout_3.addWidget(self.confirma_contrasenia_btn, 5, 2, 1, 1)
 

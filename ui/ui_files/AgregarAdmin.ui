@@ -300,7 +300,7 @@
           <item row="5" column="2">
            <widget class="QLineEdit" name="confirma_contrasenia_btn">
             <property name="echoMode">
-             <enum>QLineEdit::Password</enum>
+             <enum>QLineEdit::PasswordEchoOnEdit</enum>
             </property>
            </widget>
           </item>
