@@ -38,7 +38,7 @@
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout">
+      <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
        <property name="spacing">
         <number>0</number>
        </property>
@@ -69,23 +69,26 @@
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: rgb(214, 214, 214);</string>
+          <string notr="true">QWidget#menu_widget{
+background: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);
+
+}</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_4">
           <property name="spacing">
            <number>0</number>
           </property>
           <property name="leftMargin">
-           <number>0</number>
+           <number>5</number>
           </property>
           <property name="topMargin">
            <number>0</number>
           </property>
           <property name="rightMargin">
-           <number>0</number>
+           <number>5</number>
           </property>
           <property name="bottomMargin">
-           <number>0</number>
+           <number>10</number>
           </property>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -107,7 +110,7 @@
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap>../assets/icons/align-justify.svg</pixmap>
+               <pixmap>../assets/icons/column-2.ico</pixmap>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -207,16 +210,33 @@
        <item>
         <widget class="QWidget" name="body_widget" native="true">
          <property name="styleSheet">
-          <string notr="true">QPushButton#guardad_computadora_btn,
+          <string notr="true">QPushButton#user_btn{
+background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(20, 47, 78, 219), stop:1 rgba(85, 98, 112, 226));
+color:rgba(255, 255, 255, 210);
+border-radius:5px;
+}
+
+QPushButton#user_btn:hover{
+background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(40, 67, 98, 219), stop:1 rgba(105, 118, 132, 226));
+}
+
+QPushButton#user_btn:pressed{
+padding-left:5px;
+padding-top:5px;
+background-color:rgba(105, 118, 132, 200);
+}
+
+QPushButton#guardad_computadora_btn,
 #cancelar_registro_btn,
 #modificar_btn,
 #guardar_btn,
 #cancelar_btn,
 #agregar_admin_btn,
-#user_btn{
-background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(20, 47, 78, 219), stop:1 rgba(85, 98, 112, 226));
-color:rgba(255, 255, 255, 210);
-border-radius:5px;
+#mostrar_admin_table,
+#ocultar_admin_table{
+background: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);
+border-radius:15px;
+color:white;
 }
 
 QPushButton#guardad_computadora_btn:hover,
@@ -225,20 +245,31 @@ QPushButton#guardad_computadora_btn:hover,
 #guardar_btn:hover,
 #cancelar_btn:hover,
 #agregar_admin_btn:hover,
-#user_btn:hover{
-background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(40, 67, 98, 219), stop:1 rgba(105, 118, 132, 226));
-}
-
-QPushButton#guardad_computadora_btn:pressed,
-#cancelar_registro_btn:pressed,
-#modificar_btn:pressed,
-#guardar_btn:pressed,
-#cancelar_btn:pressed,
-#agregar_admin_btn:pressed,
-#user_btn:pressed{
+#mostrar_admin_table:hover,
+#ocultar_admin_table:hover{
 padding-left:5px;
 padding-top:5px;
-background-color:rgba(105, 118, 132, 200);
+background-color: rgb(140, 140, 140);
+}
+
+QPushButton#cerrar_sesion_btn{
+background: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);
+border-radius:5px;
+color:white;
+font: 10pt &quot;MS Shell Dlg 2&quot;;
+}
+
+QPushButton#cerrar_sesion_btn:hover{
+padding-left:3px;
+padding-top:3px;
+}
+
+QLineEdit{
+background-color:rgba(0,0,0,0);
+border:1px solid rgba(0,0,0,0);
+border-bottom-color:rgba(141,150,140,255);
+padding-bottom:7px;
+color: rgb(140, 140, 140);
 }
 </string>
          </property>
@@ -258,16 +289,25 @@ background-color:rgba(105, 118, 132, 200);
           <property name="bottomMargin">
            <number>0</number>
           </property>
-          <item>
+          <item alignment="Qt::AlignHCenter">
            <widget class="QFrame" name="frame_2">
+            <property name="minimumSize">
+             <size>
+              <width>1080</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="maximumSize">
              <size>
-              <width>16777215</width>
+              <width>1080</width>
               <height>50</height>
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true"/>
+             <string notr="true">QFrame#frame_2{
+background: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);
+border-radius:15px;
+}</string>
             </property>
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
@@ -277,20 +317,13 @@ background-color:rgba(105, 118, 132, 200);
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_2">
              <item>
-              <spacer name="horizontalSpacer">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
+              <widget class="QPushButton" name="user_btn">
+               <property name="maximumSize">
                 <size>
-                 <width>1150</width>
-                 <height>20</height>
+                 <width>50</width>
+                 <height>16777215</height>
                 </size>
                </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QPushButton" name="user_btn">
                <property name="styleSheet">
                 <string notr="true"/>
                </property>
@@ -336,7 +369,7 @@ background-color:rgba(105, 118, 132, 200);
              <item>
               <widget class="QStackedWidget" name="stackedWidget">
                <property name="currentIndex">
-                <number>3</number>
+                <number>2</number>
                </property>
                <widget class="QWidget" name="page">
                 <layout class="QGridLayout" name="gridLayout_6">
@@ -455,7 +488,7 @@ background-color:rgba(105, 118, 132, 200);
                          <property name="styleSheet">
                           <string notr="true"/>
                          </property>
-                         <layout class="QFormLayout" name="formLayout">
+                         <layout class="QGridLayout" name="gridLayout_10">
                           <property name="leftMargin">
                            <number>100</number>
                           </property>
@@ -574,7 +607,7 @@ background-color:rgba(105, 118, 132, 200);
                              </font>
                             </property>
                             <property name="text">
-                             <string>IP</string>
+                             <string>MAC ADREES</string>
                             </property>
                            </widget>
                           </item>
@@ -588,6 +621,59 @@ background-color:rgba(105, 118, 132, 200);
                             <property name="placeholderText">
                              <string>0.0.0.0</string>
                             </property>
+                           </widget>
+                          </item>
+                          <item row="4" column="0" colspan="2">
+                           <widget class="QFrame" name="frame_11">
+                            <property name="frameShape">
+                             <enum>QFrame::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Raised</enum>
+                            </property>
+                            <layout class="QVBoxLayout" name="verticalLayout_13">
+                             <item>
+                              <widget class="QLabel" name="label_20">
+                               <property name="font">
+                                <font>
+                                 <pointsize>12</pointsize>
+                                 <weight>75</weight>
+                                 <bold>true</bold>
+                                </font>
+                               </property>
+                               <property name="text">
+                                <string>Computadoras registradas</string>
+                               </property>
+                               <property name="alignment">
+                                <set>Qt::AlignCenter</set>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QTableWidget" name="computadoras_registradas_table">
+                               <column>
+                                <property name="text">
+                                 <string>Persona a cargo</string>
+                                </property>
+                               </column>
+                               <column>
+                                <property name="text">
+                                 <string>Computadora</string>
+                                </property>
+                               </column>
+                               <column>
+                                <property name="text">
+                                 <string>Fecha de entrega</string>
+                                </property>
+                               </column>
+                               <column>
+                                <property name="text">
+                                 <string>MAC ADREES</string>
+                                </property>
+                               </column>
+                              </widget>
+                             </item>
+                            </layout>
                            </widget>
                           </item>
                          </layout>
@@ -773,59 +859,233 @@ background-color:rgba(105, 118, 132, 200);
                </widget>
                <widget class="QWidget" name="page_4">
                 <layout class="QGridLayout" name="gridLayout_4">
-                 <item row="3" column="0" alignment="Qt::AlignRight|Qt::AlignBottom">
-                  <widget class="QFrame" name="frame_8">
+                 <item row="2" column="0">
+                  <widget class="QFrame" name="frame_12">
                    <property name="frameShape">
                     <enum>QFrame::StyledPanel</enum>
                    </property>
                    <property name="frameShadow">
                     <enum>QFrame::Raised</enum>
                    </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_8">
-                    <item>
-                     <widget class="QPushButton" name="agregar_admin_btn">
-                      <property name="minimumSize">
-                       <size>
-                        <width>150</width>
-                        <height>150</height>
-                       </size>
+                   <layout class="QGridLayout" name="gridLayout_5">
+                    <item row="0" column="0">
+                     <widget class="QFrame" name="frame_8">
+                      <property name="styleSheet">
+                       <string notr="true"/>
                       </property>
+                      <property name="frameShape">
+                       <enum>QFrame::StyledPanel</enum>
+                      </property>
+                      <property name="frameShadow">
+                       <enum>QFrame::Raised</enum>
+                      </property>
+                      <layout class="QGridLayout" name="gridLayout_13">
+                       <property name="leftMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="topMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="bottomMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <item row="0" column="2">
+                        <widget class="QPushButton" name="agregar_admin_btn">
+                         <property name="minimumSize">
+                          <size>
+                           <width>150</width>
+                           <height>150</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>150</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>11</pointsize>
+                           <weight>75</weight>
+                           <bold>true</bold>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>Agregar nuevo 
+Administrador</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="1">
+                        <widget class="QPushButton" name="mostrar_admin_table">
+                         <property name="maximumSize">
+                          <size>
+                           <width>200</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>Mostrar tabla de 
+adminisradores</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="0">
+                        <widget class="QPushButton" name="ocultar_admin_table">
+                         <property name="maximumSize">
+                          <size>
+                           <width>200</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>Ocultar tabla de 
+administradores</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item row="0" column="1">
+                     <widget class="QFrame" name="frame_7">
                       <property name="maximumSize">
                        <size>
                         <width>150</width>
                         <height>16777215</height>
                        </size>
                       </property>
-                      <property name="font">
-                       <font>
-                        <pointsize>12</pointsize>
-                        <weight>75</weight>
-                        <bold>true</bold>
-                       </font>
+                      <property name="styleSheet">
+                       <string notr="true"/>
                       </property>
-                      <property name="text">
-                       <string>Agregar nuevo 
-Administrador</string>
+                      <property name="frameShape">
+                       <enum>QFrame::StyledPanel</enum>
                       </property>
+                      <property name="frameShadow">
+                       <enum>QFrame::Raised</enum>
+                      </property>
+                      <layout class="QGridLayout" name="gridLayout_12">
+                       <item row="0" column="0">
+                        <widget class="QPushButton" name="modificar_btn">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>40</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>10</pointsize>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>Modificar 
+información</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="1" column="0">
+                        <widget class="QLabel" name="label_18">
+                         <property name="text">
+                          <string/>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="2" column="0">
+                        <widget class="QPushButton" name="guardar_btn">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>30</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string/>
+                         </property>
+                         <property name="icon">
+                          <iconset>
+                           <normaloff>../assets/icons/save-2.ico</normaloff>../assets/icons/save-2.ico</iconset>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="3" column="0">
+                        <widget class="QLabel" name="label_19">
+                         <property name="text">
+                          <string/>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="4" column="0">
+                        <widget class="QPushButton" name="cancelar_btn">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>30</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string/>
+                         </property>
+                         <property name="icon">
+                          <iconset>
+                           <normaloff>../assets/icons/cancel-2.ico</normaloff>../assets/icons/cancel-2.ico</iconset>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item row="1" column="0" colspan="2">
+                     <widget class="QFrame" name="frame_10">
+                      <property name="minimumSize">
+                       <size>
+                        <width>700</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>16777215</width>
+                        <height>50</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true"/>
+                      </property>
+                      <property name="frameShape">
+                       <enum>QFrame::StyledPanel</enum>
+                      </property>
+                      <property name="frameShadow">
+                       <enum>QFrame::Raised</enum>
+                      </property>
+                      <layout class="QGridLayout" name="gridLayout_11">
+                       <item row="0" column="0">
+                        <widget class="QPushButton" name="cerrar_sesion_btn">
+                         <property name="maximumSize">
+                          <size>
+                           <width>500</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>Cerrar Sesión</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
                      </widget>
                     </item>
                    </layout>
                   </widget>
                  </item>
-                 <item row="4" column="0" alignment="Qt::AlignHCenter">
-                  <widget class="QFrame" name="frame_10">
-                   <property name="minimumSize">
-                    <size>
-                     <width>700</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                   <property name="maximumSize">
-                    <size>
-                     <width>16777215</width>
-                     <height>50</height>
-                    </size>
-                   </property>
+                 <item row="0" column="0">
+                  <widget class="QFrame" name="frame_6">
                    <property name="styleSheet">
                     <string notr="true"/>
                    </property>
@@ -836,154 +1096,6 @@ Administrador</string>
                     <enum>QFrame::Raised</enum>
                    </property>
                    <layout class="QGridLayout" name="gridLayout_9">
-                    <item row="0" column="0">
-                     <widget class="QPushButton" name="cerrar_sesion_btn">
-                      <property name="text">
-                       <string>Cerrar Sesión</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item row="3" column="1" alignment="Qt::AlignBottom">
-                  <widget class="QFrame" name="frame_7">
-                   <property name="maximumSize">
-                    <size>
-                     <width>150</width>
-                     <height>16777215</height>
-                    </size>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Raised</enum>
-                   </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_7">
-                    <property name="spacing">
-                     <number>0</number>
-                    </property>
-                    <property name="leftMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="topMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="rightMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="bottomMargin">
-                     <number>30</number>
-                    </property>
-                    <item>
-                     <widget class="QPushButton" name="modificar_btn">
-                      <property name="minimumSize">
-                       <size>
-                        <width>0</width>
-                        <height>40</height>
-                       </size>
-                      </property>
-                      <property name="font">
-                       <font>
-                        <pointsize>10</pointsize>
-                       </font>
-                      </property>
-                      <property name="text">
-                       <string>Modificar 
-información</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_18">
-                      <property name="text">
-                       <string/>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="guardar_btn">
-                      <property name="minimumSize">
-                       <size>
-                        <width>0</width>
-                        <height>30</height>
-                       </size>
-                      </property>
-                      <property name="text">
-                       <string/>
-                      </property>
-                      <property name="icon">
-                       <iconset>
-                        <normaloff>../assets/icons/save-2.ico</normaloff>../assets/icons/save-2.ico</iconset>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_19">
-                      <property name="text">
-                       <string/>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="cancelar_btn">
-                      <property name="minimumSize">
-                       <size>
-                        <width>0</width>
-                        <height>30</height>
-                       </size>
-                      </property>
-                      <property name="text">
-                       <string/>
-                      </property>
-                      <property name="icon">
-                       <iconset>
-                        <normaloff>../assets/icons/cancel-2.ico</normaloff>../assets/icons/cancel-2.ico</iconset>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item row="0" column="0" colspan="2">
-                  <widget class="QFrame" name="frame_6">
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Raised</enum>
-                   </property>
-                   <layout class="QGridLayout" name="gridLayout_5">
-                    <property name="leftMargin">
-                     <number>50</number>
-                    </property>
-                    <property name="topMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="rightMargin">
-                     <number>50</number>
-                    </property>
-                    <property name="bottomMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="spacing">
-                     <number>0</number>
-                    </property>
-                    <item row="4" column="0">
-                     <widget class="QLabel" name="label_9">
-                      <property name="font">
-                       <font>
-                        <pointsize>14</pointsize>
-                        <weight>75</weight>
-                        <bold>true</bold>
-                       </font>
-                      </property>
-                      <property name="text">
-                       <string>Correo</string>
-                      </property>
-                     </widget>
-                    </item>
                     <item row="0" column="0">
                      <widget class="QLabel" name="label_6">
                       <property name="font">
@@ -1007,25 +1119,7 @@ información</string>
                       </property>
                      </widget>
                     </item>
-                    <item row="2" column="1">
-                     <widget class="QLineEdit" name="apellidos_txt">
-                      <property name="font">
-                       <font>
-                        <pointsize>14</pointsize>
-                       </font>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="3" column="1">
-                     <widget class="QLineEdit" name="telefono_txt">
-                      <property name="font">
-                       <font>
-                        <pointsize>14</pointsize>
-                       </font>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="2" column="0">
+                    <item row="1" column="0">
                      <widget class="QLabel" name="label_7">
                       <property name="font">
                        <font>
@@ -1039,7 +1133,16 @@ información</string>
                       </property>
                      </widget>
                     </item>
-                    <item row="3" column="0">
+                    <item row="1" column="1">
+                     <widget class="QLineEdit" name="apellidos_txt">
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="0">
                      <widget class="QLabel" name="label_8">
                       <property name="font">
                        <font>
@@ -1053,13 +1156,89 @@ información</string>
                       </property>
                      </widget>
                     </item>
-                    <item row="4" column="1">
+                    <item row="2" column="1">
+                     <widget class="QLineEdit" name="telefono_txt">
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                       </font>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="3" column="0">
+                     <widget class="QLabel" name="label_9">
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                        <weight>75</weight>
+                        <bold>true</bold>
+                       </font>
+                      </property>
+                      <property name="text">
+                       <string>Correo</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="3" column="1">
                      <widget class="QLineEdit" name="correo_txt">
                       <property name="font">
                        <font>
                         <pointsize>14</pointsize>
                        </font>
                       </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QFrame" name="frame_13">
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_7">
+                    <item>
+                     <widget class="QLabel" name="label_21">
+                      <property name="font">
+                       <font>
+                        <pointsize>12</pointsize>
+                        <weight>75</weight>
+                        <bold>true</bold>
+                       </font>
+                      </property>
+                      <property name="text">
+                       <string>TABLA DE ADMINISTRADORES</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QTableWidget" name="administradores_tabla">
+                      <column>
+                       <property name="text">
+                        <string>Nombre</string>
+                       </property>
+                      </column>
+                      <column>
+                       <property name="text">
+                        <string>Apellidos</string>
+                       </property>
+                      </column>
+                      <column>
+                       <property name="text">
+                        <string>Telefono</string>
+                       </property>
+                      </column>
+                      <column>
+                       <property name="text">
+                        <string>Correo</string>
+                       </property>
+                      </column>
                      </widget>
                     </item>
                    </layout>
