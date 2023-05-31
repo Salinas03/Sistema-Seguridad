@@ -4,10 +4,11 @@ from queue import Queue
 from base_datos import conexion
 from clases import persona
 
+# 165.22.15.159
 #Variables globales para la configuración del socket
 FORMAT = 'utf-8'
 HEADER = 20480
-HOST = socket.gethostbyname(socket.gethostname())
+HOST = '165.22.15.159'
 PORT = 5050
 ADDR = (HOST, PORT)
 
@@ -75,24 +76,26 @@ def guardar_conexiones(conn, addr, hostname):
     #Verificar si el usuario o administrador esta registrado en la base de datos
     resultado = bd.obtener_equipo_por_nombre(hostname)
     if not resultado:
-        conn.send('Conexión denegada'.encode(FORMAT))
+        conn.send('Conexión denegada'.encode())
         conn.close()
-
-    #Verificar si el dispositvo que se esta conectando es un administrador o un usuario
-    #dependiendo de la tabla SQL
-    resultado = bd.obtener_equipo_admin_por_nombre(hostname)
-    if not resultado:
-        cliente = persona.PersonaConectada(conn, addr, hostname, 'x')
-        clientes_activos.append(cliente)
-        print('Conexión con cliente :)')
-        conn.send('Conexión con servidor exitosa :)'.encode())
     else:
-        if not administrador_activo:
-            administrador = persona.PersonaConectada(conn, addr, hostname, 'x')
-            administrador_activo.append(administrador)
+        #Verificar si el dispositvo que se esta conectando es un administrador o un usuario
+        #dependiendo de la tabla SQL
+        resultado = bd.obtener_equipo_admin_por_nombre(hostname)
+        if not resultado:
+            cliente = persona.PersonaConectada(conn, addr, hostname, 'x')
+            clientes_activos.append(cliente)
+            print('Conexión con cliente :)')
+            conn.send('Conexión con servidor exitosa :)'.encode())
         else:
-            conn.send('Conexión denegada, administrador ya conectado'.encode())
-            conn.close()
+            if not administrador_activo:
+                administrador = persona.PersonaConectada(conn, addr, hostname, 'x')
+                administrador_activo.append(administrador)
+                print(len(administrador_activo))
+            else:
+                print('Conexión denegada, administrador ya conectado'.encode())
+                conn.send('Conexión denegada, administrador ya conectado'.encode())
+                conn.close()
 
 
 #2do Hilo: Encargado de administrar y manejar las funcionalidades de los usuarios ya existentes
@@ -113,25 +116,42 @@ def panel_administrador():
                 print('A sus ordenes administrador...')
                 bandera = False
 
-            #Enviar el prompt del administrador (esto va a cambiar)
-            conn_admin.send('administrador/servidor>'.encode())
+            try:
+                #Enviar el prompt del administrador (esto va a cambiar)
+                conn_admin.send('administrador/servidor>'.encode())
 
-            #Esperar instrucción de la computadora administradora
-            operacion = conn_admin.recv(HEADER).decode(FORMAT, errors='ignore') #Línea que bloque el código
+                #Esperar instrucción de la computadora administradora
+                operacion = conn_admin.recv(HEADER).decode(FORMAT, errors='ignore') #Línea que bloque el código
 
-            #Realizar operaciones de administrador
-            if operacion == 'listar':
-                listar_equipos(conn_admin)
+                #Realizar operaciones de administrador
+                if operacion == 'listar':
+                    cadena_equipos = listar_equipos()
+                    conn_admin.send(cadena_equipos.encode())
 
-            elif 'seleccionar' in operacion:
-                cliente_seleccionado = conectar_con_equipo(operacion)
-                if cliente_seleccionado is not None:
-                    manejar_operaciones(cliente_seleccionado)
-                    
-            else:
-                conn_admin.send('Comando no reconocido'.encode())
+                elif 'seleccionar' in operacion:
+                    if not clientes_activos:
+                        conn_admin.send('No hay dispositivos activos a quienes realizar operaciones :/'.encode())
+                    else:
+                        cliente_seleccionado = conectar_con_equipo(operacion)
+                        if cliente_seleccionado is not None:
+                            manejar_operaciones(cliente_seleccionado)
 
-def listar_equipos(conexion_admin):
+                elif operacion == 'salir':
+                    print('Administrador desconectado...')
+                    conn_admin.send('Bye bye...'.encode())
+                    conn_admin.close()
+                    del administrador_activo[0]
+                    bandera = True
+                else:
+                    conn_admin.send('Comando no reconocido'.encode())
+
+            except:
+                print('Administrador desconectado espontáneamente...')
+                conn_admin.close()
+                del administrador_activo[0]
+                bandera = True
+
+def listar_equipos():
     #Se tienen que listar los equipos que estan activos 
     #Pero en la UI se tienen que ver tanto activos como inactivos
 
@@ -167,26 +187,28 @@ def listar_equipos(conexion_admin):
     #Crear cadena de los equipos de cómputo inactivos
     for z, equipo_inactivo in enumerate(equipos_inactivos):
         if equipo_inactivo is not None:
-            cadena_equipos_inactivos += str(z) + '  Nombre-Host:  ' + str(equipo_inactivo[0]) + '  IP:  ' + str(equipo_inactivo[1]) + '\n'
+            cadena_equipos_inactivos += str(z) + '  Nombre-Host:  ' + str(equipo_inactivo[1]) + '  MAC:  ' + str(equipo_inactivo[2]) + '\n'
     
     cadena_equipos = cadena_equipos_activos + cadena_equipos_inactivos
-    conexion_admin.send(cadena_equipos.encode())
+    return cadena_equipos
     
 def conectar_con_equipo(operacion):
+    #Obtener la variable de conexión del administrador
+    admin_conn = administrador_activo[0].get_conexion()
+    
     try: 
         posicion = operacion.replace('seleccionar', '')
         posicion = int(posicion)
+        print(f'Posición: {posicion}')
         objeto_cliente_activo = clientes_activos[posicion]
 
-         #Obtener la variable de conexión del administrador
-        admin_conn = administrador_activo[0].get_conexion()
         #Notificar al administrador que se hizo la conexión con el dispositivo
         admin_conn.send(f'Conexión con el usuario {objeto_cliente_activo.get_direccion()[0]}'.encode())
         #Notificar
         print(f'Conexión con el usuario {objeto_cliente_activo.get_direccion()[0]}')
         #Regresar objeto de conexión
         return objeto_cliente_activo
-
+    
     except:
         admin_conn.send('Selección no válida :/'.encode())
         print('Selección no válida :/')
