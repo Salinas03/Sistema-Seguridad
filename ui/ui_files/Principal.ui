@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1174</width>
-    <height>843</height>
+    <width>1214</width>
+    <height>810</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -71,7 +71,10 @@
          <property name="styleSheet">
           <string notr="true">QWidget#menu_widget{
 background: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);
+}
 
+QPushButton{
+margin-bottom:10px;
 }</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -141,19 +144,30 @@ background: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="data_btn">
+             <widget class="QPushButton" name="compus_btn">
               <property name="text">
                <string/>
               </property>
               <property name="icon">
                <iconset>
-                <normaloff>../assets/icons/database-3.ico</normaloff>../assets/icons/database-3.ico</iconset>
+                <normaloff>../assets/icons/desktop.svg</normaloff>../assets/icons/desktop.svg</iconset>
               </property>
               <property name="checkable">
                <bool>false</bool>
               </property>
               <property name="autoExclusive">
                <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="admins_btn">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>../assets/icons/administrator-32.ico</normaloff>../assets/icons/administrator-32.ico</iconset>
               </property>
              </widget>
             </item>
@@ -232,8 +246,12 @@ QPushButton#guardad_computadora_btn,
 #guardar_btn,
 #cancelar_btn,
 #agregar_admin_btn,
-#mostrar_admin_table,
-#ocultar_admin_table{
+#modificar_admin_btn,
+#eliminar_admin_btn,
+#agregar_compu_btn,
+#modificar_compu_btn,
+#eliminar_compu_btn,
+#modificar_perfil_btn{
 background: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);
 border-radius:15px;
 color:white;
@@ -245,21 +263,25 @@ QPushButton#guardad_computadora_btn:hover,
 #guardar_btn:hover,
 #cancelar_btn:hover,
 #agregar_admin_btn:hover,
-#mostrar_admin_table:hover,
-#ocultar_admin_table:hover{
+#modificar_admin_btn:hover,
+#eliminar_admin_btn:hover,
+#agregar_compu_btn:hover,
+#modificar_compu_btn:hover,
+#eliminar_compu_btn:hover,
+#modificar_perfil_btn:hover{
 padding-left:5px;
 padding-top:5px;
 background-color: rgb(140, 140, 140);
 }
 
-QPushButton#cerrar_sesion_btn{
+QPushButton#cerrar_sesion_btn_2{
 background: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);
 border-radius:5px;
 color:white;
 font: 10pt &quot;MS Shell Dlg 2&quot;;
 }
 
-QPushButton#cerrar_sesion_btn:hover{
+QPushButton#cerrar_sesion_btn_2:hover{
 padding-left:3px;
 padding-top:3px;
 }
@@ -369,7 +391,7 @@ border-radius:15px;
              <item>
               <widget class="QStackedWidget" name="stackedWidget">
                <property name="currentIndex">
-                <number>2</number>
+                <number>4</number>
                </property>
                <widget class="QWidget" name="page">
                 <layout class="QGridLayout" name="gridLayout_6">
@@ -436,29 +458,6 @@ border-radius:15px;
                        <property name="bottomMargin">
                         <number>0</number>
                        </property>
-                       <item>
-                        <widget class="QLabel" name="label_4">
-                         <property name="text">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;AGREGAR COMPUTADORAS&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                         </property>
-                         <property name="alignment">
-                          <set>Qt::AlignCenter</set>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <spacer name="verticalSpacer_8">
-                         <property name="orientation">
-                          <enum>Qt::Vertical</enum>
-                         </property>
-                         <property name="sizeHint" stdset="0">
-                          <size>
-                           <width>20</width>
-                           <height>40</height>
-                          </size>
-                         </property>
-                        </spacer>
-                       </item>
                       </layout>
                      </widget>
                     </item>
@@ -485,146 +484,30 @@ border-radius:15px;
                        </property>
                        <item>
                         <widget class="QWidget" name="widget_7" native="true">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
                          <property name="styleSheet">
                           <string notr="true"/>
                          </property>
                          <layout class="QGridLayout" name="gridLayout_10">
                           <property name="leftMargin">
-                           <number>100</number>
+                           <number>20</number>
                           </property>
                           <property name="rightMargin">
                            <number>50</number>
                           </property>
-                          <item row="0" column="0">
-                           <widget class="QLabel" name="label_10">
-                            <property name="minimumSize">
-                             <size>
-                              <width>0</width>
-                              <height>50</height>
-                             </size>
-                            </property>
-                            <property name="font">
-                             <font>
-                              <pointsize>12</pointsize>
-                              <weight>75</weight>
-                              <bold>true</bold>
-                             </font>
-                            </property>
-                            <property name="text">
-                             <string>Persona a cargo</string>
-                            </property>
-                           </widget>
-                          </item>
-                          <item row="0" column="1">
-                           <widget class="QLineEdit" name="persona_cargo_txt">
-                            <property name="font">
-                             <font>
-                              <pointsize>12</pointsize>
-                             </font>
-                            </property>
-                            <property name="placeholderText">
-                             <string>Nombre de la persona que va a estar a cargo de la computadora</string>
-                            </property>
-                           </widget>
-                          </item>
-                          <item row="1" column="0">
-                           <widget class="QLabel" name="label_11">
-                            <property name="minimumSize">
-                             <size>
-                              <width>0</width>
-                              <height>50</height>
-                             </size>
-                            </property>
-                            <property name="font">
-                             <font>
-                              <pointsize>12</pointsize>
-                              <weight>75</weight>
-                              <bold>true</bold>
-                             </font>
-                            </property>
-                            <property name="text">
-                             <string>Computadora</string>
-                            </property>
-                           </widget>
-                          </item>
-                          <item row="1" column="1">
-                           <widget class="QLineEdit" name="computadora_txt">
-                            <property name="font">
-                             <font>
-                              <pointsize>12</pointsize>
-                             </font>
-                            </property>
-                            <property name="placeholderText">
-                             <string>Nombre de la computadora - Modelo</string>
-                            </property>
-                           </widget>
-                          </item>
-                          <item row="2" column="0">
-                           <widget class="QLabel" name="label_12">
-                            <property name="minimumSize">
-                             <size>
-                              <width>0</width>
-                              <height>50</height>
-                             </size>
-                            </property>
-                            <property name="font">
-                             <font>
-                              <pointsize>12</pointsize>
-                              <weight>75</weight>
-                              <bold>true</bold>
-                             </font>
-                            </property>
-                            <property name="text">
-                             <string>Día de entrega</string>
-                            </property>
-                           </widget>
-                          </item>
-                          <item row="2" column="1">
-                           <widget class="QLineEdit" name="dia_txt">
-                            <property name="font">
-                             <font>
-                              <pointsize>12</pointsize>
-                             </font>
-                            </property>
-                            <property name="placeholderText">
-                             <string>dd-mm-yyyy</string>
-                            </property>
-                           </widget>
-                          </item>
-                          <item row="3" column="0">
-                           <widget class="QLabel" name="label_13">
-                            <property name="minimumSize">
-                             <size>
-                              <width>0</width>
-                              <height>50</height>
-                             </size>
-                            </property>
-                            <property name="font">
-                             <font>
-                              <pointsize>12</pointsize>
-                              <weight>75</weight>
-                              <bold>true</bold>
-                             </font>
-                            </property>
-                            <property name="text">
-                             <string>MAC ADREES</string>
-                            </property>
-                           </widget>
-                          </item>
-                          <item row="3" column="1">
-                           <widget class="QLineEdit" name="ip_txt">
-                            <property name="font">
-                             <font>
-                              <pointsize>12</pointsize>
-                             </font>
-                            </property>
-                            <property name="placeholderText">
-                             <string>0.0.0.0</string>
-                            </property>
-                           </widget>
-                          </item>
-                          <item row="4" column="0" colspan="2">
+                          <item row="0" column="0" colspan="2">
                            <widget class="QFrame" name="frame_11">
+                            <property name="sizePolicy">
+                             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                              <horstretch>0</horstretch>
+                              <verstretch>0</verstretch>
+                             </sizepolicy>
+                            </property>
                             <property name="frameShape">
                              <enum>QFrame::StyledPanel</enum>
                             </property>
@@ -679,7 +562,7 @@ border-radius:15px;
                          </layout>
                         </widget>
                        </item>
-                       <item>
+                       <item alignment="Qt::AlignRight">
                         <widget class="QWidget" name="widget_8" native="true">
                          <property name="styleSheet">
                           <string notr="true"/>
@@ -700,7 +583,7 @@ border-radius:15px;
                           <property name="bottomMargin">
                            <number>0</number>
                           </property>
-                          <item>
+                          <item alignment="Qt::AlignHCenter">
                            <widget class="QLabel" name="label_14">
                             <property name="text">
                              <string/>
@@ -724,19 +607,50 @@ border-radius:15px;
                            </spacer>
                           </item>
                           <item>
-                           <widget class="QPushButton" name="guardad_computadora_btn">
+                           <widget class="QPushButton" name="agregar_compu_btn">
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>100</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                              <weight>75</weight>
+                              <bold>true</bold>
+                             </font>
+                            </property>
+                            <property name="text">
+                             <string>Agregar 
+Computadora</string>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QLabel" name="label_4">
+                            <property name="text">
+                             <string/>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QPushButton" name="eliminar_compu_btn">
                             <property name="minimumSize">
                              <size>
                               <width>0</width>
                               <height>50</height>
                              </size>
                             </property>
-                            <property name="text">
-                             <string/>
+                            <property name="font">
+                             <font>
+                              <weight>75</weight>
+                              <bold>true</bold>
+                             </font>
                             </property>
-                            <property name="icon">
-                             <iconset>
-                              <normaloff>../assets/icons/save-2.ico</normaloff>../assets/icons/save-2.ico</iconset>
+                            <property name="text">
+                             <string>Eliminar 
+Computadora</string>
                             </property>
                            </widget>
                           </item>
@@ -748,19 +662,22 @@ border-radius:15px;
                            </widget>
                           </item>
                           <item>
-                           <widget class="QPushButton" name="cancelar_registro_btn">
+                           <widget class="QPushButton" name="modificar_compu_btn">
                             <property name="minimumSize">
                              <size>
                               <width>0</width>
-                              <height>30</height>
+                              <height>50</height>
                              </size>
                             </property>
-                            <property name="text">
-                             <string/>
+                            <property name="font">
+                             <font>
+                              <weight>75</weight>
+                              <bold>true</bold>
+                             </font>
                             </property>
-                            <property name="icon">
-                             <iconset>
-                              <normaloff>../assets/icons/cancel-2.ico</normaloff>../assets/icons/cancel-2.ico</iconset>
+                            <property name="text">
+                             <string>Modificar 
+Computadora</string>
                             </property>
                            </widget>
                           </item>
@@ -859,17 +776,240 @@ border-radius:15px;
                </widget>
                <widget class="QWidget" name="page_4">
                 <layout class="QGridLayout" name="gridLayout_4">
-                 <item row="2" column="0">
-                  <widget class="QFrame" name="frame_12">
+                 <item row="0" column="0" alignment="Qt::AlignHCenter">
+                  <widget class="QFrame" name="frame_14">
                    <property name="frameShape">
                     <enum>QFrame::StyledPanel</enum>
                    </property>
                    <property name="frameShadow">
                     <enum>QFrame::Raised</enum>
                    </property>
-                   <layout class="QGridLayout" name="gridLayout_5">
-                    <item row="0" column="0">
-                     <widget class="QFrame" name="frame_8">
+                   <layout class="QVBoxLayout" name="verticalLayout_15">
+                    <item>
+                     <widget class="QFrame" name="frame_6">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>1080</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>900</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">QFrame#frame_6{
+background-color: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);
+color:white;
+border-radius:50px;
+}</string>
+                      </property>
+                      <property name="frameShape">
+                       <enum>QFrame::StyledPanel</enum>
+                      </property>
+                      <property name="frameShadow">
+                       <enum>QFrame::Raised</enum>
+                      </property>
+                      <layout class="QGridLayout" name="gridLayout_9">
+                       <item row="2" column="1">
+                        <spacer name="verticalSpacer_9">
+                         <property name="orientation">
+                          <enum>Qt::Vertical</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>20</width>
+                           <height>40</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item row="6" column="1">
+                        <spacer name="verticalSpacer_11">
+                         <property name="orientation">
+                          <enum>Qt::Vertical</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>20</width>
+                           <height>40</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item row="10" column="1">
+                        <spacer name="verticalSpacer_6">
+                         <property name="orientation">
+                          <enum>Qt::Vertical</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>20</width>
+                           <height>40</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item row="8" column="1">
+                        <spacer name="verticalSpacer_12">
+                         <property name="orientation">
+                          <enum>Qt::Vertical</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>20</width>
+                           <height>40</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item row="5" column="0">
+                        <widget class="QLabel" name="label_7">
+                         <property name="font">
+                          <font>
+                           <pointsize>14</pointsize>
+                           <weight>75</weight>
+                           <bold>true</bold>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt;Apellidos&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="9" column="1">
+                        <widget class="QLineEdit" name="correo_txt">
+                         <property name="font">
+                          <font>
+                           <pointsize>14</pointsize>
+                          </font>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="7" column="0">
+                        <widget class="QLabel" name="label_8">
+                         <property name="font">
+                          <font>
+                           <pointsize>14</pointsize>
+                           <weight>75</weight>
+                           <bold>true</bold>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt;Teléfono&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="1" column="0" colspan="2">
+                        <widget class="QLabel" name="label_13">
+                         <property name="text">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt; font-weight:600; color:#ffffff;&quot;&gt;PERFIL ADMINISTRADOR&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="9" column="0">
+                        <widget class="QLabel" name="label_9">
+                         <property name="font">
+                          <font>
+                           <pointsize>14</pointsize>
+                           <weight>75</weight>
+                           <bold>true</bold>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt;Correo&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="1">
+                        <spacer name="verticalSpacer_8">
+                         <property name="orientation">
+                          <enum>Qt::Vertical</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>20</width>
+                           <height>40</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item row="3" column="1">
+                        <widget class="QLineEdit" name="nombre_txt">
+                         <property name="font">
+                          <font>
+                           <pointsize>14</pointsize>
+                          </font>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="3" column="0">
+                        <widget class="QLabel" name="label_6">
+                         <property name="font">
+                          <font>
+                           <pointsize>14</pointsize>
+                           <weight>75</weight>
+                           <bold>true</bold>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt;Nombre&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="5" column="1">
+                        <widget class="QLineEdit" name="apellidos_txt">
+                         <property name="font">
+                          <font>
+                           <pointsize>14</pointsize>
+                          </font>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="4" column="1">
+                        <spacer name="verticalSpacer_10">
+                         <property name="orientation">
+                          <enum>Qt::Vertical</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>20</width>
+                           <height>40</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item row="7" column="1">
+                        <widget class="QLineEdit" name="telefono_txt">
+                         <property name="font">
+                          <font>
+                           <pointsize>14</pointsize>
+                          </font>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item alignment="Qt::AlignRight">
+                     <widget class="QFrame" name="frame_12">
+                      <property name="maximumSize">
+                       <size>
+                        <width>16777215</width>
+                        <height>200</height>
+                       </size>
+                      </property>
                       <property name="styleSheet">
                        <string notr="true"/>
                       </property>
@@ -880,202 +1020,82 @@ border-radius:15px;
                        <enum>QFrame::Raised</enum>
                       </property>
                       <layout class="QGridLayout" name="gridLayout_13">
-                       <property name="leftMargin">
-                        <number>0</number>
-                       </property>
-                       <property name="topMargin">
-                        <number>0</number>
-                       </property>
-                       <property name="rightMargin">
-                        <number>0</number>
-                       </property>
-                       <property name="bottomMargin">
-                        <number>0</number>
-                       </property>
-                       <property name="spacing">
-                        <number>0</number>
-                       </property>
-                       <item row="0" column="2">
-                        <widget class="QPushButton" name="agregar_admin_btn">
+                       <item row="0" column="0">
+                        <widget class="QFrame" name="frame_15">
                          <property name="minimumSize">
                           <size>
-                           <width>150</width>
-                           <height>150</height>
+                           <width>1080</width>
+                           <height>0</height>
                           </size>
                          </property>
                          <property name="maximumSize">
                           <size>
-                           <width>150</width>
+                           <width>1080</width>
                            <height>16777215</height>
                           </size>
                          </property>
-                         <property name="font">
-                          <font>
-                           <pointsize>11</pointsize>
-                           <weight>75</weight>
-                           <bold>true</bold>
-                          </font>
+                         <property name="styleSheet">
+                          <string notr="true"/>
                          </property>
-                         <property name="text">
-                          <string>Agregar nuevo 
-Administrador</string>
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
                          </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="1">
-                        <widget class="QPushButton" name="mostrar_admin_table">
-                         <property name="maximumSize">
-                          <size>
-                           <width>200</width>
-                           <height>16777215</height>
-                          </size>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
                          </property>
-                         <property name="text">
-                          <string>Mostrar tabla de 
-adminisradores</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="0">
-                        <widget class="QPushButton" name="ocultar_admin_table">
-                         <property name="maximumSize">
-                          <size>
-                           <width>200</width>
-                           <height>16777215</height>
-                          </size>
-                         </property>
-                         <property name="text">
-                          <string>Ocultar tabla de 
-administradores</string>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
-                     </widget>
-                    </item>
-                    <item row="0" column="1">
-                     <widget class="QFrame" name="frame_7">
-                      <property name="maximumSize">
-                       <size>
-                        <width>150</width>
-                        <height>16777215</height>
-                       </size>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true"/>
-                      </property>
-                      <property name="frameShape">
-                       <enum>QFrame::StyledPanel</enum>
-                      </property>
-                      <property name="frameShadow">
-                       <enum>QFrame::Raised</enum>
-                      </property>
-                      <layout class="QGridLayout" name="gridLayout_12">
-                       <item row="0" column="0">
-                        <widget class="QPushButton" name="modificar_btn">
-                         <property name="minimumSize">
-                          <size>
-                           <width>0</width>
-                           <height>40</height>
-                          </size>
-                         </property>
-                         <property name="font">
-                          <font>
-                           <pointsize>10</pointsize>
-                          </font>
-                         </property>
-                         <property name="text">
-                          <string>Modificar 
+                         <layout class="QHBoxLayout" name="horizontalLayout_8">
+                          <item>
+                           <widget class="QPushButton" name="cerrar_sesion_btn_2">
+                            <property name="minimumSize">
+                             <size>
+                              <width>120</width>
+                              <height>30</height>
+                             </size>
+                            </property>
+                            <property name="maximumSize">
+                             <size>
+                              <width>120</width>
+                              <height>16777215</height>
+                             </size>
+                            </property>
+                            <property name="text">
+                             <string>Cerrar Sesión</string>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <spacer name="horizontalSpacer">
+                            <property name="orientation">
+                             <enum>Qt::Horizontal</enum>
+                            </property>
+                            <property name="sizeHint" stdset="0">
+                             <size>
+                              <width>40</width>
+                              <height>20</height>
+                             </size>
+                            </property>
+                           </spacer>
+                          </item>
+                          <item>
+                           <widget class="QPushButton" name="modificar_perfil_btn">
+                            <property name="minimumSize">
+                             <size>
+                              <width>200</width>
+                              <height>40</height>
+                             </size>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>10</pointsize>
+                             </font>
+                            </property>
+                            <property name="text">
+                             <string>Modificar 
 información</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="1" column="0">
-                        <widget class="QLabel" name="label_18">
-                         <property name="text">
-                          <string/>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="2" column="0">
-                        <widget class="QPushButton" name="guardar_btn">
-                         <property name="minimumSize">
-                          <size>
-                           <width>0</width>
-                           <height>30</height>
-                          </size>
-                         </property>
-                         <property name="text">
-                          <string/>
-                         </property>
-                         <property name="icon">
-                          <iconset>
-                           <normaloff>../assets/icons/save-2.ico</normaloff>../assets/icons/save-2.ico</iconset>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="3" column="0">
-                        <widget class="QLabel" name="label_19">
-                         <property name="text">
-                          <string/>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="4" column="0">
-                        <widget class="QPushButton" name="cancelar_btn">
-                         <property name="minimumSize">
-                          <size>
-                           <width>0</width>
-                           <height>30</height>
-                          </size>
-                         </property>
-                         <property name="text">
-                          <string/>
-                         </property>
-                         <property name="icon">
-                          <iconset>
-                           <normaloff>../assets/icons/cancel-2.ico</normaloff>../assets/icons/cancel-2.ico</iconset>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
-                     </widget>
-                    </item>
-                    <item row="1" column="0" colspan="2">
-                     <widget class="QFrame" name="frame_10">
-                      <property name="minimumSize">
-                       <size>
-                        <width>700</width>
-                        <height>0</height>
-                       </size>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>16777215</width>
-                        <height>50</height>
-                       </size>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true"/>
-                      </property>
-                      <property name="frameShape">
-                       <enum>QFrame::StyledPanel</enum>
-                      </property>
-                      <property name="frameShadow">
-                       <enum>QFrame::Raised</enum>
-                      </property>
-                      <layout class="QGridLayout" name="gridLayout_11">
-                       <item row="0" column="0">
-                        <widget class="QPushButton" name="cerrar_sesion_btn">
-                         <property name="maximumSize">
-                          <size>
-                           <width>500</width>
-                           <height>16777215</height>
-                          </size>
-                         </property>
-                         <property name="text">
-                          <string>Cerrar Sesión</string>
-                         </property>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
                         </widget>
                        </item>
                       </layout>
@@ -1084,8 +1104,77 @@ información</string>
                    </layout>
                   </widget>
                  </item>
+                </layout>
+               </widget>
+               <widget class="QWidget" name="page_5">
+                <layout class="QGridLayout" name="gridLayout_14">
                  <item row="0" column="0">
-                  <widget class="QFrame" name="frame_6">
+                  <widget class="QWidget" name="widget_11" native="true">
+                   <layout class="QVBoxLayout" name="verticalLayout_8">
+                    <item>
+                     <widget class="QFrame" name="frame_13">
+                      <property name="frameShape">
+                       <enum>QFrame::StyledPanel</enum>
+                      </property>
+                      <property name="frameShadow">
+                       <enum>QFrame::Raised</enum>
+                      </property>
+                      <layout class="QVBoxLayout" name="verticalLayout_7">
+                       <item>
+                        <widget class="QLabel" name="label_21">
+                         <property name="font">
+                          <font>
+                           <pointsize>12</pointsize>
+                           <weight>75</weight>
+                           <bold>true</bold>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>TABLA DE ADMINISTRADORES</string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QTableWidget" name="administradores_tabla">
+                         <column>
+                          <property name="text">
+                           <string>Nombre</string>
+                          </property>
+                         </column>
+                         <column>
+                          <property name="text">
+                           <string>Apellidos</string>
+                          </property>
+                         </column>
+                         <column>
+                          <property name="text">
+                           <string>Telefono</string>
+                          </property>
+                         </column>
+                         <column>
+                          <property name="text">
+                           <string>Correo</string>
+                          </property>
+                         </column>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item row="0" column="1" alignment="Qt::AlignHCenter">
+                  <widget class="QFrame" name="frame_8">
+                   <property name="maximumSize">
+                    <size>
+                     <width>150</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
                    <property name="styleSheet">
                     <string notr="true"/>
                    </property>
@@ -1095,122 +1184,38 @@ información</string>
                    <property name="frameShadow">
                     <enum>QFrame::Raised</enum>
                    </property>
-                   <layout class="QGridLayout" name="gridLayout_9">
-                    <item row="0" column="0">
-                     <widget class="QLabel" name="label_6">
-                      <property name="font">
-                       <font>
-                        <pointsize>14</pointsize>
-                        <weight>75</weight>
-                        <bold>true</bold>
-                       </font>
-                      </property>
-                      <property name="text">
-                       <string>Nombre</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="0" column="1">
-                     <widget class="QLineEdit" name="nombre_txt">
-                      <property name="font">
-                       <font>
-                        <pointsize>14</pointsize>
-                       </font>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="0">
-                     <widget class="QLabel" name="label_7">
-                      <property name="font">
-                       <font>
-                        <pointsize>14</pointsize>
-                        <weight>75</weight>
-                        <bold>true</bold>
-                       </font>
-                      </property>
-                      <property name="text">
-                       <string>Apellidos</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="1">
-                     <widget class="QLineEdit" name="apellidos_txt">
-                      <property name="font">
-                       <font>
-                        <pointsize>14</pointsize>
-                       </font>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="2" column="0">
-                     <widget class="QLabel" name="label_8">
-                      <property name="font">
-                       <font>
-                        <pointsize>14</pointsize>
-                        <weight>75</weight>
-                        <bold>true</bold>
-                       </font>
-                      </property>
-                      <property name="text">
-                       <string>Teléfono</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="2" column="1">
-                     <widget class="QLineEdit" name="telefono_txt">
-                      <property name="font">
-                       <font>
-                        <pointsize>14</pointsize>
-                       </font>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="3" column="0">
-                     <widget class="QLabel" name="label_9">
-                      <property name="font">
-                       <font>
-                        <pointsize>14</pointsize>
-                        <weight>75</weight>
-                        <bold>true</bold>
-                       </font>
-                      </property>
-                      <property name="text">
-                       <string>Correo</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="3" column="1">
-                     <widget class="QLineEdit" name="correo_txt">
-                      <property name="font">
-                       <font>
-                        <pointsize>14</pointsize>
-                       </font>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QFrame" name="frame_13">
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Raised</enum>
-                   </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_7">
+                   <layout class="QVBoxLayout" name="verticalLayout_14">
+                    <property name="spacing">
+                     <number>0</number>
+                    </property>
+                    <property name="leftMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>0</number>
+                    </property>
                     <item>
-                     <widget class="QLabel" name="label_21">
-                      <property name="font">
-                       <font>
-                        <pointsize>12</pointsize>
-                        <weight>75</weight>
-                        <bold>true</bold>
-                       </font>
+                     <widget class="QLabel" name="label_10">
+                      <property name="maximumSize">
+                       <size>
+                        <width>16777215</width>
+                        <height>150</height>
+                       </size>
                       </property>
                       <property name="text">
-                       <string>TABLA DE ADMINISTRADORES</string>
+                       <string/>
+                      </property>
+                      <property name="pixmap">
+                       <pixmap>../assets/files/admin2.png</pixmap>
+                      </property>
+                      <property name="scaledContents">
+                       <bool>true</bool>
                       </property>
                       <property name="alignment">
                        <set>Qt::AlignCenter</set>
@@ -1218,27 +1223,109 @@ información</string>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QTableWidget" name="administradores_tabla">
-                      <column>
-                       <property name="text">
-                        <string>Nombre</string>
-                       </property>
-                      </column>
-                      <column>
-                       <property name="text">
-                        <string>Apellidos</string>
-                       </property>
-                      </column>
-                      <column>
-                       <property name="text">
-                        <string>Telefono</string>
-                       </property>
-                      </column>
-                      <column>
-                       <property name="text">
-                        <string>Correo</string>
-                       </property>
-                      </column>
+                     <spacer name="verticalSpacer_5">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="agregar_admin_btn">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>100</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>11</pointsize>
+                        <weight>75</weight>
+                        <bold>true</bold>
+                       </font>
+                      </property>
+                      <property name="text">
+                       <string>Agregar nuevo 
+Administrador</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="label_11">
+                      <property name="text">
+                       <string/>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="eliminar_admin_btn">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>50</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>250</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <weight>75</weight>
+                        <bold>true</bold>
+                       </font>
+                      </property>
+                      <property name="text">
+                       <string>Eliminar 
+Adminstrador</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="label_12">
+                      <property name="text">
+                       <string/>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="modificar_admin_btn">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>50</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>200</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <weight>75</weight>
+                        <bold>true</bold>
+                       </font>
+                      </property>
+                      <property name="text">
+                       <string>Modificar 
+Administrador</string>
+                      </property>
                      </widget>
                     </item>
                    </layout>

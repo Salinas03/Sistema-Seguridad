@@ -11,8 +11,8 @@ from modelos.admin_model import Admin
 class LoginWindow(Login, QWidget):
 
     # FUNCION PARA PODER INICIAR
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent = None):
+        super().__init__(parent)
         self.setupUi(self)
         self.admin = Admin(conexion()) # LLAMADA A LA BASE DE DATOS Y ASIGNADA A UNA VARIABLE
 
@@ -35,4 +35,20 @@ class LoginWindow(Login, QWidget):
         self.close()
         window = PrincipalWindow(self)
         window.show()
-        self.setWindowFlag(Qt.Window)   
+        self.setWindowFlag(Qt.Window)
+
+
+
+
+
+
+ 
+
+        
+
+
+
+                      
+
+
+        
