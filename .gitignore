@@ -1,5 +1,5 @@
 .env
 tasks.txt
-/servidor/pruebas/test.py
+/servidor/pruebas/
 /servidor/base_datos/__pycache__
 /servidor/clases/__pycache__
