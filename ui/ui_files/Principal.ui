@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1214</width>
-    <height>810</height>
+    <width>1250</width>
+    <height>813</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -251,7 +251,8 @@ QPushButton#guardad_computadora_btn,
 #agregar_compu_btn,
 #modificar_compu_btn,
 #eliminar_compu_btn,
-#modificar_perfil_btn{
+#modificar_perfil_btn,
+#guardar_admin_btn{
 background: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);
 border-radius:15px;
 color:white;
@@ -268,7 +269,8 @@ QPushButton#guardad_computadora_btn:hover,
 #agregar_compu_btn:hover,
 #modificar_compu_btn:hover,
 #eliminar_compu_btn:hover,
-#modificar_perfil_btn:hover{
+#modificar_perfil_btn:hover,
+#guardar_admin_btn:hover{
 padding-left:5px;
 padding-top:5px;
 background-color: rgb(140, 140, 140);
@@ -293,7 +295,25 @@ border-bottom-color:rgba(141,150,140,255);
 padding-bottom:7px;
 color: rgb(140, 140, 140);
 }
-</string>
+
+QTableWidget{
+	background-color: rgb(255, 255, 255);
+	color: rgb(0, 0, 0);
+	gridline-color: rgb(0,206,151);
+	font-size:12pt;
+	color:#000000;
+}
+
+QHeaderView::section{
+	background-color: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);
+	color:white;
+	border-color: 1px solid rgb(255, 255, 255);
+}
+
+QTableWidget QTableCornerButton::section{
+	background-color: rgb(0, 0, 0);
+	border: 1px solid qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);
+}</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
           <property name="spacing">
@@ -810,6 +830,13 @@ Computadora</string>
 background-color: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);
 color:white;
 border-radius:50px;
+}
+
+QLineEdit#nombre_txt:hover,
+#apellidos_txt:hover,
+#telefono_txt:hover,
+#correo_txt:hover{
+color:white;
 }</string>
                       </property>
                       <property name="frameShape">
@@ -819,59 +846,32 @@ border-radius:50px;
                        <enum>QFrame::Raised</enum>
                       </property>
                       <layout class="QGridLayout" name="gridLayout_9">
-                       <item row="2" column="1">
-                        <spacer name="verticalSpacer_9">
-                         <property name="orientation">
-                          <enum>Qt::Vertical</enum>
+                       <property name="leftMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="topMargin">
+                        <number>50</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>50</number>
+                       </property>
+                       <property name="bottomMargin">
+                        <number>100</number>
+                       </property>
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <item row="0" column="0" colspan="2">
+                        <widget class="QLabel" name="label_13">
+                         <property name="text">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt; font-weight:600; color:#ffffff;&quot;&gt;PERFIL ADMINISTRADOR&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                          </property>
-                         <property name="sizeHint" stdset="0">
-                          <size>
-                           <width>20</width>
-                           <height>40</height>
-                          </size>
+                         <property name="alignment">
+                          <set>Qt::AlignCenter</set>
                          </property>
-                        </spacer>
+                        </widget>
                        </item>
-                       <item row="6" column="1">
-                        <spacer name="verticalSpacer_11">
-                         <property name="orientation">
-                          <enum>Qt::Vertical</enum>
-                         </property>
-                         <property name="sizeHint" stdset="0">
-                          <size>
-                           <width>20</width>
-                           <height>40</height>
-                          </size>
-                         </property>
-                        </spacer>
-                       </item>
-                       <item row="10" column="1">
-                        <spacer name="verticalSpacer_6">
-                         <property name="orientation">
-                          <enum>Qt::Vertical</enum>
-                         </property>
-                         <property name="sizeHint" stdset="0">
-                          <size>
-                           <width>20</width>
-                           <height>40</height>
-                          </size>
-                         </property>
-                        </spacer>
-                       </item>
-                       <item row="8" column="1">
-                        <spacer name="verticalSpacer_12">
-                         <property name="orientation">
-                          <enum>Qt::Vertical</enum>
-                         </property>
-                         <property name="sizeHint" stdset="0">
-                          <size>
-                           <width>20</width>
-                           <height>40</height>
-                          </size>
-                         </property>
-                        </spacer>
-                       </item>
-                       <item row="5" column="0">
+                       <item row="4" column="0" alignment="Qt::AlignHCenter">
                         <widget class="QLabel" name="label_7">
                          <property name="font">
                           <font>
@@ -885,8 +885,14 @@ border-radius:50px;
                          </property>
                         </widget>
                        </item>
-                       <item row="9" column="1">
-                        <widget class="QLineEdit" name="correo_txt">
+                       <item row="2" column="1">
+                        <widget class="QLineEdit" name="nombre_txt">
+                         <property name="maximumSize">
+                          <size>
+                           <width>800</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
                          <property name="font">
                           <font>
                            <pointsize>14</pointsize>
@@ -894,7 +900,20 @@ border-radius:50px;
                          </property>
                         </widget>
                        </item>
-                       <item row="7" column="0">
+                       <item row="7" column="1">
+                        <spacer name="verticalSpacer_12">
+                         <property name="orientation">
+                          <enum>Qt::Vertical</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>20</width>
+                           <height>40</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item row="6" column="0" alignment="Qt::AlignHCenter">
                         <widget class="QLabel" name="label_8">
                          <property name="font">
                           <font>
@@ -908,32 +927,8 @@ border-radius:50px;
                          </property>
                         </widget>
                        </item>
-                       <item row="1" column="0" colspan="2">
-                        <widget class="QLabel" name="label_13">
-                         <property name="text">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt; font-weight:600; color:#ffffff;&quot;&gt;PERFIL ADMINISTRADOR&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                         </property>
-                         <property name="alignment">
-                          <set>Qt::AlignCenter</set>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="9" column="0">
-                        <widget class="QLabel" name="label_9">
-                         <property name="font">
-                          <font>
-                           <pointsize>14</pointsize>
-                           <weight>75</weight>
-                           <bold>true</bold>
-                          </font>
-                         </property>
-                         <property name="text">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt;Correo&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="1">
-                        <spacer name="verticalSpacer_8">
+                       <item row="5" column="1">
+                        <spacer name="verticalSpacer_11">
                          <property name="orientation">
                           <enum>Qt::Vertical</enum>
                          </property>
@@ -945,16 +940,7 @@ border-radius:50px;
                          </property>
                         </spacer>
                        </item>
-                       <item row="3" column="1">
-                        <widget class="QLineEdit" name="nombre_txt">
-                         <property name="font">
-                          <font>
-                           <pointsize>14</pointsize>
-                          </font>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="3" column="0">
+                       <item row="2" column="0" alignment="Qt::AlignHCenter">
                         <widget class="QLabel" name="label_6">
                          <property name="font">
                           <font>
@@ -968,8 +954,14 @@ border-radius:50px;
                          </property>
                         </widget>
                        </item>
-                       <item row="5" column="1">
-                        <widget class="QLineEdit" name="apellidos_txt">
+                       <item row="6" column="1">
+                        <widget class="QLineEdit" name="telefono_txt">
+                         <property name="maximumSize">
+                          <size>
+                           <width>800</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
                          <property name="font">
                           <font>
                            <pointsize>14</pointsize>
@@ -977,7 +969,36 @@ border-radius:50px;
                          </property>
                         </widget>
                        </item>
-                       <item row="4" column="1">
+                       <item row="8" column="1">
+                        <widget class="QLineEdit" name="correo_txt">
+                         <property name="maximumSize">
+                          <size>
+                           <width>800</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>14</pointsize>
+                          </font>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="8" column="0" alignment="Qt::AlignHCenter">
+                        <widget class="QLabel" name="label_9">
+                         <property name="font">
+                          <font>
+                           <pointsize>14</pointsize>
+                           <weight>75</weight>
+                           <bold>true</bold>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt;Correo&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="3" column="1">
                         <spacer name="verticalSpacer_10">
                          <property name="orientation">
                           <enum>Qt::Vertical</enum>
@@ -990,14 +1011,46 @@ border-radius:50px;
                          </property>
                         </spacer>
                        </item>
-                       <item row="7" column="1">
-                        <widget class="QLineEdit" name="telefono_txt">
+                       <item row="1" column="1">
+                        <spacer name="verticalSpacer_9">
+                         <property name="orientation">
+                          <enum>Qt::Vertical</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>20</width>
+                           <height>40</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item row="4" column="1">
+                        <widget class="QLineEdit" name="apellidos_txt">
+                         <property name="maximumSize">
+                          <size>
+                           <width>800</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
                          <property name="font">
                           <font>
                            <pointsize>14</pointsize>
                           </font>
                          </property>
                         </widget>
+                       </item>
+                       <item row="9" column="1">
+                        <spacer name="verticalSpacer_6">
+                         <property name="orientation">
+                          <enum>Qt::Vertical</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>20</width>
+                           <height>40</height>
+                          </size>
+                         </property>
+                        </spacer>
                        </item>
                       </layout>
                      </widget>
@@ -1077,6 +1130,23 @@ border-radius:50px;
                            </spacer>
                           </item>
                           <item>
+                           <widget class="QPushButton" name="guardar_admin_btn">
+                            <property name="minimumSize">
+                             <size>
+                              <width>100</width>
+                              <height>40</height>
+                             </size>
+                            </property>
+                            <property name="text">
+                             <string/>
+                            </property>
+                            <property name="icon">
+                             <iconset>
+                              <normaloff>../assets/icons/save-2.ico</normaloff>../assets/icons/save-2.ico</iconset>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
                            <widget class="QPushButton" name="modificar_perfil_btn">
                             <property name="minimumSize">
                              <size>
@@ -1139,9 +1209,25 @@ información</string>
                        </item>
                        <item>
                         <widget class="QTableWidget" name="administradores_tabla">
+                         <property name="horizontalScrollMode">
+                          <enum>QAbstractItemView::ScrollPerPixel</enum>
+                         </property>
+                         <attribute name="horizontalHeaderMinimumSectionSize">
+                          <number>125</number>
+                         </attribute>
+                         <attribute name="horizontalHeaderHighlightSections">
+                          <bool>false</bool>
+                         </attribute>
                          <column>
                           <property name="text">
                            <string>Nombre</string>
+                          </property>
+                          <property name="background">
+                           <color alpha="0">
+                            <red>0</red>
+                            <green>0</green>
+                            <blue>0</blue>
+                           </color>
                           </property>
                          </column>
                          <column>

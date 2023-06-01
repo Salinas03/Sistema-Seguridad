@@ -1,9 +1,14 @@
 # CLASE PARA LA AGREGACION DE UN NUEVO ADMIN
+from aifc import Error
+from db.connection import conexion
+
+
 class Admin():
 
     #FUNCION PARA PODER INICIAR LA CLASE
     def __init__(self,conexion):
         self.conexion = conexion # CREACION DE LA VARIABLE DE CONEXION
+        conn = conexion
 
         # CREACION DE LA TABLA administradores SI ES QUE NO EXISTE
         with self.conexion.cursor() as cursor:
@@ -30,3 +35,20 @@ class Admin():
             sql = """INSERT INTO administradores (nombre, apellido, telefono, correo, password) VALUES (%s,%s,%s,%s,%s)"""
             cursor.execute(sql,(nombre, apellido, telefono, correo, password))
             self.conexion.commit()
+    
+    def seleccionar_admins(self):
+            conn = conexion()
+            sql = """SELECT * FROM administradores"""
+            
+            try:
+                cur = conn.cursor()
+                cur.execute(sql)
+                admins = cur.fetchall()
+                return admins
+            except Error as e:
+                print("Error al seleccionar libros: " + str(e))
+            
+            finally:
+                if conn:
+                    cur.close()
+                    conn.close()
