@@ -73,10 +73,12 @@ def aceptar_conexiones():
             print('Error al aceptar la conexión :(')
 
 def guardar_conexiones(conn, addr, hostname):
+    mensaje = ''
     #Verificar si el usuario o administrador esta registrado en la base de datos
     resultado = bd.obtener_equipo_por_nombre(hostname)
     if not resultado:
-        conn.send('Conexión denegada'.encode())
+        mensaje = f'Conexión denegada a {hostname}'
+        conn.send('Conexión denegada >:/'.encode())
         conn.close()
     else:
         #Verificar si el dispositvo que se esta conectando es un administrador o un usuario
@@ -85,18 +87,26 @@ def guardar_conexiones(conn, addr, hostname):
         if not resultado:
             cliente = persona.PersonaConectada(conn, addr, hostname, 'x')
             clientes_activos.append(cliente)
+            mensaje = f'El cliente {hostname} se ha conectado'
             print('Conexión con cliente :)')
             conn.send('Conexión con servidor exitosa :)'.encode())
         else:
             if not administrador_activo:
                 administrador = persona.PersonaConectada(conn, addr, hostname, 'x')
                 administrador_activo.append(administrador)
-                print(len(administrador_activo))
+                #Posibilidad de crear hilo
             else:
                 print('Conexión denegada, administrador ya conectado'.encode())
+                mensaje = f'Conexión denegada al administrador {hostname}'
                 conn.send('Conexión denegada, administrador ya conectado'.encode())
                 conn.close()
-
+    
+    #Solo notificar cuando se conecte un usuario
+    # if administrador_activo:
+    #     print('Ya se conecto un administrador')
+    #     if hostname != administrador_activo[0].get_nombre_host():
+    #         print('Enviar notificación')
+    #         notificar_admin_conexiones(mensaje)
 
 #2do Hilo: Encargado de administrar y manejar las funcionalidades de los usuarios ya existentes
 #desde la computadora del administrador
@@ -255,6 +265,18 @@ def crear_tareas():
     #Iniciar la cola de tareas
     queue.join()
 
+def notificar_admin_conexiones(mensaje):
+    try:
+        admin_conn = administrador_activo[0].get_conexion()
+        mensaje = 'NOTIFICACION|' + mensaje
+        admin_conn.send(mensaje.encode())
+
+        #Enviar a la función de notificar admin en específico
+        
+    except:
+        print('No se envio el mensaje')
+        
+        
 #Asignar las tareas que estan en la cola
 #1.-El primer hilo encenderá el canal del socket y manejará las conexiones que se vayan realizando
 #2.-El segundo hilo manejará las manejará los comandos del administrador y clientes ya conectados
