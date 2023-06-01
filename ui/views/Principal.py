@@ -17,7 +17,7 @@ class Principal(QMainWindow, object):
     def setupUi(self, Principal):
         if not Principal.objectName():
             Principal.setObjectName(u"Principal")
-        Principal.resize(1214, 810)
+        Principal.resize(1250, 813)
         self.centralwidget = QWidget(Principal)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -150,14 +150,15 @@ class Principal(QMainWindow, object):
 "#agregar_compu_btn,\n"
 "#modificar_compu_btn,\n"
 "#eliminar_compu_btn,\n"
-"#modificar_perfil_btn{\n"
+"#modificar_perfil_btn,\n"
+"#guardar_admin_btn{\n"
 "background: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
 "border-radius:15px;\n"
 "color:white;\n"
-"}\n"
+""
+                        "}\n"
 "\n"
-"QPushButto"
-                        "n#guardad_computadora_btn:hover,\n"
+"QPushButton#guardad_computadora_btn:hover,\n"
 "#cancelar_registro_btn:hover,\n"
 "#modificar_btn:hover,\n"
 "#guardar_btn:hover,\n"
@@ -168,7 +169,8 @@ class Principal(QMainWindow, object):
 "#agregar_compu_btn:hover,\n"
 "#modificar_compu_btn:hover,\n"
 "#eliminar_compu_btn:hover,\n"
-"#modificar_perfil_btn:hover{\n"
+"#modificar_perfil_btn:hover,\n"
+"#guardar_admin_btn:hover{\n"
 "padding-left:5px;\n"
 "padding-top:5px;\n"
 "background-color: rgb(140, 140, 140);\n"
@@ -193,7 +195,26 @@ class Principal(QMainWindow, object):
 "padding-bottom:7px;\n"
 "color: rgb(140, 140, 140);\n"
 "}\n"
-"")
+"\n"
+"QTa"
+                        "bleWidget{\n"
+"	background-color: rgb(255, 255, 255);\n"
+"	color: rgb(0, 0, 0);\n"
+"	gridline-color: rgb(0,206,151);\n"
+"	font-size:12pt;\n"
+"	color:#000000;\n"
+"}\n"
+"\n"
+"QHeaderView::section{\n"
+"	background-color: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
+"	color:white;\n"
+"	border-color: 1px solid rgb(255, 255, 255);\n"
+"}\n"
+"\n"
+"QTableWidget QTableCornerButton::section{\n"
+"	background-color: rgb(0, 0, 0);\n"
+"	border: 1px solid qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
+"}")
         self.verticalLayout = QVBoxLayout(self.body_widget)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -452,26 +473,25 @@ class Principal(QMainWindow, object):
 "background-color: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
 "color:white;\n"
 "border-radius:50px;\n"
+"}\n"
+"\n"
+"QLineEdit#nombre_txt:hover,\n"
+"#apellidos_txt:hover,\n"
+"#telefono_txt:hover,\n"
+"#correo_txt:hover{\n"
+"color:white;\n"
 "}")
         self.frame_6.setFrameShape(QFrame.StyledPanel)
         self.frame_6.setFrameShadow(QFrame.Raised)
         self.gridLayout_9 = QGridLayout(self.frame_6)
+        self.gridLayout_9.setSpacing(0)
         self.gridLayout_9.setObjectName(u"gridLayout_9")
-        self.verticalSpacer_9 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.gridLayout_9.setContentsMargins(0, 50, 50, 100)
+        self.label_13 = QLabel(self.frame_6)
+        self.label_13.setObjectName(u"label_13")
+        self.label_13.setAlignment(Qt.AlignCenter)
 
-        self.gridLayout_9.addItem(self.verticalSpacer_9, 2, 1, 1, 1)
-
-        self.verticalSpacer_11 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.gridLayout_9.addItem(self.verticalSpacer_11, 6, 1, 1, 1)
-
-        self.verticalSpacer_6 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.gridLayout_9.addItem(self.verticalSpacer_6, 10, 1, 1, 1)
-
-        self.verticalSpacer_12 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.gridLayout_9.addItem(self.verticalSpacer_12, 8, 1, 1, 1)
+        self.gridLayout_9.addWidget(self.label_13, 0, 0, 1, 2)
 
         self.label_7 = QLabel(self.frame_6)
         self.label_7.setObjectName(u"label_7")
@@ -481,65 +501,75 @@ class Principal(QMainWindow, object):
         font5.setWeight(75)
         self.label_7.setFont(font5)
 
-        self.gridLayout_9.addWidget(self.label_7, 5, 0, 1, 1)
+        self.gridLayout_9.addWidget(self.label_7, 4, 0, 1, 1, Qt.AlignHCenter)
 
-        self.correo_txt = QLineEdit(self.frame_6)
-        self.correo_txt.setObjectName(u"correo_txt")
+        self.nombre_txt = QLineEdit(self.frame_6)
+        self.nombre_txt.setObjectName(u"nombre_txt")
+        self.nombre_txt.setMaximumSize(QSize(800, 16777215))
         font6 = QFont()
         font6.setPointSize(14)
-        self.correo_txt.setFont(font6)
+        self.nombre_txt.setFont(font6)
 
-        self.gridLayout_9.addWidget(self.correo_txt, 9, 1, 1, 1)
+        self.gridLayout_9.addWidget(self.nombre_txt, 2, 1, 1, 1)
+
+        self.verticalSpacer_12 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.gridLayout_9.addItem(self.verticalSpacer_12, 7, 1, 1, 1)
 
         self.label_8 = QLabel(self.frame_6)
         self.label_8.setObjectName(u"label_8")
         self.label_8.setFont(font5)
 
-        self.gridLayout_9.addWidget(self.label_8, 7, 0, 1, 1)
+        self.gridLayout_9.addWidget(self.label_8, 6, 0, 1, 1, Qt.AlignHCenter)
 
-        self.label_13 = QLabel(self.frame_6)
-        self.label_13.setObjectName(u"label_13")
-        self.label_13.setAlignment(Qt.AlignCenter)
+        self.verticalSpacer_11 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
-        self.gridLayout_9.addWidget(self.label_13, 1, 0, 1, 2)
-
-        self.label_9 = QLabel(self.frame_6)
-        self.label_9.setObjectName(u"label_9")
-        self.label_9.setFont(font5)
-
-        self.gridLayout_9.addWidget(self.label_9, 9, 0, 1, 1)
-
-        self.verticalSpacer_8 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.gridLayout_9.addItem(self.verticalSpacer_8, 0, 1, 1, 1)
-
-        self.nombre_txt = QLineEdit(self.frame_6)
-        self.nombre_txt.setObjectName(u"nombre_txt")
-        self.nombre_txt.setFont(font6)
-
-        self.gridLayout_9.addWidget(self.nombre_txt, 3, 1, 1, 1)
+        self.gridLayout_9.addItem(self.verticalSpacer_11, 5, 1, 1, 1)
 
         self.label_6 = QLabel(self.frame_6)
         self.label_6.setObjectName(u"label_6")
         self.label_6.setFont(font5)
 
-        self.gridLayout_9.addWidget(self.label_6, 3, 0, 1, 1)
-
-        self.apellidos_txt = QLineEdit(self.frame_6)
-        self.apellidos_txt.setObjectName(u"apellidos_txt")
-        self.apellidos_txt.setFont(font6)
-
-        self.gridLayout_9.addWidget(self.apellidos_txt, 5, 1, 1, 1)
-
-        self.verticalSpacer_10 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.gridLayout_9.addItem(self.verticalSpacer_10, 4, 1, 1, 1)
+        self.gridLayout_9.addWidget(self.label_6, 2, 0, 1, 1, Qt.AlignHCenter)
 
         self.telefono_txt = QLineEdit(self.frame_6)
         self.telefono_txt.setObjectName(u"telefono_txt")
+        self.telefono_txt.setMaximumSize(QSize(800, 16777215))
         self.telefono_txt.setFont(font6)
 
-        self.gridLayout_9.addWidget(self.telefono_txt, 7, 1, 1, 1)
+        self.gridLayout_9.addWidget(self.telefono_txt, 6, 1, 1, 1)
+
+        self.correo_txt = QLineEdit(self.frame_6)
+        self.correo_txt.setObjectName(u"correo_txt")
+        self.correo_txt.setMaximumSize(QSize(800, 16777215))
+        self.correo_txt.setFont(font6)
+
+        self.gridLayout_9.addWidget(self.correo_txt, 8, 1, 1, 1)
+
+        self.label_9 = QLabel(self.frame_6)
+        self.label_9.setObjectName(u"label_9")
+        self.label_9.setFont(font5)
+
+        self.gridLayout_9.addWidget(self.label_9, 8, 0, 1, 1, Qt.AlignHCenter)
+
+        self.verticalSpacer_10 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.gridLayout_9.addItem(self.verticalSpacer_10, 3, 1, 1, 1)
+
+        self.verticalSpacer_9 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.gridLayout_9.addItem(self.verticalSpacer_9, 1, 1, 1, 1)
+
+        self.apellidos_txt = QLineEdit(self.frame_6)
+        self.apellidos_txt.setObjectName(u"apellidos_txt")
+        self.apellidos_txt.setMaximumSize(QSize(800, 16777215))
+        self.apellidos_txt.setFont(font6)
+
+        self.gridLayout_9.addWidget(self.apellidos_txt, 4, 1, 1, 1)
+
+        self.verticalSpacer_6 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.gridLayout_9.addItem(self.verticalSpacer_6, 9, 1, 1, 1)
 
 
         self.verticalLayout_15.addWidget(self.frame_6)
@@ -571,6 +601,15 @@ class Principal(QMainWindow, object):
         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_8.addItem(self.horizontalSpacer)
+
+        self.guardar_admin_btn = QPushButton(self.frame_15)
+        self.guardar_admin_btn.setObjectName(u"guardar_admin_btn")
+        self.guardar_admin_btn.setMinimumSize(QSize(100, 40))
+        icon6 = QIcon()
+        icon6.addFile(u"./assets/icons/save-2.ico", QSize(), QIcon.Normal, QIcon.Off)
+        self.guardar_admin_btn.setIcon(icon6)
+
+        self.horizontalLayout_8.addWidget(self.guardar_admin_btn)
 
         self.modificar_perfil_btn = QPushButton(self.frame_15)
         self.modificar_perfil_btn.setObjectName(u"modificar_perfil_btn")
@@ -616,6 +655,7 @@ class Principal(QMainWindow, object):
         if (self.administradores_tabla.columnCount() < 4):
             self.administradores_tabla.setColumnCount(4)
         __qtablewidgetitem4 = QTableWidgetItem()
+        __qtablewidgetitem4.setBackground(QColor(0, 0, 0, 0));
         self.administradores_tabla.setHorizontalHeaderItem(0, __qtablewidgetitem4)
         __qtablewidgetitem5 = QTableWidgetItem()
         self.administradores_tabla.setHorizontalHeaderItem(1, __qtablewidgetitem5)
@@ -624,6 +664,9 @@ class Principal(QMainWindow, object):
         __qtablewidgetitem7 = QTableWidgetItem()
         self.administradores_tabla.setHorizontalHeaderItem(3, __qtablewidgetitem7)
         self.administradores_tabla.setObjectName(u"administradores_tabla")
+        self.administradores_tabla.setHorizontalScrollMode(QAbstractItemView.ScrollPerPixel)
+        self.administradores_tabla.horizontalHeader().setMinimumSectionSize(125)
+        self.administradores_tabla.horizontalHeader().setHighlightSections(False)
 
         self.verticalLayout_7.addWidget(self.administradores_tabla)
 
@@ -917,12 +960,13 @@ class Principal(QMainWindow, object):
         self.label_17.setText("")
         self.label_5.setText(QCoreApplication.translate("Principal", u"Ayuda", None))
         self.label_15.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p>- Obtener la MAC ADRESS de la computadora que va a ser registrada. </p><p><br/></p><p>- Para poder registrar una nueva computadora, se debe registrar primeramente en la secci\u00f3n de agregar </p><p>computadoras. </p><p><br/></p><p>-Instalar la segunda aplicaci\u00f3n en la computadora que se va a monitorear. </p><p><br/></p><p>-Asegurese que ambas aplicaciones cuenten con una conexi\u00f3n a internet, si no, el programa no podra ser utilizado </p><p>correctamente.</p></body></html>", None))
+        self.label_13.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p><span style=\" font-size:16pt; font-weight:600; color:#ffffff;\">PERFIL ADMINISTRADOR</span></p></body></html>", None))
         self.label_7.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p><span style=\" color:#ffffff;\">Apellidos</span></p></body></html>", None))
         self.label_8.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p><span style=\" color:#ffffff;\">Tel\u00e9fono</span></p></body></html>", None))
-        self.label_13.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p><span style=\" font-size:16pt; font-weight:600; color:#ffffff;\">PERFIL ADMINISTRADOR</span></p></body></html>", None))
-        self.label_9.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p><span style=\" color:#ffffff;\">Correo</span></p></body></html>", None))
         self.label_6.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p><span style=\" color:#ffffff;\">Nombre</span></p></body></html>", None))
+        self.label_9.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p><span style=\" color:#ffffff;\">Correo</span></p></body></html>", None))
         self.cerrar_sesion_btn_2.setText(QCoreApplication.translate("Principal", u"Cerrar Sesi\u00f3n", None))
+        self.guardar_admin_btn.setText("")
         self.modificar_perfil_btn.setText(QCoreApplication.translate("Principal", u"Modificar \n"
 "informaci\u00f3n", None))
         self.label_21.setText(QCoreApplication.translate("Principal", u"TABLA DE ADMINISTRADORES", None))
