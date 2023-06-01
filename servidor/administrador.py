@@ -8,7 +8,9 @@ FORMAT = "utf-8"
 HEADER = 20480
 IP = '165.22.15.159'
 PORT = 5050
+PORT_NOT = 5051
 ADDR = (IP, PORT)
+ADDR_NOT = (IP, PORT_NOT)
 
 #Configuración de variables para los hilos
 NUMERO_HILOS = 2
@@ -16,7 +18,11 @@ NUMERO_TAREAS = [1,2]
 queue = Queue()
 
 administrador = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-administrador.connect(ADDR) #Linea de bloqueo de código
+notificaciones_admin = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+notificaciones_admin.connect(ADDR_NOT) #Se conecta con el socket de notificaciones
+administrador.connect(ADDR) #Linea de bloqueo de código , se conecta con el ade administrador
+
 
 #Mensaje de primer conexión con el servidor (conexión temporal)
 respuesta_servidor = administrador.recv(HEADER).decode(FORMAT)
@@ -57,15 +63,15 @@ def operaciones():
             administrador.close()
             break
 
-def escuchar_conexiones(mensaje_notificacion):
-    while True:
-        try:
-            print('Este es el mensaje de las notificaciones')
-            print(mensaje_notificacion)
+def escuchar_conexiones():  
+    while True:  
+        try:        
+            notificacion = notificaciones_admin.recv(HEADER).decode(FORMAT)
+            print('Notificación:')
+            print(notificacion)
+                
         except:
-            print('Hubo un error al conectar con el servidor (escuchar conexiones) :(')
-            administrador.close()
-            break
+            print('Error al aceptar el canal de notificaciones')
 
 def crear_hilos():
     for _ in range(NUMERO_HILOS):
@@ -93,6 +99,6 @@ def definir_tareas():
         queue.task_done()
 
 if 'denegada' not in respuesta_servidor: 
-    operaciones()
-    # crear_hilos()
-    # crear_tareas()
+    #operaciones()
+    crear_hilos()
+    crear_tareas()
