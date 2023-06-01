@@ -9,15 +9,19 @@ from clases import persona
 FORMAT = 'utf-8'
 HEADER = 20480
 HOST = '165.22.15.159'
+
 PORT = 5050
+PORT_NOT = 5051
+
 ADDR = (HOST, PORT)
+ADDR_NOT = (HOST, PORT_NOT)
 
 #Objeto base de datos
 bd = conexion.BaseDatos()
 
 #Configuración de variables para los hilos
-NUMERO_HILOS = 2
-NUMERO_TAREAS = [1,2]
+NUMERO_HILOS = 3
+NUMERO_TAREAS = [1,2,3]
 queue = Queue()
 
 #Arreglo de equipos de cómputo de la base de datos
@@ -29,20 +33,30 @@ clientes_activos = []
 #Por el momento solo habra un administrador (Prueba)
 administrador_activo = []
 
+notificacion_conexion = []
+
 #1er Hilo: Realizar el levantado del canal (socket) y aceptar nuevas conexiones
 #obtener información de la base de datos
 def crear_socket():
     try:
         global servidor
+        global notificaciones_socket
+        notificaciones_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         servidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
     except socket.error as err:
         print(f'Error a la hora de crear el socket... /n {err}')
 
 def vincular_socket():
     try:
+        notificaciones_socket.bind(ADDR_NOT)
         servidor.bind(ADDR)
+
+        notificaciones_socket.listen()
         servidor.listen()
+
         print(f'HOST {HOST} corriendo en el puerto {PORT}')
+        print(f'NOTIFICACIONES HOST {HOST} corriendo en el puerto {PORT_NOT}')
     except socket.error as err:
         print(f'Error al enlazar el socket... /n {err}')
         print('Intentando denuevo...')
@@ -73,7 +87,7 @@ def aceptar_conexiones():
             print('Error al aceptar la conexión :(')
 
 def guardar_conexiones(conn, addr, hostname):
-    mensaje = ''
+    mensaje = 'mensaje vacio'
     #Verificar si el usuario o administrador esta registrado en la base de datos
     resultado = bd.obtener_equipo_por_nombre(hostname)
     if not resultado:
@@ -94,7 +108,8 @@ def guardar_conexiones(conn, addr, hostname):
             if not administrador_activo:
                 administrador = persona.PersonaConectada(conn, addr, hostname, 'x')
                 administrador_activo.append(administrador)
-                #Posibilidad de crear hilo
+                #Posibilidad crear otro socket alv
+                #Accept connection
             else:
                 print('Conexión denegada, administrador ya conectado'.encode())
                 mensaje = f'Conexión denegada al administrador {hostname}'
@@ -102,11 +117,9 @@ def guardar_conexiones(conn, addr, hostname):
                 conn.close()
     
     #Solo notificar cuando se conecte un usuario
-    # if administrador_activo:
-    #     print('Ya se conecto un administrador')
-    #     if hostname != administrador_activo[0].get_nombre_host():
-    #         print('Enviar notificación')
-    #         notificar_admin_conexiones(mensaje)
+    if administrador_activo:
+        if hostname != administrador_activo[0].get_nombre_host():
+            notificar_admin_conexiones(mensaje)
 
 #2do Hilo: Encargado de administrar y manejar las funcionalidades de los usuarios ya existentes
 #desde la computadora del administrador
@@ -121,7 +134,7 @@ def panel_administrador():
                 conn_admin = administrador_activo[0].get_conexion()
                 addr_admin = administrador_activo[0].get_direccion()
                 nombre_host = administrador_activo[0].get_nombre_host()
-                conn_admin.send(f'Conexión exitosa :) \n Bienvenido administrador {nombre_host} \n Su dirección IP es {addr_admin}'.encode())
+                conn_admin.send(f'Conexión exitosa :) \nBienvenido administrador {nombre_host} \nSu dirección IP es {addr_admin}'.encode())
                 print('Conexión exitosa :)')
                 print('A sus ordenes administrador...')
                 bandera = False
@@ -201,7 +214,7 @@ def listar_equipos():
     
     cadena_equipos = cadena_equipos_activos + cadena_equipos_inactivos
     return cadena_equipos
-    
+
 def conectar_con_equipo(operacion):
     #Obtener la variable de conexión del administrador
     admin_conn = administrador_activo[0].get_conexion()
@@ -249,6 +262,30 @@ def manejar_operaciones(cliente_seleccionado):
             print('Error al enviar el comando')
             break
 
+#3er Hilo: Encargado de administrar y escuchar cuando un administrador se conecte al canal de notificaciones
+#para poder enviar mensajería a través de él
+def aceptar_canal_notificaciones():
+    while True:
+        try:
+            conn, addr = notificaciones_socket.accept() #Línea de bloque de código
+            notificaciones_socket.setblocking(1)
+
+            notificacion_conexion.append(conn)
+            notificacion_conexion.append(addr)
+            print('Conexión con socket de notificaciones')
+            break
+        except:         
+            print('Error al aceptar la conexión con el socket de notificaciones')
+   
+def notificar_admin_conexiones(mensaje):
+    try:
+        if notificacion_conexion:
+            noti_conn = notificacion_conexion[0]
+            noti_conn.send(mensaje.encode())
+    except:
+        print('No se envio el mensaje')
+
+#Creación de hilos y asignación de tareas
 def crear_hilos(): 
     for _ in range(NUMERO_HILOS):
         thread = threading.Thread(target=tarea)
@@ -265,31 +302,24 @@ def crear_tareas():
     #Iniciar la cola de tareas
     queue.join()
 
-def notificar_admin_conexiones(mensaje):
-    try:
-        admin_conn = administrador_activo[0].get_conexion()
-        mensaje = 'NOTIFICACION|' + mensaje
-        admin_conn.send(mensaje.encode())
-
-        #Enviar a la función de notificar admin en específico
-        
-    except:
-        print('No se envio el mensaje')
-        
-        
 #Asignar las tareas que estan en la cola
 #1.-El primer hilo encenderá el canal del socket y manejará las conexiones que se vayan realizando
 #2.-El segundo hilo manejará las manejará los comandos del administrador y clientes ya conectados
+#3.-El tercer hilo manejará la aceptación de el canal de notificacion
 def tarea():
     while True:
         tarea = queue.get()
         if tarea == 1:
+            #Crear socket y vincular socket son los dos canales
             crear_socket()
-            vincular_socket()
+            vincular_socket()   
             aceptar_conexiones()
 
         if tarea == 2:
             panel_administrador()
+
+        if tarea == 3:
+            aceptar_canal_notificaciones()
 
         queue.task_done()
 
