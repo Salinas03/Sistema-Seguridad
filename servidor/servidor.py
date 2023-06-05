@@ -1,5 +1,6 @@
 import socket
 import threading
+import json
 from queue import Queue
 from base_datos import conexion
 from clases import persona
@@ -29,6 +30,7 @@ equipos_computo = bd.obtener_equipos_computo()
 
 #Arreglo de conexiones de clientes realizadas en tiempo real
 clientes_activos = []
+clientes_activos_mostrar = []
 
 #Por el momento solo habra un administrador (Prueba)
 administrador_activo = []
@@ -60,7 +62,9 @@ def vincular_socket():
     except socket.error as err:
         print(f'Error al enlazar el socket... /n {err}')
         print('Intentando denuevo...')
-        vincular_socket()
+        notificaciones_socket.close()
+        servidor.close()
+        # vincular_socket()
 
 def aceptar_conexiones():
     #Cerrar todas las conexiones al iniciar el servidor
@@ -77,19 +81,24 @@ def aceptar_conexiones():
 
             #Conexión temporal establecida para obtener información del cliente que se conecto
             conn.send('Conexión temporal establecida...'.encode())
+
+            #Se reciben los dos parámetros obligatorios del administrador o cliente para poder
+            #verificar si se puede hacer la conexión total con el servidor
             nombre_host = conn.recv(HEADER).decode(FORMAT)
+            numero_serie = conn.recv(HEADER).decode(FORMAT)
             print(f'Dispositivo conectado temporalmente: {nombre_host}')
+
             #Hacer validación si el cliente que se conecto esta en la base de datos o no
-            #Si esta en l abase de datos se determina si es administrador o cliente
-            guardar_conexiones(conn,addr, nombre_host)
+            #Si esta en la base de datos se determina si es administrador o cliente
+            guardar_conexiones(conn,addr, nombre_host, numero_serie)
 
         except:
             print('Error al aceptar la conexión :(')
 
-def guardar_conexiones(conn, addr, hostname):
+def guardar_conexiones(conn, addr, hostname, numero_serie):
     mensaje = 'mensaje vacio'
     #Verificar si el usuario o administrador esta registrado en la base de datos
-    resultado = bd.obtener_equipo_por_nombre(hostname)
+    resultado = bd.obtener_equipo_por_nombre_numero_serie(hostname, numero_serie)
     if not resultado:
         mensaje = f'Conexión denegada a {hostname}'
         conn.send('Conexión denegada >:/'.encode())
@@ -97,18 +106,17 @@ def guardar_conexiones(conn, addr, hostname):
     else:
         #Verificar si el dispositvo que se esta conectando es un administrador o un usuario
         #dependiendo de la tabla SQL
-        resultado = bd.obtener_equipo_admin_por_nombre(hostname)
+        resultado = bd.obtener_equipo_admin_por_nombre_numero_serie(hostname, numero_serie)
         if not resultado:
-            cliente = persona.PersonaConectada(conn, addr, hostname, 'x')
+            cliente = persona.PersonaConectada(conn, addr, hostname, numero_serie)
             clientes_activos.append(cliente)
             mensaje = f'El cliente {hostname} se ha conectado'
             print('Conexión con cliente :)')
             conn.send('Conexión con servidor exitosa :)'.encode())
         else:
             if not administrador_activo:
-                administrador = persona.PersonaConectada(conn, addr, hostname, 'x')
+                administrador = persona.PersonaConectada(conn, addr, hostname, numero_serie)
                 administrador_activo.append(administrador)
-                #Posibilidad crear otro socket alv
                 #Accept connection
             else:
                 print('Conexión denegada, administrador ya conectado'.encode())
@@ -119,7 +127,7 @@ def guardar_conexiones(conn, addr, hostname):
     #Solo notificar cuando se conecte un usuario
     if administrador_activo:
         if hostname != administrador_activo[0].get_nombre_host():
-            notificar_admin_conexiones(mensaje)
+            notificar_admin_conexiones(f'{mensaje} \n IP: {addr} \n Número de serie: {numero_serie}')
 
 #2do Hilo: Encargado de administrar y manejar las funcionalidades de los usuarios ya existentes
 #desde la computadora del administrador
@@ -183,6 +191,8 @@ def listar_equipos():
 
     #Copiar los equipos de cómputo a la variable de equipos inactivos
     equipos_inactivos = equipos_computo[:]
+    if clientes_activos_mostrar:
+        del clientes_activos_mostrar[:]
 
     #Crar cadena de texto de los equipos activos e inactivos
     for i,cliente_activo in enumerate(clientes_activos):
@@ -196,23 +206,31 @@ def listar_equipos():
             #El arreglo se recorre al borrar estos elementos (podría estar mal)
             del clientes_activos[i]
             continue
-        
-        ip_cliente = cliente_activo.get_direccion()[0]
-        nombre_host = cliente_activo.get_nombre_host()
-        cadena_equipos_activos += str(i) +'  Nombre-host:  ' + str(nombre_host) + '  IP:  ' + str(ip_cliente) + '\n'
 
-        #Obtener los equipos de cómputo inactivos
+        ip_cliente = cliente_activo.get_direccion()[0]
+
+        #Obtener los equipos de cómputo inactivos y activos
         for x, equipo_computo in enumerate(equipos_computo):
-            #Aqui se tiene que cambiar
+
             if cliente_activo.get_nombre_host() == equipo_computo[1]:
                 equipos_inactivos[x] = None
+                equipo = list(equipo_computo)
+                equipo.append(ip_cliente)
+                clientes_activos_mostrar.append(equipo)
     
     #Crear cadena de los equipos de cómputo inactivos
     for z, equipo_inactivo in enumerate(equipos_inactivos):
         if equipo_inactivo is not None:
-            cadena_equipos_inactivos += str(z) + '  Nombre-Host:  ' + str(equipo_inactivo[1]) + '  MAC:  ' + str(equipo_inactivo[2]) + '\n'
+            cadena_equipos_inactivos += str(z) + '  ID:  ' + str(equipo_inactivo[0]) + '  NOMBRE EQUIPO:  ' + str(equipo_inactivo[1]) +  '  NÚMERO SERIE: ' + str(equipo_inactivo[2]) + '  ID PROPIETARIO:   ' + str(equipo_inactivo[3]) +  '\n'
+
+    #Crear cadena de los equipos de cómputo activos
+    for j, cliente_activo_mostrar in enumerate(clientes_activos_mostrar):
+        cadena_equipos_activos += str(j) + '  ID:  ' + str(cliente_activo_mostrar[0]) + '  NOMBRE EQUIPO:  ' + str(cliente_activo_mostrar[1]) +  '  NÚMERO SERIE: ' + str(cliente_activo_mostrar[2]) + '  ID PROPIETARIO:   ' + str(cliente_activo_mostrar[3]) + '  IP:   ' + str(cliente_activo_mostrar[5]) +'\n'
     
     cadena_equipos = cadena_equipos_activos + cadena_equipos_inactivos
+    equipos = [equipos_inactivos, clientes_activos_mostrar]
+    equipos = json.dumps(equipos)
+    # return equipos
     return cadena_equipos
 
 def conectar_con_equipo(operacion):
@@ -256,6 +274,8 @@ def manejar_operaciones(cliente_seleccionado):
 
             #Enviar la insturcción al cliente
             cliente_seleccionado.get_conexion().send(operacion.encode())
+
+            #Obtener respuesta del cliente
         
         except:
             
@@ -273,15 +293,23 @@ def aceptar_canal_notificaciones():
             notificacion_conexion.append(conn)
             notificacion_conexion.append(addr)
             print('Conexión con socket de notificaciones')
-            break
+            # break
         except:         
             print('Error al aceptar la conexión con el socket de notificaciones')
+            notificaciones_socket.close()
+            break
    
 def notificar_admin_conexiones(mensaje):
     try:
         if notificacion_conexion:
+            #Obtener variable de conexión
             noti_conn = notificacion_conexion[0]
+
+            #Listar los equipos
+            equipos = listar_equipos()
+
             noti_conn.send(mensaje.encode())
+            noti_conn.send(equipos.encode())
     except:
         print('No se envio el mensaje')
 
