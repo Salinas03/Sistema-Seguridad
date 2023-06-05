@@ -10,7 +10,7 @@ from controllers.OpcionesComputadora import OpcionesCompusWindow
 if __name__ == "__main__":
     app = QApplication()
 
-    window = OpcionesCompusWindow()
+    window = PrincipalWindow()
     window.show()
 
-    app.exec_() 
+    app.exec_()

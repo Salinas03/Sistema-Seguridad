@@ -127,15 +127,15 @@ class AgregarComputadoras(QMainWindow, object):
         self.frame_4.setFrameShadow(QFrame.Raised)
         self.horizontalLayout = QHBoxLayout(self.frame_4)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.pushButton_2 = QPushButton(self.frame_4)
-        self.pushButton_2.setObjectName(u"pushButton_2")
+        self.cancelar_registro_btn = QPushButton(self.frame_4)
+        self.cancelar_registro_btn.setObjectName(u"cancelar_registro_btn")
 
-        self.horizontalLayout.addWidget(self.pushButton_2)
+        self.horizontalLayout.addWidget(self.cancelar_registro_btn)
 
-        self.pushButton = QPushButton(self.frame_4)
-        self.pushButton.setObjectName(u"pushButton")
+        self.guardar_compu_btn = QPushButton(self.frame_4)
+        self.guardar_compu_btn.setObjectName(u"guardar_compu_btn")
 
-        self.horizontalLayout.addWidget(self.pushButton)
+        self.horizontalLayout.addWidget(self.guardar_compu_btn)
 
 
         self.verticalLayout.addWidget(self.frame_4, 0, Qt.AlignRight|Qt.AlignBottom)
@@ -161,7 +161,7 @@ class AgregarComputadoras(QMainWindow, object):
         self.dia_txt.setPlaceholderText(QCoreApplication.translate("AgregarComputadoras", u"dd-mm-yyyy", None))
         self.label_13.setText(QCoreApplication.translate("AgregarComputadoras", u"MAC ADDRESS", None))
         self.ip_txt.setPlaceholderText(QCoreApplication.translate("AgregarComputadoras", u"0.0.0.0", None))
-        self.pushButton_2.setText(QCoreApplication.translate("AgregarComputadoras", u"Cancelar", None))
-        self.pushButton.setText(QCoreApplication.translate("AgregarComputadoras", u"Aceptar", None))
+        self.cancelar_registro_btn.setText(QCoreApplication.translate("AgregarComputadoras", u"Cancelar", None))
+        self.guardar_compu_btn.setText(QCoreApplication.translate("AgregarComputadoras", u"Aceptar", None))
     # retranslateUi
 

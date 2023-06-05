@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>OpcionesComputadora</class>
+ <widget class="QMainWindow" name="OpcionesComputadora">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -42,12 +42,13 @@
     <property name="bottomMargin">
      <number>0</number>
     </property>
-    <item alignment="Qt::AlignLeft">
+    <item>
      <widget class="QFrame" name="frame">
       <property name="styleSheet">
        <string notr="true">QFrame#frame{
 	background-color: rgb(255, 255, 255);
-}</string>
+}
+</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -128,9 +129,12 @@
        </sizepolicy>
       </property>
       <property name="styleSheet">
-       <string notr="true">QWidget#botones_widget,
+       <string notr="true">QFrame#frame_2{
+background-color: transparent;
+}
+QWidget#botones_widget,
 #comando_widget{
-background: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #CADBE7);
+background: qlineargradient(x1:0, y1:0, x2:1 y2:1, stop:0 #251F9B, stop:1 #01A6E1);
 }
 
 QWidget#botones_widget,
@@ -177,7 +181,23 @@ padding:5px;
        <item>
         <widget class="QWidget" name="comando_widget" native="true">
          <property name="styleSheet">
-          <string notr="true"/>
+          <string notr="true">QPushButton#ingresar_comandos_btn{
+border:none;
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #434645, stop:1 #434645);
+color:white;
+padding-top:10px;
+padding-left:20px;
+padding-right:20px;
+padding-bottom:10px;
+}
+
+QPushButton#ingresar_comandos_btn:hover{
+	background-color: #A1A1A2;
+}
+
+QPushButton#ingresar_comandos_btn:pressed{
+	font: 75 10pt &quot;MS Shell Dlg 2&quot;;
+}</string>
          </property>
          <layout class="QGridLayout" name="gridLayout">
           <property name="leftMargin">
@@ -218,6 +238,15 @@ padding:5px;
           </item>
           <item row="2" column="1">
            <widget class="QPushButton" name="ingresar_comandos_btn">
+            <property name="font">
+             <font>
+              <family>MS Shell Dlg 2</family>
+              <pointsize>8</pointsize>
+              <weight>9</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+             </font>
+            </property>
             <property name="text">
              <string>Ingresar</string>
             </property>
@@ -254,8 +283,23 @@ padding:5px;
           <string notr="true"/>
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
+          <property name="leftMargin">
+           <number>45</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <property name="spacing">
+           <number>0</number>
+          </property>
           <item row="1" column="1" colspan="2">
-           <widget class="QComboBox" name="comboBox">
+           <widget class="QComboBox" name="comandos_cbx">
             <item>
              <property name="text">
               <string>-</string>
@@ -301,25 +345,6 @@ Manualmente</string>
             </property>
            </widget>
           </item>
-          <item row="5" column="1">
-           <widget class="QPushButton" name="pushButton_5">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>100</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>4</string>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="3">
            <spacer name="horizontalSpacer_6">
             <property name="orientation">
@@ -333,63 +358,6 @@ Manualmente</string>
             </property>
            </spacer>
           </item>
-          <item row="3" column="1">
-           <widget class="QPushButton" name="pushButton_3">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>100</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>2</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QPushButton" name="pushButton_4">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>100</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>3</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="1">
-           <widget class="QPushButton" name="pushButton_6">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>100</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>5</string>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="0">
            <spacer name="horizontalSpacer_4">
             <property name="orientation">
@@ -402,25 +370,6 @@ Manualmente</string>
              </size>
             </property>
            </spacer>
-          </item>
-          <item row="2" column="1">
-           <widget class="QPushButton" name="pushButton_2">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>100</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>1</string>
-            </property>
-           </widget>
           </item>
           <item row="0" column="0" colspan="4">
            <widget class="QLabel" name="label_3">
@@ -442,6 +391,101 @@ Manualmente</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1" colspan="2">
+           <widget class="QPushButton" name="pushButton_2">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>1</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1" colspan="2">
+           <widget class="QPushButton" name="pushButton_3">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>2</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1" colspan="2">
+           <widget class="QPushButton" name="pushButton_4">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>3</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1" colspan="2">
+           <widget class="QPushButton" name="pushButton_5">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>4</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1" colspan="2">
+           <widget class="QPushButton" name="pushButton_6">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>5</string>
             </property>
            </widget>
           </item>

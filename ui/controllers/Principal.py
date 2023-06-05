@@ -1,12 +1,15 @@
 
 # IMPORTACION DE LA LIBRERIAS A OCUPAR
-from PySide2.QtWidgets import QWidget, QMessageBox, QTableWidgetItem, QHeaderView, QTableWidget
+from PySide2.QtWidgets import QWidget, QMessageBox, QTableWidgetItem, QAbstractItemView
 from PySide2 import QtCore
 from PySide2.QtCore import Qt
 from views.Principal import Principal
 from controllers.AgregarAdmin import AgregarAdminWindow
 from controllers.AgregarCompus import AgregarCompusWindow
+from controllers.OpcionesComputadora import OpcionesCompusWindow
 from modelos.admin_model import Admin
+from PySide2.QtCore import QRegExp
+from PySide2.QtGui import QRegExpValidator
 
 
 class PrincipalWindow(Principal,Admin,QWidget):
@@ -23,24 +26,19 @@ class PrincipalWindow(Principal,Admin,QWidget):
         self.user_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_4))
         self.admins_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_5))
 
+
         # PONER LAS MEDIDAS DEL ANCHO DE LAS TABLAS
-        self.tabla_computadoras_activas.setColumnWidth(0,560)
-        self.tabla_computadoras_activas.setColumnWidth(1,560)
-        self.tabla_computadoras_activas.setColumnWidth(2,560)
+        header_computadoras_activas = self.tabla_computadoras_activas.horizontalHeader()
+        header_computadoras_activas.setSectionResizeMode(header_computadoras_activas.Stretch)
 
-        self.tabla_computadoras_desactivas.setColumnWidth(0,560)
-        self.tabla_computadoras_desactivas.setColumnWidth(1,560)
-        self.tabla_computadoras_desactivas.setColumnWidth(2,560)
+        header_computadoras_desactivas = self.tabla_computadoras_desactivas.horizontalHeader()
+        header_computadoras_desactivas.setSectionResizeMode(header_computadoras_desactivas.Stretch)
 
-        self.computadoras_registradas_table.setColumnWidth(0,350)
-        self.computadoras_registradas_table.setColumnWidth(1,350)
-        self.computadoras_registradas_table.setColumnWidth(2,350)
-        self.computadoras_registradas_table.setColumnWidth(3,350)
+        header_computadoras_registradas_table = self.computadoras_registradas_table.horizontalHeader()
+        header_computadoras_registradas_table.setSectionResizeMode(header_computadoras_registradas_table.Stretch)
 
-        self.administradores_tabla.setColumnWidth(0,402)
-        self.administradores_tabla.setColumnWidth(1,402)
-        self.administradores_tabla.setColumnWidth(2,402)
-        self.administradores_tabla.setColumnWidth(3,402)
+        header_administradores_tabla = self.administradores_tabla.horizontalHeader()
+        header_administradores_tabla.setSectionResizeMode(header_administradores_tabla.Stretch)
     
         # OCULTAR LOS BOTONES DE ACTIVACION DE Y DESACTIVACION DE COMPUTADORAS
         self.activar_btn.hide()
@@ -57,12 +55,17 @@ class PrincipalWindow(Principal,Admin,QWidget):
         self.agregar_admin_btn.clicked.connect(self.abrir_agregar_admin)
         # LLAMADO PARA AGREGAR UNA NUEVA COMPUTADORA
         self.agregar_compu_btn.clicked.connect(self.abrir_agregar_compus)
+        
+        self.otros_comandos_btn.clicked.connect(self.abrir_opciones_computadora)
+
         self.ventana_abierta = False # IDENTIFICACION DE QUE LA VENTANA ESTA CERRADA
 
         self.modificar_perfil_btn.clicked.connect(self.habilitar_datos_admin)
 
         self.configuracion_tabla_admins()
         self.datos_admins(self.seleccionar_admins())
+
+        self.guardar_admin_btn.clicked.connect(self.guardar_datos_perfil)
 
 
     # FUNCION PARA MANDAR LLAMAR LA VENTANA DE AGREGAR ADMIN
@@ -86,6 +89,15 @@ class PrincipalWindow(Principal,Admin,QWidget):
             window.setWindowModality(QtCore.Qt.ApplicationModal) # BLOQUEO DE LA VENTANA PRINCIPAL
             window.destroyed.connect(self.ventana_cerrada)
             window.show()
+    
+    # FUNCION PARA MANDAR LLAMAR LA VENTANA DE OPCIONES DE COMPUTADORA
+    def abrir_opciones_computadora(self):
+        if not self.ventana_abierta:
+            self.ventana_abierta:True
+            window = OpcionesCompusWindow(self)
+            window.setWindowModality(QtCore.Qt.ApplicationModal)
+            window.destroyed.connect(self.ventana_cerrada)
+            window.show()
             
     # FUNCION PARA DEFINIR QUE LA VENTANA CAMBIE SU ESTADO A FALSE        
     def ventana_cerrada(self):
@@ -103,11 +115,22 @@ class PrincipalWindow(Principal,Admin,QWidget):
         self.administradores_tabla.setColumnCount(len(column_headers))
         self.administradores_tabla.setHorizontalHeaderLabels(column_headers)
 
+        self.administradores_tabla.setSelectionBehavior(QAbstractItemView.SelectRows)
+
     def datos_admins(self,data):
         self.administradores_tabla.setRowCount(len(data))
         for (index_row, row) in enumerate(data):
             for (index_cell, cell) in enumerate(row):
                 self.administradores_tabla.setItem(index_row, index_cell, QTableWidgetItem(str(cell)))
+    
+    def guardar_datos_perfil(self):
+        self.nombre_txt.setEnabled(False)
+        self.apellidos_txt.setEnabled(False)
+        self.telefono_txt.setEnabled(False)
+        self.correo_txt.setEnabled(False)
+        QMessageBox.warning(self, "Guardado", "Los datos se guardaron correctamente.")
+  
+    
 
 
 

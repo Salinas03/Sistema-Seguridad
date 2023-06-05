@@ -242,14 +242,14 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <widget class="QPushButton" name="pushButton_2">
+           <widget class="QPushButton" name="cancelar_registro_btn">
             <property name="text">
              <string>Cancelar</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="guardar_compu_btn">
             <property name="text">
              <string>Aceptar</string>
             </property>

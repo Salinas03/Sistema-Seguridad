@@ -860,7 +860,21 @@ class Principal(QMainWindow, object):
         self.frame_5 = QFrame(self.page_2)
         self.frame_5.setObjectName(u"frame_5")
         self.frame_5.setMaximumSize(QSize(100, 16777215))
-        self.frame_5.setStyleSheet(u"")
+        self.frame_5.setStyleSheet(u"QPushButton#otros_comandos_btn{\n"
+"padding:5px;\n"
+"border-radius:10px;\n"
+"border:1px solid white;\n"
+"color:white;\n"
+"background: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
+"}\n"
+"\n"
+"QPushButton#otros_comandos_btn:hover{\n"
+"background: qlineargradient(x1:0, y1:0, x2:1 y2:1, stop:0 #251F9B, stop:1 #01A6E1);\n"
+"}\n"
+"\n"
+"QPushButton#otros_comandos_btn:pressed{\n"
+"	font: 75 9pt \"MS Shell Dlg 2\";\n"
+"}")
         self.frame_5.setFrameShape(QFrame.StyledPanel)
         self.frame_5.setFrameShadow(QFrame.Raised)
         self.verticalLayout_5 = QVBoxLayout(self.frame_5)
@@ -883,7 +897,16 @@ class Principal(QMainWindow, object):
 
         self.verticalLayout_5.addWidget(self.activar_compus_btn)
 
-        self.verticalSpacer_2 = QSpacerItem(20, 174, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.verticalSpacer_8 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout_5.addItem(self.verticalSpacer_8)
+
+        self.otros_comandos_btn = QPushButton(self.frame_5)
+        self.otros_comandos_btn.setObjectName(u"otros_comandos_btn")
+
+        self.verticalLayout_5.addWidget(self.otros_comandos_btn)
+
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout_5.addItem(self.verticalSpacer_2)
 
@@ -1004,6 +1027,8 @@ class Principal(QMainWindow, object):
         self.activar_btn.setText(QCoreApplication.translate("Principal", u"Activar", None))
         self.activar_compus_btn.setText(QCoreApplication.translate("Principal", u"Activar \n"
 "Computadoras", None))
+        self.otros_comandos_btn.setText(QCoreApplication.translate("Principal", u"Otros \n"
+"comandos", None))
         self.desactivar_btn.setText(QCoreApplication.translate("Principal", u"Desactivar", None))
         self.desactivar_compus_btn.setText(QCoreApplication.translate("Principal", u"Desactivar \n"
 "Computadoras", None))
