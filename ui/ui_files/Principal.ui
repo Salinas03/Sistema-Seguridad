@@ -1610,7 +1610,21 @@ QPushButton#desactivar_btn:hover,
                     </size>
                    </property>
                    <property name="styleSheet">
-                    <string notr="true"/>
+                    <string notr="true">QPushButton#otros_comandos_btn{
+padding:5px;
+border-radius:10px;
+border:1px solid white;
+color:white;
+background: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);
+}
+
+QPushButton#otros_comandos_btn:hover{
+background: qlineargradient(x1:0, y1:0, x2:1 y2:1, stop:0 #251F9B, stop:1 #01A6E1);
+}
+
+QPushButton#otros_comandos_btn:pressed{
+	font: 75 9pt &quot;MS Shell Dlg 2&quot;;
+}</string>
                    </property>
                    <property name="frameShape">
                     <enum>QFrame::StyledPanel</enum>
@@ -1675,6 +1689,27 @@ Computadoras</string>
                      </widget>
                     </item>
                     <item>
+                     <spacer name="verticalSpacer_8">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="otros_comandos_btn">
+                      <property name="text">
+                       <string>Otros 
+comandos</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
                      <spacer name="verticalSpacer_2">
                       <property name="orientation">
                        <enum>Qt::Vertical</enum>
@@ -1682,7 +1717,7 @@ Computadoras</string>
                       <property name="sizeHint" stdset="0">
                        <size>
                         <width>20</width>
-                        <height>174</height>
+                        <height>40</height>
                        </size>
                       </property>
                      </spacer>
