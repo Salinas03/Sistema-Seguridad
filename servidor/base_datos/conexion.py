@@ -48,6 +48,16 @@ class BaseDatos:
             except Error as err:
                 print(f'Error al intentar la conexión {err}')
 
+    def obtener_equipo_por_nombre_numero_serie(self, nombre, numero_serie):
+        if self.conexion.is_connected():
+            try:
+                cursor = self.conexion.cursor()
+                cursor.execute(f'SELECT * FROM equipos WHERE nombre_equipo="{nombre}" AND numero_serie_equipo="{numero_serie}"')
+                resultado = cursor.fetchall()
+                return resultado
+            except Error as err:
+                print(f'Error al intentar la conexión {err}')
+
     def obtener_equipo_admin_por_nombre(self, nombre):
         if self.conexion.is_connected():
             try:
@@ -58,6 +68,15 @@ class BaseDatos:
             except Error as err:
                 print(f'Error al intentar la conexión {err}')
 
+    def obtener_equipo_admin_por_nombre_numero_serie(self, nombre, numero_serie):
+        if self.conexion.is_connected():
+            try:
+                cursor = self.conexion.cursor()
+                cursor.execute(f'SELECT * FROM equipos WHERE nombre_equipo="{nombre}" AND numero_serie_equipo="{numero_serie}" AND rol={1}')
+                resultado = cursor.fetchall()
+                return resultado
+            except Error as err:
+                print(f'Error al intentar la conexión {err}')
 
 
 

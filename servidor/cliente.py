@@ -21,15 +21,27 @@ cliente.send(socket.gethostname().encode())
 #Aqui tanto se puede conectar como no se puede conectar
 respuesta_servidor = cliente.recv(HEADER).decode(FORMAT)
 print(respuesta_servidor)
-print('Esperando instrucciones...')
 
-while True:
-    respuesta_servidor = cliente.recv(HEADER).decode(FORMAT)
-    if respuesta_servidor == ' ':
-        cliente.send(' '.encode())
-    else:
+if 'denegada' in respuesta_servidor:
+    cliente.close()
+
+else:
+    print('Esperando instrucciones...')
+
+    while True:
         try:
-            os.system(f'{os.getcwd()}/comandos/{respuesta_servidor}.bat')
+            respuesta_servidor = cliente.recv(HEADER).decode(FORMAT)
+            if respuesta_servidor == ' ':
+                cliente.send(' '.encode())
 
+            else:
+                try:
+                    print(f'Instrucción a aplicar {respuesta_servidor}')
+                    os.system(f'{os.getcwd()}/comandos/{respuesta_servidor}.bat')
+
+                except:
+                    print('Instruccion no encontrada')
         except:
-            print('Instruccion no encontrada')
+            print('Ocurrió un error')
+            cliente.close()
+            break
