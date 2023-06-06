@@ -2,8 +2,8 @@ import socket
 import threading
 import json
 from queue import Queue
-from base_datos import conexion
-from clases import persona
+from base_datos.conexion import BaseDatos
+from clases.persona import PersonaConectada
 
 # 165.22.15.159
 #Variables globales para la configuración del socket
@@ -18,7 +18,7 @@ ADDR = (HOST, PORT)
 ADDR_NOT = (HOST, PORT_NOT)
 
 #Objeto base de datos
-bd = conexion.BaseDatos()
+bd = BaseDatos()
 
 #Configuración de variables para los hilos
 NUMERO_HILOS = 3
@@ -42,8 +42,9 @@ notificacion_conexion = []
 def crear_socket():
     try:
         global servidor
-        global notificaciones_socket
-        notificaciones_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        global notificaciones
+
+        notificaciones = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         servidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     except socket.error as err:
@@ -51,10 +52,10 @@ def crear_socket():
 
 def vincular_socket():
     try:
-        notificaciones_socket.bind(ADDR_NOT)
+        notificaciones.bind(ADDR_NOT)
         servidor.bind(ADDR)
 
-        notificaciones_socket.listen()
+        notificaciones.listen()
         servidor.listen()
 
         print(f'HOST {HOST} corriendo en el puerto {PORT}')
@@ -62,7 +63,7 @@ def vincular_socket():
     except socket.error as err:
         print(f'Error al enlazar el socket... /n {err}')
         print('Intentando denuevo...')
-        notificaciones_socket.close()
+        notificaciones.close()
         servidor.close()
         # vincular_socket()
 
@@ -80,7 +81,7 @@ def aceptar_conexiones():
             servidor.setblocking(1) #Evita el tiempo de espera de las conexiones, (el servidor no se cierra)
 
             #Conexión temporal establecida para obtener información del cliente que se conecto
-            conn.send('Conexión temporal establecida...'.encode())
+            conn.send('{"success": True, "msg": "Conexión temporal establecida..."}'.encode())
 
             #Se reciben los dos parámetros obligatorios del administrador o cliente para poder
             #verificar si se puede hacer la conexión total con el servidor
@@ -93,6 +94,7 @@ def aceptar_conexiones():
             guardar_conexiones(conn,addr, nombre_host, numero_serie)
 
         except:
+            conn.send('{"success": False, "msg": "Error al aceptar la conexión :("}')
             print('Error al aceptar la conexión :(')
 
 def guardar_conexiones(conn, addr, hostname, numero_serie):
@@ -101,27 +103,31 @@ def guardar_conexiones(conn, addr, hostname, numero_serie):
     resultado = bd.obtener_equipo_por_nombre_numero_serie(hostname, numero_serie)
     if not resultado:
         mensaje = f'Conexión denegada a {hostname}'
-        conn.send('Conexión denegada >:/'.encode())
+        conn.send('{"success": False, "msg": "Conexión denegada >:/"}'.encode())
         conn.close()
     else:
         #Verificar si el dispositvo que se esta conectando es un administrador o un usuario
         #dependiendo de la tabla SQL
         resultado = bd.obtener_equipo_admin_por_nombre_numero_serie(hostname, numero_serie)
         if not resultado:
-            cliente = persona.PersonaConectada(conn, addr, hostname, numero_serie)
+            cliente = PersonaConectada(conn, addr, hostname, numero_serie)
             clientes_activos.append(cliente)
             mensaje = f'El cliente {hostname} se ha conectado'
             print('Conexión con cliente :)')
-            conn.send('Conexión con servidor exitosa :)'.encode())
+            conn.send('{"success": True, "msg": "Conexión con servidor exitosa :)"}'.encode())
+
+            #Crear nuevo hilo para escuchar los usuarios
+            # usuario_thread = threading.Thread(target=escuchar_desconexiones, args=(conn, addr))
+            # usuario_thread.start()
         else:
             if not administrador_activo:
-                administrador = persona.PersonaConectada(conn, addr, hostname, numero_serie)
+                administrador = PersonaConectada(conn, addr, hostname, numero_serie)
                 administrador_activo.append(administrador)
-                #Accept connection
+                #Se empieza a ejecutar el panel del administrador
             else:
                 print('Conexión denegada, administrador ya conectado'.encode())
                 mensaje = f'Conexión denegada al administrador {hostname}'
-                conn.send('Conexión denegada, administrador ya conectado'.encode())
+                conn.send('{"success": False, "msg": "Conexión denegada, administrador ya conectado"}'.encode())
                 conn.close()
     
     #Solo notificar cuando se conecte un usuario
@@ -142,7 +148,11 @@ def panel_administrador():
                 conn_admin = administrador_activo[0].get_conexion()
                 addr_admin = administrador_activo[0].get_direccion()
                 nombre_host = administrador_activo[0].get_nombre_host()
-                conn_admin.send(f'Conexión exitosa :) \nBienvenido administrador {nombre_host} \nSu dirección IP es {addr_admin}'.encode())
+
+                msg = f"Conexión exitosa :) \nBienvenido administrador {nombre_host} \nSu dirección IP es {addr_admin}"
+
+                conn_admin.send('{"success": True, "msg":'+msg+'}'.encode())
+                
                 print('Conexión exitosa :)')
                 print('A sus ordenes administrador...')
                 bandera = False
@@ -287,8 +297,8 @@ def manejar_operaciones(cliente_seleccionado):
 def aceptar_canal_notificaciones():
     while True:
         try:
-            conn, addr = notificaciones_socket.accept() #Línea de bloque de código
-            notificaciones_socket.setblocking(1)
+            conn, addr = notificaciones.accept() #Línea de bloque de código
+            notificaciones.setblocking(1)
 
             notificacion_conexion.append(conn)
             notificacion_conexion.append(addr)
@@ -296,7 +306,7 @@ def aceptar_canal_notificaciones():
             # break
         except:         
             print('Error al aceptar la conexión con el socket de notificaciones')
-            notificaciones_socket.close()
+            notificaciones.close()
             break
    
 def notificar_admin_conexiones(mensaje):
