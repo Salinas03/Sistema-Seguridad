@@ -1,7 +1,6 @@
 import socket
 import threading
 import json
-from queue import Queue
 from base_datos.conexion import BaseDatos
 from clases.persona import PersonaConectada
 
@@ -10,20 +9,14 @@ from clases.persona import PersonaConectada
 FORMAT = 'utf-8'
 HEADER = 20480
 HOST = socket.gethostbyname(socket.gethostname())
-
+# HOST = '165.22.15.159'
 PORT = 5050
-PORT_NOT = 5051
-
+PORT_NOTI = 5051
 ADDR = (HOST, PORT)
-ADDR_NOT = (HOST, PORT_NOT)
+ADDR_NOTI = (HOST, PORT_NOTI)
 
 #Objeto base de datos
 bd = BaseDatos()
-
-#Configuración de variables para los hilos
-NUMERO_HILOS = 2
-NUMERO_TAREAS = [1,2]
-queue = Queue()
 
 #Arreglo de equipos de cómputo de la base de datos
 equipos_computo = bd.obtener_equipos_computo()
@@ -33,38 +26,39 @@ clientes_activos = []
 clientes_activos_mostrar = []
 
 #Por el momento solo habra un administrador (Prueba)
-administrador_activo = []
+administradores_activos = []
+administradores_activos_notificacion = []
 
-notificacion_conexion = []
-
-#1er Hilo: Realizar el levantado del canal (socket) y aceptar nuevas conexiones
-#obtener información de la base de datos
+#CREAR CANALES DEL SERVIDOR Y GUARDAR LAS CONEXIONES REALIZADAS
 def crear_socket():
     try:
         global servidor
-        global notificaciones
+        global notificacion
 
-        notificaciones = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         servidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        notificacion = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     except socket.error as err:
         print(f'Error a la hora de crear el socket... /n {err}')
 
 def vincular_socket():
     try:
-        notificaciones.bind(ADDR_NOT)
         servidor.bind(ADDR)
-
-        notificaciones.listen()
+        notificacion.bind(ADDR_NOTI)
         servidor.listen()
+        notificacion.listen()
 
         print(f'HOST {HOST} corriendo en el puerto {PORT}')
-        print(f'NOTIFICACIONES HOST {HOST} corriendo en el puerto {PORT_NOT}')
+        print(f'NOTIFICACION {HOST} corriendo en el puerto {PORT_NOTI}')
+
+        notificacion_thread = threading.Thread(target=aceptar_conexiones_notificacion)
+        notificacion_thread.start()
+
     except socket.error as err:
         print(f'Error al enlazar el socket... /n {err}')
         print('Intentando denuevo...')
-        notificaciones.close()
         servidor.close()
+        notificacion.close()
         # vincular_socket()
 
 def aceptar_conexiones():
@@ -72,8 +66,12 @@ def aceptar_conexiones():
     for cliente in clientes_activos:
         cliente.get_conexion().close()
 
+    for administrador in administradores_activos:
+        administrador.get_conexion().close()
+
     #Borrar los datos de las conexiónes y direcciones
     del clientes_activos[:]
+    del administradores_activos[:]
 
     while True:
         try:
@@ -98,66 +96,50 @@ def aceptar_conexiones():
             print('Error al aceptar la conexión :(')
 
 def guardar_conexiones(conn, addr, hostname, numero_serie):
-    mensaje = 'mensaje vacio'
     #Verificar si el usuario o administrador esta registrado en la base de datos
     resultado = bd.obtener_equipo_por_nombre_numero_serie(hostname, numero_serie)
     if not resultado:
-        mensaje = f'Conexión denegada a {hostname}'
         conn.send('{"success": False, "msg": "Conexión denegada >:/"}'.encode())
         conn.close()
     else:
-        #Verificar si el dispositvo que se esta conectando es un administrador o un usuario
-        #dependiendo de la tabla SQL
+        #Verificar si el dispositvo que se esta conectando es un administrador o un usuario dependiendo de la tabla SQL
+
         resultado = bd.obtener_equipo_admin_por_nombre_numero_serie(hostname, numero_serie)
         if not resultado:
             cliente = PersonaConectada(conn, addr, hostname, numero_serie)
             clientes_activos.append(cliente)
-            mensaje = f'El cliente {hostname} se ha conectado'
             print('Conexión con cliente :)')
             conn.send('{"success": True, "msg": "Conexión con servidor exitosa :)"}'.encode())
 
-            #Crear nuevo hilo para escuchar los usuarios
-            # usuario_thread = threading.Thread(target=escuchar_desconexiones, args=(conn, addr))
-            # usuario_thread.start()
+            usuario_thread = threading.Thread(target=panel_usuario, args=(conn, cliente))
+            usuario_thread.start()
+
+            enviar_mensajes(f'Usuario {hostname} con la IP {addr} se ha conectado')
+
         else:
             administrador = PersonaConectada(conn, addr, hostname, numero_serie)
-            administrador_activo.append(administrador)
-                
-            administrador_thread = threading.Thread(target=panel_administrador, args=(conn, addr,administrador))
-            administrador_thread.start()
-            # if not administrador_activo:
-            #     administrador = PersonaConectada(conn, addr, hostname, numero_serie)
-            #     administrador_activo.append(administrador)
-                
-            #     administrador_thread = threading.Thread(target=panel_administrador, args=(conn, addr, administrador))
-            #     administrador_thread.start()
-            # else:
-            #     print('Conexión denegada, administrador ya conectado'.encode())
-            #     mensaje = f'Conexión denegada al administrador {hostname}'
-            #     conn.send('{"success": False, "msg": "Conexión denegada, administrador ya conectado"}'.encode())
-            #     conn.close()
-    
-    #Solo notificar cuando se conecte un usuario
-    # if administrador_activo:
-    #     if hostname != administrador_activo[0].get_nombre_host():
-    #         notificar_admin_conexiones(f'{mensaje} \n IP: {addr} \n Número de serie: {numero_serie}')
+            administradores_activos.append(administrador)
 
-#2do Hilo: Encargado de administrar y manejar las funcionalidades de los usuarios ya existentes
-#desde la computadora del administrador
-def panel_administrador(conn, addr, administrador):
+            administrador_thread = threading.Thread(target=panel_administrador, args=(conn,administrador))
+            administrador_thread.start()
+
+            enviar_mensajes(f'Administrador {hostname} con la IP {addr} se ha conectado')
+
+#MANEJAR LAS OPERACIONES DEL ADMINISTRADOR, LISTAR, SELECCIONAR Y SALIR
+def panel_administrador(conn, administrador):
 
     nombre_host = administrador.get_nombre_host()
 
     #Estar checando si se ha conectado un administrador
-    msg = f"Conexión exitosa :) \nBienvenido administrador {nombre_host} \nSu dirección IP es {addr}"
-    conn.send('{"success": True, "msg": "PUTA MIERDA"}'.encode(FORMAT))
+    msg = f"Bienvenido administrador {nombre_host} :)"
+    respuesta = json.dumps({"success": True, "msg": msg})
+    conn.send(respuesta.encode(FORMAT))
                 
     print('Conexión exitosa :)')
     print('A sus ordenes administrador...')
 
     while True:
         try:
-            #Enviar el prompt del administrador (esto va a cambiar)
             conn.send('administrador/servidor>'.encode())
 
             #Esperar instrucción de la computadora administradora
@@ -179,22 +161,22 @@ def panel_administrador(conn, addr, administrador):
                     else:
                         conn.send('Selección no válida :/'.encode())
 
-
             elif operacion == 'salir':
                 print('Administrador desconectado...')
                 conn.send('Bye bye...'.encode())
+                administrador_desconexion = borrar_administradores_activos(conn)
+                enviar_mensajes(f'Administrador {administrador_desconexion.get_nombre_host()} desconectado')
                 conn.close()
-                index = administrador_activo.index(conn)
-
-                del administrador_activo[index]
+                break
             else:
                 conn.send('Comando no reconocido'.encode())
 
         except:
                 print('Administrador desconectado espontáneamente...')
+                administrador_desconexion = borrar_administradores_activos(conn)
+                enviar_mensajes(f'Administrador {administrador_desconexion.get_nombre_host()} desconectado')
                 conn.close()
-                index = administrador_activo.index(conn)
-                del administrador_activo[index]
+                break
             
 def listar_equipos():
     #Se tienen que listar los equipos que estan activos 
@@ -289,72 +271,81 @@ def manejar_operaciones(cliente_seleccionado, conn_admin):
             print('Error al enviar el comando')
             break
 
-#3er Hilo: Encargado de administrar y escuchar cuando un administrador se conecte al canal de notificaciones
-#para poder enviar mensajería a través de él
-def aceptar_canal_notificaciones():
+#MANEJAR OPERACIONES CON LOS USUARIOS
+def panel_usuario(conn, usuario):
     while True:
         try:
-            # print('fakiu')
-            conn, addr = notificaciones.accept() #Línea de bloque de código
-            notificaciones.setblocking(1)
+            print(f'Entró {usuario.get_nombre_host()} al panel de usuario')
+            respuesta_usuario = conn.recv(HEADER).decode(FORMAT)
+            if respuesta_usuario == 'SALIR':
+                enviar_mensajes(f'Usuario {usuario.get_nombre_host()} se ha desconectado')
+                conn.close()
+                break
 
-            notificacion_conexion.append(conn)
-            notificacion_conexion.append(addr)
-            print('Conexión con socket de notificaciones')
-            # break
         except:         
-            print('Error al aceptar la conexión con el socket de notificaciones')
-            notificaciones.close()
-            # break
+            enviar_mensajes(f'Usuario {usuario.get_nombre_host()} se ha desconectado')
+            conn.close()
+            break
    
-def notificar_admin_conexiones(mensaje):
-    try:
-        if notificacion_conexion:
-            #Obtener variable de conexión
-            noti_conn = notificacion_conexion[0]
+#MANEJAR EL SOCKET DE NOTIFICACIONES
+def aceptar_conexiones_notificacion():
+    #Cerrar todas las conexiones al iniciar el servidor
+    for administrador_notificacion in administradores_activos_notificacion:
+        administrador_notificacion[0].close()
 
-            #Listar los equipos
-            equipos = listar_equipos()
+    del administradores_activos_notificacion[:]
 
-            noti_conn.send(mensaje.encode())
-            noti_conn.send(equipos.encode())
-    except:
-        print('No se envio el mensaje')
-
-#Creación de hilos y asignación de tareas
-def crear_hilos(): 
-    for _ in range(NUMERO_HILOS):
-        thread = threading.Thread(target=tarea)
-        #Cuando el hilo se cierre se tiene que cerrar en todo el programa
-        thread.daemon = True
-        #Iniciar hilo
-        thread.start()
-
-def crear_tareas():
-    #Crear la cola de tareas
-    for tarea in NUMERO_TAREAS:
-        queue.put(tarea)
-
-    #Iniciar la cola de tareas
-    queue.join()
-
-#Asignar las tareas que estan en la cola
-#1.-El primer hilo encenderá el canal del socket y manejará las conexiones que se vayan realizando
-#2.-El segundo hilo manejará la aceptación de el canal de notificacion
-def tarea():
     while True:
-        tarea = queue.get()
-        if tarea == 1:
-            #Crear socket y vincular socket son los dos canales
-            crear_socket()
-            vincular_socket()   
-            aceptar_conexiones()
+        try:
+            conn, addr = notificacion.accept()
+            notificacion.setblocking(1)
 
-        if tarea == 2:
-            pass
-            # aceptar_canal_notificaciones()
+            administradores_activos_notificacion.append((conn, addr))
 
-        queue.task_done()
+            print(f'Conexión con socket de notificaciones {addr[0]}')
 
-crear_hilos()
-crear_tareas()
+        except:
+            print('Hubo un error al conectar con el canal de notificación')
+            notificacion.close()
+
+def panel_notificacion(conn):
+    while True:
+        try:
+            print('Entrando al panel')
+            respuesta_usuario = conn.recv(HEADER).decode(FORMAT)
+            if respuesta_usuario == 'SALIR':
+                print('Desconexión con el panel de notificación')
+                conn.close()
+                break
+        except:
+            print('Hubo un problema ')
+            conn.close()
+            break
+
+#FUNCIÓN PARA ENVIAR MENSAJERIA
+def enviar_mensajes(mensaje):
+    try:
+        if administradores_activos:
+            for administrador_notificacion in administradores_activos_notificacion: 
+                administrador_notificacion[0].send(f'{mensaje}'.encode())
+    except:
+        print('No se enviaron algunos de los mensajes')
+
+#FUNCIONES PARA BORRAR
+def buscar_conexiones_arreglo(arreglo, conexion):
+    for elemento in arreglo:
+        if elemento.get_conexion() == conexion:
+            return elemento
+            
+    return None
+
+def borrar_administradores_activos(conn):
+    #Borrar administrador del arreglo
+    administrador_desconexion = buscar_conexiones_arreglo(administradores_activos, conn)
+    index = administradores_activos.index(administrador_desconexion)
+    del administradores_activos[index]
+    return administrador_desconexion
+
+crear_socket()
+vincular_socket()
+aceptar_conexiones()
