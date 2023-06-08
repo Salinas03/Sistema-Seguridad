@@ -1,0 +1,6 @@
+.env
+tasks.txt
+/servidor/test.py
+/servidor/testing/
+/servidor/base_datos/__pycache__
+/servidor/clases/__pycache__
