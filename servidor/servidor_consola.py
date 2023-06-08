@@ -8,8 +8,8 @@ from clases.persona import PersonaConectada
 #Variables globales para la configuración del socket
 FORMAT = 'utf-8'
 HEADER = 20480
-HOST = socket.gethostbyname(socket.gethostname())
-# HOST = '165.22.15.159'
+# HOST = socket.gethostbyname(socket.gethostname())
+HOST = '165.22.15.159'
 PORT = 5050
 PORT_NOTI = 5051
 ADDR = (HOST, PORT)
@@ -301,24 +301,30 @@ def aceptar_conexiones_notificacion():
             notificacion.setblocking(1)
 
             administradores_activos_notificacion.append((conn, addr))
+            
+            panel_notificacon_thread = threading.Thread(target=panel_notificacion, args=(conn,addr))
+            panel_notificacon_thread.start()
 
-            print(f'Conexión con socket de notificaciones {addr[0]}')
+            print(f'Conexión con socket de notificaciones: {addr[0]}')
 
         except:
             print('Hubo un error al conectar con el canal de notificación')
-            notificacion.close()
-
-def panel_notificacion(conn):
+            conn.send('{"success": False, "msg": "Error al aceptar la conexión en notificación :("}')
+          
+def panel_notificacion(conn, addr):
     while True:
         try:
             print('Entrando al panel')
             respuesta_usuario = conn.recv(HEADER).decode(FORMAT)
             if respuesta_usuario == 'SALIR':
                 print('Desconexión con el panel de notificación')
+                ip = borrar_administradores_notificacion(addr)
+                print(f'Administrador con la IP {ip} desconcectado de notificación')
                 conn.close()
                 break
         except:
-            print('Hubo un problema ')
+            ip = borrar_administradores_notificacion(addr)
+            print(f'Desconexión del usuario con la IP {ip}')
             conn.close()
             break
 
@@ -331,20 +337,21 @@ def enviar_mensajes(mensaje):
     except:
         print('No se enviaron algunos de los mensajes')
 
-#FUNCIONES PARA BORRAR
-def buscar_conexiones_arreglo(arreglo, conexion):
-    for elemento in arreglo:
-        if elemento.get_conexion() == conexion:
-            return elemento
-            
-    return None
-
 def borrar_administradores_activos(conn):
     #Borrar administrador del arreglo
-    administrador_desconexion = buscar_conexiones_arreglo(administradores_activos, conn)
-    index = administradores_activos.index(administrador_desconexion)
-    del administradores_activos[index]
-    return administrador_desconexion
+    for administrador in administradores_activos:
+        if administrador.get_conexion() == conn:
+            index = administradores_activos.index(administrador)
+            del administradores_activos[index]
+            return administrador
+
+def borrar_administradores_notificacion(addr):
+    #Borrar arreglo notificación
+    for notificacion in administradores_activos_notificacion:
+        if notificacion[1] == addr:
+            index = administradores_activos_notificacion.index(notificacion)
+            del administradores_activos_notificacion[index]
+            return notificacion[1] #Regresar IP
 
 crear_socket()
 vincular_socket()
