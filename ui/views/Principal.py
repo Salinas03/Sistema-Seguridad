@@ -317,8 +317,8 @@ class Principal(QMainWindow, object):
         self.verticalLayout_13.addWidget(self.label_20)
 
         self.computadoras_registradas_table = QTableWidget(self.frame_11)
-        if (self.computadoras_registradas_table.columnCount() < 4):
-            self.computadoras_registradas_table.setColumnCount(4)
+        if (self.computadoras_registradas_table.columnCount() < 5):
+            self.computadoras_registradas_table.setColumnCount(5)
         __qtablewidgetitem = QTableWidgetItem()
         self.computadoras_registradas_table.setHorizontalHeaderItem(0, __qtablewidgetitem)
         __qtablewidgetitem1 = QTableWidgetItem()
@@ -327,6 +327,8 @@ class Principal(QMainWindow, object):
         self.computadoras_registradas_table.setHorizontalHeaderItem(2, __qtablewidgetitem2)
         __qtablewidgetitem3 = QTableWidgetItem()
         self.computadoras_registradas_table.setHorizontalHeaderItem(3, __qtablewidgetitem3)
+        __qtablewidgetitem4 = QTableWidgetItem()
+        self.computadoras_registradas_table.setHorizontalHeaderItem(4, __qtablewidgetitem4)
         self.computadoras_registradas_table.setObjectName(u"computadoras_registradas_table")
 
         self.verticalLayout_13.addWidget(self.computadoras_registradas_table)
@@ -652,17 +654,21 @@ class Principal(QMainWindow, object):
         self.verticalLayout_7.addWidget(self.label_21)
 
         self.administradores_tabla = QTableWidget(self.frame_13)
-        if (self.administradores_tabla.columnCount() < 4):
-            self.administradores_tabla.setColumnCount(4)
-        __qtablewidgetitem4 = QTableWidgetItem()
-        __qtablewidgetitem4.setBackground(QColor(0, 0, 0, 0));
-        self.administradores_tabla.setHorizontalHeaderItem(0, __qtablewidgetitem4)
+        if (self.administradores_tabla.columnCount() < 6):
+            self.administradores_tabla.setColumnCount(6)
         __qtablewidgetitem5 = QTableWidgetItem()
-        self.administradores_tabla.setHorizontalHeaderItem(1, __qtablewidgetitem5)
+        self.administradores_tabla.setHorizontalHeaderItem(0, __qtablewidgetitem5)
         __qtablewidgetitem6 = QTableWidgetItem()
-        self.administradores_tabla.setHorizontalHeaderItem(2, __qtablewidgetitem6)
+        __qtablewidgetitem6.setBackground(QColor(0, 0, 0, 0));
+        self.administradores_tabla.setHorizontalHeaderItem(1, __qtablewidgetitem6)
         __qtablewidgetitem7 = QTableWidgetItem()
-        self.administradores_tabla.setHorizontalHeaderItem(3, __qtablewidgetitem7)
+        self.administradores_tabla.setHorizontalHeaderItem(2, __qtablewidgetitem7)
+        __qtablewidgetitem8 = QTableWidgetItem()
+        self.administradores_tabla.setHorizontalHeaderItem(3, __qtablewidgetitem8)
+        __qtablewidgetitem9 = QTableWidgetItem()
+        self.administradores_tabla.setHorizontalHeaderItem(4, __qtablewidgetitem9)
+        __qtablewidgetitem10 = QTableWidgetItem()
+        self.administradores_tabla.setHorizontalHeaderItem(5, __qtablewidgetitem10)
         self.administradores_tabla.setObjectName(u"administradores_tabla")
         self.administradores_tabla.setHorizontalScrollMode(QAbstractItemView.ScrollPerPixel)
         self.administradores_tabla.horizontalHeader().setMinimumSectionSize(125)
@@ -800,14 +806,20 @@ class Principal(QMainWindow, object):
         self.gridLayout_2 = QGridLayout(self.widget_2)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.tabla_computadoras_activas = QTableWidget(self.widget_2)
-        if (self.tabla_computadoras_activas.columnCount() < 3):
-            self.tabla_computadoras_activas.setColumnCount(3)
-        __qtablewidgetitem8 = QTableWidgetItem()
-        self.tabla_computadoras_activas.setHorizontalHeaderItem(0, __qtablewidgetitem8)
-        __qtablewidgetitem9 = QTableWidgetItem()
-        self.tabla_computadoras_activas.setHorizontalHeaderItem(1, __qtablewidgetitem9)
-        __qtablewidgetitem10 = QTableWidgetItem()
-        self.tabla_computadoras_activas.setHorizontalHeaderItem(2, __qtablewidgetitem10)
+        if (self.tabla_computadoras_activas.columnCount() < 6):
+            self.tabla_computadoras_activas.setColumnCount(6)
+        __qtablewidgetitem11 = QTableWidgetItem()
+        self.tabla_computadoras_activas.setHorizontalHeaderItem(0, __qtablewidgetitem11)
+        __qtablewidgetitem12 = QTableWidgetItem()
+        self.tabla_computadoras_activas.setHorizontalHeaderItem(1, __qtablewidgetitem12)
+        __qtablewidgetitem13 = QTableWidgetItem()
+        self.tabla_computadoras_activas.setHorizontalHeaderItem(2, __qtablewidgetitem13)
+        __qtablewidgetitem14 = QTableWidgetItem()
+        self.tabla_computadoras_activas.setHorizontalHeaderItem(3, __qtablewidgetitem14)
+        __qtablewidgetitem15 = QTableWidgetItem()
+        self.tabla_computadoras_activas.setHorizontalHeaderItem(4, __qtablewidgetitem15)
+        __qtablewidgetitem16 = QTableWidgetItem()
+        self.tabla_computadoras_activas.setHorizontalHeaderItem(5, __qtablewidgetitem16)
         self.tabla_computadoras_activas.setObjectName(u"tabla_computadoras_activas")
 
         self.gridLayout_2.addWidget(self.tabla_computadoras_activas, 1, 0, 1, 1)
@@ -839,14 +851,18 @@ class Principal(QMainWindow, object):
         self.gridLayout_3 = QGridLayout(self.widget_4)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.tabla_computadoras_desactivas = QTableWidget(self.widget_4)
-        if (self.tabla_computadoras_desactivas.columnCount() < 3):
-            self.tabla_computadoras_desactivas.setColumnCount(3)
-        __qtablewidgetitem11 = QTableWidgetItem()
-        self.tabla_computadoras_desactivas.setHorizontalHeaderItem(0, __qtablewidgetitem11)
-        __qtablewidgetitem12 = QTableWidgetItem()
-        self.tabla_computadoras_desactivas.setHorizontalHeaderItem(1, __qtablewidgetitem12)
-        __qtablewidgetitem13 = QTableWidgetItem()
-        self.tabla_computadoras_desactivas.setHorizontalHeaderItem(2, __qtablewidgetitem13)
+        if (self.tabla_computadoras_desactivas.columnCount() < 5):
+            self.tabla_computadoras_desactivas.setColumnCount(5)
+        __qtablewidgetitem17 = QTableWidgetItem()
+        self.tabla_computadoras_desactivas.setHorizontalHeaderItem(0, __qtablewidgetitem17)
+        __qtablewidgetitem18 = QTableWidgetItem()
+        self.tabla_computadoras_desactivas.setHorizontalHeaderItem(1, __qtablewidgetitem18)
+        __qtablewidgetitem19 = QTableWidgetItem()
+        self.tabla_computadoras_desactivas.setHorizontalHeaderItem(2, __qtablewidgetitem19)
+        __qtablewidgetitem20 = QTableWidgetItem()
+        self.tabla_computadoras_desactivas.setHorizontalHeaderItem(3, __qtablewidgetitem20)
+        __qtablewidgetitem21 = QTableWidgetItem()
+        self.tabla_computadoras_desactivas.setHorizontalHeaderItem(4, __qtablewidgetitem21)
         self.tabla_computadoras_desactivas.setObjectName(u"tabla_computadoras_desactivas")
 
         self.gridLayout_3.addWidget(self.tabla_computadoras_desactivas, 0, 0, 1, 1)
@@ -964,13 +980,15 @@ class Principal(QMainWindow, object):
         self.user_btn.setText("")
         self.label_20.setText(QCoreApplication.translate("Principal", u"Computadoras registradas", None))
         ___qtablewidgetitem = self.computadoras_registradas_table.horizontalHeaderItem(0)
-        ___qtablewidgetitem.setText(QCoreApplication.translate("Principal", u"Persona a cargo", None));
+        ___qtablewidgetitem.setText(QCoreApplication.translate("Principal", u"ID", None));
         ___qtablewidgetitem1 = self.computadoras_registradas_table.horizontalHeaderItem(1)
-        ___qtablewidgetitem1.setText(QCoreApplication.translate("Principal", u"Computadora", None));
+        ___qtablewidgetitem1.setText(QCoreApplication.translate("Principal", u"Nombre de quipo", None));
         ___qtablewidgetitem2 = self.computadoras_registradas_table.horizontalHeaderItem(2)
-        ___qtablewidgetitem2.setText(QCoreApplication.translate("Principal", u"Fecha de entrega", None));
+        ___qtablewidgetitem2.setText(QCoreApplication.translate("Principal", u"N\u00famero de serie", None));
         ___qtablewidgetitem3 = self.computadoras_registradas_table.horizontalHeaderItem(3)
-        ___qtablewidgetitem3.setText(QCoreApplication.translate("Principal", u"MAC ADREES", None));
+        ___qtablewidgetitem3.setText(QCoreApplication.translate("Principal", u"Propietario del equipo", None));
+        ___qtablewidgetitem4 = self.computadoras_registradas_table.horizontalHeaderItem(4)
+        ___qtablewidgetitem4.setText(QCoreApplication.translate("Principal", u"Rol", None));
         self.label_14.setText("")
         self.agregar_compu_btn.setText(QCoreApplication.translate("Principal", u"Agregar \n"
 "Computadora", None))
@@ -993,14 +1011,18 @@ class Principal(QMainWindow, object):
         self.modificar_perfil_btn.setText(QCoreApplication.translate("Principal", u"Modificar \n"
 "informaci\u00f3n", None))
         self.label_21.setText(QCoreApplication.translate("Principal", u"TABLA DE ADMINISTRADORES", None))
-        ___qtablewidgetitem4 = self.administradores_tabla.horizontalHeaderItem(0)
-        ___qtablewidgetitem4.setText(QCoreApplication.translate("Principal", u"Nombre", None));
-        ___qtablewidgetitem5 = self.administradores_tabla.horizontalHeaderItem(1)
-        ___qtablewidgetitem5.setText(QCoreApplication.translate("Principal", u"Apellidos", None));
-        ___qtablewidgetitem6 = self.administradores_tabla.horizontalHeaderItem(2)
-        ___qtablewidgetitem6.setText(QCoreApplication.translate("Principal", u"Telefono", None));
-        ___qtablewidgetitem7 = self.administradores_tabla.horizontalHeaderItem(3)
-        ___qtablewidgetitem7.setText(QCoreApplication.translate("Principal", u"Correo", None));
+        ___qtablewidgetitem5 = self.administradores_tabla.horizontalHeaderItem(0)
+        ___qtablewidgetitem5.setText(QCoreApplication.translate("Principal", u"id", None));
+        ___qtablewidgetitem6 = self.administradores_tabla.horizontalHeaderItem(1)
+        ___qtablewidgetitem6.setText(QCoreApplication.translate("Principal", u"Nombre", None));
+        ___qtablewidgetitem7 = self.administradores_tabla.horizontalHeaderItem(2)
+        ___qtablewidgetitem7.setText(QCoreApplication.translate("Principal", u"Apellidos", None));
+        ___qtablewidgetitem8 = self.administradores_tabla.horizontalHeaderItem(3)
+        ___qtablewidgetitem8.setText(QCoreApplication.translate("Principal", u"Telefono", None));
+        ___qtablewidgetitem9 = self.administradores_tabla.horizontalHeaderItem(4)
+        ___qtablewidgetitem9.setText(QCoreApplication.translate("Principal", u"Correo", None));
+        ___qtablewidgetitem10 = self.administradores_tabla.horizontalHeaderItem(5)
+        ___qtablewidgetitem10.setText(QCoreApplication.translate("Principal", u"Rol", None));
         self.label_10.setText("")
         self.agregar_admin_btn.setText(QCoreApplication.translate("Principal", u"Agregar nuevo \n"
 "Administrador", None))
@@ -1011,19 +1033,29 @@ class Principal(QMainWindow, object):
         self.modificar_admin_btn.setText(QCoreApplication.translate("Principal", u"Modificar \n"
 "Administrador", None))
         self.label_2.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p><span style=\" font-size:12pt;\">Computadoras </span><span style=\" font-size:12pt; color:#00aa00;\">activas</span></p></body></html>", None))
-        ___qtablewidgetitem8 = self.tabla_computadoras_activas.horizontalHeaderItem(0)
-        ___qtablewidgetitem8.setText(QCoreApplication.translate("Principal", u"Desktop", None));
-        ___qtablewidgetitem9 = self.tabla_computadoras_activas.horizontalHeaderItem(1)
-        ___qtablewidgetitem9.setText(QCoreApplication.translate("Principal", u"Nombre", None));
-        ___qtablewidgetitem10 = self.tabla_computadoras_activas.horizontalHeaderItem(2)
-        ___qtablewidgetitem10.setText(QCoreApplication.translate("Principal", u"IP", None));
+        ___qtablewidgetitem11 = self.tabla_computadoras_activas.horizontalHeaderItem(0)
+        ___qtablewidgetitem11.setText(QCoreApplication.translate("Principal", u"ID", None));
+        ___qtablewidgetitem12 = self.tabla_computadoras_activas.horizontalHeaderItem(1)
+        ___qtablewidgetitem12.setText(QCoreApplication.translate("Principal", u"Nombre del equipo", None));
+        ___qtablewidgetitem13 = self.tabla_computadoras_activas.horizontalHeaderItem(2)
+        ___qtablewidgetitem13.setText(QCoreApplication.translate("Principal", u"N\u00famero de serie", None));
+        ___qtablewidgetitem14 = self.tabla_computadoras_activas.horizontalHeaderItem(3)
+        ___qtablewidgetitem14.setText(QCoreApplication.translate("Principal", u"Propietario de equipo", None));
+        ___qtablewidgetitem15 = self.tabla_computadoras_activas.horizontalHeaderItem(4)
+        ___qtablewidgetitem15.setText(QCoreApplication.translate("Principal", u"Rol", None));
+        ___qtablewidgetitem16 = self.tabla_computadoras_activas.horizontalHeaderItem(5)
+        ___qtablewidgetitem16.setText(QCoreApplication.translate("Principal", u"IP", None));
         self.label_3.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p><span style=\" font-size:12pt;\">Computadoras </span><span style=\" font-size:12pt; color:#ff0206;\">desactivadas</span></p></body></html>", None))
-        ___qtablewidgetitem11 = self.tabla_computadoras_desactivas.horizontalHeaderItem(0)
-        ___qtablewidgetitem11.setText(QCoreApplication.translate("Principal", u"Desktop", None));
-        ___qtablewidgetitem12 = self.tabla_computadoras_desactivas.horizontalHeaderItem(1)
-        ___qtablewidgetitem12.setText(QCoreApplication.translate("Principal", u"Nombre", None));
-        ___qtablewidgetitem13 = self.tabla_computadoras_desactivas.horizontalHeaderItem(2)
-        ___qtablewidgetitem13.setText(QCoreApplication.translate("Principal", u"IP", None));
+        ___qtablewidgetitem17 = self.tabla_computadoras_desactivas.horizontalHeaderItem(0)
+        ___qtablewidgetitem17.setText(QCoreApplication.translate("Principal", u"ID", None));
+        ___qtablewidgetitem18 = self.tabla_computadoras_desactivas.horizontalHeaderItem(1)
+        ___qtablewidgetitem18.setText(QCoreApplication.translate("Principal", u"Nombre del equipo", None));
+        ___qtablewidgetitem19 = self.tabla_computadoras_desactivas.horizontalHeaderItem(2)
+        ___qtablewidgetitem19.setText(QCoreApplication.translate("Principal", u"N\u00famero de serie", None));
+        ___qtablewidgetitem20 = self.tabla_computadoras_desactivas.horizontalHeaderItem(3)
+        ___qtablewidgetitem20.setText(QCoreApplication.translate("Principal", u"Rol", None));
+        ___qtablewidgetitem21 = self.tabla_computadoras_desactivas.horizontalHeaderItem(4)
+        ___qtablewidgetitem21.setText(QCoreApplication.translate("Principal", u"Rol", None));
         self.activar_btn.setText(QCoreApplication.translate("Principal", u"Activar", None))
         self.activar_compus_btn.setText(QCoreApplication.translate("Principal", u"Activar \n"
 "Computadoras", None))
