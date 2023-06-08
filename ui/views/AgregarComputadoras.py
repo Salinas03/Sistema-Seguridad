@@ -71,13 +71,13 @@ class AgregarComputadoras(QMainWindow, object):
 
         self.gridLayout_3.addWidget(self.label_10, 0, 0, 1, 1)
 
-        self.persona_cargo_txt = QLineEdit(self.frame_2)
-        self.persona_cargo_txt.setObjectName(u"persona_cargo_txt")
+        self.nombre_equipo_txt = QLineEdit(self.frame_2)
+        self.nombre_equipo_txt.setObjectName(u"nombre_equipo_txt")
         font2 = QFont()
         font2.setPointSize(12)
-        self.persona_cargo_txt.setFont(font2)
+        self.nombre_equipo_txt.setFont(font2)
 
-        self.gridLayout_3.addWidget(self.persona_cargo_txt, 0, 1, 1, 1)
+        self.gridLayout_3.addWidget(self.nombre_equipo_txt, 0, 1, 1, 1)
 
         self.label_11 = QLabel(self.frame_2)
         self.label_11.setObjectName(u"label_11")
@@ -86,11 +86,11 @@ class AgregarComputadoras(QMainWindow, object):
 
         self.gridLayout_3.addWidget(self.label_11, 1, 0, 1, 1)
 
-        self.computadora_txt = QLineEdit(self.frame_2)
-        self.computadora_txt.setObjectName(u"computadora_txt")
-        self.computadora_txt.setFont(font2)
+        self.num_serie_txt = QLineEdit(self.frame_2)
+        self.num_serie_txt.setObjectName(u"num_serie_txt")
+        self.num_serie_txt.setFont(font2)
 
-        self.gridLayout_3.addWidget(self.computadora_txt, 1, 1, 1, 1)
+        self.gridLayout_3.addWidget(self.num_serie_txt, 1, 1, 1, 1)
 
         self.label_12 = QLabel(self.frame_2)
         self.label_12.setObjectName(u"label_12")
@@ -99,11 +99,11 @@ class AgregarComputadoras(QMainWindow, object):
 
         self.gridLayout_3.addWidget(self.label_12, 2, 0, 1, 1)
 
-        self.dia_txt = QLineEdit(self.frame_2)
-        self.dia_txt.setObjectName(u"dia_txt")
-        self.dia_txt.setFont(font2)
+        self.propietario_equipo_txt = QLineEdit(self.frame_2)
+        self.propietario_equipo_txt.setObjectName(u"propietario_equipo_txt")
+        self.propietario_equipo_txt.setFont(font2)
 
-        self.gridLayout_3.addWidget(self.dia_txt, 2, 1, 1, 1)
+        self.gridLayout_3.addWidget(self.propietario_equipo_txt, 2, 1, 1, 1)
 
         self.label_13 = QLabel(self.frame_2)
         self.label_13.setObjectName(u"label_13")
@@ -112,11 +112,11 @@ class AgregarComputadoras(QMainWindow, object):
 
         self.gridLayout_3.addWidget(self.label_13, 3, 0, 1, 1)
 
-        self.ip_txt = QLineEdit(self.frame_2)
-        self.ip_txt.setObjectName(u"ip_txt")
-        self.ip_txt.setFont(font2)
+        self.rol_txt = QLineEdit(self.frame_2)
+        self.rol_txt.setObjectName(u"rol_txt")
+        self.rol_txt.setFont(font2)
 
-        self.gridLayout_3.addWidget(self.ip_txt, 3, 1, 1, 1)
+        self.gridLayout_3.addWidget(self.rol_txt, 3, 1, 1, 1)
 
 
         self.verticalLayout.addWidget(self.frame_2)
@@ -153,14 +153,14 @@ class AgregarComputadoras(QMainWindow, object):
     def retranslateUi(self, AgregarComputadoras):
         AgregarComputadoras.setWindowTitle(QCoreApplication.translate("AgregarComputadoras", u"MainWindow", None))
         self.label.setText(QCoreApplication.translate("AgregarComputadoras", u"Agregar Computadoras", None))
-        self.label_10.setText(QCoreApplication.translate("AgregarComputadoras", u"Persona a cargo", None))
-        self.persona_cargo_txt.setPlaceholderText(QCoreApplication.translate("AgregarComputadoras", u"Nombre de la persona que va a estar a cargo de la computadora", None))
-        self.label_11.setText(QCoreApplication.translate("AgregarComputadoras", u"Computadora", None))
-        self.computadora_txt.setPlaceholderText(QCoreApplication.translate("AgregarComputadoras", u"Nombre de la computadora - Modelo", None))
-        self.label_12.setText(QCoreApplication.translate("AgregarComputadoras", u"D\u00eda de entrega", None))
-        self.dia_txt.setPlaceholderText(QCoreApplication.translate("AgregarComputadoras", u"dd-mm-yyyy", None))
-        self.label_13.setText(QCoreApplication.translate("AgregarComputadoras", u"MAC ADDRESS", None))
-        self.ip_txt.setPlaceholderText(QCoreApplication.translate("AgregarComputadoras", u"0.0.0.0", None))
+        self.label_10.setText(QCoreApplication.translate("AgregarComputadoras", u"Nombre del equipo", None))
+        self.nombre_equipo_txt.setPlaceholderText(QCoreApplication.translate("AgregarComputadoras", u"Nombre del equipo", None))
+        self.label_11.setText(QCoreApplication.translate("AgregarComputadoras", u"N\u00famero de serie", None))
+        self.num_serie_txt.setPlaceholderText(QCoreApplication.translate("AgregarComputadoras", u"N\u00famero de serie", None))
+        self.label_12.setText(QCoreApplication.translate("AgregarComputadoras", u"Propietario del equipo", None))
+        self.propietario_equipo_txt.setPlaceholderText(QCoreApplication.translate("AgregarComputadoras", u"Propietario del equipo", None))
+        self.label_13.setText(QCoreApplication.translate("AgregarComputadoras", u"Rol", None))
+        self.rol_txt.setPlaceholderText(QCoreApplication.translate("AgregarComputadoras", u"Rol", None))
         self.cancelar_registro_btn.setText(QCoreApplication.translate("AgregarComputadoras", u"Cancelar", None))
         self.guardar_compu_btn.setText(QCoreApplication.translate("AgregarComputadoras", u"Aceptar", None))
     # retranslateUi

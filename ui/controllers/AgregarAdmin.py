@@ -1,20 +1,23 @@
 # IMPORTACION DE LA LIBRERIAS A OCUPAR
 from PySide2.QtWidgets import QWidget,QMessageBox
-from views.AgregarAdmin import AgregarAdmin
+from views.AgregarAdmin import AgregarPropietario
 from PySide2.QtCore import Qt
-from modelos.admin_model import Admin
+from modelos.propietarios_consultas import Propietario
 from db.connection import conexion
-from PySide2.QtCore import QRegExp, QTimer
+from PySide2.QtCore import QRegExp
 from PySide2.QtGui import QRegExpValidator
+from controllers.Principal import Principal
 
-# CLASE DE AGREGACION DE ADMINISTRADORES
-class AgregarAdminWindow(AgregarAdmin, QWidget):
+# CLASE DE AGREGACION DE propietarioISTRADORES
+class AgregarpropietarioWindow(AgregarPropietario,QWidget):
 
-    def __init__(self, parent=None):
+    def __init__(self, funcion, parent=None):
         super().__init__(parent)
         self.setupUi(self)
         self.setWindowFlag(Qt.Window)
-        self.admin = Admin(conexion()) # LLAMADO DE LA BD Y ASIGNADA A UNA VARIABLE
+        self.propietario = Propietario(conexion()) # LLAMADO DE LA BD Y ASIGNADA A UNA VARIABLE
+        self.principal = Principal()
+        self.actualizar_tabla = funcion
 
         # VALIDACIÓN DE DATOS EN LOS QLineEdit
         only_password = QRegExpValidator(QRegExp('^[A-Za-z0-9.@/_&$%!-]{3,50}')) # VALIDACION DE DATOS ALFANUMERICOS DONDE SOLO PUEDE TENER ENTRE 3 Y 100 VALORES
@@ -22,46 +25,55 @@ class AgregarAdminWindow(AgregarAdmin, QWidget):
         only_number = QRegExpValidator(QRegExp('^[0-9]{0,10}'))
         #   VALIDACION PARA CAMPO DE CORREO, DONDE SE DEBE PONER UN VALOR ALFANUMERICO, DESPUES LA ACEPTACION DEL @, POR CONSIGUIENTE
         #   OTRO VALOR ALFANUMERICO Y LA ACEPTACION DEL .COM U OTRO DOMINIO
-        email = QRegExpValidator(QRegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"))
+        #email = QRegExpValidator(QRegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"))
+        email = QRegExpValidator(QRegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@(?:gmail|hotmail|msn|yahoo|outlook|live|[.]{1,1})+(?:com|com.mx|net|org|edu|gov|mil|biz|info|name|museum|coop|aero|xxx|[a-zA-Z]{2})$"))
+        rol = QRegExpValidator(QRegExp('^[0-1]{1,1}'))
 
-        self.nombre_admin_txt.setValidator(only_text)
-        self.apellido_admin_txt.setValidator(only_text)
-        self.telefono_admin_txt.setValidator(only_number)
-        self.correo_admin_txt.setValidator(email)
-        self.password_admin_txt.setValidator(only_password)
-        self.confirma_contrasenia_btn.setValidator(only_password)
+        self.nombre_propietario_txt.setValidator(only_text)
+        self.nombre_propietario_txt.setFocus()
+        self.apellido_propietario_txt.setValidator(only_text)
+        self.telefono_propietario_txt.setValidator(only_number)
+        self.correo_propietario_txt.setValidator(email)
+        self.password_propietario_txt.setValidator(only_password)
+        self.confirma_contrasenia_txt.setValidator(only_password)
+        self.rol_propietario_txt.setValidator(rol)
 
-        # LLAMADO DE LA FUNCION AGREGAR ADMIN Y ENVIO DE LOS DATOS DE LOS TXT 
-        self.y = self.agregar_admin_btn.clicked.connect(lambda:self.agregar_admin(self.nombre_admin_txt.text(),
-                                                                                  self.apellido_admin_txt.text(),
-                                                                                  self.telefono_admin_txt.text(),
-                                                                                  self.correo_admin_txt.text(),
-                                                                                   self.password_admin_txt.text()))
+        # LLAMADO DE LA FUNCION AGREGAR propietario Y ENVIO DE LOS DATOS DE LOS TXT 
+        self.agregar_admin_btn.clicked.connect(lambda:self.agregar_propietario(
+                                                                               self.nombre_propietario_txt.text(),
+                                                                               self.apellido_propietario_txt.text(),
+                                                                               self.telefono_propietario_txt.text(),
+                                                                               self.correo_propietario_txt.text(),
+                                                                               self.password_propietario_txt.text(),
+                                                                               self.rol_propietario_txt.text()
+                                                                               ))
         self.cancelar_admin_btn.clicked.connect(self.cancelar_registro)
 
     # FUNCION PARA AGREGAR ADMIB
     #                   RECEPCION DE DATOS ENVIADOS POR LOS TXT
-    def agregar_admin(self,nombre, apellido, telefono, correo, password):
+    def agregar_propietario(self,nombre, apellido, telefono, correo, password, rol):
         # ASIGNACION DE LOS DATOS A NUEVAS VARIABLES 
-        nombre = self.nombre_admin_txt.text()
-        apellido = self.apellido_admin_txt.text()
-        telefono = self.telefono_admin_txt.text()
-        correo = self.correo_admin_txt.text()
-        password = self.password_admin_txt.text()
-        password2 = self.confirma_contrasenia_btn.text()
+        #id = self.id_propietario_txt.text()
+        nombre = self.nombre_propietario_txt.text()
+        apellido = self.apellido_propietario_txt.text()
+        telefono = self.telefono_propietario_txt.text()
+        correo = self.correo_propietario_txt.text()
+        password = self.password_propietario_txt.text()
+        password2 = self.confirma_contrasenia_txt.text()
+        rol = self.rol_propietario_txt.text()
 
         # CONDICIONES PARA LA VERIFICACION DE LOS CAMPOS 
-        if nombre == '' or apellido == '' or telefono == '' or correo == '' or password == '' or password2 == '':
+        if nombre == '' or apellido == '' or telefono == '' or correo == '' or password == '' or  password2 == '' or rol == '' :
             QMessageBox.warning(self, 'Error', 'Por favor de poner datos validos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
         
-        elif password != password2:
+        elif password != password2: 
             QMessageBox.warning(self, 'Error', 'Las contraseñas no coinciden, favor de verificar',QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
         
         else:
-            self.admin.insertar_admin(nombre, apellido, telefono, correo, password)
-            AgregarAdmin.hide(self)
-            QMessageBox.warning(self, 'Registro', 'El registro se hizo con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
-
+            self.propietario.insertar_propietario(nombre,apellido,telefono,correo,password,rol)
+            QMessageBox.information(self, 'Registro', 'El registro se hizo con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+            AgregarPropietario.hide(self)
+            self.actualizar_tabla(self.propietario.seleccionar_propietario())
 
     def cancelar_registro(self):
-        self.close()    
+        self.close()   

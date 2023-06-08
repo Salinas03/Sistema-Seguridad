@@ -556,22 +556,27 @@ border-radius:15px;
                               <widget class="QTableWidget" name="computadoras_registradas_table">
                                <column>
                                 <property name="text">
-                                 <string>Persona a cargo</string>
+                                 <string>ID</string>
                                 </property>
                                </column>
                                <column>
                                 <property name="text">
-                                 <string>Computadora</string>
+                                 <string>Nombre de quipo</string>
                                 </property>
                                </column>
                                <column>
                                 <property name="text">
-                                 <string>Fecha de entrega</string>
+                                 <string>Número de serie</string>
                                 </property>
                                </column>
                                <column>
                                 <property name="text">
-                                 <string>MAC ADREES</string>
+                                 <string>Propietario del equipo</string>
+                                </property>
+                               </column>
+                               <column>
+                                <property name="text">
+                                 <string>Rol</string>
                                 </property>
                                </column>
                               </widget>
@@ -1220,6 +1225,11 @@ información</string>
                          </attribute>
                          <column>
                           <property name="text">
+                           <string>id</string>
+                          </property>
+                         </column>
+                         <column>
+                          <property name="text">
                            <string>Nombre</string>
                           </property>
                           <property name="background">
@@ -1243,6 +1253,11 @@ información</string>
                          <column>
                           <property name="text">
                            <string>Correo</string>
+                          </property>
+                         </column>
+                         <column>
+                          <property name="text">
+                           <string>Rol</string>
                           </property>
                          </column>
                         </widget>
@@ -1517,12 +1532,27 @@ QPushButton#desactivar_btn:hover,
                         <widget class="QTableWidget" name="tabla_computadoras_activas">
                          <column>
                           <property name="text">
-                           <string>Desktop</string>
+                           <string>ID</string>
                           </property>
                          </column>
                          <column>
                           <property name="text">
-                           <string>Nombre</string>
+                           <string>Nombre del equipo</string>
+                          </property>
+                         </column>
+                         <column>
+                          <property name="text">
+                           <string>Número de serie</string>
+                          </property>
+                         </column>
+                         <column>
+                          <property name="text">
+                           <string>Propietario de equipo</string>
+                          </property>
+                         </column>
+                         <column>
+                          <property name="text">
+                           <string>Rol</string>
                           </property>
                          </column>
                          <column>
@@ -1580,17 +1610,27 @@ QPushButton#desactivar_btn:hover,
                         <widget class="QTableWidget" name="tabla_computadoras_desactivas">
                          <column>
                           <property name="text">
-                           <string>Desktop</string>
+                           <string>ID</string>
                           </property>
                          </column>
                          <column>
                           <property name="text">
-                           <string>Nombre</string>
+                           <string>Nombre del equipo</string>
                           </property>
                          </column>
                          <column>
                           <property name="text">
-                           <string>IP</string>
+                           <string>Número de serie</string>
+                          </property>
+                         </column>
+                         <column>
+                          <property name="text">
+                           <string>Rol</string>
+                          </property>
+                         </column>
+                         <column>
+                          <property name="text">
+                           <string>Rol</string>
                           </property>
                          </column>
                         </widget>

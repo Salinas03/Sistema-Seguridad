@@ -20,20 +20,21 @@ class Login(QMainWindow, object):
         Login.resize(800, 800)
         Login.setMinimumSize(QSize(800, 800))
         Login.setMaximumSize(QSize(800, 800))
-        Login.setStyleSheet(u"/*background-color: rgb(43,48,52);*/\n"
-"\n"
+        Login.setStyleSheet(u"\n"
 "QMainWindow#Login{\n"
 "background: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
 "}")
         self.centralwidget = QWidget(Login)
         self.centralwidget.setObjectName(u"centralwidget")
+        self.gridLayout = QGridLayout(self.centralwidget)
+        self.gridLayout.setObjectName(u"gridLayout")
         self.frame = QFrame(self.centralwidget)
         self.frame.setObjectName(u"frame")
-        self.frame.setGeometry(QRect(11, 11, 791, 781))
         self.frame.setFrameShape(QFrame.StyledPanel)
         self.frame.setFrameShadow(QFrame.Raised)
         self.verticalLayout_3 = QVBoxLayout(self.frame)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.verticalLayout_3.setContentsMargins(100, 100, 100, 100)
         self.frame_superior = QFrame(self.frame)
         self.frame_superior.setObjectName(u"frame_superior")
         self.frame_superior.setFrameShape(QFrame.StyledPanel)
@@ -59,7 +60,8 @@ class Login(QMainWindow, object):
 "border-bottom-color:rgba(255,255,255,255);\n"
 "color:rgb(255,255,255);\n"
 "padding-bottom:7px;\n"
-"}")
+"}\n"
+"")
         self.frame_body.setFrameShape(QFrame.StyledPanel)
         self.frame_body.setFrameShadow(QFrame.Raised)
         self.gridLayout_3 = QGridLayout(self.frame_body)
@@ -111,6 +113,31 @@ class Login(QMainWindow, object):
 
         self.frame_inferior = QFrame(self.frame)
         self.frame_inferior.setObjectName(u"frame_inferior")
+        self.frame_inferior.setStyleSheet(u"QPushButton#recuperar_contrasenia_btn{\n"
+"color:white;\n"
+"background-color:transparent;\n"
+"}\n"
+"QPushButton#recuperar_contrasenia_btn:hover{\n"
+"color: rgb(0, 170, 255);\n"
+"}\n"
+"\n"
+"QPushButton#ingresar_btn{\n"
+"border:none;\n"
+"color: rgb(0,0,0);\n"
+"background-color: #D2CFCC ;\n"
+"border-radius:5px;\n"
+"}\n"
+"\n"
+"QPushButton#ingresar_btn:hover { \n"
+"	background-color: rgb(149, 149, 149);\n"
+"}\n"
+"\n"
+"QPushButton#ingresar_btn:pressed { \n"
+"	font: 75 10pt \"MS Shell Dlg 2\";\n"
+"	background-color: rgb(149, 149, 149);\n"
+"}\n"
+"\n"
+"")
         self.frame_inferior.setFrameShape(QFrame.StyledPanel)
         self.frame_inferior.setFrameShadow(QFrame.Raised)
         self.gridLayout_4 = QGridLayout(self.frame_inferior)
@@ -121,26 +148,29 @@ class Login(QMainWindow, object):
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.ingresar_btn = QPushButton(self.frame_inferior)
         self.ingresar_btn.setObjectName(u"ingresar_btn")
-        self.ingresar_btn.setMinimumSize(QSize(0, 20))
-        self.ingresar_btn.setStyleSheet(u"QPushButton#ingresar_btn{\n"
-"color: rgb(0, 0, 0);\n"
-"background-color: rgb(223, 223, 223);\n"
-"border-radius:5px;\n"
-"}\n"
-"\n"
-"QPushButton#ingresar_btn:pressed { \n"
-"	font: 75 8pt \"MS Shell Dlg 2\";\n"
-"	background-color: rgb(149, 149, 149);\n"
-"}")
+        self.ingresar_btn.setMinimumSize(QSize(0, 40))
+        font1 = QFont()
+        font1.setFamily(u"MS Shell Dlg 2")
+        font1.setPointSize(10)
+        font1.setBold(False)
+        font1.setItalic(False)
+        font1.setWeight(9)
+        self.ingresar_btn.setFont(font1)
+        self.ingresar_btn.setStyleSheet(u"")
 
         self.verticalLayout_2.addWidget(self.ingresar_btn)
 
-        self.pushButton_2 = QPushButton(self.frame_inferior)
-        self.pushButton_2.setObjectName(u"pushButton_2")
-        self.pushButton_2.setStyleSheet(u"background-color:transparent;\n"
-"color: rgb(255, 255, 255);")
+        self.label_4 = QLabel(self.frame_inferior)
+        self.label_4.setObjectName(u"label_4")
+        self.label_4.setMaximumSize(QSize(16777215, 20))
 
-        self.verticalLayout_2.addWidget(self.pushButton_2)
+        self.verticalLayout_2.addWidget(self.label_4)
+
+        self.recuperar_contrasenia_btn = QPushButton(self.frame_inferior)
+        self.recuperar_contrasenia_btn.setObjectName(u"recuperar_contrasenia_btn")
+        self.recuperar_contrasenia_btn.setStyleSheet(u"")
+
+        self.verticalLayout_2.addWidget(self.recuperar_contrasenia_btn)
 
 
         self.gridLayout_4.addLayout(self.verticalLayout_2, 0, 0, 1, 1)
@@ -148,10 +178,10 @@ class Login(QMainWindow, object):
 
         self.verticalLayout_3.addWidget(self.frame_inferior, 0, Qt.AlignHCenter)
 
+
+        self.gridLayout.addWidget(self.frame, 0, 0, 1, 1)
+
         Login.setCentralWidget(self.centralwidget)
-        self.statusBar = QStatusBar(Login)
-        self.statusBar.setObjectName(u"statusBar")
-        Login.setStatusBar(self.statusBar)
 
         self.retranslateUi(Login)
 
@@ -159,13 +189,14 @@ class Login(QMainWindow, object):
     # setupUi
 
     def retranslateUi(self, Login):
-        Login.setWindowTitle(QCoreApplication.translate("Login", u"MainWindow", None))
+        Login.setWindowTitle(QCoreApplication.translate("Login", u"Login", None))
         self.label.setText(QCoreApplication.translate("Login", u"<html><head/><body><p><span style=\" font-size:20pt; font-weight:600; color:#ffffff;\">INICIAR SESI\u00d3N</span></p></body></html>", None))
         self.label_2.setText(QCoreApplication.translate("Login", u"<html><head/><body><p><span style=\" font-size:14pt; color:#ffffff;\">Correo</span></p></body></html>", None))
         self.correo_txt.setPlaceholderText(QCoreApplication.translate("Login", u"Correo", None))
         self.label_3.setText(QCoreApplication.translate("Login", u"<html><head/><body><p><span style=\" font-size:14pt; color:#ffffff;\">Contrase\u00f1a</span></p></body></html>", None))
         self.password_txt.setPlaceholderText(QCoreApplication.translate("Login", u"Contrase\u00f1a", None))
         self.ingresar_btn.setText(QCoreApplication.translate("Login", u"Ingresar", None))
-        self.pushButton_2.setText(QCoreApplication.translate("Login", u"Se me olvido la contrase\u00f1a", None))
+        self.label_4.setText("")
+        self.recuperar_contrasenia_btn.setText(QCoreApplication.translate("Login", u"Se me olvido la contrase\u00f1a", None))
     # retranslateUi
 

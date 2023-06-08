@@ -1,50 +1,58 @@
 from PySide2.QtWidgets import QWidget,QMessageBox
 from views.AgregarComputadoras import AgregarComputadoras
-from modelos.compus_model import Compus
 from PySide2.QtCore import Qt
+from modelos.equipos_consultas import Equipo
 from db.connection import conexion
 from PySide2.QtCore import QRegExp, QTimer
 from PySide2.QtGui import QRegExpValidator
 
 class AgregarCompusWindow(AgregarComputadoras, QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
+    def __init__(self, function):
+        super().__init__(None)
         self.setupUi(self)
         self.setWindowFlag(Qt.Window)
+        self.equipo = Equipo(conexion())
+
+        self.actualizar_tabla = function
 
         # VALIDACIÓN DE DATOS EN LOS QLineEdit
-        only_text = QRegExpValidator(QRegExp('^[A-Za-z-]{3,50}')) # VALIDACION DE DATOS ALFANUMERICOS DONDE SOLO PUEDE TENER ENTRE 3 Y 100 VALORES
-        only_number = QRegExpValidator(QRegExp('^[0-9.]{7,50}'))
-        only_fecha = QRegExpValidator(QRegExp('^[0-9-/]{10,10}'))
+        only_text = QRegExpValidator(QRegExp('^[A-Za-z0-9-]{3,50}')) # VALIDACION DE DATOS ALFANUMERICOS DONDE SOLO PUEDE TENER ENTRE 3 Y 100 VALORES
+        propietario_text = QRegExpValidator(QRegExp('^[0-9]{1,10}'))
+        rol = QRegExpValidator(QRegExp('^[0-1]{1,1}'))
 
+        # only_number = QRegExpValidator(QRegExp('^[0-9.]{7,50}'))
+        # only_fecha = QRegExpValidator(QRegExp('^[0-9-/]{10,10}'))
 
-        self.persona_cargo_txt.setValidator(only_text)
-        self.computadora_txt.setValidator(only_text)
-        self.dia_txt.setValidator(only_fecha)
-        self.ip_txt.setValidator(only_number)
+        self.nombre_equipo_txt.setValidator(only_text)
+        self.nombre_equipo_txt.setFocus()
+        self.num_serie_txt.setValidator(only_text)
+        self.propietario_equipo_txt.setValidator(propietario_text)
+        self.rol_txt.setValidator(rol)
 
-        self.x = self.guardar_compu_btn.clicked.connect(lambda:self.agregar_compus(self.persona_cargo_txt.text(), 
-                                                                                   self.computadora_txt.text(), 
-                                                                                   self.dia_txt.text(), 
-                                                                                   self.ip_txt.text()))
+        self.x = self.guardar_compu_btn.clicked.connect(lambda:self.agregar_compus(self.nombre_equipo_txt.text(), 
+                                                                                   self.num_serie_txt.text(), 
+                                                                                   self.propietario_equipo_txt.text(), 
+                                                                                   self.rol_txt.text()))
         self.y = self.cancelar_registro_btn.clicked.connect(self.cancelar_registro)
 
 
-    def agregar_compus(self, persona, computadora, dia, macaddress):
-            persona = self.persona_cargo_txt.text()
-            computadora = self.computadora_txt.text()
-            dia = self.dia_txt.text()
-            macaddress = self.ip_txt.text()
+    def agregar_compus(self, equipo, numSerie, propietario, rol):
+            equipo = self.nombre_equipo_txt.text()
+            numSerie = self.num_serie_txt.text()
+            propietario = self.propietario_equipo_txt.text()
+            rol = self.rol_txt.text()
 
-            if persona == '' or computadora == '' or dia == '' or macaddress == '':
+            if equipo == '' or numSerie == '' or propietario == '' or rol == '':
                 QMessageBox.warning(self, 'Error', 'Por favor de poner datos validos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
 
             else:
-                self.persona_cargo_txt.clear()
-                self.computadora_txt.clear()
-                self.dia_txt.clear()
-                self.ip_txt.clear()
+                self.equipo.insertar_compus(equipo,numSerie,propietario,rol)
+                self.nombre_equipo_txt.clear()
+                self.num_serie_txt.clear()
+                self.propietario_equipo_txt.clear()
+                self.rol_txt.clear()
                 QMessageBox.warning(self, 'Registro', 'El registro se hizo con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                self.actualizar_tabla(self.equipo.seleccionar_compus())
                 self.close()   
 
     def cancelar_registro(self):
