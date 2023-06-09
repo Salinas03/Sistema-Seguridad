@@ -100,7 +100,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Agregar Propietario o Administrador</string>
+             <string>Modificar Propietario o Administrador</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -230,7 +230,7 @@
              </size>
             </property>
             <property name="text">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Los roles son los siguientes:&lt;/p&gt;&lt;p&gt;- Si se desea agregar un usuario &lt;span style=&quot; font-weight:600;&quot;&gt;Administrador&lt;/span&gt; pon &lt;span style=&quot; font-weight:600;&quot;&gt;1&lt;/span&gt;&lt;/p&gt;&lt;p&gt;- Si se desea agregar un usuario &lt;span style=&quot; font-weight:600;&quot;&gt;Normal&lt;/span&gt; pon &lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Los roles son los siguientes:&lt;/p&gt;&lt;p&gt;- Si se desea modificar un usuario &lt;span style=&quot; font-weight:600;&quot;&gt;Administrador&lt;/span&gt; pon &lt;span style=&quot; font-weight:600;&quot;&gt;1&lt;/span&gt;&lt;/p&gt;&lt;p&gt;- Si se desea modificar un usuario &lt;span style=&quot; font-weight:600;&quot;&gt;Normal&lt;/span&gt; pon &lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
           </item>
@@ -339,26 +339,6 @@
           <property name="bottomMargin">
            <number>0</number>
           </property>
-          <item>
-           <widget class="QPushButton" name="eliminar_propietario_btn">
-            <property name="text">
-             <string>Eliminar</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
           <item>
            <widget class="QPushButton" name="cancelar_admin_btn">
             <property name="text">

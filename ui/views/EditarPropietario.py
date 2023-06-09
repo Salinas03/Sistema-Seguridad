@@ -169,15 +169,6 @@ class EditarPropietario(QMainWindow, object):
         self.horizontalLayout.setSpacing(0)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.horizontalLayout.setContentsMargins(0, 90, 10, 0)
-        self.eliminar_propietario_btn = QPushButton(self.widget_4)
-        self.eliminar_propietario_btn.setObjectName(u"eliminar_propietario_btn")
-
-        self.horizontalLayout.addWidget(self.eliminar_propietario_btn)
-
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout.addItem(self.horizontalSpacer)
-
         self.cancelar_admin_btn = QPushButton(self.widget_4)
         self.cancelar_admin_btn.setObjectName(u"cancelar_admin_btn")
 
@@ -203,14 +194,13 @@ class EditarPropietario(QMainWindow, object):
 
     def retranslateUi(self, EditarPropietario):
         EditarPropietario.setWindowTitle(QCoreApplication.translate("EditarPropietario", u"MainWindow", None))
-        self.label.setText(QCoreApplication.translate("EditarPropietario", u"Agregar Propietario o Administrador", None))
+        self.label.setText(QCoreApplication.translate("EditarPropietario", u"Modificar Propietario o Administrador", None))
         self.label_5.setText(QCoreApplication.translate("EditarPropietario", u"Tel\u00e9fono", None))
         self.label_3.setText(QCoreApplication.translate("EditarPropietario", u"Nombre", None))
-        self.label_9.setText(QCoreApplication.translate("EditarPropietario", u"<html><head/><body><p>Los roles son los siguientes:</p><p>- Si se desea agregar un usuario <span style=\" font-weight:600;\">Administrador</span> pon <span style=\" font-weight:600;\">1</span></p><p>- Si se desea agregar un usuario <span style=\" font-weight:600;\">Normal</span> pon <span style=\" font-weight:600;\">0</span></p></body></html>", None))
+        self.label_9.setText(QCoreApplication.translate("EditarPropietario", u"<html><head/><body><p>Los roles son los siguientes:</p><p>- Si se desea modificar un usuario <span style=\" font-weight:600;\">Administrador</span> pon <span style=\" font-weight:600;\">1</span></p><p>- Si se desea modificar un usuario <span style=\" font-weight:600;\">Normal</span> pon <span style=\" font-weight:600;\">0</span></p></body></html>", None))
         self.label_6.setText(QCoreApplication.translate("EditarPropietario", u"Correo", None))
         self.label_8.setText(QCoreApplication.translate("EditarPropietario", u"Rol", None))
         self.label_4.setText(QCoreApplication.translate("EditarPropietario", u"Apellidos", None))
-        self.eliminar_propietario_btn.setText(QCoreApplication.translate("EditarPropietario", u"Eliminar", None))
         self.cancelar_admin_btn.setText(QCoreApplication.translate("EditarPropietario", u"Cancelar", None))
         self.agregar_admin_btn.setText(QCoreApplication.translate("EditarPropietario", u"Modificar", None))
     # retranslateUi

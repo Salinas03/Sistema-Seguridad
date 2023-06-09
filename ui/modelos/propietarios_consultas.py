@@ -44,9 +44,17 @@ class Propietario:
         if self.conexion.is_connected():
             try:
                 cursor = self.conexion.cursor()
-                sql = f"""UPDATE propietarios SET nombre_propietario = %s,apellido_propietario = %s,telefono_propietario=%s,correo_propietario=%s,contrasena_propietario=%s,rol=%s WHERE id_propietarios={id_propietarios}"""
-                cursor.execute(sql, data)
+                sql = f"""UPDATE propietarios SET 
+                                                nombre_propietario = %s,
+                                                apellido_propietario = %s,
+                                                telefono_propietario=%s,
+                                                correo_propietario=%s,
+                                                rol=%s 
+                            WHERE id_propietarios= %s"""
+                cursor.execute(sql, (*data, id_propietarios))
+                cursor.close()
                 self.conexion.commit()
+                return True
             except Error as err:
                 print(f'Error al intentar la conexion {err}')
 
@@ -61,6 +69,19 @@ class Propietario:
             #self.conexion.commit()
         except Error as err:
             print(f'Error al intentar la conexion {err}')
+
+    def eliminar_propietario(self,id_propietarios):
+        if self.conexion.is_connected():
+            try:
+                cursor = self.conexion.cursor()
+                sql = f"""DELETE FROM propietarios WHERE id_propietarios = %s"""
+                cursor.execute(sql, (id_propietarios,))
+                cursor.close()
+                self.conexion.commit()
+                return True
+            except Error as err:
+                print(f'Error al intentar la conexion {err}')
+            
         
 
     

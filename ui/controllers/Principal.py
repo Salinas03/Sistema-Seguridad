@@ -10,7 +10,6 @@ from controllers.ModificarPropietarios import ModificarPropietarioWindow
 from modelos.propietarios_consultas import Propietario
 from db.connection import conexion
 from modelos.equipos_consultas import Equipo
-from clases.administrador_ui import admin_socket_ui
 import os
 
 class PrincipalWindow(Principal,QWidget):
@@ -22,7 +21,6 @@ class PrincipalWindow(Principal,QWidget):
         self.conexion = conexion()
         self.equipo = Equipo(self.conexion)
         self.propietario = Propietario(self.conexion)
-        print(admin_socket_ui.escribir_operaciones('listar'))
         #self.modificarPropietario = ModificarPropietario(self.conexion)
 
 
@@ -77,7 +75,7 @@ class PrincipalWindow(Principal,QWidget):
         header_administradores_tabla.setSectionResizeMode(header_administradores_tabla.Stretch)
         # LLAMADO PARA AGREGAR UN NUEVO ADMINISTRADOR
         self.agregar_admin_btn.clicked.connect(self.abrir_agregar_admin)
-        self.y = self.modificar_admin_btn.clicked.connect(self.modificar_propietarios)
+        self.y = self.eliminar_admin_btn.clicked.connect(self.eliminar_propietario)
         self.x = self.administradores_tabla.itemDoubleClicked.connect(self.modificar_propietarios)
         #self.administradores_tabla.cellDoubleClicked.connect(self.abrir_agregar_admin)      
 
@@ -101,9 +99,6 @@ class PrincipalWindow(Principal,QWidget):
         # < --------------------- PAGINA EN GENERAL --------------------- >
         
         self.ventana_abierta = False # IDENTIFICACION DE QUE LA VENTANA ESTA CERRADA
-
-
-
 
 # ////////////////////////// FUNCIONES PAGINA PRINCIPAL //////////////////////////
 
@@ -194,13 +189,23 @@ class PrincipalWindow(Principal,QWidget):
             seleccionar_fila = self.administradores_tabla.selectedItems()
             if seleccionar_fila:
                 id_propietarios = seleccionar_fila[0].text()
-                window = ModificarPropietarioWindow(self, id_propietarios)
+                window = ModificarPropietarioWindow(self.datos_admins,self,id_propietarios)
                 window.setWindowModality(QtCore.Qt.ApplicationModal) # BLOQUEO DE LA VENTANA PRINCIPAL
                 window.destroyed.connect(self.ventana_cerrada)
                 window.show()
         else:
             QMessageBox.warning(self, "Advertencia", "La ventana ya está abierta.")
+    
+    def eliminar_propietario(self):
+        propietario = Propietario(conexion())
+        seleccionar_fila = self.administradores_tabla.selectedItems()
+        if seleccionar_fila:
+            id_propietarios = seleccionar_fila[0].text()
+            fila = seleccionar_fila[0].row()
 
+            if propietario.eliminar_propietario(id_propietarios):
+                self.administradores_tabla.removeRow(fila)
+                QMessageBox.information(self, 'Eliminacion', 'El propietario se elimino con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
             
 # ////////////////////////// FUNCIONES PAGINA PERFIL //////////////////////////
 
@@ -225,20 +230,4 @@ class PrincipalWindow(Principal,QWidget):
     # FUNCION PARA DEFINIR QUE LA VENTANA CAMBIE SU ESTADO A FALSE        
     def ventana_cerrada(self):
         self.ventana_abierta = False
-
-
-
-
     
-    
-    
-    
-
-
-
-  
-    
-
-
-
-
