@@ -4,3 +4,4 @@ tasks.txt
 /servidor/testing/
 /servidor/base_datos/__pycache__
 /servidor/clases/__pycache__
+/ui/env
