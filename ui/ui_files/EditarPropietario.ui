@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>AgregarPropietario</class>
- <widget class="QMainWindow" name="AgregarPropietario">
+ <class>EditarPropietario</class>
+ <widget class="QMainWindow" name="EditarPropietario">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -140,16 +140,6 @@
           <property name="spacing">
            <number>0</number>
           </property>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_2">
-            <property name="text">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#ff0000;&quot;&gt;ADVERTENCIA&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;: Si agregas a un administrador, debes de saber que el tambien tendra &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;acceso a las computadoras que se hayan registrado, esto para el acceso remoto&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;a ellas.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-           </widget>
-          </item>
          </layout>
         </widget>
        </item>
@@ -195,41 +185,17 @@
           <property name="rightMargin">
            <number>100</number>
           </property>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_6">
+          <item row="0" column="2">
+           <widget class="QLineEdit" name="nombre_propietario_txt">
             <property name="font">
              <font>
               <pointsize>12</pointsize>
              </font>
             </property>
-            <property name="text">
-             <string>Correo</string>
-            </property>
            </widget>
           </item>
-          <item row="6" column="2">
+          <item row="4" column="2">
            <widget class="QLineEdit" name="rol_propietario_txt"/>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="label_11">
-            <property name="font">
-             <font>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Contraseña</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="2">
-           <widget class="QLineEdit" name="telefono_propietario_txt">
-            <property name="font">
-             <font>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-           </widget>
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="label_5">
@@ -243,78 +209,45 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
-           <widget class="QLineEdit" name="apellido_propietario_txt">
-            <property name="font">
-             <font>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_4">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_3">
             <property name="font">
              <font>
               <pointsize>12</pointsize>
              </font>
             </property>
             <property name="text">
-             <string>Apellidos</string>
+             <string>Nombre</string>
             </property>
            </widget>
           </item>
           <item row="5" column="0">
-           <widget class="QLabel" name="label_7">
+           <widget class="QLabel" name="label_9">
             <property name="minimumSize">
              <size>
               <width>0</width>
-              <height>30</height>
+              <height>60</height>
              </size>
             </property>
+            <property name="text">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Los roles son los siguientes:&lt;/p&gt;&lt;p&gt;- Si se desea agregar un usuario &lt;span style=&quot; font-weight:600;&quot;&gt;Administrador&lt;/span&gt; pon &lt;span style=&quot; font-weight:600;&quot;&gt;1&lt;/span&gt;&lt;/p&gt;&lt;p&gt;- Si se desea agregar un usuario &lt;span style=&quot; font-weight:600;&quot;&gt;Normal&lt;/span&gt; pon &lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_6">
             <property name="font">
              <font>
               <pointsize>12</pointsize>
              </font>
             </property>
             <property name="text">
-             <string>Confirma Contraseña</string>
+             <string>Correo</string>
             </property>
            </widget>
           </item>
-          <item row="4" column="2">
-           <widget class="QLineEdit" name="password_propietario_txt">
-            <property name="font">
-             <font>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="echoMode">
-             <enum>QLineEdit::Password</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0">
-           <widget class="QLabel" name="label_8">
-            <property name="font">
-             <font>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Rol</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="2">
-           <widget class="QLineEdit" name="confirma_contrasenia_txt">
-            <property name="echoMode">
-             <enum>QLineEdit::PasswordEchoOnEdit</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLineEdit" name="nombre_propietario_txt">
+          <item row="2" column="2">
+           <widget class="QLineEdit" name="telefono_propietario_txt">
             <property name="font">
              <font>
               <pointsize>12</pointsize>
@@ -331,28 +264,36 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_3">
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_8">
             <property name="font">
              <font>
               <pointsize>12</pointsize>
              </font>
             </property>
             <property name="text">
-             <string>Nombre</string>
+             <string>Rol</string>
             </property>
            </widget>
           </item>
-          <item row="7" column="0">
-           <widget class="QLabel" name="label_9">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>60</height>
-             </size>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_4">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
             </property>
             <property name="text">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Los roles son los siguientes:&lt;/p&gt;&lt;p&gt;- Si se desea agregar un usuario &lt;span style=&quot; font-weight:600;&quot;&gt;Administrador&lt;/span&gt; pon &lt;span style=&quot; font-weight:600;&quot;&gt;1&lt;/span&gt;&lt;/p&gt;&lt;p&gt;- Si se desea agregar un usuario &lt;span style=&quot; font-weight:600;&quot;&gt;Normal&lt;/span&gt; pon &lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Apellidos</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLineEdit" name="apellido_propietario_txt">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
             </property>
            </widget>
           </item>
@@ -361,6 +302,12 @@
        </item>
        <item alignment="Qt::AlignRight">
         <widget class="QWidget" name="widget_4" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -393,6 +340,26 @@
            <number>0</number>
           </property>
           <item>
+           <widget class="QPushButton" name="eliminar_propietario_btn">
+            <property name="text">
+             <string>Eliminar</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
            <widget class="QPushButton" name="cancelar_admin_btn">
             <property name="text">
              <string>Cancelar</string>
@@ -402,7 +369,7 @@
           <item>
            <widget class="QPushButton" name="agregar_admin_btn">
             <property name="text">
-             <string>Agregar</string>
+             <string>Modificar</string>
             </property>
            </widget>
           </item>

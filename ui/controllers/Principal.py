@@ -1,23 +1,30 @@
 
 # IMPORTACION DE LA LIBRERIAS A OCUPAR
-from PySide2.QtWidgets import QWidget, QMessageBox, QTableWidgetItem, QAbstractItemView
+from PySide2.QtWidgets import QWidget, QMessageBox, QTableWidgetItem, QAbstractItemView, QTableWidget
 from PySide2 import QtCore
-from PySide2.QtCore import Qt
 from views.Principal import Principal
-from controllers.AgregarAdmin import AgregarAdminWindow
+from controllers.AgregarAdmin import AgregarpropietarioWindow
 from controllers.AgregarCompus import AgregarCompusWindow
 from controllers.OpcionesComputadora import OpcionesCompusWindow
-from modelos.admin_model import Admin
-from PySide2.QtCore import QRegExp
-from PySide2.QtGui import QRegExpValidator
+from controllers.ModificarPropietarios import ModificarPropietarioWindow
+from modelos.propietarios_consultas import Propietario
+from db.connection import conexion
+from modelos.equipos_consultas import Equipo
+from clases.administrador_ui import admin_socket_ui
+import os
 
-
-class PrincipalWindow(Principal,Admin,QWidget):
+class PrincipalWindow(Principal,QWidget):
 
     # FUNCION PARA INICIO DE LA VENTANA
-    def __init__(self, parent=None):
-        super().__init__(parent)
+    def __init__(self):
+        super().__init__(None)
         self.setupUi(self)
+        self.conexion = conexion()
+        self.equipo = Equipo(self.conexion)
+        self.propietario = Propietario(self.conexion)
+        print(admin_socket_ui.escribir_operaciones('listar'))
+        #self.modificarPropietario = ModificarPropietario(self.conexion)
+
 
         # BOTONES QUE REDIRIGEN A LAS PAGINAS DEL STACKEDWIDGET
         self.home_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_2))
@@ -26,70 +33,99 @@ class PrincipalWindow(Principal,Admin,QWidget):
         self.user_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_4))
         self.admins_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_5))
 
+        # < --------------------- PAGINA PRINCIPAL --------------------- > 
 
-        # PONER LAS MEDIDAS DEL ANCHO DE LAS TABLAS
+        # CONTROL DE COMPUTADORAS
+        self.activar_btn.clicked.connect(self.activar_computadora)
+        self.activar_compus_btn.clicked.connect(self.activar_computadoras)
+        self.desactivar_btn.clicked.connect(self.desactivar_computadora)
+        self.desactivar_compus_btn.clicked.connect(self.desactivar_computadoras)
+
+        # MEDIDAS DEL ANCHO DE LAS TABLAS
         header_computadoras_activas = self.tabla_computadoras_activas.horizontalHeader()
         header_computadoras_activas.setSectionResizeMode(header_computadoras_activas.Stretch)
 
         header_computadoras_desactivas = self.tabla_computadoras_desactivas.horizontalHeader()
         header_computadoras_desactivas.setSectionResizeMode(header_computadoras_desactivas.Stretch)
 
+        # OCULTAR LOS BOTONES DE ACTIVACION DE Y DESACTIVACION DE COMPUTADORAS
+        self.desactivar_btn.setVisible(False)
+        self.desactivar_compus_btn.setVisible(False)
+
+        # BlOQUEO DE BOTON OTROS COMANDOS
+        self.otros_comandos_btn.setEnabled(False)
+
+        self.otros_comandos_btn.clicked.connect(self.abrir_opciones_computadora)
+
+
+        # < --------------------- PAGINA COMPUTADORAS REGISTRADAS --------------------- >
+
+        # MEDIDAS DEL ANCHO DE LAS TABLAS
         header_computadoras_registradas_table = self.computadoras_registradas_table.horizontalHeader()
         header_computadoras_registradas_table.setSectionResizeMode(header_computadoras_registradas_table.Stretch)
 
+        # LLAMADO PARA AGREGAR UNA NUEVA COMPUTADORA
+        self.agregar_compu_btn.clicked.connect(self.abrir_agregar_compus)
+        self.configuracion_tabla_compus()
+        self.datos_compus(self.equipo.seleccionar_compus())
+
+
+        # < --------------------- PAGINA ADMINISTRADORES REGISTRADOS --------------------- >
+
+        # MEDIDAS DEL ANCHO DE LAS TABLAS
         header_administradores_tabla = self.administradores_tabla.horizontalHeader()
         header_administradores_tabla.setSectionResizeMode(header_administradores_tabla.Stretch)
-    
-        # OCULTAR LOS BOTONES DE ACTIVACION DE Y DESACTIVACION DE COMPUTADORAS
-        self.activar_btn.hide()
-        self.desactivar_btn.hide()
-        self.desactivar_compus_btn.hide()
+        # LLAMADO PARA AGREGAR UN NUEVO ADMINISTRADOR
+        self.agregar_admin_btn.clicked.connect(self.abrir_agregar_admin)
+        self.y = self.modificar_admin_btn.clicked.connect(self.modificar_propietarios)
+        self.x = self.administradores_tabla.itemDoubleClicked.connect(self.modificar_propietarios)
+        #self.administradores_tabla.cellDoubleClicked.connect(self.abrir_agregar_admin)      
 
+        self.configuracion_tabla_admins()
+        self.datos_admins(self.propietario.seleccionar_propietario())
+
+        # < --------------------- PAGINA PERFIL --------------------- >
+    
         # DESHABILITAR LOS CAMPOS DE PERFIL DE ADMINISTRADOR
         self.nombre_txt.setEnabled(False)
         self.apellidos_txt.setEnabled(False)
         self.telefono_txt.setEnabled(False)
         self.correo_txt.setEnabled(False)
-        
-        # LLAMADO PARA AGREGAR UN NUEVO ADMINISTRADOR
-        self.agregar_admin_btn.clicked.connect(self.abrir_agregar_admin)
-        # LLAMADO PARA AGREGAR UNA NUEVA COMPUTADORA
-        self.agregar_compu_btn.clicked.connect(self.abrir_agregar_compus)
-        
-        self.otros_comandos_btn.clicked.connect(self.abrir_opciones_computadora)
-
-        self.ventana_abierta = False # IDENTIFICACION DE QUE LA VENTANA ESTA CERRADA
 
         self.modificar_perfil_btn.clicked.connect(self.habilitar_datos_admin)
 
-        self.configuracion_tabla_admins()
-        self.datos_admins(self.seleccionar_admins())
-
         self.guardar_admin_btn.clicked.connect(self.guardar_datos_perfil)
+        
+        
+        
+        # < --------------------- PAGINA EN GENERAL --------------------- >
+        
+        self.ventana_abierta = False # IDENTIFICACION DE QUE LA VENTANA ESTA CERRADA
 
 
-    # FUNCION PARA MANDAR LLAMAR LA VENTANA DE AGREGAR ADMIN
-    def abrir_agregar_admin(self):
-        # CONDICION PARA SABER SI LA VENTANA ESTA ABIERTA
-        if not self.ventana_abierta: 
-            self.ventana_abierta:True # CAMBIO DE LA VENTANA A TRUE
-            window = AgregarAdminWindow(self)
-            window.setWindowModality(QtCore.Qt.ApplicationModal) # BLOQUEO DE LA VENTANA PRINCIPAL
-            window.destroyed.connect(self.ventana_cerrada)
-            window.show()
-        else:
-            QMessageBox.warning(self, "Advertencia", "La ventana ya está abierta.")
-    
-    # FUNCION PARA MANDAR LLAMAR A LA VENTANA DE AGREGAR COMPUS
-    def abrir_agregar_compus(self):
-        # CONDICION PARA SABER SI LA VENTANA ESTA ABIERTA
-        if not self.ventana_abierta:
-            self.ventana_abierta:True # CAMBIO DE LA VENTANA A TRUE
-            window = AgregarCompusWindow(self)
-            window.setWindowModality(QtCore.Qt.ApplicationModal) # BLOQUEO DE LA VENTANA PRINCIPAL
-            window.destroyed.connect(self.ventana_cerrada)
-            window.show()
-    
+
+
+# ////////////////////////// FUNCIONES PAGINA PRINCIPAL //////////////////////////
+
+    def activar_computadora(self):
+        self.desactivar_btn.setVisible(True)
+        self.desactivar_compus_btn.setVisible(True)
+
+    def activar_computadoras(self):
+        self.desactivar_btn.setVisible(True)
+        self.desactivar_compus_btn.setVisible(True)
+        self.activar_compus_btn.setVisible(False)
+        self.activar_btn.setVisible(False)
+
+    def desactivar_computadora(self):
+        pass
+
+    def desactivar_computadoras(self):
+        self.activar_compus_btn.setVisible(True)
+        self.activar_btn.setVisible(True)
+        self.desactivar_compus_btn.setVisible(False)
+        self.desactivar_btn.setVisible(False)
+
     # FUNCION PARA MANDAR LLAMAR LA VENTANA DE OPCIONES DE COMPUTADORA
     def abrir_opciones_computadora(self):
         if not self.ventana_abierta:
@@ -98,24 +134,41 @@ class PrincipalWindow(Principal,Admin,QWidget):
             window.setWindowModality(QtCore.Qt.ApplicationModal)
             window.destroyed.connect(self.ventana_cerrada)
             window.show()
-            
-    # FUNCION PARA DEFINIR QUE LA VENTANA CAMBIE SU ESTADO A FALSE        
-    def ventana_cerrada(self):
-        self.ventana_abierta = False
 
-    # CONDICION PARA HABILITAR LOS CAMPOS DE PERFIL DE ADMINISTRADORS
-    def habilitar_datos_admin(self):
-        self.nombre_txt.setEnabled(True)
-        self.apellidos_txt.setEnabled(True)
-        self.telefono_txt.setEnabled(True)
-        self.correo_txt.setEnabled(True)
+# ////////////////////////// FUNCIONES PAGINA COMPUTADORAS REGISTRADAS //////////////////////////
+
+    # FUNCION PARA MANDAR LLAMAR A LA VENTANA DE AGREGAR COMPUS
+    def abrir_agregar_compus(self):
+        # CONDICION PARA SABER SI LA VENTANA ESTA ABIERTA
+        if not self.ventana_abierta:
+            self.ventana_abierta:True # CAMBIO DE LA VENTANA A TRUE
+            window = AgregarCompusWindow(self.datos_compus)
+            window.setWindowModality(QtCore.Qt.ApplicationModal) # BLOQUEO DE LA VENTANA PRINCIPAL
+            window.destroyed.connect(self.ventana_cerrada)
+            window.show()
+
+    def configuracion_tabla_compus(self):
+        column_header = ('id','Nombre de equipo', 'Número de serie', 'Propietario del equipo', 'Rol')
+        self.computadoras_registradas_table.setColumnCount(len(column_header))
+        self.computadoras_registradas_table.setHorizontalHeaderLabels(column_header)
+
+        self.computadoras_registradas_table.setSelectionBehavior(QAbstractItemView.SelectRows)
     
-    def configuracion_tabla_admins(self):
-        column_headers = ("nombre", "apellido", "telefono", "correo")
-        self.administradores_tabla.setColumnCount(len(column_headers))
-        self.administradores_tabla.setHorizontalHeaderLabels(column_headers)
+    def datos_compus(self,data):
+        self.computadoras_registradas_table.setRowCount(len(data))
+        for (index_row, row) in enumerate(data):
+            for (index_cell, cell) in enumerate(row):
+                self.computadoras_registradas_table.setItem(index_row, index_cell, QTableWidgetItem(str(cell)))
 
-        self.administradores_tabla.setSelectionBehavior(QAbstractItemView.SelectRows)
+
+# ////////////////////////// FUNCIONES PAGINA ADMINISTRADORES REGISTRADOS //////////////////////////
+
+    def configuracion_tabla_admins(self):
+            column_headers = ("id", "nombre", "apellidos", "telefono", "correo", "rol")
+            self.administradores_tabla.setColumnCount(len(column_headers))
+            self.administradores_tabla.setHorizontalHeaderLabels(column_headers)
+
+            self.administradores_tabla.setSelectionBehavior(QAbstractItemView.SelectRows)
 
     def datos_admins(self,data):
         self.administradores_tabla.setRowCount(len(data))
@@ -123,12 +176,66 @@ class PrincipalWindow(Principal,Admin,QWidget):
             for (index_cell, cell) in enumerate(row):
                 self.administradores_tabla.setItem(index_row, index_cell, QTableWidgetItem(str(cell)))
     
+    # FUNCION PARA MANDAR LLAMAR LA VENTANA DE AGREGAR ADMIN
+    def abrir_agregar_admin(self):
+        # CONDICION PARA SABER SI LA VENTANA ESTA ABIERTA
+        if not self.ventana_abierta: 
+            self.ventana_abierta:True # CAMBIO DE LA VENTANA A TRUE
+            window = AgregarpropietarioWindow(self.datos_admins)
+            window.setWindowModality(QtCore.Qt.ApplicationModal) # BLOQUEO DE LA VENTANA PRINCIPAL
+            window.destroyed.connect(self.ventana_cerrada)
+            window.show()
+        else:
+            QMessageBox.warning(self, "Advertencia", "La ventana ya está abierta.")
+    
+    def modificar_propietarios(self):
+        if not self.ventana_abierta:
+            self.ventana_abierta:True # CAMBIO DE LA VENTANA A TRUE 
+            seleccionar_fila = self.administradores_tabla.selectedItems()
+            if seleccionar_fila:
+                id_propietarios = seleccionar_fila[0].text()
+                window = ModificarPropietarioWindow(self, id_propietarios)
+                window.setWindowModality(QtCore.Qt.ApplicationModal) # BLOQUEO DE LA VENTANA PRINCIPAL
+                window.destroyed.connect(self.ventana_cerrada)
+                window.show()
+        else:
+            QMessageBox.warning(self, "Advertencia", "La ventana ya está abierta.")
+
+            
+# ////////////////////////// FUNCIONES PAGINA PERFIL //////////////////////////
+
+    # FUNCION PARA HABILITAR LOS CAMPOS DE PERFIL DE ADMINISTRADORS
+    def habilitar_datos_admin(self):
+        self.nombre_txt.setEnabled(True)
+        self.apellidos_txt.setEnabled(True)
+        self.telefono_txt.setEnabled(True)
+        self.correo_txt.setEnabled(True)
+
     def guardar_datos_perfil(self):
         self.nombre_txt.setEnabled(False)
         self.apellidos_txt.setEnabled(False)
         self.telefono_txt.setEnabled(False)
         self.correo_txt.setEnabled(False)
         QMessageBox.warning(self, "Guardado", "Los datos se guardaron correctamente.")
+
+
+
+# ////////////////////////// FUNCIONES PARA LAS PAGINAS //////////////////////////
+            
+    # FUNCION PARA DEFINIR QUE LA VENTANA CAMBIE SU ESTADO A FALSE        
+    def ventana_cerrada(self):
+        self.ventana_abierta = False
+
+
+
+
+    
+    
+    
+    
+
+
+
   
     
 

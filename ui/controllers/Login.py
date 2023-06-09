@@ -1,12 +1,13 @@
 #IMPORTACION DE LAS LIBRERIAS A OCUPAR
-from PySide2.QtWidgets import QWidget, QLabel, QMessageBox
+from PySide2.QtWidgets import *
 from views.Login import Login
 from PySide2.QtCore import Qt
 from controllers.Principal import PrincipalWindow
 from db.connection import conexion
-from modelos.admin_model import Admin
+from modelos.propietarios_consultas import Propietario
 from PySide2.QtCore import QRegExp, QTimer
 from PySide2.QtGui import QRegExpValidator
+from clases.administrador_ui import admin_socket_ui
 
 
 # CLASE PARA EL INICIO DE SESION
@@ -16,7 +17,7 @@ class LoginWindow(Login, QWidget):
     def __init__(self, parent = None):
         super().__init__(parent)
         self.setupUi(self)
-        self.admin = Admin(conexion()) # LLAMADA A LA BASE DE DATOS Y ASIGNADA A UNA VARIABLE
+        self.propietario = Propietario(conexion()) # LLAMADA A LA BASE DE DATOS Y ASIGNADA A UNA VARIABLE
 
         # LLAMADO DE INICIO DE SESION                                           # AQUI SE MANDAN LOS DATOS DE LOS TXT
         self.x = self.ingresar_btn.clicked.connect(lambda:self.iniciar_sesion(self.correo_txt.text(),self.password_txt.text()))
@@ -36,15 +37,36 @@ class LoginWindow(Login, QWidget):
     # FUNCION PARA EL INICIO DE SESION
     def iniciar_sesion(self, correo, password):
         # CONDICION PARA VALIDAR LOS DATOS DE LOS TXT CON LOS DATOS DE LA BD
+        if correo == '' or password == '': # CONDICION PARA VERIFICAR QUE LOS CAMPOS DE TEXTO NO ESTEN VACIOS
+                    QMessageBox.warning(self, 'Advertencia', 'Favor de llenar los campos correspondientes', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
 
-        if correo and password:
-            correo = self.admin.getAdmin(correo,password)
-            if correo:
-                self.abrir_principal_window()
-            else:
-                QMessageBox.warning(self, 'Advertencia', 'Correo y/o contraseña invalidos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
-        elif correo == '' or password == '':
-                QMessageBox.warning(self, 'Advertencia', 'Favor de llenar los campos correspondientes', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+        elif '@' not in correo: # CONDICION PARA VERIFICAR QUE EXISTA UN @ EN EL CAMPO DE TEXTO CORREO
+            QMessageBox.warning(self, 'Inserta datos validos' , 'Ingresa un correo valido \nRecuerda que deben de llevar @', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+        
+        else:
+            if correo and password: # CONDICION PARA VERIFICAR EL CORREO Y LA CONTRASEÑA DE LA BD
+                correo = self.propietario.obtener_propietario(correo,password)
+                if correo: # CONDICION PARA INICIAR SESION
+                    respuesta  = admin_socket_ui.crear_sockets()
+                    if respuesta['success']:
+                        print(respuesta['msg'])
+                        respuesta = admin_socket_ui.conexion_temporal()
+                        if respuesta['success']:    
+                            print(respuesta['msg'])
+                            respuesta = admin_socket_ui.validacion_conexion()
+                            if respuesta['success']:
+                                print(respuesta['msg'])
+                                self.abrir_principal_window()
+                            else:
+                                print(respuesta['msg']) 
+                        else:
+                            print(respuesta['msg']) 
+                    else:
+                        print(respuesta['msg'])
+                    
+                else:
+                    QMessageBox.critical(self, 'Advertencia', 'Correo y/o contraseña invalidos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+        
 
         
 
