@@ -2,8 +2,8 @@ from PySide2.QtWidgets import QWidget,QMessageBox, QPushButton
 from views.OpcionesComputadoras import OpcionesComputadora
 
 class OpcionesCompusWindow(OpcionesComputadora, QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
+    def __init__(self,):
+        super().__init__(None)
         self.setupUi(self)
 
         self.comando_widget.hide()
@@ -30,6 +30,7 @@ class OpcionesCompusWindow(OpcionesComputadora, QWidget):
 
     def mostrar_comandos_manualmente(self):
         self.comando_widget.show()
+
         
     
 
