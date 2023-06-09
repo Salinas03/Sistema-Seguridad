@@ -35,7 +35,6 @@ class AgregarCompusWindow(AgregarComputadoras, QWidget):
                                                                                    self.rol_txt.text()))
         self.y = self.cancelar_registro_btn.clicked.connect(self.cancelar_registro)
 
-
     def agregar_compus(self, equipo, numSerie, propietario, rol):
             equipo = self.nombre_equipo_txt.text()
             numSerie = self.num_serie_txt.text()

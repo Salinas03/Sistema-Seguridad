@@ -7,7 +7,6 @@ from db.connection import conexion
 from modelos.propietarios_consultas import Propietario
 from PySide2.QtCore import QRegExp, QTimer
 from PySide2.QtGui import QRegExpValidator
-from clases.administrador_ui import admin_socket_ui
 
 
 # CLASE PARA EL INICIO DE SESION
@@ -32,14 +31,11 @@ class LoginWindow(Login, QWidget):
         self.correo_txt.setValidator(email)
         self.password_txt.setValidator(only_password)
         
-
-
     # FUNCION PARA EL INICIO DE SESION
     def iniciar_sesion(self, correo, password):
         # CONDICION PARA VALIDAR LOS DATOS DE LOS TXT CON LOS DATOS DE LA BD
         if correo == '' or password == '': # CONDICION PARA VERIFICAR QUE LOS CAMPOS DE TEXTO NO ESTEN VACIOS
                     QMessageBox.warning(self, 'Advertencia', 'Favor de llenar los campos correspondientes', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
-
         elif '@' not in correo: # CONDICION PARA VERIFICAR QUE EXISTA UN @ EN EL CAMPO DE TEXTO CORREO
             QMessageBox.warning(self, 'Inserta datos validos' , 'Ingresa un correo valido \nRecuerda que deben de llevar @', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
         
@@ -47,33 +43,14 @@ class LoginWindow(Login, QWidget):
             if correo and password: # CONDICION PARA VERIFICAR EL CORREO Y LA CONTRASEÑA DE LA BD
                 correo = self.propietario.obtener_propietario(correo,password)
                 if correo: # CONDICION PARA INICIAR SESION
-                    respuesta  = admin_socket_ui.crear_sockets()
-                    if respuesta['success']:
-                        print(respuesta['msg'])
-                        respuesta = admin_socket_ui.conexion_temporal()
-                        if respuesta['success']:    
-                            print(respuesta['msg'])
-                            respuesta = admin_socket_ui.validacion_conexion()
-                            if respuesta['success']:
-                                print(respuesta['msg'])
-                                self.abrir_principal_window()
-                            else:
-                                print(respuesta['msg']) 
-                        else:
-                            print(respuesta['msg']) 
-                    else:
-                        print(respuesta['msg'])
-                    
+                    self.abrir_principal_window()
                 else:
                     QMessageBox.critical(self, 'Advertencia', 'Correo y/o contraseña invalidos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
         
-
-        
-
     # FUNCION PARA EL LLLAMADO DE LA PAGINA PRINCIPAL 
     def abrir_principal_window(self):
         self.close()
-        window = PrincipalWindow(self)
+        window = PrincipalWindow()
         window.show()
         self.setWindowFlag(Qt.Window)
     

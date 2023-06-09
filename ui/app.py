@@ -14,7 +14,7 @@ if __name__ == "__main__":
     app = QApplication()
 
     
-    window = LoginWindow()
+    window = PrincipalWindow()
     window.show()
 
     app.exec_()
