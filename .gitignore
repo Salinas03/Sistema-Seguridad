@@ -5,3 +5,8 @@ tasks.txt
 /servidor/base_datos/__pycache__
 /servidor/clases/__pycache__
 /ui/env
+/ui/clases/__pycache__
+/ui/controllers/__pycache__
+/ui/db/__pycache__
+/ui/modelos/__pycache__
+/ui/views/__pycache__
