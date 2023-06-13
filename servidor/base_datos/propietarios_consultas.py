@@ -9,7 +9,7 @@ class PropietariosConsultas:
     def obtener_propietario(self, correo, password):
         with self.conexion.cursor() as cursor:
             try:
-                sql = """SELECT correo_propietario FROM propietarios WHERE correo_propietario = %s AND contrasena_propietario = %s"""
+                sql = """SELECT * FROM propietarios WHERE correo_propietario = %s AND contrasena_propietario = %s"""
                 cursor.execute(sql, (correo, password))
                 resultado = cursor.fetchall()
                 return json.dumps({'success': True, 'data': resultado})

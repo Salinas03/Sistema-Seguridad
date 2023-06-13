@@ -10,7 +10,7 @@ class EquiposConsultas():
         if self.conexion.is_connected():
             try:
                 cursor = self.conexion.cursor()
-                cursor.execute(f'SELECT * FROM equipos WHERE rol={0}')
+                cursor.execute(f'SELECT * FROM equipos')
                 resultado = cursor.fetchall()
                 return json.dumps({'success': True, 'data': resultado})
             except Error as err:
