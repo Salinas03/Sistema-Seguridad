@@ -279,9 +279,9 @@ class OpcionesComputadora(QMainWindow, object):
         self.pushButton_7.setText(QCoreApplication.translate("OpcionesComputadora", u"Ingresar Comando \n"
 "Manualmente", None))
         self.label_3.setText(QCoreApplication.translate("OpcionesComputadora", u"<html><head/><body><p><span style=\" color:#ffffff;\">Selecciona la </span></p><p><span style=\" color:#ffffff;\">opci\u00f3n a ejecutar</span></p></body></html>", None))
-        self.pushButton_2.setText(QCoreApplication.translate("OpcionesComputadora", u"1", None))
-        self.pushButton_3.setText(QCoreApplication.translate("OpcionesComputadora", u"2", None))
-        self.pushButton_4.setText(QCoreApplication.translate("OpcionesComputadora", u"3", None))
+        self.pushButton_2.setText(QCoreApplication.translate("OpcionesComputadora", u"Apagar", None))
+        self.pushButton_3.setText(QCoreApplication.translate("OpcionesComputadora", u"Suspender", None))
+        self.pushButton_4.setText(QCoreApplication.translate("OpcionesComputadora", u"Bloquear", None))
         self.pushButton_5.setText(QCoreApplication.translate("OpcionesComputadora", u"4", None))
         self.pushButton_6.setText(QCoreApplication.translate("OpcionesComputadora", u"5", None))
     # retranslateUi

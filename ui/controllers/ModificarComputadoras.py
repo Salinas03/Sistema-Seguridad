@@ -26,6 +26,7 @@ class ModificarEquipoWindow(EditarComputadoras, QWidget):
         self.propietario_equipo_txt.setValidator(propietario_text)
         self.rol_txt.setValidator(rol)
 
+        self.x = self.modificar_compu_btn.clicked.connect(self.editar_compus)
         self.y = self.cancelar_registro_btn.clicked.connect(self.cancelar_registro)
 
     def llenar_campos_texto(self):
@@ -34,9 +35,9 @@ class ModificarEquipoWindow(EditarComputadoras, QWidget):
         if len(data) >= 1:
             equipo = data[0]
             self.nombre_equipo_txt.setText(equipo[1])
-            self.num_serie_txt.sett(equipo[2])
-            self.propietario_equipo_txt.sett(equipo[3])
-            self.rol_txt.sett(equipo[4])
+            self.num_serie_txt.setText(equipo[2])
+            self.propietario_equipo_txt.setText(str(equipo[3]))
+            self.rol_txt.setText(str(equipo[4]))
         else:
             print('No existe ningún valor')
     

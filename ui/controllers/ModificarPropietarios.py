@@ -85,5 +85,3 @@ class ModificarPropietarioWindow(EditarPropietario,QWidget):
     def cerrar_ventana(self):
         self.close()
                 
-
-
