@@ -409,7 +409,7 @@ Manualmente</string>
              </size>
             </property>
             <property name="text">
-             <string>1</string>
+             <string>Apagar</string>
             </property>
            </widget>
           </item>
@@ -428,7 +428,7 @@ Manualmente</string>
              </size>
             </property>
             <property name="text">
-             <string>2</string>
+             <string>Suspender</string>
             </property>
            </widget>
           </item>
@@ -447,7 +447,7 @@ Manualmente</string>
              </size>
             </property>
             <property name="text">
-             <string>3</string>
+             <string>Bloquear</string>
             </property>
            </widget>
           </item>
