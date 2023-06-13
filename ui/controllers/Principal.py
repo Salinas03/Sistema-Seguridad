@@ -11,7 +11,8 @@ from modelos.propietarios_consultas import Propietario
 from db.connection import conexion
 from modelos.equipos_consultas import Equipo
 from clases.administrador_ui import admin_socket_ui
-import os
+import socket
+import json
 
 class PrincipalWindow(Principal,QWidget):
 
@@ -20,11 +21,8 @@ class PrincipalWindow(Principal,QWidget):
         super().__init__(None)
         self.setupUi(self)
         self.conexion = conexion()
-        self.equipo = Equipo(self.conexion)
-        self.propietario = Propietario(self.conexion)
-        print(admin_socket_ui.escribir_operaciones('listar'))
-        #self.modificarPropietario = ModificarPropietario(self.conexion)
-
+        # self.equipo = Equipo(self.conexion)
+        # self.propietario = Propietario(self.conexion)
 
         # BOTONES QUE REDIRIGEN A LAS PAGINAS DEL STACKEDWIDGET
         self.home_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_2))
@@ -67,8 +65,6 @@ class PrincipalWindow(Principal,QWidget):
         # LLAMADO PARA AGREGAR UNA NUEVA COMPUTADORA
         self.agregar_compu_btn.clicked.connect(self.abrir_agregar_compus)
         self.configuracion_tabla_compus()
-        self.datos_compus(self.equipo.seleccionar_compus())
-
 
         # < --------------------- PAGINA ADMINISTRADORES REGISTRADOS --------------------- >
 
@@ -82,7 +78,6 @@ class PrincipalWindow(Principal,QWidget):
         #self.administradores_tabla.cellDoubleClicked.connect(self.abrir_agregar_admin)      
 
         self.configuracion_tabla_admins()
-        self.datos_admins(self.propietario.seleccionar_propietario())
 
         # < --------------------- PAGINA PERFIL --------------------- >
     
@@ -102,7 +97,22 @@ class PrincipalWindow(Principal,QWidget):
         
         self.ventana_abierta = False # IDENTIFICACION DE QUE LA VENTANA ESTA CERRADA
 
+        #Aqui va un ciclo infinito demasiado cerdo oh yhea omaigad ayudame porfavor diosito solo quiero mi titulo xd
+        equipos_computo = admin_socket_ui.escribir_operaciones(json.dumps({
+            'tabla': 'equipos',
+            'operacion': 'obtener_equipos_computo'
+        }))
+        
+        self.datos_compus(equipos_computo['data'])
+        print(equipos_computo)
+        
+        
+        # self.datos_admins(self.propietario.seleccionar_propietario())
 
+        # while True:
+        #     respuesta = admin_socket_ui.get_socket().recv(admin_socket_ui.HEADER).decode(admin_socket_ui.FORMAT)
+        #     if respuesta == 'REFRESH':
+        #         self.datos_compus(self.equipo.seleccionar_compus())
 
 
 # ////////////////////////// FUNCIONES PAGINA PRINCIPAL //////////////////////////

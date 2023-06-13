@@ -8,7 +8,7 @@ from modelos.propietarios_consultas import Propietario
 from PySide2.QtCore import QRegExp, QTimer
 from PySide2.QtGui import QRegExpValidator
 from clases.administrador_ui import admin_socket_ui
-
+import json
 
 # CLASE PARA EL INICIO DE SESION
 class LoginWindow(Login, QWidget):
@@ -17,7 +17,6 @@ class LoginWindow(Login, QWidget):
     def __init__(self, parent = None):
         super().__init__(parent)
         self.setupUi(self)
-        self.propietario = Propietario(conexion()) # LLAMADA A LA BASE DE DATOS Y ASIGNADA A UNA VARIABLE
 
         # LLAMADO DE INICIO DE SESION                                           # AQUI SE MANDAN LOS DATOS DE LOS TXT
         self.x = self.ingresar_btn.clicked.connect(lambda:self.iniciar_sesion(self.correo_txt.text(),self.password_txt.text()))
@@ -45,35 +44,41 @@ class LoginWindow(Login, QWidget):
         
         else:
             if correo and password: # CONDICION PARA VERIFICAR EL CORREO Y LA CONTRASEÑA DE LA BD
-                correo = self.propietario.obtener_propietario(correo,password)
-                if correo: # CONDICION PARA INICIAR SESION
-                    respuesta  = admin_socket_ui.crear_sockets()
-                    if respuesta['success']:
+                respuesta  = admin_socket_ui.crear_sockets()
+                if respuesta['success']:
+                    print(respuesta['msg'])
+                    respuesta = admin_socket_ui.conexion_temporal()
+                    if respuesta['success']:    
                         print(respuesta['msg'])
-                        respuesta = admin_socket_ui.conexion_temporal()
-                        if respuesta['success']:    
+                        respuesta = admin_socket_ui.validacion_conexion()
+                        if respuesta['success']:
                             print(respuesta['msg'])
-                            respuesta = admin_socket_ui.validacion_conexion()
-                            if respuesta['success']:
-                                print(respuesta['msg'])
+
+                            peticion = {
+                                'tabla': 'propietarios',
+                                'operacion': 'login',
+                                'data': [correo, password]
+                            }
+
+                            respuesta = admin_socket_ui.escribir_operaciones(json.dumps(peticion))
+
+                            if respuesta['data'][0]:
                                 self.abrir_principal_window()
+                                self.close()
                             else:
-                                print(respuesta['msg']) 
+                                QMessageBox.critical(self, 'Advertencia', 'Correo y/o contraseña invalidos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                            print(respuesta['data'][0])
                         else:
                             print(respuesta['msg']) 
                     else:
-                        print(respuesta['msg'])
-                    
+                        print(respuesta['msg']) 
                 else:
-                    QMessageBox.critical(self, 'Advertencia', 'Correo y/o contraseña invalidos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
-        
-
-        
-
+                    print(respuesta['msg']) 
+                    
     # FUNCION PARA EL LLLAMADO DE LA PAGINA PRINCIPAL 
     def abrir_principal_window(self):
         self.close()
-        window = PrincipalWindow(self)
+        window = PrincipalWindow()
         window.show()
         self.setWindowFlag(Qt.Window)
     

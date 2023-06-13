@@ -10,3 +10,4 @@ tasks.txt
 /ui/db/__pycache__
 /ui/modelos/__pycache__
 /ui/views/__pycache__
+/ui/views/Principal.py
