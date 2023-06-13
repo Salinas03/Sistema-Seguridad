@@ -5,9 +5,11 @@ class Propietario:
 
     #FUNCION PARA PODER INICIAR LA CLASE
     def __init__(self,conexion):
-        self.conexion = conexion # CREACION DE LA VARIABLE DE CONEXIO    
+        self.conexion = conexion # CREACION DE LA VARIABLE DE CONEXIO   
+
+
     # FUNCION PARA BUSCAR EL CORREO Y EL PASSWORD, ESTO PARA EL INICIO DE SESION
-    def obtener_propietario(self, correo, password):
+    def obtener_correo_propietario(self, correo, password):
         with self.conexion.cursor() as cursor:
             sql = """SELECT correo_propietario FROM propietarios WHERE correo_propietario = %s AND contrasena_propietario = %s"""
             cursor.execute(sql, (correo, password))
@@ -58,6 +60,23 @@ class Propietario:
             except Error as err:
                 print(f'Error al intentar la conexion {err}')
 
+    def actualizar_perfil(self,id_propietarios, data):
+        if self.conexion.is_connected():
+            try:
+                sql = """UPDATE propietarios SET 
+                                                nombre_propietario = %s,
+                                                apellido_propietario = %s,
+                                                telefono_propietario=%s,
+                                                correo_propietario=%s
+                            WHERE id_propietarios= %s"""
+                cursor = self.conexion.cursor()
+                cursor.execute(sql, (*data, id_propietarios))
+                self.conexion.commit()
+                cursor.close()
+                return True
+            except Error as err:
+                print(f'Error al intentar la conexion {err}')
+        
     def seleccionar_propietario_id(self, id_propietarios):
         try:
             cursor = self.conexion.cursor()
@@ -66,6 +85,20 @@ class Propietario:
             resultado = cursor.fetchall()  # Obtener los resultados de la consulta
             #cursor.close()  # Cerrar el cursor después de obtener los resultados
             return resultado
+            #self.conexion.commit()
+        except Error as err:
+            print(f'Error al intentar la conexion {err}')
+
+    def seleccionar_propietario_id_login(self, correo):
+        try:
+            cursor = self.conexion.cursor()
+            sql = f'SELECT id_propietarios FROM propietarios WHERE correo_propietario = %s'
+            cursor.execute(sql, [correo])
+            resultado = cursor.fetchone()  # Obtener los resultados de la consulta
+            #cursor.close()  # Cerrar el cursor después de obtener los resultados
+            if resultado:
+                id_propietario = resultado[0]
+                return id_propietario
             #self.conexion.commit()
         except Error as err:
             print(f'Error al intentar la conexion {err}')
@@ -81,6 +114,23 @@ class Propietario:
                 return True
             except Error as err:
                 print(f'Error al intentar la conexion {err}')
+    
+    def seleccionar_datos_perfil(self, id_propietarios):
+        try:
+            cursor = self.conexion.cursor()
+            sql = f'SELECT nombre_propietario,apellido_propietario,telefono_propietario,correo_propietario FROM propietarios WHERE id_propietarios = {id_propietarios}'
+            cursor.execute(sql)
+            resultado = cursor.fetchall()  # Obtener los resultados de la consulta
+            #cursor.close()  # Cerrar el cursor después de obtener los resultados
+            return resultado
+            #self.conexion.commit()
+        except Error as err:
+            print(f'Error al intentar la conexion {err}')
+
+  
+    
+
+
             
         
 

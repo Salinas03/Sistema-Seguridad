@@ -26,7 +26,7 @@ class AgregarpropietarioWindow(AgregarPropietario,QWidget):
         #   VALIDACION PARA CAMPO DE CORREO, DONDE SE DEBE PONER UN VALOR ALFANUMERICO, DESPUES LA ACEPTACION DEL @, POR CONSIGUIENTE
         #   OTRO VALOR ALFANUMERICO Y LA ACEPTACION DEL .COM U OTRO DOMINIO
         #email = QRegExpValidator(QRegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"))
-        email = QRegExpValidator(QRegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@(?:gmail|hotmail|msn|yahoo|outlook|live|[.]{1,1})+(?:com|com.mx|net|org|edu|gov|mil|biz|info|name|museum|coop|aero|xxx|[a-zA-Z]{2})$"))
+        email = QRegExpValidator(QRegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@(?:gmail|hotmail|msn|yahoo|outlook|live|[.]{1,1})+(?:com|com.mx|net|org|edu|gov|mil|biz|info|name|museum|coop|aero|xxx|)"))
         rol = QRegExpValidator(QRegExp('^[0-1]{1,1}'))
 
         self.nombre_propietario_txt.setValidator(only_text)
@@ -69,6 +69,10 @@ class AgregarpropietarioWindow(AgregarPropietario,QWidget):
         elif password != password2: 
             QMessageBox.warning(self, 'Error', 'Las contraseñas no coinciden, favor de verificar',QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
         
+        elif '@' not in correo:
+            QMessageBox.warning(self, 'Inserta datos validos' , 'Ingresa un correo valido \nRecuerda que deben de llevar @', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+        elif '.com' or '.com.mx' or '.net' or '.org' or '.edu' or '.gov' or '.mil' or '.biz' or '.info' or '.name' or '.museum' or '.coop' or '.aero' or '.xxx' not in correo:
+            QMessageBox.warning(self, 'Inserta datos validos' , 'Ingresa un correo valido \nRecuerda que deben de llevar un dominio \nEjemplo: .com', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
         else:
             self.propietario.insertar_propietario(nombre,apellido,telefono,correo,password,rol)
             QMessageBox.information(self, 'Registro', 'El registro se hizo con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)

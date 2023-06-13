@@ -767,7 +767,7 @@ Computadora</string>
                        </font>
                       </property>
                       <property name="text">
-                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;- Obtener la MAC ADRESS de la computadora que va a ser registrada. &lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;- Para poder registrar una nueva computadora, se debe registrar primeramente en la sección de agregar &lt;/p&gt;&lt;p&gt;computadoras. &lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;-Instalar la segunda aplicación en la computadora que se va a monitorear. &lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;-Asegurese que ambas aplicaciones cuenten con una conexión a internet, si no, el programa no podra ser utilizado &lt;/p&gt;&lt;p&gt;correctamente.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;- Obtener la MAC ADRESS de la computadora que va a ser registrada. &lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;- Para poder registrar una nueva computadora, se debe registrar primeramente en la sección de agregar &lt;/p&gt;&lt;p&gt;computadoras. &lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;-Instalar la segunda aplicación en la computadora que se va a monitorear. &lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;-Asegurese que ambas aplicaciones cuenten con una conexión a internet, si no, el programa no podra ser utilizado correctamente.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;- Si requiere modificar algún dato de alguna computadora o algún propietario, de doble click en el dato a modificar.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;-Si quiere agregar otro comando en la computadoras activas, de doble click en la computadora seleccionada.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                       </property>
                       <property name="alignment">
                        <set>Qt::AlignJustify|Qt::AlignTop</set>
@@ -1166,6 +1166,9 @@ información</string>
                  <item row="0" column="0">
                   <widget class="QWidget" name="widget_11" native="true">
                    <layout class="QVBoxLayout" name="verticalLayout_8">
+                    <property name="rightMargin">
+                     <number>50</number>
+                    </property>
                     <item>
                      <widget class="QFrame" name="frame_13">
                       <property name="frameShape">

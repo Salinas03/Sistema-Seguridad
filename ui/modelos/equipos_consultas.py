@@ -72,8 +72,7 @@ class Equipo():
             resultado = cursor.fetchall()
             return resultado
         except Error as err:
-            print(f'Error al intentar la conexion {err}')
-    
+            print(f'Error al intentar la conexion {err}')   
 
     def insertar_compus(self, equipo, numSerie, propietario, rol):
         if self.conexion.is_connected():
