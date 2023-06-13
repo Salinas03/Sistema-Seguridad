@@ -16,7 +16,6 @@ class LoginWindow(Login, QWidget):
     def __init__(self, parent = None):
         super().__init__(parent)
         self.setupUi(self)
-        self.propietario = Propietario(conexion()) # LLAMADA A LA BASE DE DATOS Y ASIGNADA A UNA VARIABLE
 
         # LLAMADO DE INICIO DE SESION                                           # AQUI SE MANDAN LOS DATOS DE LOS TXT
         self.x = self.ingresar_btn.clicked.connect(lambda:self.iniciar_sesion(self.correo_txt.text(),self.password_txt.text()))
@@ -41,18 +40,7 @@ class LoginWindow(Login, QWidget):
         
         else:
             if correo and password: # CONDICION PARA VERIFICAR EL CORREO Y LA CONTRASEÑA DE LA BD
-                correo = self.propietario.obtener_propietario(correo,password)
-                if correo: # CONDICION PARA INICIAR SESION
-                    self.abrir_principal_window()
-                else:
-                    QMessageBox.critical(self, 'Advertencia', 'Correo y/o contraseña invalidos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
-        
-    # FUNCION PARA EL LLLAMADO DE LA PAGINA PRINCIPAL 
-    def abrir_principal_window(self):
-        self.close()
-        window = PrincipalWindow()
-        window.show()
-        self.setWindowFlag(Qt.Window)
+
     
 
 

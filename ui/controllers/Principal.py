@@ -10,7 +10,7 @@ from controllers.ModificarPropietarios import ModificarPropietarioWindow
 from modelos.propietarios_consultas import Propietario
 from db.connection import conexion
 from modelos.equipos_consultas import Equipo
-import os
+
 
 class PrincipalWindow(Principal,QWidget):
 
@@ -19,9 +19,6 @@ class PrincipalWindow(Principal,QWidget):
         super().__init__(None)
         self.setupUi(self)
         self.conexion = conexion()
-        self.equipo = Equipo(self.conexion)
-        self.propietario = Propietario(self.conexion)
-        #self.modificarPropietario = ModificarPropietario(self.conexion)
 
 
         # BOTONES QUE REDIRIGEN A LAS PAGINAS DEL STACKEDWIDGET
@@ -65,8 +62,6 @@ class PrincipalWindow(Principal,QWidget):
         # LLAMADO PARA AGREGAR UNA NUEVA COMPUTADORA
         self.agregar_compu_btn.clicked.connect(self.abrir_agregar_compus)
         self.configuracion_tabla_compus()
-        self.datos_compus(self.equipo.seleccionar_compus())
-
 
         # < --------------------- PAGINA ADMINISTRADORES REGISTRADOS --------------------- >
 
@@ -80,7 +75,6 @@ class PrincipalWindow(Principal,QWidget):
         #self.administradores_tabla.cellDoubleClicked.connect(self.abrir_agregar_admin)      
 
         self.configuracion_tabla_admins()
-        self.datos_admins(self.propietario.seleccionar_propietario())
 
         # < --------------------- PAGINA PERFIL --------------------- >
     
