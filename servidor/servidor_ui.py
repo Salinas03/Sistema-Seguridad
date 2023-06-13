@@ -1,42 +1,44 @@
 import socket
 import threading
 import json
-from base_datos.conexion import BaseDatos
+from base_datos.conexion import conexion
+from base_datos.equipos_consultas import EquiposConsultas
+from base_datos.propietarios_consultas import PropietariosConsultas
 from clases.persona import PersonaConectada
+from clases.validar_json import is_valid_json
 
 # 165.22.15.159
 #Variables globales para la configuración del socket
 FORMAT = 'utf-8'
 HEADER = 20480
-# HOST = socket.gethostbyname(socket.gethostname())
-HOST = '165.22.15.159'
+HOST = socket.gethostbyname(socket.gethostname())
+# HOST = '165.22.15.159'
 PORT = 5050
 PORT_NOTI = 5051
+PORT_BROAD = 5052
 ADDR = (HOST, PORT)
 ADDR_NOTI = (HOST, PORT_NOTI)
-
-#Objeto base de datos
-bd = BaseDatos()
-
-#Arreglo de equipos de cómputo de la base de datos
-equipos_computo = bd.obtener_equipos_computo()
+ADDR_BROAD = (HOST, PORT_BROAD)
 
 #Arreglo de conexiones de clientes realizadas en tiempo real
 clientes_activos = []
 clientes_activos_mostrar = []
 
-#Por el momento solo habra un administrador (Prueba)
 administradores_activos = []
 administradores_activos_notificacion = []
+conexiones_broadcast = []
+
 
 #CREAR CANALES DEL SERVIDOR Y GUARDAR LAS CONEXIONES REALIZADAS
 def crear_socket():
     try:
         global servidor
         global notificacion
+        global broadcasting
 
         servidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         notificacion = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        broadcasting = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     except socket.error as err:
         print(f'Error a la hora de crear el socket... /n {err}')
@@ -45,20 +47,27 @@ def vincular_socket():
     try:
         servidor.bind(ADDR)
         notificacion.bind(ADDR_NOTI)
+        broadcasting.bind(ADDR_BROAD)
+        
         servidor.listen()
         notificacion.listen()
+        broadcasting.listen()
 
         print(f'HOST {HOST} corriendo en el puerto {PORT}')
         print(f'NOTIFICACION {HOST} corriendo en el puerto {PORT_NOTI}')
+        print(f'BROADCASTING {HOST} corriendo en el puerto {PORT_BROAD}')
 
         notificacion_thread = threading.Thread(target=aceptar_conexiones_notificacion)
         notificacion_thread.start()
+        broadcasting_thread = threading.Thread(target=aceptar_conexiones_broadcast)
+        broadcasting_thread.start()
 
     except socket.error as err:
         print(f'Error al enlazar el socket... /n {err}')
         print('Intentando denuevo...')
         servidor.close()
         notificacion.close()
+        broadcasting.close()
         # vincular_socket()
 
 def aceptar_conexiones():
@@ -72,14 +81,13 @@ def aceptar_conexiones():
     #Borrar los datos de las conexiónes y direcciones
     del clientes_activos[:]
     del administradores_activos[:]
-
     while True:
         try:
             conn, addr = servidor.accept() #Linea que bloquea el flujo del programa
             servidor.setblocking(1) #Evita el tiempo de espera de las conexiones, (el servidor no se cierra)
 
             #Conexión temporal establecida para obtener información del cliente que se conecto
-            conn.send('{"success": True, "msg": "Conexión temporal establecida..."}'.encode())
+            conn.send('{"success": true, "msg": "Conexión temporal establecida..." }'.encode())
 
             #Se reciben los dos parámetros obligatorios del administrador o cliente para poder
             #verificar si se puede hacer la conexión total con el servidor
@@ -92,24 +100,27 @@ def aceptar_conexiones():
             guardar_conexiones(conn,addr, nombre_host, numero_serie)
 
         except:
-            conn.send('{"success": False, "msg": "Error al aceptar la conexión :("}')
-            print('Error al aceptar la conexión :(')
+            # conn.send('{"success": false, "msg": "Error al aceptar la conexión :("}'.encode())
+            print('Error al aceptar la conexión wtf :(')
 
 def guardar_conexiones(conn, addr, hostname, numero_serie):
     #Verificar si el usuario o administrador esta registrado en la base de datos
-    resultado = bd.obtener_equipo_por_nombre_numero_serie(hostname, numero_serie)
+    resultado = EquiposConsultas(conexion()).obtener_equipo_por_nombre_numero_serie(hostname, numero_serie)
     if not resultado:
-        conn.send('{"success": False, "msg": "Conexión denegada >:/"}'.encode())
+        conn.send('{"success": false, "msg": "Conexión denegada >:/"}'.encode())
         conn.close()
+
+        #Realizar operaciones de estos dispositivos intrusos
+        enviar_mensajes(f'Un dispositivo con la IP {addr} y número de serie {numero_serie} intento entrar al canal sin permisos')
     else:
         #Verificar si el dispositvo que se esta conectando es un administrador o un usuario dependiendo de la tabla SQL
 
-        resultado = bd.obtener_equipo_admin_por_nombre_numero_serie(hostname, numero_serie)
+        resultado = EquiposConsultas(conexion()).obtener_equipo_admin_por_nombre_numero_serie(hostname, numero_serie)
         if not resultado:
             cliente = PersonaConectada(conn, addr, hostname, numero_serie)
             clientes_activos.append(cliente)
             print('Conexión con cliente :)')
-            conn.send('{"success": True, "msg": "Conexión con servidor exitosa :)"}'.encode())
+            conn.send('{"success": true, "msg": "Conexión con servidor exitosa :)"}'.encode())
 
             usuario_thread = threading.Thread(target=panel_usuario, args=(conn, cliente))
             usuario_thread.start()
@@ -140,15 +151,13 @@ def panel_administrador(conn, administrador):
 
     while True:
         try:
-            conn.send('administrador/servidor>'.encode())
 
             #Esperar instrucción de la computadora administradora
             operacion = conn.recv(HEADER).decode(FORMAT, errors='ignore') #Línea que bloque el código
-
             #Realizar operaciones de administrador
             if operacion == 'listar':
-                cadena_equipos = listar_equipos()
-                conn.send(cadena_equipos.encode())
+                equipos = listar_equipos()
+                conn.send(equipos.encode())
 
             elif 'seleccionar' in operacion:
                 if not clientes_activos:
@@ -168,16 +177,87 @@ def panel_administrador(conn, administrador):
                 enviar_mensajes(f'Administrador {administrador_desconexion.get_nombre_host()} desconectado')
                 conn.close()
                 break
+            
+            #Operaciones con la base de datos
+            elif is_valid_json(operacion):
+                print('JSON VÁLIDO')
+                respuesta_operacion = panel_base_datos(operacion)
+                conn.send(respuesta_operacion.encode()) #Respetar el request response
+
             else:
                 conn.send('Comando no reconocido'.encode())
 
         except:
-                print('Administrador desconectado espontáneamente...')
-                administrador_desconexion = borrar_administradores_activos(conn)
-                enviar_mensajes(f'Administrador {administrador_desconexion.get_nombre_host()} desconectado')
-                conn.close()
-                break
+            print('Administrador desconectado espontáneamente...')
+            administrador_desconexion = borrar_administradores_activos(conn)
+            enviar_mensajes(f'Administrador {administrador_desconexion.get_nombre_host()} desconectado')
+            conn.close()
+            break
+
+def panel_base_datos(instruccion): 
+    instruccion = json.loads(instruccion)
+    operacion = instruccion['operacion']
+
+    if instruccion['tabla'] == 'equipos':
+        if operacion == 'insertar':
+            data = instruccion['data']
+            respuesta_operacion = EquiposConsultas(conexion()).insertar_equipo_computo(data[0], data[1], data[2], data[3])
+            if respuesta_operacion['success']:
+                broadcast()
+
+            return respuesta_operacion
+        
+        elif operacion == 'actualizar':
+            respuesta_operacion = EquiposConsultas(conexion()).actualizar_equipo_computo(instruccion['id'], instruccion['data'])
+            return respuesta_operacion
+        
+        elif operacion == 'borrar':
+            respuesta_operacion = EquiposConsultas(conexion()).borrar_equipo_computo(instruccion['id'])
+
+        elif operacion == 'obtener_equipos_computo':
+            return EquiposConsultas(conexion()).obtener_equipos_computo()
+
+        elif operacion == 'obtener_equipo_computo_por_id':
+            return EquiposConsultas(conexion()).obtener_equipo_computo_por_id(instruccion['id'])
+        
+        elif operacion == 'obtener_equipo_por_nombre_numero_serie':
+            data = instruccion['data']
+            return EquiposConsultas(conexion()).obtener_equipo_por_nombre_numero_serie(data[0], data[1])
+        
+        elif operacion == 'obtener_equipo_admin_por_nombre_numero_serie':
+            data = instruccion['data']
+            return EquiposConsultas(conexion()).obtener_equipo_admin_por_nombre_numero_serie(data[0], data[1])
+        
+        else:
+            return json.dumps({'success': False, 'msg': 'Operación no encontrada'})
             
+    elif instruccion['tabla'] == 'propietarios':
+
+        if operacion == 'insertar':
+            data = instruccion['data']
+            respuesta_operacion = PropietariosConsultas(conexion()).insertar_propietario(data[0], data[1], data[2], data[3], data[4], data[5])
+            return respuesta_operacion
+
+        elif operacion == 'actualizar':
+            respuesta_operacion = PropietariosConsultas(conexion()).actualizar_propietario(instruccion['id'], instruccion['data'])
+            return respuesta_operacion
+
+        elif operacion == 'borrar':
+            respuesta_operacion = PropietariosConsultas(conexion()).eliminar_propietario(instruccion['id'])
+            return respuesta_operacion
+
+        elif operacion == 'obtener_propietarios':
+            respuesta_operacion = PropietariosConsultas(conexion()).obtener_propietarios()
+            return respuesta_operacion
+
+        elif operacion == 'login':
+            data = instruccion['data']
+            respuesta_operacion = PropietariosConsultas(conexion()).obtener_propietario(data[0], data[1])
+            return respuesta_operacion
+
+        elif operacion == 'obtener_propietario_id':
+            respuesta_operacion = PropietariosConsultas(conexion()).seleccionar_propietario_id(instruccion['id'])
+        
 def listar_equipos():
     #Se tienen que listar los equipos que estan activos 
     #Pero en la UI se tienen que ver tanto activos como inactivos
@@ -186,7 +266,9 @@ def listar_equipos():
     cadena_equipos_inactivos = 'INACTIVOS \n'
 
     #Copiar los equipos de cómputo a la variable de equipos inactivos
+    equipos_computo = EquiposConsultas(conexion()).obtener_equipos_computo()
     equipos_inactivos = equipos_computo[:]
+
     if clientes_activos_mostrar:
         del clientes_activos_mostrar[:]
 
@@ -211,6 +293,8 @@ def listar_equipos():
             if cliente_activo.get_nombre_host() == equipo_computo[1]:
                 equipos_inactivos[x] = None
                 equipo = list(equipo_computo)
+
+                #Agregar la IP al cliente activo para mostrar
                 equipo.append(ip_cliente)
                 clientes_activos_mostrar.append(equipo)
     
@@ -226,8 +310,8 @@ def listar_equipos():
     cadena_equipos = cadena_equipos_activos + cadena_equipos_inactivos
     equipos = [equipos_inactivos, clientes_activos_mostrar]
     equipos = json.dumps(equipos)
-    # return equipos
-    return cadena_equipos
+    return equipos
+    # return cadena_equipos
 
 def conectar_con_equipo(operacion):
     
@@ -314,7 +398,7 @@ def aceptar_conexiones_notificacion():
 def panel_notificacion(conn, addr):
     while True:
         try:
-            print('Entrando al panel')
+            # print('Entrando al panel')
             respuesta_usuario = conn.recv(HEADER).decode(FORMAT)
             if respuesta_usuario == 'SALIR':
                 print('Desconexión con el panel de notificación')
@@ -324,7 +408,7 @@ def panel_notificacion(conn, addr):
                 break
         except:
             ip = borrar_administradores_notificacion(addr)
-            print(f'Desconexión del usuario con la IP {ip}')
+            print(f'Desconexión del equipo con la IP {ip}')
             conn.close()
             break
 
@@ -352,6 +436,32 @@ def borrar_administradores_notificacion(addr):
             index = administradores_activos_notificacion.index(notificacion)
             del administradores_activos_notificacion[index]
             return notificacion[1] #Regresar IP
+
+#Broadcast
+def aceptar_conexiones_broadcast():
+    for conexion in conexiones_broadcast:
+        conexion[0].close()
+
+    del conexiones_broadcast[:]
+
+    while True:
+        try:
+            conn, addr = broadcasting.accept()
+            conexiones_broadcast.append((conn, addr))
+
+            print(f'Conexión con socket de broadcast {addr}')
+
+        except:
+            print('Hubo un error al conectar con el canal de broadcasting')
+            conn.send('{"success": False, "msg": "Error al aceptar la conexión en broadcasting :("}')
+
+def broadcast():
+    try:
+        if administradores_activos:
+            for conexion in conexiones_broadcast: 
+                conexion[0].send('REFRESH'.encode())
+    except:
+        print('Fukin shit')
 
 crear_socket()
 vincular_socket()

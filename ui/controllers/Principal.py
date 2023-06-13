@@ -11,9 +11,9 @@ from modelos.propietarios_consultas import Propietario
 from py2_msgboxes import msg_boxes
 from db.connection import conexion
 from modelos.equipos_consultas import Equipo
+
 from PySide2.QtCore import QRegExp 
 from PySide2.QtGui import QRegExpValidator
-
 
 class PrincipalWindow(Principal,QWidget):
 
@@ -23,10 +23,12 @@ class PrincipalWindow(Principal,QWidget):
         super().__init__(None)
         self.setupUi(self)
         self.conexion = conexion()
+
         self.equipo = Equipo(self.conexion)
         self.propietario = Propietario(self.conexion)
 
         self.llenar_campos_texto()
+
 
 
         # BOTONES QUE REDIRIGEN A LAS PAGINAS DEL STACKEDWIDGET
@@ -71,9 +73,11 @@ class PrincipalWindow(Principal,QWidget):
         self.b = self.computadoras_registradas_table.itemDoubleClicked.connect(self.modificar_equipos)
         
         self.configuracion_tabla_compus()
+
         self.datos_compus(self.equipo.seleccionar_compus())
 
         self.computadoras_registradas_table.cellPressed.connect(self.habilitar_eliminar_compus)
+
 
 
         # < --------------------- PAGINA ADMINISTRADORES REGISTRADOS --------------------- >
@@ -88,7 +92,6 @@ class PrincipalWindow(Principal,QWidget):
         self.x = self.administradores_tabla.itemDoubleClicked.connect(self.modificar_propietarios)
 
         self.configuracion_tabla_admins()
-        self.datos_admins(self.propietario.seleccionar_propietario())
 
         self.administradores_tabla.cellPressed.connect(self.habilitar_eliminar_propietario)
 

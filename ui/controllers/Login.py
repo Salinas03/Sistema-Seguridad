@@ -15,7 +15,6 @@ class LoginWindow(Login, QWidget):
     def __init__(self, parent = None):
         super().__init__(parent)
         self.setupUi(self)
-        self.propietario = Propietario(conexion()) # LLAMADA A LA BASE DE DATOS Y ASIGNADA A UNA VARIABLE
 
         # LLAMADO DE INICIO DE SESION                                           # AQUI SE MANDAN LOS DATOS DE LOS TXT
         #self.x = self.ingresar_btn.clicked.connect(lambda:self.iniciar_sesion(self.correo_txt.text(),self.password_txt.text()))
@@ -42,6 +41,7 @@ class LoginWindow(Login, QWidget):
         elif '@' not in correo: # CONDICION PARA VERIFICAR QUE EXISTA UN @ EN EL CAMPO DE TEXTO CORREO
             QMessageBox.warning(self, 'Inserta datos validos' , 'Ingresa un correo valido \nRecuerda que deben de llevar @', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
         else:
+
             # if correo and password: # CONDICION PARA VERIFICAR EL CORREO Y LA CONTRASEÑA DE LA BD
             #     correo = self.propietario.obtener_correo_propietario(correo,password)
             #     if correo: # CONDICION PARA INICIAR SESION
@@ -62,6 +62,9 @@ class LoginWindow(Login, QWidget):
         window = PrincipalWindow(id_propieatrio)
         window.show()
         self.setWindowFlag(Qt.Window)
+
+            if correo and password: # CONDICION PARA VERIFICAR EL CORREO Y LA CONTRASEÑA DE LA BD
+
     
 
 

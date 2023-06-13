@@ -1,28 +1,30 @@
 import socket
-import threading
+import json
+import wmi
 
 class AdministradorSocketUI:
     def __init__(self):
         # 165.22.15.159
         self.FORMAT = "utf-8"
         self.HEADER = 20480
-        self.IP = '165.22.15.159'
+        # self.IP = '165.22.15.159'
+        self.IP = socket.gethostbyname(socket.gethostname())
         self.PORT = 5050
         self.PORT_NOT = 5051
+        self.PORT_BROAD = 5052
         self.ADDR = (self.IP, self.PORT)
         self.ADDR_NOT = (self.IP, self.PORT_NOT)
-
-        #Configuración de variables para los hilos
-        self.NUMERO_HILOS = 1
-        self.NUMERO_TAREAS = [1]
+        self.ADDR_BROAD = (self.IP, self.PORT_BROAD)
 
     def crear_sockets(self):
         #Creación de sockets, uno para atender el panel de administración y otro para manejar las notificaciones y listados
         global administrador
         global notificacion
+        global broadcasting
         try:
             administrador = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             notificacion = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            broadcasting = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
             print('Creación de sockets...')
             return {"success": True, "msg": "Creación de sockets exitosa :)"}
@@ -34,15 +36,18 @@ class AdministradorSocketUI:
         try:
             #Conexión de los sockets con los sockets del administrador
             notificacion.connect(self.ADDR_NOT) #Se conecta con el socket de notificaciones
-            administrador.connect(self.ADDR) #Linea de bloqueo de código , se conecta con el ade administrador
-            
+            administrador.connect(self.ADDR) #Linea de bloqueo de código , se conecta con el socket administrador
+            broadcasting.connect(self.ADDR_BROAD)
+                    
             #Mensaje de primer conexión con el servidor (conexión temporal)
-            respuesta_servidor = administrador.recv(self.HEADER).decode(self.FORMAT)
-            
-            print(respuesta_servidor) #Imprimir de manera de mensaje emergente
+            respuesta_servidor = json.loads(administrador.recv(self.HEADER).decode(self.FORMAT))
+            print(respuesta_servidor)
 
             return respuesta_servidor
         except:
+            notificacion.close()
+            administrador.close()
+            broadcasting.close()
             return {"success": False, "msg": "Error al conectar con el servidor :("}
 
     def validacion_conexion(self):
@@ -57,7 +62,7 @@ class AdministradorSocketUI:
 
             #Mensaje de segunda conexión con el servidor
             #Aqui tanto se puede conectar como no se puede conectar
-            respuesta_servidor = administrador.recv(self.HEADER).decode(self.FORMAT)
+            respuesta_servidor = json.loads(administrador.recv(self.HEADER).decode(self.FORMAT))
             print(respuesta_servidor)
 
             return respuesta_servidor
@@ -65,52 +70,39 @@ class AdministradorSocketUI:
         except: 
             return {"success": False, "msg": "Error al validar la conexión :("}
 
-    def escribir_operaciones(operacion):
+    def escribir_operaciones(self, operacion):
         try:
             administrador.send(operacion.encode())
+            respuesta_servidor = json.loads(administrador.recv(self.HEADER).decode(self.FORMAT))
+            return respuesta_servidor
         except:
             print('Error al enviar el mensaje desde el administrador :(')
+            administrador.close()
+            notificacion.send('SALIR'.encode())
+            notificacion.close()
+            broadcasting.close()
+            return None
 
-    #1er hilo
-    def escuchar_respuesta_operaciones(self):
-        while True:
-            try:
-                respuesta_servidor = administrador.recv(self.HEADER).decode(self.FORMAT)
-                print(respuesta_servidor)
+    def get_socket_administrador(self):
+        return administrador
 
-                if 'Bye' in respuesta_servidor:
-                    administrador.close()
-                    notificacion.send('SALIR'.encode())
-                    notificacion.close()
-                    break
-
-                return respuesta_servidor
-
-            except:
-                print('Error al recibir mensaje desde el servidor :(')
-                administrador.close()
-                notificacion.send('SALIR'.encode())
-                notificacion.close()
-                break
+    def get_socket_notificacion(self):
+        return notificacion
     
-    #2do hilo
-    def escuchar_notificaciones(self):
-        while True:
-            try:
-                respuesta_servidor_notificacion = notificacion.recv(self.HEADER).decode(self.FORMAT)
-                print('Notificación:')
-                print(respuesta_servidor_notificacion)
+    def get_socket_broadcasting(self):
+        return broadcasting 
 
-            except:
-                notificacion.close()
-                print('Error al recibir la notificación')
-                break
-    
-    def crear_threads(self):
-        escuchar_operaciones_thread = threading.Thread(target=self.escuchar_respuesta_operaciones)
-        escuchar_notificaciones_thread = threading.Thread(target=self.escuchar_notificaciones)
-        escuchar_operaciones_thread.start()
-        escuchar_notificaciones_thread.start()   
+    def obtener_numero_serie(self):
+        # Connect to the WMI service
+        c = wmi.WMI()
+
+        # Query for the serial number
+        numero_serie = None
+        for bios in c.Win32_BIOS():
+            numero_serie = bios.SerialNumber.strip()
+            break
+        
+        return numero_serie
 
 #Global variable scope (testing)
 admin_socket_ui = AdministradorSocketUI()

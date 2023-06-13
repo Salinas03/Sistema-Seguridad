@@ -5,6 +5,8 @@ from modelos.equipos_consultas import Equipo
 from db.connection import conexion
 from PySide2.QtCore import QRegExp, QTimer
 from PySide2.QtGui import QRegExpValidator
+from clases.administrador_ui import admin_socket_ui
+import json
 
 class AgregarCompusWindow(AgregarComputadoras, QWidget):
     def __init__(self, function):
@@ -45,6 +47,21 @@ class AgregarCompusWindow(AgregarComputadoras, QWidget):
                 QMessageBox.warning(self, 'Error', 'Por favor de poner datos validos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
 
             else:
+                objeto_insertar = {
+                    'tabla': 'equipos',
+                    'operacion': 'insertar',
+                    'data': [equipo, numSerie, propietario, rol]     
+                }
+
+                respuesta = json.loads(admin_socket_ui.escribir_operaciones(json.dumps(objeto_insertar)))
+                
+                if respuesta['success']:
+                    #Realizar mensajes emergentes
+                    pass
+                else:
+                    #Realizar mensajes emergentes
+                    pass
+
                 self.equipo.insertar_compus(equipo,numSerie,propietario,rol)
                 self.nombre_equipo_txt.clear()
                 self.num_serie_txt.clear()
