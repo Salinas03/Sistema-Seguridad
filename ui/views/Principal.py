@@ -387,13 +387,6 @@ class Principal(QMainWindow, object):
 
         self.verticalLayout_11.addWidget(self.label_16)
 
-        self.modificar_compu_btn = QPushButton(self.widget_8)
-        self.modificar_compu_btn.setObjectName(u"modificar_compu_btn")
-        self.modificar_compu_btn.setMinimumSize(QSize(0, 50))
-        self.modificar_compu_btn.setFont(font2)
-
-        self.verticalLayout_11.addWidget(self.modificar_compu_btn)
-
         self.label_17 = QLabel(self.widget_8)
         self.label_17.setObjectName(u"label_17")
 
@@ -735,14 +728,6 @@ class Principal(QMainWindow, object):
 
         self.verticalLayout_14.addWidget(self.label_12)
 
-        self.modificar_admin_btn = QPushButton(self.frame_8)
-        self.modificar_admin_btn.setObjectName(u"modificar_admin_btn")
-        self.modificar_admin_btn.setMinimumSize(QSize(0, 50))
-        self.modificar_admin_btn.setMaximumSize(QSize(200, 16777215))
-        self.modificar_admin_btn.setFont(font2)
-
-        self.verticalLayout_14.addWidget(self.modificar_admin_btn)
-
 
         self.gridLayout_14.addWidget(self.frame_8, 0, 1, 1, 1, Qt.AlignHCenter)
 
@@ -996,8 +981,6 @@ class Principal(QMainWindow, object):
         self.eliminar_compu_btn.setText(QCoreApplication.translate("Principal", u"Eliminar \n"
 "Computadora", None))
         self.label_16.setText("")
-        self.modificar_compu_btn.setText(QCoreApplication.translate("Principal", u"Modificar \n"
-"Computadora", None))
         self.label_17.setText("")
         self.label_5.setText(QCoreApplication.translate("Principal", u"Ayuda", None))
         self.label_15.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p>- Obtener la MAC ADRESS de la computadora que va a ser registrada. </p><p><br/></p><p>- Para poder registrar una nueva computadora, se debe registrar primeramente en la secci\u00f3n de agregar </p><p>computadoras. </p><p><br/></p><p>-Instalar la segunda aplicaci\u00f3n en la computadora que se va a monitorear. </p><p><br/></p><p>-Asegurese que ambas aplicaciones cuenten con una conexi\u00f3n a internet, si no, el programa no podra ser utilizado </p><p>correctamente.</p></body></html>", None))
@@ -1030,8 +1013,6 @@ class Principal(QMainWindow, object):
         self.eliminar_admin_btn.setText(QCoreApplication.translate("Principal", u"Eliminar \n"
 "Adminstrador", None))
         self.label_12.setText("")
-        self.modificar_admin_btn.setText(QCoreApplication.translate("Principal", u"Modificar \n"
-"Administrador", None))
         self.label_2.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p><span style=\" font-size:12pt;\">Computadoras </span><span style=\" font-size:12pt; color:#00aa00;\">activas</span></p></body></html>", None))
         ___qtablewidgetitem11 = self.tabla_computadoras_activas.horizontalHeaderItem(0)
         ___qtablewidgetitem11.setText(QCoreApplication.translate("Principal", u"ID", None));

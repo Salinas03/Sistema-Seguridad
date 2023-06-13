@@ -1,20 +1,22 @@
 from PySide2.QtWidgets import *
-from views.Principal import Principal
 from views.EditarPropietario import EditarPropietario
 from db.connection import conexion
 from modelos.propietarios_consultas import Propietario
 from PySide2.QtCore import Qt, QRegExp 
 from PySide2.QtGui import QRegExpValidator
 
+
 class ModificarPropietarioWindow(EditarPropietario,QWidget):
     
-    def __init__(self, parent = None, _id = None):
+    def __init__(self, funcion ,parent = None, _id = None):
         self._id = _id
         super().__init__(parent)
         self.setupUi(self)
         self.setWindowFlag(Qt.Window)
         self.llenar_campos_texto()
         #self.propietario = Propietario(conexion())
+        self.actualizar_tabla = funcion
+
 
         only_text = QRegExpValidator(QRegExp('^[A-Za-z]{3,50}')) # VALIDACION DE DATOS ALFANUMERICOS DONDE SOLO PUEDE TENER ENTRE 3 Y 100 VALORES
         only_number = QRegExpValidator(QRegExp('^[0-9]{0,10}'))
@@ -31,11 +33,12 @@ class ModificarPropietarioWindow(EditarPropietario,QWidget):
         self.correo_propietario_txt.setValidator(email)
         self.rol_propietario_txt.setValidator(rol)
 
+        #self.editar_admin_btn.clicked.connect(self.editar_propietario)
+        self.agregar_admin_btn.clicked.connect(self.editar_propietario)
+        self.cancelar_admin_btn.clicked.connect(self.cerrar_ventana)
+
     def llenar_campos_texto(self):
         data = Propietario(conexion()).seleccionar_propietario_id(self._id)
-
-        print(data)
-
         if len(data) >= 1:
             propietario = data[0]
             self.nombre_propietario_txt.setText(propietario[1])
@@ -51,19 +54,36 @@ class ModificarPropietarioWindow(EditarPropietario,QWidget):
         apellido = self.apellido_propietario_txt.text()
         telefono = self.telefono_propietario_txt.text()
         correo = self.correo_propietario_txt.text()
-        password = self.password_propietario_txt.text()
-        password2 = self.confirma_contrasenia_txt.text()
         rol = self.rol_propietario_txt.text()
 
+        errores_count = 0
+
         # CONDICIONES PARA LA VERIFICACION DE LOS CAMPOS 
-        if nombre == '' or apellido == '' or telefono == '' or correo == '' or password == '' or  password2 == '' or rol == '' :
+        if nombre == '' or apellido == '' or telefono == '' or correo == ''  or rol == '' :
             QMessageBox.warning(self, 'Error', 'Por favor de poner datos validos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
-        
-        elif password != password2: 
-            QMessageBox.warning(self, 'Error', 'Las contraseñas no coinciden, favor de verificar',QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
-        
-    def seleccionar_propietario(self):
-        pass
-        #propietario_path = QFileDialog.
+            errores_count +=1
+        elif errores_count == 0:
+            return True
+                    
+    def editar_propietario(self):
+        nombre = self.nombre_propietario_txt.text()
+        apellido = self.apellido_propietario_txt.text()
+        telefono = self.telefono_propietario_txt.text()
+        correo = self.correo_propietario_txt.text()
+        rol = self.rol_propietario_txt.text()
+
+        data = [nombre,apellido,telefono,correo,rol]
+
+        if self.checar_inputs():
+            propietario = Propietario(conexion())
+            if propietario.actualizar_propietario(self._id, data):
+                QMessageBox.information(self, 'Actualización', 'El propietario se actualizo con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                self.actualizar_tabla(propietario.seleccionar_propietario())
+                self.close()
+            
+
+    def cerrar_ventana(self):
+        self.close()
+                
 
 

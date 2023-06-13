@@ -4,9 +4,6 @@ class Equipo():
 
     def __init__(self, conexion):
         self.conexion = conexion
-    
-    def insertarCompus(self):
-        pass
 
     def obtener_equipos_computo(self):
         if self.conexion.is_connected():
@@ -87,6 +84,45 @@ class Equipo():
                 cursor.execute(sql, val)
                 self.conexion.commit()
 
+            except Error as err:
+                print(f'Error al intentar la conexion {err}')
+
+    def actualizar_equipo(self, id_equipo, data):
+        if self.conexion.is_connected():
+            try:
+                cursor = self.conexion.cursor()
+                sql = f"""UPDATE equipos SET
+                                            nombre_equipo = %s,
+                                            numero_serie_equipo = %s,
+                                            propietario_equipo = %s,
+                                            rol = %s
+                            WHERE id_equipo = %s"""
+                cursor.execute(sql, (*data, id_equipo))
+                cursor.close()
+                self.conexion.commit()
+                return True
+            except Error as err:
+                print(f'Error al intentar la conexion {err}')
+
+    def seleccionar_equipo_id(self, id_equipo):
+        try:
+            cursor = self.conexion.cursor()
+            sql = f"""SELECT id_equipo,nombre_equipo,numero_serie_equipo,propietario_equipo,rol FROM equipos WHERE id_equipo = {id_equipo} """
+            cursor.execute(sql)
+            resultado = cursor.fetchall()
+            return resultado
+        except Error as err:
+            print(f'Error al intentar la conexion {err}')
+
+    def eliminar_equipo(self, id_equipo):
+        if self.conexion.is_connected():
+            try:
+                cursor = self.conexion.cursor()
+                sql = f"""DELETE FROM equipos WHERE id_equipo = %s"""
+                cursor.execute(sql, (id_equipo,))
+                cursor.close()
+                self.conexion.commit()
+                return True
             except Error as err:
                 print(f'Error al intentar la conexion {err}')
 
