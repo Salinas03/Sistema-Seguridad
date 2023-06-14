@@ -17,6 +17,17 @@ class EquiposConsultas():
                 print(f'Error al intentar la obtener los equipos de cómputo {err}')
                 return json.dumps({'success': False, 'msg': f'Error al obtener los equipos de cómputo {err}'})
 
+    def obtener_equipos_computo_clientes(self):
+        if self.conexion.is_connected():
+            try:
+                cursor = self.conexion.cursor()
+                cursor.execute(f'SELECT * FROM equipos WHERE rol={0}')
+                resultado = cursor.fetchall()
+                return json.dumps({'success': True, 'data': resultado})
+            except Error as err:
+                print(f'Error al intentar la obtener los equipos de cómputo {err}')
+                return json.dumps({'success': False, 'msg': f'Error al obtener los equipos de cómputo {err}'})
+
     def obtener_equipo_computo_por_id(self, id_equipo):
         if self.conexion.is_connected():
             try:

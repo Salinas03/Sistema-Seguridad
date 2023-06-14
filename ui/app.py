@@ -6,7 +6,7 @@ from controllers.Login import LoginWindow
 if __name__ == "__main__":
     app = QApplication()
     
-    window = PrincipalWindow()
+    window = LoginWindow()
     window.show()
 
     app.exec_()
