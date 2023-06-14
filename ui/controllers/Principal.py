@@ -9,11 +9,15 @@ from controllers.ModificarPropietarios import ModificarPropietarioWindow
 from controllers.ModificarComputadoras import ModificarEquipoWindow
 from modelos.propietarios_consultas import Propietario
 from py2_msgboxes import msg_boxes
-from db.connection import conexion
 from modelos.equipos_consultas import Equipo
-
 from PySide2.QtCore import QRegExp 
 from PySide2.QtGui import QRegExpValidator
+
+#TODO Librerias agregadas para la implementación de tablas dinámicas
+import json
+import threading
+from db.connection import conexion
+from clases.administrador_ui import admin_socket_ui
 
 class PrincipalWindow(Principal,QWidget):
 
@@ -22,14 +26,9 @@ class PrincipalWindow(Principal,QWidget):
         self._id = _id
         super().__init__(None)
         self.setupUi(self)
-        self.conexion = conexion()
-
-        self.equipo = Equipo(self.conexion)
-        self.propietario = Propietario(self.conexion)
+        self.conexion = conexion
 
         self.llenar_campos_texto()
-
-
 
         # BOTONES QUE REDIRIGEN A LAS PAGINAS DEL STACKEDWIDGET
         self.home_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_2))
@@ -62,6 +61,15 @@ class PrincipalWindow(Principal,QWidget):
 
         self.otros_comandos_btn.clicked.connect(self.abrir_opciones_computadora)
 
+        # < --------------------- PAGINA COMPUTADORAS ACTIVAS E INACTIVAS TODO--------------------- >
+        header_computadoras_activas_tabla = self.tabla_computadoras_activas.horizontalHeader()
+        header_computadoras_activas_tabla.setSectionResizeMode(header_computadoras_activas_tabla.Stretch)
+        self.configuracion_tabla_equipos_activos()
+
+        header_computadoras_inactivas_tabla = self.tabla_computadoras_desactivas.horizontalHeader()
+        header_computadoras_inactivas_tabla.setSectionResizeMode(header_computadoras_inactivas_tabla.Stretch)
+        self.configuracion_tabla_equipos_inactivos()
+
 
         # < --------------------- PAGINA COMPUTADORAS REGISTRADAS --------------------- >
         self.eliminar_compu_btn.setEnabled(False)
@@ -73,8 +81,6 @@ class PrincipalWindow(Principal,QWidget):
         self.b = self.computadoras_registradas_table.itemDoubleClicked.connect(self.modificar_equipos)
         
         self.configuracion_tabla_compus()
-
-        self.datos_compus(self.equipo.seleccionar_compus())
 
         self.computadoras_registradas_table.cellPressed.connect(self.habilitar_eliminar_compus)
 
@@ -114,16 +120,70 @@ class PrincipalWindow(Principal,QWidget):
         self.guardar_admin_btn.setEnabled(False)
 
         self.modificar_perfil_btn.clicked.connect(self.modificar_perfil)
-
         self.guardar_admin_btn.clicked.connect(self.guardar_datos_perfil)
-        
-        
         
         # < --------------------- PAGINA EN GENERAL --------------------- >
         
         self.ventana_abierta = False # IDENTIFICACION DE QUE LA VENTANA ESTA CERRADA
 
-# ////////////////////////// FUNCIONES PAGINA PRINCIPAL //////////////////////////
+        #RENDERIZADO DE TABLAS POR MEDIO DE PETICIONES ------------------------------------------------------
+
+        self.peticion_equipos = {
+            'tabla': 'equipos',
+            'operacion': 'obtener_equipos_computo'
+        }
+
+        self.peticion_propietarios = {
+            'tabla': 'propietarios',
+            'operacion': 'obtener_propietarios'
+        }
+
+
+        #Obtener por primera vez los equipos activos e inactivos
+        equipos_activos_inactivos = admin_socket_ui.escribir_operaciones('listar')
+
+        if equipos_activos_inactivos:
+            self.desplegar_datos_equipos_inactivos(equipos_activos_inactivos[0])
+            self.desplegar_datos_equipos_activos(equipos_activos_inactivos[1])
+            thread_equipos_activos_inactivos = threading.Thread(target=self.escuchar_cambios_equipos_activos_inactivos_notificacion)
+            thread_equipos_activos_inactivos.start()
+
+        #Obtener por primera vez los equipos de cómputo de la BD_SQL
+        equipos_computo = admin_socket_ui.escribir_operaciones(json.dumps(self.peticion_equipos))
+        if equipos_computo['success']:
+            self.datos_compus(equipos_computo['data'])
+            thread_equipos_computo = threading.Thread(target=self.escuchar_cambios_equipos_computo)
+            thread_equipos_computo.start()
+
+
+# ////////////////////////// FUNCIONES PAGINA PRINCIPAL TODO//////////////////////////
+
+    def configuracion_tabla_equipos_activos(self):
+        column_header = ('ID','Nombre del equipo', 'Número de serie', 'Propietario del equipo', 'Rol', 'IP')
+        self.tabla_computadoras_activas.setColumnCount(len(column_header))
+        self.tabla_computadoras_activas.setHorizontalHeaderLabels(column_header)
+
+    def configuracion_tabla_equipos_inactivos(self):
+        column_header = ('ID','Nombre del equipo', 'Número de serie', 'Propietario del equipo', 'Rol')
+        self.tabla_computadoras_desactivas.setColumnCount(len(column_header))
+        self.tabla_computadoras_desactivas.setHorizontalHeaderLabels(column_header)
+
+    def desplegar_datos_equipos_activos(self, data):
+        self.tabla_computadoras_activas.setRowCount(len(data))
+        for (index_row, row) in enumerate(data):
+            for (index_cell, cell) in enumerate(row):
+                self.tabla_computadoras_activas.setItem(index_row, index_cell, QTableWidgetItem(str(cell)))
+
+    def desplegar_datos_equipos_inactivos(self, data):
+        self.tabla_computadoras_desactivas.setRowCount(len(data))
+        for (index_row, row) in enumerate(data):
+            if row is not None:
+                for (index_cell, cell) in enumerate(row):
+                    self.tabla_computadoras_desactivas.showRow(index_row)
+                    self.tabla_computadoras_desactivas.setItem(index_row, index_cell, QTableWidgetItem(str(cell)))
+            else: 
+                self.tabla_computadoras_desactivas.hideRow(index_row)
+
 
     def activar_computadora(self):
         self.desactivar_btn.setVisible(True)
@@ -167,7 +227,7 @@ class PrincipalWindow(Principal,QWidget):
 
     # FUNCION PARA COLOCAR LAF CONFIGURACIONES PARA LA TABLA 
     def configuracion_tabla_compus(self):
-        column_header = ('id','Nombre de equipo', 'Número de serie', 'Propietario del equipo', 'Rol')
+        column_header = ('ID','Nombre de equipo', 'Número de serie', 'Propietario del equipo', 'Rol')
         self.computadoras_registradas_table.setColumnCount(len(column_header))
         self.computadoras_registradas_table.setHorizontalHeaderLabels(column_header)
 
@@ -335,3 +395,37 @@ class PrincipalWindow(Principal,QWidget):
     def ventana_cerrada(self):
         self.ventana_abierta = False
     
+
+# ////////////////////////// FUNCIONES PARA ESCUCHAR CAMBIOS EN LA BASE DE DATOS TODO//////////////////////////
+    def escuchar_cambios_equipos_activos_inactivos_notificacion(self):
+        print('Escuchar cuando se conecten o desconecten usuarios | Canal: Notificaciones')
+        while True:
+            try:
+                msg_notificacion = admin_socket_ui.get_socket_notificacion().recv(admin_socket_ui.HEADER).decode(admin_socket_ui.FORMAT)
+
+                print(msg_notificacion)
+
+                equipos_activos_inactivos = admin_socket_ui.escribir_operaciones('listar')
+
+                print('Equipos activos e inactivos')
+                print(equipos_activos_inactivos)
+
+
+                self.desplegar_datos_equipos_activos(equipos_activos_inactivos[1])
+                self.desplegar_datos_equipos_inactivos(equipos_activos_inactivos[0])
+
+            except:
+                admin_socket_ui.get_socket_notificacion().close()
+                print('Hubo un problema al recibir el mensaje de notificacion')
+
+    def escuchar_cambios_equipos_computo(self):
+        print('Escuchar cambios en la BD | Canal: Broadcasting')
+        while True:
+                try:
+                    msg_broadcast = admin_socket_ui.get_socket_broadcasting().recv(admin_socket_ui.HEADER).decode(admin_socket_ui.FORMAT)
+                    if msg_broadcast == 'REFRESH':
+                        equipos_computo = admin_socket_ui.escribir_operaciones(json.dumps(self.peticion_equipos))
+                        self.datos_compus(equipos_computo['data'])
+                except:
+                    admin_socket_ui.get_socket_broadcasting().close()
+                    print('Hubo un problema al recibir el mensaje del broadcasting')
