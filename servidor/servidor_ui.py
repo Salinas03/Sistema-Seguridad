@@ -4,7 +4,7 @@ import json
 from base_datos.conexion import conexion
 from base_datos.equipos_consultas import EquiposConsultas
 from base_datos.propietarios_consultas import PropietariosConsultas
-from clases.persona import EquipoConectado
+from clases.equipo_conectado import EquipoConectado
 from clases.validar_json import is_valid_json
 
 #VARIABLES GLOBALES PARA LA CONFIGURACIÓN DE SOCKETS
