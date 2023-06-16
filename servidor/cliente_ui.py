@@ -5,7 +5,7 @@ import threading
 import os
 
 class ClienteSocket:
-    def _init_(self):
+    def __init__(self):
         self.FORMAT = "utf-8"
         self.HEADER = 20480
         self.IP = '165.22.15.159'
