@@ -79,8 +79,6 @@ class ClienteSocket:
         return numero_serie
 
 
-
-
 cliente_socket = ClienteSocket()
 
 def manejar_canal_cliente():
@@ -105,24 +103,42 @@ def manejar_canal_cliente():
 
                 except:
                     print('Hubo un error al aplicar la instrucción aplicada')
-        except:
-            print('Ocurrió un error en el canal cliente principal')
-            cliente_socket.get_socket_cliente_secundario().send('SALIR'.encode())
-            cliente_socket.get_socket_cliente().close()
-            cliente_socket.get_socket_cliente_secundario().close()
-            break
+        except (socket.error, socket.timeout) as err:
+
+            #SE HACE LA ESEPCIÓN DE QUE SI SE VA EL INTERNET
+            if isinstance(err, (socket.error, socket.timeout)):
+                print('Desconexión de internet del canal principal')
+                cliente_socket.get_socket_cliente().close()
+                cliente_socket.get_socket_cliente_secundario().close()
+                #CREAR UNA FUNCIÓN DE RECONEXIÓN TODO
+                break
+            else:
+                print('Ocurrió un error en el canal cliente principal')
+                cliente_socket.get_socket_cliente_secundario().send('SALIR'.encode())
+                cliente_socket.get_socket_cliente().close()
+                cliente_socket.get_socket_cliente_secundario().close()
+                break
 
 def manejar_canal_cliente_secundario():
     while True:
         try:
             respuesta_servidor = cliente_socket.get_socket_cliente_secundario().recv(cliente_socket.HEADER).decode(cliente_socket.FORMAT)
             print(respuesta_servidor)
-        except:
-            print('Ocurrio un error en el canal cliente secunadrio')
-            cliente_socket.get_socket_cliente_secundario().send('SALIR'.encode())
-            cliente_socket.get_socket_cliente().close()
-            cliente_socket.get_socket_cliente_secundario().close()
-            break
+        except (socket.error, socket.timeout) as err:
+
+            if(err, (socket.error, socket.timeout)):
+                print('Desconexión de internet del canal secundario')
+                cliente_socket.get_socket_cliente().close()
+                cliente_socket.get_socket_cliente_secundario().close()
+                #CREAR UNA FUNCIÓN DE RECONEXIÓN TODO
+                break
+
+            else:
+                print('Ocurrio un error en el canal cliente secunadrio')
+                cliente_socket.get_socket_cliente_secundario().send('SALIR'.encode())
+                cliente_socket.get_socket_cliente().close()
+                cliente_socket.get_socket_cliente_secundario().close()
+                break
 
 respuesta = cliente_socket.crear_sockets()
 if respuesta['success']:

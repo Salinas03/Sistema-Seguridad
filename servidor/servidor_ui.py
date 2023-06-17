@@ -300,10 +300,18 @@ def panel_base_datos(instruccion):
         
         elif operacion == 'actualizar':
             respuesta_operacion = EquiposConsultas(conexion()).actualizar_equipo_computo(instruccion['id'], instruccion['data'])
+
+            if respuesta_operacion['success']:
+                broadcast()
+
             return respuesta_operacion
         
         elif operacion == 'borrar':
             respuesta_operacion = EquiposConsultas(conexion()).borrar_equipo_computo(instruccion['id'])
+            if respuesta_operacion['success']:
+                broadcast()
+
+            return respuesta_operacion
 
         elif operacion == 'obtener_equipos_computo':
             return EquiposConsultas(conexion()).obtener_equipos_computo()
@@ -357,8 +365,9 @@ def panel_cliente(conn, addr):
             respuesta_usuario = conn.recv(HEADER).decode(FORMAT)
             print(f'Respuesta del usuario {respuesta_usuario}')
             if respuesta_usuario == 'SALIR':
+                print(f'Usuario {addr} se ha desconectado')
                 enviar_notificacion(f'Usuario {addr} se ha desconectado')
-                borrar_conexion_usuarios(conn)
+                borrar_conexion_usuarios(conn) #TODO checar esta funcion
                 print('Entro en el salir')
                 conn.close()
                 break
@@ -399,16 +408,9 @@ def listar_equipos():
     equipos_computo = equipos_computo['data']
     equipos_inactivos = equipos_computo[:]
 
-    print('Equipos inactivos')
-    print(equipos_inactivos)
-
+    #Borrar elementos del arreglo auxiliar
     if conexiones_equipos_cliente_mostrar:
         del conexiones_equipos_cliente_mostrar[:]
-
-    #Crar cadena de texto de los equipos activos e inactivos
-    print('Conexión equipos cliente')
-    print(conexiones_equipos_cliente)
-
 
     for i,conexion_equipo in enumerate(conexiones_equipos_cliente):
         bandera = False
@@ -441,6 +443,12 @@ def listar_equipos():
                     #Agregar la IP al cliente activo para mostrar
                     equipo.append(ip_cliente)
                     conexiones_equipos_cliente_mostrar.append(equipo)
+
+    print('Equipos inactivos')
+    print(equipos_inactivos)
+
+    print('Equipos activos')
+    print(conexiones_equipos_cliente_mostrar)
 
     equipos = [equipos_inactivos, conexiones_equipos_cliente_mostrar]
     equipos = json.dumps(equipos)
@@ -509,9 +517,27 @@ def borrar_administradores_notificacion(addr):
 
 def borrar_conexion_usuarios(conn):
     #Borrar arreglo notificación
-    for conexion_equipo in conexiones_equipos_cliente:
+    print(f'Todas las conexiones equipos clientes en el arreglo')
+    print(conexiones_equipos_cliente)
+
+    for i,conexion_equipo in enumerate(conexiones_equipos_cliente):
+        print(f'Dentro del ciclo for vueltas {i}')
         if conexion_equipo.get_conexion() == conn:
+            print(f'Entro al if en la posición {i}')
+            print('Borrado')
+            print(conexion_equipo)
+
+            print('Nombre host')
+            print(conexion_equipo.get_nombre_host())
+
+            print(f'Según se va a borrar')
+            print(conexion_equipo.get_nombre_host())
+
             index = conexiones_equipos_cliente.index(conexion_equipo)
+
+            print(f'El que se borra')
+            print(conexiones_equipos_cliente[index].get_nombre_host())
+            
             del conexiones_equipos_cliente[index]
 
     for conexion_equipo_secundario in conexiones_equipos_cliente_secundario:

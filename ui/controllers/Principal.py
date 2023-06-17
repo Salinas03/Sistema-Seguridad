@@ -402,21 +402,20 @@ class PrincipalWindow(Principal,QWidget):
         while True:
             try:
                 msg_notificacion = admin_socket_ui.get_socket_notificacion().recv(admin_socket_ui.HEADER).decode(admin_socket_ui.FORMAT)
-
                 print(msg_notificacion)
-
                 equipos_activos_inactivos = admin_socket_ui.escribir_operaciones('listar')
 
                 print('Equipos activos e inactivos')
                 print(equipos_activos_inactivos)
 
-
                 self.desplegar_datos_equipos_activos(equipos_activos_inactivos[1])
                 self.desplegar_datos_equipos_inactivos(equipos_activos_inactivos[0])
 
             except:
+                # admin_socket_ui.get_socket_notificacion().send('SALIR'.encode())
                 admin_socket_ui.get_socket_notificacion().close()
                 print('Hubo un problema al recibir el mensaje de notificacion')
+                break
 
     def escuchar_cambios_equipos_computo(self):
         print('Escuchar cambios en la BD | Canal: Broadcasting')
@@ -429,3 +428,4 @@ class PrincipalWindow(Principal,QWidget):
                 except:
                     admin_socket_ui.get_socket_broadcasting().close()
                     print('Hubo un problema al recibir el mensaje del broadcasting')
+                    break
