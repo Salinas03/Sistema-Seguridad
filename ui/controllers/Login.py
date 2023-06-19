@@ -3,10 +3,11 @@ from PySide2.QtWidgets import *
 from views.Login import Login
 from PySide2.QtCore import Qt
 from controllers.Principal import PrincipalWindow
-from db.connection import conexion
-from modelos.propietarios_consultas import Propietario
-from PySide2.QtCore import QRegExp, QTimer
+from PySide2.QtCore import QRegExp
 from PySide2.QtGui import QRegExpValidator
+
+import json
+from clases.administrador_ui import admin_socket_ui
 
 
 # CLASE PARA EL INICIO DE SESION
@@ -37,24 +38,40 @@ class LoginWindow(Login, QWidget):
         password = self.password_txt.text()
         # CONDICION PARA VALIDAR LOS DATOS DE LOS TXT CON LOS DATOS DE LA BD
         if correo == '' or password == '': # CONDICION PARA VERIFICAR QUE LOS CAMPOS DE TEXTO NO ESTEN VACIOS
-                    QMessageBox.warning(self, 'Advertencia', 'Favor de llenar los campos correspondientes', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+            QMessageBox.warning(self, 'Advertencia', 'Favor de llenar los campos correspondientes', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+
         elif '@' not in correo: # CONDICION PARA VERIFICAR QUE EXISTA UN @ EN EL CAMPO DE TEXTO CORREO
             QMessageBox.warning(self, 'Inserta datos validos' , 'Ingresa un correo valido \nRecuerda que deben de llevar @', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+
         else:
-
-            # if correo and password: # CONDICION PARA VERIFICAR EL CORREO Y LA CONTRASEÑA DE LA BD
-            #     correo = self.propietario.obtener_correo_propietario(correo,password)
-            #     if correo: # CONDICION PARA INICIAR SESION
-            #         self.abrir_principal_window()
-            #     else:
-            #         QMessageBox.critical(self, 'Advertencia', 'Correo y/o contraseña invalidos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
             if correo and password:
-                id_propieatrio = self.propietario.seleccionar_propietario_id_login(correo)
-                if id_propieatrio:
-                    self.abrir_principal_window(id_propieatrio)
-                else:
-                    QMessageBox.critical(self, 'Advertencia', 'Correo y/o contraseña invalidos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
+                respuesta = admin_socket_ui.crear_sockets()
+                if respuesta['success']:
+                    print(respuesta['msg'])
+                    respuesta = admin_socket_ui.conexion_temporal()
+                    if respuesta['success']:
+                        print(respuesta['msg'])
+                        respuesta = admin_socket_ui.validacion_conexion()
+                        if respuesta['success']:
+                            respuesta_servidor = admin_socket_ui.escribir_operaciones(json.dumps({
+                                'tabla': 'propietarios',
+                                'operacion': 'login',
+                                'data': [correo, password]
+                            }))
 
+                            administrador = respuesta_servidor['data'][0]
+
+                            if administrador:
+                                self.abrir_principal_window(administrador[0])
+                                self.close()
+
+                        else: 
+                            QMessageBox.critical(self, 'Advertencia', 'Correo y/o contraseña invalidos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
+                            print(respuesta['msg'])
+                    else:
+                        print(respuesta['msg'])
+                else:
+                    print(respuesta['msg'])
 
     # FUNCION PARA EL LLLAMADO DE LA PAGINA PRINCIPAL 
     def abrir_principal_window(self, id_propieatrio):
@@ -63,7 +80,6 @@ class LoginWindow(Login, QWidget):
         window.show()
         self.setWindowFlag(Qt.Window)
 
-            if correo and password: # CONDICION PARA VERIFICAR EL CORREO Y LA CONTRASEÑA DE LA BD
 
     
 

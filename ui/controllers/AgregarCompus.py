@@ -53,14 +53,14 @@ class AgregarCompusWindow(AgregarComputadoras, QWidget):
                     'data': [equipo, numSerie, propietario, rol]     
                 }
 
-                respuesta = json.loads(admin_socket_ui.escribir_operaciones(json.dumps(objeto_insertar)))
+                # respuesta = json.loads(admin_socket_ui.escribir_operaciones(json.dumps(objeto_insertar)))
                 
-                if respuesta['success']:
-                    #Realizar mensajes emergentes
-                    pass
-                else:
-                    #Realizar mensajes emergentes
-                    pass
+                # if respuesta['success']:
+                #     #Realizar mensajes emergentes
+                #     pass
+                # else:
+                #     #Realizar mensajes emergentes
+                #     pass
 
                 self.equipo.insertar_compus(equipo,numSerie,propietario,rol)
                 self.nombre_equipo_txt.clear()

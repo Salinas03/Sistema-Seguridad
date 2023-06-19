@@ -1,4 +1,4 @@
-class PersonaConectada:
+class EquipoConectado:
 
     #Sobrecarga de constructores
     def __init__(self, conexion, direccion, nombre_host, identificador):
