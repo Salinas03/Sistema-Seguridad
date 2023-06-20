@@ -3,6 +3,7 @@ import json
 import wmi
 import threading
 import os
+import time
 
 class ClienteSocket:
     def __init__(self):
@@ -33,7 +34,6 @@ class ClienteSocket:
         try:
 
             cliente.connect(self.ADDR)
-            cliente_secundario.connect(self.ADDR_CLIENTE)
 
             respuesta_servidor = json.loads(cliente.recv(self.HEADER).decode(self.FORMAT))
 
@@ -42,6 +42,16 @@ class ClienteSocket:
         except:
             cliente.close()
             cliente_secundario.close()
+
+    def conexion_canal_secundario(self):
+        try:
+            cliente_secundario.connect(self.ADDR_CLIENTE)
+            return True
+
+        except:
+            cliente.close()
+            cliente_secundario.close()
+            return False
 
     def validacion_conexion(self):
         try:
@@ -114,31 +124,25 @@ def manejar_canal_cliente():
                 break
             else:
                 print('Ocurrió un error en el canal cliente principal')
-                cliente_socket.get_socket_cliente_secundario().send('SALIR'.encode())
                 cliente_socket.get_socket_cliente().close()
                 cliente_socket.get_socket_cliente_secundario().close()
                 break
 
 def manejar_canal_cliente_secundario():
+    cliente_socket.get_socket_cliente_secundario().settimeout(5)
     while True:
         try:
-            respuesta_servidor = cliente_socket.get_socket_cliente_secundario().recv(cliente_socket.HEADER).decode(cliente_socket.FORMAT)
-            print(respuesta_servidor)
-        except (socket.error, socket.timeout) as err:
+            mensaje = cliente_socket.get_socket_cliente_secundario().recv(cliente_socket.HEADER).decode(cliente_socket.FORMAT)
+            print(f'Mensaje del servidor {mensaje}')
 
-            if(err, (socket.error, socket.timeout)):
-                print('Desconexión de internet del canal secundario')
-                cliente_socket.get_socket_cliente().close()
-                cliente_socket.get_socket_cliente_secundario().close()
-                #CREAR UNA FUNCIÓN DE RECONEXIÓN TODO
-                break
+            cliente_socket.get_socket_cliente_secundario().send('*'.encode())
+            
+        except:
+            print('Ocurrio un error en el canal cliente secunadrio')
+            cliente_socket.get_socket_cliente().close()
+            cliente_socket.get_socket_cliente_secundario().close()
+            break
 
-            else:
-                print('Ocurrio un error en el canal cliente secunadrio')
-                cliente_socket.get_socket_cliente_secundario().send('SALIR'.encode())
-                cliente_socket.get_socket_cliente().close()
-                cliente_socket.get_socket_cliente_secundario().close()
-                break
 
 respuesta = cliente_socket.crear_sockets()
 if respuesta['success']:
@@ -149,11 +153,16 @@ if respuesta['success']:
         print(respuesta['msg'])
         respuesta = cliente_socket.validacion_conexion()
         if respuesta['success']:
-            cliente_thread = threading.Thread(target=manejar_canal_cliente)
-            cliente_thread.start()
-            cliente_secundario_thread = threading.Thread(target=manejar_canal_cliente_secundario)
-            cliente_secundario_thread.start()
-            print('Esperando instrucciones ...')
+            #Conexión con el canal secundario despúes de la validación del socket principal
+            if cliente_socket.conexion_canal_secundario():
+                cliente_thread = threading.Thread(target=manejar_canal_cliente)
+                cliente_thread.start()
+                cliente_secundario_thread = threading.Thread(target=manejar_canal_cliente_secundario)
+                cliente_secundario_thread.start()
+                print('Esperando instrucciones ...')
+
+            else: 
+                print('Hubo un error al conectar con el canal secundario')
         else:
             print(respuesta['msg'])
     else:

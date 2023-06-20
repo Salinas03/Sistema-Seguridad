@@ -2,6 +2,7 @@ import socket
 import threading
 import json
 import atexit
+import time
 from base_datos.conexion import conexion
 from base_datos.equipos_consultas import EquiposConsultas
 from base_datos.propietarios_consultas import PropietariosConsultas
@@ -26,6 +27,7 @@ ADDR = (HOST, PORT)
 ADDR_NOTI = (HOST, PORT_NOTI)
 ADDR_BROAD = (HOST, PORT_BROAD)
 ADDR_CLIEN = (HOST, PORT_CLIEN)
+TIMEOUT = 3
 
 #ARREGLOS DE CONEXIONES CON EL SERVIDOR
 conexiones_equipos_cliente = []
@@ -360,21 +362,31 @@ def panel_base_datos(instruccion):
 
 def panel_cliente(conn, addr):
     print(f'Entró {addr} al panel de cliente.')
+    conn.settimeout(TIMEOUT)
 
     while True:
-        try:
-            respuesta_usuario = conn.recv(HEADER).decode(FORMAT)
-            print(f'Respuesta del usuario {respuesta_usuario}')
-            if respuesta_usuario == 'SALIR':
-                print(f'Usuario {addr} se ha desconectado')
-                enviar_notificacion(f'Usuario {addr} se ha desconectado')
-                borrar_conexion_usuarios(conn) #TODO checar esta funcion
-                print('Entro en el salir')
-                conn.close()
-                break
+        try:    
+            conn.send('*'.encode())
+            mensaje_cliente = conn.recv(HEADER).decode(FORMAT)
+            # print(f'Mensaje del cliente {mensaje_cliente}')
 
-        except:         
-            print('Hubo un error al recibir el mensaje en el panel del clilente')
+
+        except ConnectionResetError:         
+            print('Hubo un error al recibir el mensaje en el panel del cliente (ConnectionReset)')
+            borrar_conexion_usuarios(conn)
+            enviar_notificacion(f'Usuario {addr} se ha desconectado')
+            conn.close()
+            break
+
+        except socket.timeout:
+            print('Hubo un error al recibir el mensaje en el panel del cliente (Timeout)')
+            borrar_conexion_usuarios(conn)
+            enviar_notificacion(f'Usuario {addr} se ha desconectado')
+            conn.close()
+            break
+
+        except:
+            print('Hubo un error al recibir el mensaje en el panel del cliente (Exception)')
             borrar_conexion_usuarios(conn)
             enviar_notificacion(f'Usuario {addr} se ha desconectado')
             conn.close()
@@ -413,10 +425,11 @@ def listar_equipos():
     if conexiones_equipos_cliente_mostrar:
         del conexiones_equipos_cliente_mostrar[:]
 
-    for i,conexion_equipo in enumerate(conexiones_equipos_cliente):
+    for i,conexion_equipo in enumerate(conexiones_equipos_cliente[:]):
         bandera = False
         #Mostrar solo aquellas conexiones que estan activas
         print(f'Dentro del for, vueltas {i}')
+        conexion_equipo.get_conexion().settimeout(1)
         try:
             print('Dentro del try')
             conexion_equipo.get_conexion().send(' '.encode())
@@ -428,7 +441,8 @@ def listar_equipos():
             #El arreglo se recorre al borrar estos elementos (podría estar mal)
             print(f'No se pudo enviar mensaje a {conexion_equipo.get_nombre_host()}')
             print('Dentro del except')
-            del conexiones_equipos_cliente[i] #Borrar la conexion del cliente en esa posición en caso de que no haya respuesta
+            index = conexiones_equipos_cliente.index(conexion_equipo)
+            del conexiones_equipos_cliente[index] #Borrar la conexion del cliente en esa posición en caso de que no haya respuesta
             continue
         
         if bandera:
@@ -518,37 +532,23 @@ def borrar_administradores_notificacion(addr):
 
 def borrar_conexion_usuarios(conn):
     #Borrar arreglo notificación
-    print(f'Todas las conexiones equipos clientes en el arreglo')
+    print(f'(BORRAR) Todas las conexiones equipos clientes en el arreglo')
     print(conexiones_equipos_cliente)
 
-    for i,conexion_equipo in enumerate(conexiones_equipos_cliente):
-        print(f'Dentro del ciclo for vueltas {i}')
+    for i,conexion_equipo in enumerate(conexiones_equipos_cliente[:]):
         if conexion_equipo.get_conexion() == conn:
-            print(f'Entro al if en la posición {i}')
-            print('Borrado')
-            print(conexion_equipo)
-
-            print('Nombre host')
-            print(conexion_equipo.get_nombre_host())
-
-            print(f'Según se va a borrar')
-            print(conexion_equipo.get_nombre_host())
-
             index = conexiones_equipos_cliente.index(conexion_equipo)
-
-            print(f'El que se borra')
-            print(conexiones_equipos_cliente[index].get_nombre_host())
-            
             del conexiones_equipos_cliente[index]
 
-    for conexion_equipo_secundario in conexiones_equipos_cliente_secundario:
+    for conexion_equipo_secundario in conexiones_equipos_cliente_secundario[:]:
         if conexion_equipo_secundario[0] == conn:
             index = conexiones_equipos_cliente_secundario.index(conexion_equipo_secundario)
             del conexiones_equipos_cliente_secundario[index]
 
 #FUNCIONALIDADES BROADCAST QUE SE ENVIAN A TODOS LOS ADMINISTRADORES
 def enviar_notificacion(mensaje):
-    print('Enviar notificación')
+    print('(NOTIFICACIÓN ')
+    print(f'Mensaje enviado: {mensaje}')
     try:
         if conexiones_equipos_admin:
             for conexion_admin_notificacion in conexiones_equipos_admin_notificacion: 
@@ -562,7 +562,7 @@ def broadcast():
             for conexion_broadcast in conexiones_equipos_broadcast: 
                 conexion_broadcast[0].send('REFRESH'.encode())
     except:
-        print('Fukin shit')
+        print('Error al enviar el mensaje de broadcast')
 
 atexit.register(cerrar)
 crear_sockets()
