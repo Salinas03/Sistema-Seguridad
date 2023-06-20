@@ -16,6 +16,7 @@ from PySide2.QtGui import QRegExpValidator
 #TODO Librerias agregadas para la implementación de tablas dinámicas
 import json
 import threading
+import time
 from db.connection import conexion
 from clases.administrador_ui import admin_socket_ui
 
@@ -483,7 +484,10 @@ class PrincipalWindow(Principal,QWidget):
         while True:
             try:
                 msg_notificacion = admin_socket_ui.get_socket_notificacion().recv(admin_socket_ui.HEADER).decode(admin_socket_ui.FORMAT)
+                print('Mensaje desde el servidor por medio de enviar mensaje')
                 print(msg_notificacion)
+                
+                #Aqui necesita esperar a que obtenga los valores TODO
                 equipos_activos_inactivos = admin_socket_ui.escribir_operaciones('listar')
 
                 print('Equipos activos e inactivos')
