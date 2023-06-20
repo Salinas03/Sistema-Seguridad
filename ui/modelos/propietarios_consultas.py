@@ -127,6 +127,18 @@ class Propietario:
         except Error as err:
             print(f'Error al intentar la conexion {err}')
 
+    def seleccionar_nombre_perfil(self, id_propietarios):
+        try:
+            cursor = self.conexion.cursor()
+            sql = f'SELECT nombre_propietario FROM propietarios WHERE id_propietarios = {id_propietarios}'
+            cursor.execute(sql)
+            resultado = cursor.fetchall()  # Obtener los resultados de la consulta
+            #cursor.close()  # Cerrar el cursor después de obtener los resultados
+            return resultado
+            #self.conexion.commit()
+        except Error as err:
+            print(f'Error al intentar la conexion {err}')
+
   
     
 
