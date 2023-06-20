@@ -17,7 +17,10 @@ class Principal(QMainWindow, object):
     def setupUi(self, Principal):
         if not Principal.objectName():
             Principal.setObjectName(u"Principal")
-        Principal.resize(1250, 813)
+        Principal.resize(1309, 813)
+        icon = QIcon()
+        icon.addFile(u"./ui/assets/icons/LOGO.svg", QSize(), QIcon.Normal, QIcon.Off)
+        Principal.setWindowIcon(icon)
         self.centralwidget = QWidget(Principal)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -53,16 +56,16 @@ class Principal(QMainWindow, object):
         self.label.setObjectName(u"label")
         self.label.setMinimumSize(QSize(0, 55))
         self.label.setMaximumSize(QSize(16777215, 50))
-        self.label.setPixmap(QPixmap(u"./assets/icons/column-2.ico"))
+        self.label.setPixmap(QPixmap(u"./ui/assets/icons/column-2.ico"))
         self.label.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_3.addWidget(self.label)
 
         self.home_btn = QPushButton(self.menu_widget)
         self.home_btn.setObjectName(u"home_btn")
-        icon = QIcon()
-        icon.addFile(u"./assets/icons/home-3.ico", QSize(), QIcon.Normal, QIcon.Off)
-        self.home_btn.setIcon(icon)
+        icon1 = QIcon()
+        icon1.addFile(u"./ui/assets/icons/home-3.ico", QSize(), QIcon.Normal, QIcon.Off)
+        self.home_btn.setIcon(icon1)
         self.home_btn.setCheckable(False)
         self.home_btn.setChecked(False)
         self.home_btn.setAutoRepeat(False)
@@ -72,9 +75,9 @@ class Principal(QMainWindow, object):
 
         self.compus_btn = QPushButton(self.menu_widget)
         self.compus_btn.setObjectName(u"compus_btn")
-        icon1 = QIcon()
-        icon1.addFile(u"./ui/assets/icons/desktop.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.compus_btn.setIcon(icon1)
+        icon2 = QIcon()
+        icon2.addFile(u"./ui/assets/icons/desktop.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.compus_btn.setIcon(icon2)
         self.compus_btn.setCheckable(False)
         self.compus_btn.setAutoExclusive(False)
 
@@ -82,9 +85,9 @@ class Principal(QMainWindow, object):
 
         self.admins_btn = QPushButton(self.menu_widget)
         self.admins_btn.setObjectName(u"admins_btn")
-        icon2 = QIcon()
-        icon2.addFile(u"./assets/icons/administrator-32.ico", QSize(), QIcon.Normal, QIcon.Off)
-        self.admins_btn.setIcon(icon2)
+        icon3 = QIcon()
+        icon3.addFile(u"./ui/assets/icons/administrator-32.ico", QSize(), QIcon.Normal, QIcon.Off)
+        self.admins_btn.setIcon(icon3)
 
         self.verticalLayout_3.addWidget(self.admins_btn)
 
@@ -99,9 +102,9 @@ class Principal(QMainWindow, object):
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.settings_btn = QPushButton(self.menu_widget)
         self.settings_btn.setObjectName(u"settings_btn")
-        icon3 = QIcon()
-        icon3.addFile(u"./ui/assets/icons/help-circle.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.settings_btn.setIcon(icon3)
+        icon4 = QIcon()
+        icon4.addFile(u"./ui/assets/icons/help-circle.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.settings_btn.setIcon(icon4)
         self.settings_btn.setCheckable(False)
         self.settings_btn.setAutoExclusive(False)
 
@@ -109,9 +112,9 @@ class Principal(QMainWindow, object):
 
         self.pushButton_4 = QPushButton(self.menu_widget)
         self.pushButton_4.setObjectName(u"pushButton_4")
-        icon4 = QIcon()
-        icon4.addFile(u"./ui/assets/icons/arrow-down-left.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.pushButton_4.setIcon(icon4)
+        icon5 = QIcon()
+        icon5.addFile(u"./ui/assets/icons/arrow-down-left.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.pushButton_4.setIcon(icon5)
 
         self.verticalLayout_2.addWidget(self.pushButton_4)
 
@@ -125,12 +128,11 @@ class Principal(QMainWindow, object):
         self.body_widget.setObjectName(u"body_widget")
         self.body_widget.setStyleSheet(u"QPushButton#user_btn{\n"
 "background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(20, 47, 78, 219), stop:1 rgba(85, 98, 112, 226));\n"
-"color:rgba(255, 255, 255, 210);\n"
 "border-radius:5px;\n"
 "}\n"
 "\n"
 "QPushButton#user_btn:hover{\n"
-"background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(40, 67, 98, 219), stop:1 rgba(105, 118, 132, 226));\n"
+"background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1.5, y2:3, stop:0 #c0c0c0, stop:1 #000000);\n"
 "}\n"
 "\n"
 "QPushButton#user_btn:pressed{\n"
@@ -155,11 +157,11 @@ class Principal(QMainWindow, object):
 "background: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
 "border-radius:15px;\n"
 "color:white;\n"
-""
-                        "}\n"
+"}\n"
 "\n"
 "QPushButton#guardad_computadora_btn:hover,\n"
-"#cancelar_registro_btn:hover,\n"
+"#cancelar_regis"
+                        "tro_btn:hover,\n"
 "#modificar_btn:hover,\n"
 "#guardar_btn:hover,\n"
 "#cancelar_btn:hover,\n"
@@ -196,11 +198,11 @@ class Principal(QMainWindow, object):
 "color: rgb(140, 140, 140);\n"
 "}\n"
 "\n"
-"QTa"
-                        "bleWidget{\n"
+"QTableWidget{\n"
 "	background-color: rgb(255, 255, 255);\n"
-"	color: rgb(0, 0, 0);\n"
-"	gridline-color: rgb(0,206,151);\n"
+"	color: rgb(0, "
+                        "0, 0);\n"
+"	gridline-color: #2B3034;\n"
 "	font-size:12pt;\n"
 "	color:#000000;\n"
 "}\n"
@@ -235,9 +237,9 @@ class Principal(QMainWindow, object):
         self.user_btn.setObjectName(u"user_btn")
         self.user_btn.setMaximumSize(QSize(50, 16777215))
         self.user_btn.setStyleSheet(u"")
-        icon5 = QIcon()
-        icon5.addFile(u"./assets/icons/user-4.ico", QSize(), QIcon.Normal, QIcon.Off)
-        self.user_btn.setIcon(icon5)
+        icon6 = QIcon()
+        icon6.addFile(u"./ui/assets/icons/user-4.ico", QSize(), QIcon.Normal, QIcon.Off)
+        self.user_btn.setIcon(icon6)
 
         self.horizontalLayout_2.addWidget(self.user_btn)
 
@@ -348,7 +350,7 @@ class Principal(QMainWindow, object):
         self.verticalLayout_11.setContentsMargins(0, 0, 10, 0)
         self.label_14 = QLabel(self.widget_8)
         self.label_14.setObjectName(u"label_14")
-        self.label_14.setPixmap(QPixmap(u"./assets/files/ok.png"))
+        self.label_14.setPixmap(QPixmap(u"./ui/assets/files/ok.png"))
 
         self.verticalLayout_11.addWidget(self.label_14, 0, Qt.AlignHCenter)
 
@@ -429,10 +431,17 @@ class Principal(QMainWindow, object):
 
         self.widget_10 = QWidget(self.page_3)
         self.widget_10.setObjectName(u"widget_10")
-        self.gridLayout_8 = QGridLayout(self.widget_10)
+        self.gridLayout_5 = QGridLayout(self.widget_10)
+        self.gridLayout_5.setObjectName(u"gridLayout_5")
+        self.scrollArea = QScrollArea(self.widget_10)
+        self.scrollArea.setObjectName(u"scrollArea")
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollAreaWidgetContents = QWidget()
+        self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1184, 562))
+        self.gridLayout_8 = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_8.setObjectName(u"gridLayout_8")
-        self.gridLayout_8.setContentsMargins(50, 60, -1, -1)
-        self.label_15 = QLabel(self.widget_10)
+        self.label_15 = QLabel(self.scrollAreaWidgetContents)
         self.label_15.setObjectName(u"label_15")
         font4 = QFont()
         font4.setPointSize(12)
@@ -440,6 +449,10 @@ class Principal(QMainWindow, object):
         self.label_15.setAlignment(Qt.AlignJustify|Qt.AlignTop)
 
         self.gridLayout_8.addWidget(self.label_15, 0, 0, 1, 1)
+
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+
+        self.gridLayout_5.addWidget(self.scrollArea, 0, 0, 1, 1)
 
 
         self.verticalLayout_12.addWidget(self.widget_10)
@@ -600,9 +613,9 @@ class Principal(QMainWindow, object):
         self.guardar_admin_btn = QPushButton(self.frame_15)
         self.guardar_admin_btn.setObjectName(u"guardar_admin_btn")
         self.guardar_admin_btn.setMinimumSize(QSize(100, 40))
-        icon6 = QIcon()
-        icon6.addFile(u"./assets/icons/save-2.ico", QSize(), QIcon.Normal, QIcon.Off)
-        self.guardar_admin_btn.setIcon(icon6)
+        icon7 = QIcon()
+        icon7.addFile(u"./ui/assets/icons/save-2.ico", QSize(), QIcon.Normal, QIcon.Off)
+        self.guardar_admin_btn.setIcon(icon7)
 
         self.horizontalLayout_8.addWidget(self.guardar_admin_btn)
 
@@ -689,7 +702,7 @@ class Principal(QMainWindow, object):
         self.label_10 = QLabel(self.frame_8)
         self.label_10.setObjectName(u"label_10")
         self.label_10.setMaximumSize(QSize(16777215, 150))
-        self.label_10.setPixmap(QPixmap(u"./assets/files/admin2.png"))
+        self.label_10.setPixmap(QPixmap(u"./ui/assets/files/admin2.png"))
         self.label_10.setScaledContents(True)
         self.label_10.setAlignment(Qt.AlignCenter)
 
@@ -956,7 +969,7 @@ class Principal(QMainWindow, object):
     # setupUi
 
     def retranslateUi(self, Principal):
-        Principal.setWindowTitle(QCoreApplication.translate("Principal", u"MainWindow", None))
+        Principal.setWindowTitle(QCoreApplication.translate("Principal", u"Principal", None))
         self.label.setText("")
         self.home_btn.setText("")
         self.compus_btn.setText("")
@@ -984,7 +997,8 @@ class Principal(QMainWindow, object):
         self.label_16.setText("")
         self.label_17.setText("")
         self.label_5.setText(QCoreApplication.translate("Principal", u"Ayuda", None))
-        self.label_15.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p>- Obtener el número de serie de la computadora que va a ser registrada. </p><p><br/></p><p>- Para poder registrar una nueva computadora, se debe registrar primeramente en la secci\u00f3n de agregar </p><p>computadoras. </p><p><br/></p><p>-Instalar la segunda aplicaci\u00f3n en la computadora que se va a monitorear. </p><p><br/></p><p>-Asegurese que ambas aplicaciones cuenten con una conexi\u00f3n a internet, si no, el programa no podra ser utilizado correctamente.</p><p><br/></p><p>- Si requiere modificar alg\u00fan dato de alguna computadora o alg\u00fan propietario, de doble click en el dato a modificar.</p><p><br/></p><p>-Si quiere agregar otro comando en la computadoras activas, de doble click en la computadora seleccionada.</p></body></html>", None))
+        self.label_15.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p>P\u00e1gina principal</p><p>-Instalar la segunda aplicaci\u00f3n en la computadora que se va a monitorear. </p><p>-Asegurese que ambas aplicaciones cuenten con una conexi\u00f3n a internet, si no, el programa no podra ser utilizado correctamente.</p><p>- Obtener la MAC ADRESS de la computadora que va a ser registrada. </p><p>- Para poder registrar una nueva computadora, se debe registrar primeramente en la secci\u00f3n de agregar computadoras.</p><p>-Si quiere agregar otro comando en la computadoras activas, de doble click en la fila de la computadora seleccionada.</p><p><br/></p><p>Computadoras</p><p>- Si requiere modificar alg\u00fan dato de alguna computadora, de doble click en el dato a modificar.</p><p>- Si se requiere eliminar a una computadora, seleccione la fila y de click en el b\u00f3ton eliminar</p><p><br/></p><p>Propietarios</p><p>- Si requiere modificar alg\u00fan dato de alg\u00fan propietario, de doble click en la fila del dato a modificar.</p><p>- Si se requiere eliminar a"
+                        " un propietario, seleccione la fila y de click en el b\u00f3ton eliminar</p></body></html>", None))
         self.label_13.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p><span style=\" font-size:16pt; font-weight:600; color:#ffffff;\">PERFIL ADMINISTRADOR</span></p></body></html>", None))
         self.label_7.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p><span style=\" color:#ffffff;\">Apellidos</span></p></body></html>", None))
         self.label_8.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p><span style=\" color:#ffffff;\">Tel\u00e9fono</span></p></body></html>", None))

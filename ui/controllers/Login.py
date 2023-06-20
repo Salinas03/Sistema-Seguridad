@@ -32,6 +32,14 @@ class LoginWindow(Login, QWidget):
         self.password_txt.setValidator(only_password)
     
     
+    def eventFilter(self, obj, event):
+        if obj == self.password_txt and event.type() == event.KeyPress:
+            if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
+                self.iniciar_sesion
+                return True
+
+        return super().eventFilter(obj, event)
+    
     # FUNCION PARA EL INICIO DE SESION
     def iniciar_sesion(self):
         correo = self.correo_txt.text()

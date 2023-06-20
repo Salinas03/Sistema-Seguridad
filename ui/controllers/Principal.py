@@ -10,7 +10,7 @@ from controllers.ModificarComputadoras import ModificarEquipoWindow
 from modelos.propietarios_consultas import Propietario
 from py2_msgboxes import msg_boxes
 from modelos.equipos_consultas import Equipo
-from PySide2.QtCore import QRegExp 
+from PySide2.QtCore import *
 from PySide2.QtGui import QRegExpValidator
 
 #TODO Librerias agregadas para la implementación de tablas dinámicas
@@ -21,14 +21,22 @@ from clases.administrador_ui import admin_socket_ui
 
 class PrincipalWindow(Principal,QWidget):
 
-    # FUNCION PARA INICIO DE LA VENTANA
-    def __init__(self,_id = 12):
-        self._id = _id
+    # CONSTRUCTOR PARA INICIO DE LA VENTANA
+                # RECEPCION DEL ID QUE ENVIA
+                # EL LOGIN
+    def __init__(self,_id):
+        self._id = _id # ASIGNACION DEL VALOR ID QUE SE OBTIENE DEL LOGIN A UNA VARIABLE GLOBAL
         super().__init__(None)
         self.setupUi(self)
-        self.conexion = conexion
+        self.conexion = conexion  # LLAMADO DE LA BD
 
-        self.llenar_campos_texto()
+###################################################################################################################################
+###################################################################################################################################
+#
+#       FUNCIONES QUE SE EJECUTAN CUANDO DE EJECUTA LA VENTANA PRINCIPAL
+#
+###################################################################################################################################
+###################################################################################################################################
 
         # BOTONES QUE REDIRIGEN A LAS PAGINAS DEL STACKEDWIDGET
         self.home_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_2))
@@ -62,6 +70,7 @@ class PrincipalWindow(Principal,QWidget):
         self.otros_comandos_btn.clicked.connect(self.abrir_opciones_computadora)
 
         # < --------------------- PAGINA COMPUTADORAS ACTIVAS E INACTIVAS TODO--------------------- >
+        
         header_computadoras_activas_tabla = self.tabla_computadoras_activas.horizontalHeader()
         header_computadoras_activas_tabla.setSectionResizeMode(header_computadoras_activas_tabla.Stretch)
         self.configuracion_tabla_equipos_activos()
@@ -70,21 +79,29 @@ class PrincipalWindow(Principal,QWidget):
         header_computadoras_inactivas_tabla.setSectionResizeMode(header_computadoras_inactivas_tabla.Stretch)
         self.configuracion_tabla_equipos_inactivos()
 
+        self.tabla_computadoras_activas.itemDoubleClicked.connect(self.abrir_opciones_computadora)
+
 
         # < --------------------- PAGINA COMPUTADORAS REGISTRADAS --------------------- >
         self.eliminar_compu_btn.setEnabled(False)
         # MEDIDAS DEL ANCHO DE LAS TABLAS
         header_computadoras_registradas_table = self.computadoras_registradas_table.horizontalHeader()
         header_computadoras_registradas_table.setSectionResizeMode(header_computadoras_registradas_table.Stretch)
-        self.agregar_compu_btn.clicked.connect(self.abrir_agregar_compus)
-        self.a = self.eliminar_compu_btn.clicked.connect(self.eliminar_equipo)
-        self.b = self.computadoras_registradas_table.itemDoubleClicked.connect(self.modificar_equipos)
-        
-        self.configuracion_tabla_compus()
 
+
+        self.agregar_compu_btn.clicked.connect(self.abrir_agregar_compus) # LLAMADO PARA AGREGAR NUEVA COMPUTADORA
+
+        # LLAMADO PARA LA INSERCION DE DATOS EN LA TABLA DE COMPUTADORAS
+        self.configuracion_tabla_compus()
         self.computadoras_registradas_table.cellPressed.connect(self.habilitar_eliminar_compus)
 
+        self.eliminar_compu_btn.clicked.connect(self.eliminar_equipo) # LLAMADO PARA LA ELIMINACION DE COMPUTADORAS
 
+        # LLAMADO PARA LA MODIFICACION DE LA COMPUTADORAS, HACIENDO DOBLE CLICK SOBRE LA COMPUTADORA SELECCIONADA EN LA TABLA
+        self.computadoras_registradas_table.itemDoubleClicked.connect(self.modificar_equipos)
+        
+        # HABILITACION DE BOTON PARA ELIMINAR, CUANDO UNA FILA DE LA TABLA SE HAYA SELECCIONADO
+        self.computadoras_registradas_table.selectionModel().currentChanged.connect(self.actualizar_estado_boton_compu)
 
         # < --------------------- PAGINA ADMINISTRADORES REGISTRADOS --------------------- >
 
@@ -92,16 +109,27 @@ class PrincipalWindow(Principal,QWidget):
         # MEDIDAS DEL ANCHO DE LAS TABLAS
         header_administradores_tabla = self.administradores_tabla.horizontalHeader()
         header_administradores_tabla.setSectionResizeMode(header_administradores_tabla.Stretch)
+
         # LLAMADO PARA AGREGAR UN NUEVO ADMINISTRADOR
         self.agregar_admin_btn.clicked.connect(self.abrir_agregar_admin)
-        self.y = self.eliminar_admin_btn.clicked.connect(self.eliminar_propietario)
+
+        self.y = self.eliminar_admin_btn.clicked.connect(self.eliminar_propietario) # LLAMADO PARA LA ELIMINACION DE PROPIETARIOS
+
+        # LLAMADO PARA LA MODIFICACION DE PROPIETARIOS, HACIENDO DOBLE CLICK EN LA FILA SELECCIONADA DE LA TABLA
         self.x = self.administradores_tabla.itemDoubleClicked.connect(self.modificar_propietarios)
 
+        # LLAMADO PARA LA INSERCION DE DATOS EN LA TABLA DE PROPIETARIOS
         self.configuracion_tabla_admins()
+        self.administradores_tabla.cellPressed.connect(self.habilitar_eliminar_propietario)
 
+        self.ocultar_propietario() # LLAMADO PARA PODER OCULTAR EL PROPIETARIO QUE TIENE LA SESION INICIADA ACTUALMENTE
+
+        # HABILITAR EL BOTON DE ELIMINAR CUANDO SELECCIONE UNA FILA DE LA TABLA PROPIETARIO
         self.administradores_tabla.cellPressed.connect(self.habilitar_eliminar_propietario)
 
         # < --------------------- PAGINA PERFIL --------------------- >
+
+        self.llenar_campos_texto()
 
         email = QRegExpValidator(QRegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@(?:gmail|hotmail|msn|yahoo|outlook|live|[.]{1,1})+(?:com|com.mx|net|org|edu|gov|mil|biz|info|name|museum|coop|aero|xxx|[a-zA-Z]{2})$"))
         only_text = QRegExpValidator(QRegExp('^[A-Za-z]{3,50}')) # VALIDACION DE DATOS ALFANUMERICOS DONDE SOLO PUEDE TENER ENTRE 3 Y 100 VALORES
@@ -119,8 +147,9 @@ class PrincipalWindow(Principal,QWidget):
         self.correo_txt.setEnabled(False)
         self.guardar_admin_btn.setEnabled(False)
 
-        self.modificar_perfil_btn.clicked.connect(self.modificar_perfil)
-        self.guardar_admin_btn.clicked.connect(self.guardar_datos_perfil)
+        self.modificar_perfil_btn.clicked.connect(self.modificar_perfil) # LLAMADO PARA LA MODIFICACION DE LOS DATOS DEL PERFIL
+        self.guardar_admin_btn.clicked.connect(self.guardar_datos_perfil) # LLAMADO PARA GUARDAR LOS DATOS NUEVOS DEL PERFIL
+        self.cerrar_sesion_btn_2.clicked.connect(self.cerrar_sesion) # LLAMADO PARA CERRAR SESION 
         
         # < --------------------- PAGINA EN GENERAL --------------------- >
         
@@ -155,6 +184,22 @@ class PrincipalWindow(Principal,QWidget):
             thread_equipos_computo = threading.Thread(target=self.escuchar_cambios_equipos_computo)
             thread_equipos_computo.start()
 
+###################################################################################################################################
+###################################################################################################################################
+#
+#       FIN DE LAS FUNCIONES QUE SE EJECUTAN CUANDO DE EJECUTA LA VENTANA PRINCIPAL
+#
+###################################################################################################################################
+###################################################################################################################################
+
+
+###################################################################################################################################
+###################################################################################################################################
+#
+#       FUNCIONES SECUNDARIAS, DEPENDEN DEL LLAMADO DE LAS INICIALES
+#
+###################################################################################################################################
+###################################################################################################################################
 
 # ////////////////////////// FUNCIONES PAGINA PRINCIPAL TODO//////////////////////////
 
@@ -163,10 +208,15 @@ class PrincipalWindow(Principal,QWidget):
         self.tabla_computadoras_activas.setColumnCount(len(column_header))
         self.tabla_computadoras_activas.setHorizontalHeaderLabels(column_header)
 
+        self.tabla_computadoras_activas.setSelectionBehavior(QAbstractItemView.SelectRows)# EVENTO QUE SELECCIONA TODA LA FILA
+
+
     def configuracion_tabla_equipos_inactivos(self):
         column_header = ('ID','Nombre del equipo', 'Número de serie', 'Propietario del equipo', 'Rol')
         self.tabla_computadoras_desactivas.setColumnCount(len(column_header))
         self.tabla_computadoras_desactivas.setHorizontalHeaderLabels(column_header)
+
+        self.tabla_computadoras_desactivas.setEnabled(False)
 
     def desplegar_datos_equipos_activos(self, data):
         self.tabla_computadoras_activas.setRowCount(len(data))
@@ -208,11 +258,15 @@ class PrincipalWindow(Principal,QWidget):
     def abrir_opciones_computadora(self):
         if not self.ventana_abierta:
             self.ventana_abierta:True
-            window = OpcionesCompusWindow(self)
-            window.setWindowModality(QtCore.Qt.ApplicationModal)
-            window.destroyed.connect(self.ventana_cerrada)
-            window.show()
-
+            seleccionar_fila = self.tabla_computadoras_activas.selectedItems()
+            if seleccionar_fila:
+                id_propietarios = seleccionar_fila[0].text()
+                window = OpcionesCompusWindow(self,id_propietarios)
+                window.setWindowModality(QtCore.Qt.ApplicationModal)
+                window.destroyed.connect(self.ventana_cerrada)
+                window.show()
+            else:
+                QMessageBox.warning(self, "Advertencia", "La ventana ya está abierta.")
 # ////////////////////////// FUNCIONES PAGINA COMPUTADORAS REGISTRADAS //////////////////////////
 
     # FUNCION PARA MANDAR LLAMAR A LA VENTANA DE AGREGAR COMPUS
@@ -269,7 +323,13 @@ class PrincipalWindow(Principal,QWidget):
 
     def habilitar_eliminar_compus(self):
         self.eliminar_compu_btn.setEnabled(True)
- 
+    
+    # FUNCION PARA HABILITAR EL BOTON DE ELIMINAR EQUIPOS DE COMPUTO
+    def actualizar_estado_boton_compu(self,current: QModelIndex, previous: QModelIndex):
+        if current.isValid():
+            self.eliminar_compu_btn.setEnabled(True)
+        else:
+            self.eliminar_compu_btn.setEnabled(False)   
 
 # ////////////////////////// FUNCIONES PAGINA ADMINISTRADORES REGISTRADOS //////////////////////////
 
@@ -325,7 +385,19 @@ class PrincipalWindow(Principal,QWidget):
                     QMessageBox.information(self, 'Eliminacion', 'El propietario se elimino con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
 
     def habilitar_eliminar_propietario(self):
-        self.eliminar_admin_btn.setEnabled(True)           
+        self.eliminar_admin_btn.setEnabled(True)   
+
+    # FUNCION PARA OCULTAR EL ADMINISTRADOR QUE TIENE LA SESION INICIADA
+    def ocultar_propietario(self):
+        usuario_actual = -1  # Valor predeterminado en caso de que no se encuentre ninguna fila
+        nombre_propietario = Propietario(conexion()).seleccionar_nombre_perfil(self._id) # OBTENCION DE LOS DATOS DE LA CONSULTA DE LA BD
+        # CICLO PARA VERIFICAR QUE EL NOMBRE DEL ADMINISTRADOR EXISTA EN LA TABLA
+        for fila in range(self.administradores_tabla.rowCount()):
+            if self.administradores_tabla.item(fila, 1).text() == nombre_propietario[0][0]: # OBTENCION DEL NOMBRE DE LOS CAMPOS DE NOMBRE EN LA TABLA
+                usuario_actual = fila
+                break
+        if usuario_actual != -1: # CONDICION QUE VALIDA QUE SI HAY UN NOMBRE IGUAL EN LA TABLA
+            self.administradores_tabla.hideRow(usuario_actual) # EVENTO QUE OCULTA UNA FILA DE LA TABLA        
 # ////////////////////////// FUNCIONES PAGINA PERFIL //////////////////////////
 
 
@@ -394,6 +466,15 @@ class PrincipalWindow(Principal,QWidget):
     # FUNCION PARA DEFINIR QUE LA VENTANA CAMBIE SU ESTADO A FALSE        
     def ventana_cerrada(self):
         self.ventana_abierta = False
+
+    # FUNCION PARA CERRAR SESION
+    def cerrar_sesion(self):
+        # ESTA IMPORTACION SE PONE AQUI, YA QUE HACE UN BUCLE INFINITO AL MOMENTO DEL LLAMADO DE LA PAGINA LOGIN
+        from controllers.Login import LoginWindow
+        self.close()
+        window = LoginWindow(self)
+        window.show()
+
     
 
 # ////////////////////////// FUNCIONES PARA ESCUCHAR CAMBIOS EN LA BASE DE DATOS TODO//////////////////////////
