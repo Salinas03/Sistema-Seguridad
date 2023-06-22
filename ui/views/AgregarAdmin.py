@@ -230,8 +230,8 @@ class AgregarPropietario(QMainWindow, object):
         self.label.setText(QCoreApplication.translate("AgregarPropietario", u"Agregar Propietario o Administrador", None))
         self.label_2.setText(QCoreApplication.translate("AgregarPropietario", u"<html><head/><body><p><span style=\" font-size:10pt; font-weight:600; color:#ff0000;\">ADVERTENCIA</span><span style=\" font-size:10pt;\">: Si agregas a un administrador, debes de saber que el tambien tendra </span></p><p><span style=\" font-size:10pt;\">acceso a las computadoras que se hayan registrado, esto para el acceso remoto</span></p><p><span style=\" font-size:10pt;\">a ellas.</span></p></body></html>", None))
         self.rol_propietario_cmbx.setItemText(0, QCoreApplication.translate("AgregarPropietario", u"Selecciona el rol", None))
-        self.rol_propietario_cmbx.setItemText(1, QCoreApplication.translate("AgregarPropietario", u"Administrador - 1", None))
-        self.rol_propietario_cmbx.setItemText(2, QCoreApplication.translate("AgregarPropietario", u"Normal - 0", None))
+        self.rol_propietario_cmbx.setItemText(1, QCoreApplication.translate("AgregarPropietario", u"Administrador", None))
+        self.rol_propietario_cmbx.setItemText(2, QCoreApplication.translate("AgregarPropietario", u"Cliente", None))
 
         self.label_6.setText(QCoreApplication.translate("AgregarPropietario", u"Correo", None))
         self.label_3.setText(QCoreApplication.translate("AgregarPropietario", u"Nombre", None))
