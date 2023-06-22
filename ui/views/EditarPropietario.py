@@ -20,6 +20,9 @@ class EditarPropietario(QMainWindow, object):
         EditarPropietario.resize(700, 500)
         EditarPropietario.setMinimumSize(QSize(700, 500))
         EditarPropietario.setMaximumSize(QSize(700, 500))
+        icon = QIcon()
+        icon.addFile(u"./ui/assets/icons/LOGO.svg", QSize(), QIcon.Normal, QIcon.Off)
+        EditarPropietario.setWindowIcon(icon)
         self.centralwidget = QWidget(EditarPropietario)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -85,45 +88,10 @@ class EditarPropietario(QMainWindow, object):
         self.gridLayout_3 = QGridLayout(self.widget_3)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.gridLayout_3.setContentsMargins(69, -1, 100, -1)
-        self.nombre_propietario_txt = QLineEdit(self.widget_3)
-        self.nombre_propietario_txt.setObjectName(u"nombre_propietario_txt")
-        font1 = QFont()
-        font1.setPointSize(12)
-        self.nombre_propietario_txt.setFont(font1)
-
-        self.gridLayout_3.addWidget(self.nombre_propietario_txt, 0, 2, 1, 1)
-
-        self.rol_propietario_txt = QLineEdit(self.widget_3)
-        self.rol_propietario_txt.setObjectName(u"rol_propietario_txt")
-
-        self.gridLayout_3.addWidget(self.rol_propietario_txt, 4, 2, 1, 1)
-
-        self.label_5 = QLabel(self.widget_3)
-        self.label_5.setObjectName(u"label_5")
-        self.label_5.setFont(font1)
-
-        self.gridLayout_3.addWidget(self.label_5, 2, 0, 1, 1)
-
-        self.label_3 = QLabel(self.widget_3)
-        self.label_3.setObjectName(u"label_3")
-        self.label_3.setFont(font1)
-
-        self.gridLayout_3.addWidget(self.label_3, 0, 0, 1, 1)
-
-        self.label_9 = QLabel(self.widget_3)
-        self.label_9.setObjectName(u"label_9")
-        self.label_9.setMinimumSize(QSize(0, 60))
-
-        self.gridLayout_3.addWidget(self.label_9, 5, 0, 1, 1)
-
-        self.label_6 = QLabel(self.widget_3)
-        self.label_6.setObjectName(u"label_6")
-        self.label_6.setFont(font1)
-
-        self.gridLayout_3.addWidget(self.label_6, 3, 0, 1, 1)
-
         self.telefono_propietario_txt = QLineEdit(self.widget_3)
         self.telefono_propietario_txt.setObjectName(u"telefono_propietario_txt")
+        font1 = QFont()
+        font1.setPointSize(12)
         self.telefono_propietario_txt.setFont(font1)
 
         self.gridLayout_3.addWidget(self.telefono_propietario_txt, 2, 2, 1, 1)
@@ -134,23 +102,52 @@ class EditarPropietario(QMainWindow, object):
 
         self.gridLayout_3.addWidget(self.correo_propietario_txt, 3, 2, 1, 1)
 
-        self.label_8 = QLabel(self.widget_3)
-        self.label_8.setObjectName(u"label_8")
-        self.label_8.setFont(font1)
-
-        self.gridLayout_3.addWidget(self.label_8, 4, 0, 1, 1)
-
         self.label_4 = QLabel(self.widget_3)
         self.label_4.setObjectName(u"label_4")
         self.label_4.setFont(font1)
 
         self.gridLayout_3.addWidget(self.label_4, 1, 0, 1, 1)
 
+        self.label_3 = QLabel(self.widget_3)
+        self.label_3.setObjectName(u"label_3")
+        self.label_3.setFont(font1)
+
+        self.gridLayout_3.addWidget(self.label_3, 0, 0, 1, 1)
+
+        self.nombre_propietario_txt = QLineEdit(self.widget_3)
+        self.nombre_propietario_txt.setObjectName(u"nombre_propietario_txt")
+        self.nombre_propietario_txt.setFont(font1)
+
+        self.gridLayout_3.addWidget(self.nombre_propietario_txt, 0, 2, 1, 1)
+
+        self.label_5 = QLabel(self.widget_3)
+        self.label_5.setObjectName(u"label_5")
+        self.label_5.setFont(font1)
+
+        self.gridLayout_3.addWidget(self.label_5, 2, 0, 1, 1)
+
+        self.label_8 = QLabel(self.widget_3)
+        self.label_8.setObjectName(u"label_8")
+        self.label_8.setFont(font1)
+
+        self.gridLayout_3.addWidget(self.label_8, 4, 0, 1, 1)
+
+        self.label_6 = QLabel(self.widget_3)
+        self.label_6.setObjectName(u"label_6")
+        self.label_6.setFont(font1)
+
+        self.gridLayout_3.addWidget(self.label_6, 3, 0, 1, 1)
+
         self.apellido_propietario_txt = QLineEdit(self.widget_3)
         self.apellido_propietario_txt.setObjectName(u"apellido_propietario_txt")
         self.apellido_propietario_txt.setFont(font1)
 
         self.gridLayout_3.addWidget(self.apellido_propietario_txt, 1, 2, 1, 1)
+
+        self.editar_rol_cmbx = QComboBox(self.widget_3)
+        self.editar_rol_cmbx.setObjectName(u"editar_rol_cmbx")
+
+        self.gridLayout_3.addWidget(self.editar_rol_cmbx, 4, 2, 1, 1)
 
 
         self.verticalLayout_3.addWidget(self.widget_3)
@@ -193,14 +190,13 @@ class EditarPropietario(QMainWindow, object):
     # setupUi
 
     def retranslateUi(self, EditarPropietario):
-        EditarPropietario.setWindowTitle(QCoreApplication.translate("EditarPropietario", u"MainWindow", None))
+        EditarPropietario.setWindowTitle(QCoreApplication.translate("EditarPropietario", u"Editar propietario", None))
         self.label.setText(QCoreApplication.translate("EditarPropietario", u"Modificar Propietario o Administrador", None))
-        self.label_5.setText(QCoreApplication.translate("EditarPropietario", u"Tel\u00e9fono", None))
-        self.label_3.setText(QCoreApplication.translate("EditarPropietario", u"Nombre", None))
-        self.label_9.setText(QCoreApplication.translate("EditarPropietario", u"<html><head/><body><p>Los roles son los siguientes:</p><p>- Si se desea modificar un usuario <span style=\" font-weight:600;\">Administrador</span> pon <span style=\" font-weight:600;\">1</span></p><p>- Si se desea modificar un usuario <span style=\" font-weight:600;\">Normal</span> pon <span style=\" font-weight:600;\">0</span></p></body></html>", None))
-        self.label_6.setText(QCoreApplication.translate("EditarPropietario", u"Correo", None))
-        self.label_8.setText(QCoreApplication.translate("EditarPropietario", u"Rol", None))
         self.label_4.setText(QCoreApplication.translate("EditarPropietario", u"Apellidos", None))
+        self.label_3.setText(QCoreApplication.translate("EditarPropietario", u"Nombre", None))
+        self.label_5.setText(QCoreApplication.translate("EditarPropietario", u"Tel\u00e9fono", None))
+        self.label_8.setText(QCoreApplication.translate("EditarPropietario", u"Rol", None))
+        self.label_6.setText(QCoreApplication.translate("EditarPropietario", u"Correo", None))
         self.cancelar_admin_btn.setText(QCoreApplication.translate("EditarPropietario", u"Cancelar", None))
         self.agregar_admin_btn.setText(QCoreApplication.translate("EditarPropietario", u"Modificar", None))
     # retranslateUi

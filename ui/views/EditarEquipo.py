@@ -20,6 +20,9 @@ class EditarComputadoras(QMainWindow, object):
         EditarComputadoras.resize(700, 500)
         EditarComputadoras.setMinimumSize(QSize(700, 500))
         EditarComputadoras.setMaximumSize(QSize(700, 500))
+        icon = QIcon()
+        icon.addFile(u"./ui/assets/icons/LOGO.svg", QSize(), QIcon.Normal, QIcon.Off)
+        EditarComputadoras.setWindowIcon(icon)
         self.centralwidget = QWidget(EditarComputadoras)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -99,12 +102,6 @@ class EditarComputadoras(QMainWindow, object):
 
         self.gridLayout_3.addWidget(self.label_12, 2, 0, 1, 1)
 
-        self.propietario_equipo_txt = QLineEdit(self.frame_2)
-        self.propietario_equipo_txt.setObjectName(u"propietario_equipo_txt")
-        self.propietario_equipo_txt.setFont(font2)
-
-        self.gridLayout_3.addWidget(self.propietario_equipo_txt, 2, 1, 1, 1)
-
         self.label_13 = QLabel(self.frame_2)
         self.label_13.setObjectName(u"label_13")
         self.label_13.setMinimumSize(QSize(0, 50))
@@ -112,19 +109,18 @@ class EditarComputadoras(QMainWindow, object):
 
         self.gridLayout_3.addWidget(self.label_13, 3, 0, 1, 1)
 
-        self.rol_txt = QLineEdit(self.frame_2)
-        self.rol_txt.setObjectName(u"rol_txt")
-        self.rol_txt.setFont(font2)
+        self.edita_propietario_cmbx = QComboBox(self.frame_2)
+        self.edita_propietario_cmbx.setObjectName(u"edita_propietario_cmbx")
 
-        self.gridLayout_3.addWidget(self.rol_txt, 3, 1, 1, 1)
+        self.gridLayout_3.addWidget(self.edita_propietario_cmbx, 2, 1, 1, 1)
+
+        self.edita_rol_cmbx = QComboBox(self.frame_2)
+        self.edita_rol_cmbx.setObjectName(u"edita_rol_cmbx")
+
+        self.gridLayout_3.addWidget(self.edita_rol_cmbx, 3, 1, 1, 1)
 
 
         self.verticalLayout.addWidget(self.frame_2)
-
-        self.label_2 = QLabel(self.frame)
-        self.label_2.setObjectName(u"label_2")
-
-        self.verticalLayout.addWidget(self.label_2)
 
         self.frame_4 = QFrame(self.frame)
         self.frame_4.setObjectName(u"frame_4")
@@ -156,17 +152,14 @@ class EditarComputadoras(QMainWindow, object):
     # setupUi
 
     def retranslateUi(self, EditarComputadoras):
-        EditarComputadoras.setWindowTitle(QCoreApplication.translate("EditarComputadoras", u"MainWindow", None))
+        EditarComputadoras.setWindowTitle(QCoreApplication.translate("EditarComputadoras", u"Editar equipo de computo", None))
         self.label.setText(QCoreApplication.translate("EditarComputadoras", u"Editar Computadoras", None))
         self.label_10.setText(QCoreApplication.translate("EditarComputadoras", u"Nombre del equipo", None))
         self.nombre_equipo_txt.setPlaceholderText(QCoreApplication.translate("EditarComputadoras", u"Nombre del equipo", None))
         self.label_11.setText(QCoreApplication.translate("EditarComputadoras", u"N\u00famero de serie", None))
         self.num_serie_txt.setPlaceholderText(QCoreApplication.translate("EditarComputadoras", u"N\u00famero de serie", None))
         self.label_12.setText(QCoreApplication.translate("EditarComputadoras", u"Propietario del equipo", None))
-        self.propietario_equipo_txt.setPlaceholderText(QCoreApplication.translate("EditarComputadoras", u"Propietario del equipo", None))
         self.label_13.setText(QCoreApplication.translate("EditarComputadoras", u"Rol", None))
-        self.rol_txt.setPlaceholderText(QCoreApplication.translate("EditarComputadoras", u"Rol", None))
-        self.label_2.setText(QCoreApplication.translate("EditarComputadoras", u"<html><head/><body><p>Los roles se manejan de la siguiente manera:</p><p>- Si se desea modificar una computadora <span style=\" font-weight:600;\">Administradora</span> poner <span style=\" font-weight:600;\">1</span></p><p>- Si se desea modificar una computadora <span style=\" font-weight:600;\">Usuario</span> poner <span style=\" font-weight:600;\">0</span></p><p><br/></p></body></html>", None))
         self.cancelar_registro_btn.setText(QCoreApplication.translate("EditarComputadoras", u"Cancelar", None))
         self.modificar_compu_btn.setText(QCoreApplication.translate("EditarComputadoras", u"Modificar", None))
     # retranslateUi
