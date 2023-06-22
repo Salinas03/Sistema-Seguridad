@@ -94,90 +94,10 @@ class AgregarPropietario(QMainWindow, object):
         self.gridLayout_3 = QGridLayout(self.widget_3)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.gridLayout_3.setContentsMargins(69, -1, 100, -1)
-        self.label_11 = QLabel(self.widget_3)
-        self.label_11.setObjectName(u"label_11")
-        font1 = QFont()
-        font1.setPointSize(12)
-        self.label_11.setFont(font1)
-
-        self.gridLayout_3.addWidget(self.label_11, 4, 0, 1, 1)
-
-        self.label_5 = QLabel(self.widget_3)
-        self.label_5.setObjectName(u"label_5")
-        self.label_5.setFont(font1)
-
-        self.gridLayout_3.addWidget(self.label_5, 2, 0, 1, 1)
-
-        self.apellido_propietario_txt = QLineEdit(self.widget_3)
-        self.apellido_propietario_txt.setObjectName(u"apellido_propietario_txt")
-        self.apellido_propietario_txt.setFont(font1)
-
-        self.gridLayout_3.addWidget(self.apellido_propietario_txt, 1, 2, 1, 1)
-
-        self.label_7 = QLabel(self.widget_3)
-        self.label_7.setObjectName(u"label_7")
-        self.label_7.setMinimumSize(QSize(0, 30))
-        self.label_7.setFont(font1)
-
-        self.gridLayout_3.addWidget(self.label_7, 5, 0, 1, 1)
-
-        self.label_9 = QLabel(self.widget_3)
-        self.label_9.setObjectName(u"label_9")
-        self.label_9.setMinimumSize(QSize(0, 60))
-
-        self.gridLayout_3.addWidget(self.label_9, 7, 0, 1, 1)
-
-        self.label_6 = QLabel(self.widget_3)
-        self.label_6.setObjectName(u"label_6")
-        self.label_6.setFont(font1)
-
-        self.gridLayout_3.addWidget(self.label_6, 3, 0, 1, 1)
-
-        self.label_8 = QLabel(self.widget_3)
-        self.label_8.setObjectName(u"label_8")
-        self.label_8.setFont(font1)
-
-        self.gridLayout_3.addWidget(self.label_8, 6, 0, 1, 1)
-
-        self.nombre_propietario_txt = QLineEdit(self.widget_3)
-        self.nombre_propietario_txt.setObjectName(u"nombre_propietario_txt")
-        self.nombre_propietario_txt.setFont(font1)
-
-        self.gridLayout_3.addWidget(self.nombre_propietario_txt, 0, 2, 1, 1)
-
-        self.label_4 = QLabel(self.widget_3)
-        self.label_4.setObjectName(u"label_4")
-        self.label_4.setFont(font1)
-
-        self.gridLayout_3.addWidget(self.label_4, 1, 0, 1, 1)
-
-        self.label_3 = QLabel(self.widget_3)
-        self.label_3.setObjectName(u"label_3")
-        self.label_3.setFont(font1)
-
-        self.gridLayout_3.addWidget(self.label_3, 0, 0, 1, 1)
-
-        self.telefono_propietario_txt = QLineEdit(self.widget_3)
-        self.telefono_propietario_txt.setObjectName(u"telefono_propietario_txt")
-        self.telefono_propietario_txt.setFont(font1)
-
-        self.gridLayout_3.addWidget(self.telefono_propietario_txt, 2, 2, 1, 1)
-
-        self.password_propietario_txt = QLineEdit(self.widget_3)
-        self.password_propietario_txt.setObjectName(u"password_propietario_txt")
-        self.password_propietario_txt.setFont(font1)
-        self.password_propietario_txt.setEchoMode(QLineEdit.Password)
-
-        self.gridLayout_3.addWidget(self.password_propietario_txt, 4, 2, 1, 1)
-
-        self.confirma_contrasenia_txt = QLineEdit(self.widget_3)
-        self.confirma_contrasenia_txt.setObjectName(u"confirma_contrasenia_txt")
-        self.confirma_contrasenia_txt.setEchoMode(QLineEdit.PasswordEchoOnEdit)
-
-        self.gridLayout_3.addWidget(self.confirma_contrasenia_txt, 5, 2, 1, 1)
-
         self.correo_propietario_txt = QLineEdit(self.widget_3)
         self.correo_propietario_txt.setObjectName(u"correo_propietario_txt")
+        font1 = QFont()
+        font1.setPointSize(12)
         self.correo_propietario_txt.setFont(font1)
 
         self.gridLayout_3.addWidget(self.correo_propietario_txt, 3, 2, 1, 1)
@@ -189,6 +109,86 @@ class AgregarPropietario(QMainWindow, object):
         self.rol_propietario_cmbx.setObjectName(u"rol_propietario_cmbx")
 
         self.gridLayout_3.addWidget(self.rol_propietario_cmbx, 6, 2, 1, 1)
+
+        self.apellido_propietario_txt = QLineEdit(self.widget_3)
+        self.apellido_propietario_txt.setObjectName(u"apellido_propietario_txt")
+        self.apellido_propietario_txt.setFont(font1)
+
+        self.gridLayout_3.addWidget(self.apellido_propietario_txt, 1, 2, 1, 1)
+
+        self.label_6 = QLabel(self.widget_3)
+        self.label_6.setObjectName(u"label_6")
+        self.label_6.setFont(font1)
+
+        self.gridLayout_3.addWidget(self.label_6, 3, 0, 1, 1)
+
+        self.telefono_propietario_txt = QLineEdit(self.widget_3)
+        self.telefono_propietario_txt.setObjectName(u"telefono_propietario_txt")
+        self.telefono_propietario_txt.setFont(font1)
+
+        self.gridLayout_3.addWidget(self.telefono_propietario_txt, 2, 2, 1, 1)
+
+        self.label_3 = QLabel(self.widget_3)
+        self.label_3.setObjectName(u"label_3")
+        self.label_3.setFont(font1)
+
+        self.gridLayout_3.addWidget(self.label_3, 0, 0, 1, 1)
+
+        self.label_7 = QLabel(self.widget_3)
+        self.label_7.setObjectName(u"label_7")
+        self.label_7.setMinimumSize(QSize(0, 30))
+        self.label_7.setFont(font1)
+
+        self.gridLayout_3.addWidget(self.label_7, 5, 0, 1, 1)
+
+        self.nombre_propietario_txt = QLineEdit(self.widget_3)
+        self.nombre_propietario_txt.setObjectName(u"nombre_propietario_txt")
+        self.nombre_propietario_txt.setFont(font1)
+
+        self.gridLayout_3.addWidget(self.nombre_propietario_txt, 0, 2, 1, 1)
+
+        self.label_11 = QLabel(self.widget_3)
+        self.label_11.setObjectName(u"label_11")
+        self.label_11.setFont(font1)
+
+        self.gridLayout_3.addWidget(self.label_11, 4, 0, 1, 1)
+
+        self.label_4 = QLabel(self.widget_3)
+        self.label_4.setObjectName(u"label_4")
+        self.label_4.setFont(font1)
+
+        self.gridLayout_3.addWidget(self.label_4, 1, 0, 1, 1)
+
+        self.password_propietario_txt = QLineEdit(self.widget_3)
+        self.password_propietario_txt.setObjectName(u"password_propietario_txt")
+        self.password_propietario_txt.setFont(font1)
+        self.password_propietario_txt.setEchoMode(QLineEdit.Password)
+
+        self.gridLayout_3.addWidget(self.password_propietario_txt, 4, 2, 1, 1)
+
+        self.label_8 = QLabel(self.widget_3)
+        self.label_8.setObjectName(u"label_8")
+        self.label_8.setFont(font1)
+
+        self.gridLayout_3.addWidget(self.label_8, 6, 0, 1, 1)
+
+        self.confirma_contrasenia_txt = QLineEdit(self.widget_3)
+        self.confirma_contrasenia_txt.setObjectName(u"confirma_contrasenia_txt")
+        self.confirma_contrasenia_txt.setEchoMode(QLineEdit.PasswordEchoOnEdit)
+
+        self.gridLayout_3.addWidget(self.confirma_contrasenia_txt, 5, 2, 1, 1)
+
+        self.label_5 = QLabel(self.widget_3)
+        self.label_5.setObjectName(u"label_5")
+        self.label_5.setFont(font1)
+
+        self.gridLayout_3.addWidget(self.label_5, 2, 0, 1, 1)
+
+        self.label_9 = QLabel(self.widget_3)
+        self.label_9.setObjectName(u"label_9")
+        self.label_9.setMinimumSize(QSize(0, 60))
+
+        self.gridLayout_3.addWidget(self.label_9, 7, 0, 1, 1)
 
 
         self.verticalLayout_3.addWidget(self.widget_3)
@@ -229,18 +229,18 @@ class AgregarPropietario(QMainWindow, object):
         AgregarPropietario.setWindowTitle(QCoreApplication.translate("AgregarPropietario", u"Agregar propietario", None))
         self.label.setText(QCoreApplication.translate("AgregarPropietario", u"Agregar Propietario o Administrador", None))
         self.label_2.setText(QCoreApplication.translate("AgregarPropietario", u"<html><head/><body><p><span style=\" font-size:10pt; font-weight:600; color:#ff0000;\">ADVERTENCIA</span><span style=\" font-size:10pt;\">: Si agregas a un administrador, debes de saber que el tambien tendra </span></p><p><span style=\" font-size:10pt;\">acceso a las computadoras que se hayan registrado, esto para el acceso remoto</span></p><p><span style=\" font-size:10pt;\">a ellas.</span></p></body></html>", None))
-        self.label_11.setText(QCoreApplication.translate("AgregarPropietario", u"Contrase\u00f1a", None))
-        self.label_5.setText(QCoreApplication.translate("AgregarPropietario", u"Tel\u00e9fono", None))
-        self.label_7.setText(QCoreApplication.translate("AgregarPropietario", u"Confirma Contrase\u00f1a", None))
-        self.label_9.setText(QCoreApplication.translate("AgregarPropietario", u"<html><head/><body><p>Los roles son los siguientes:</p><p>- Si se desea agregar un usuario <span style=\" font-weight:600;\">Administrador</span> pon <span style=\" font-weight:600;\">1</span></p><p>- Si se desea agregar un usuario <span style=\" font-weight:600;\">Normal</span> pon <span style=\" font-weight:600;\">0</span></p></body></html>", None))
-        self.label_6.setText(QCoreApplication.translate("AgregarPropietario", u"Correo", None))
-        self.label_8.setText(QCoreApplication.translate("AgregarPropietario", u"Rol", None))
-        self.label_4.setText(QCoreApplication.translate("AgregarPropietario", u"Apellidos", None))
-        self.label_3.setText(QCoreApplication.translate("AgregarPropietario", u"Nombre", None))
         self.rol_propietario_cmbx.setItemText(0, QCoreApplication.translate("AgregarPropietario", u"Selecciona el rol", None))
         self.rol_propietario_cmbx.setItemText(1, QCoreApplication.translate("AgregarPropietario", u"Administrador - 1", None))
         self.rol_propietario_cmbx.setItemText(2, QCoreApplication.translate("AgregarPropietario", u"Normal - 0", None))
 
+        self.label_6.setText(QCoreApplication.translate("AgregarPropietario", u"Correo", None))
+        self.label_3.setText(QCoreApplication.translate("AgregarPropietario", u"Nombre", None))
+        self.label_7.setText(QCoreApplication.translate("AgregarPropietario", u"Confirma Contrase\u00f1a", None))
+        self.label_11.setText(QCoreApplication.translate("AgregarPropietario", u"Contrase\u00f1a", None))
+        self.label_4.setText(QCoreApplication.translate("AgregarPropietario", u"Apellidos", None))
+        self.label_8.setText(QCoreApplication.translate("AgregarPropietario", u"Rol", None))
+        self.label_5.setText(QCoreApplication.translate("AgregarPropietario", u"Tel\u00e9fono", None))
+        self.label_9.setText(QCoreApplication.translate("AgregarPropietario", u"<html><head/><body><p><br/></p></body></html>", None))
         self.cancelar_admin_btn.setText(QCoreApplication.translate("AgregarPropietario", u"Cancelar", None))
         self.agregar_admin_btn.setText(QCoreApplication.translate("AgregarPropietario", u"Agregar", None))
     # retranslateUi
