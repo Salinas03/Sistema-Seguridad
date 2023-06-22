@@ -111,8 +111,6 @@ class AgregarComputadoras(QMainWindow, object):
 
         self.propietario_cmbx = QComboBox(self.frame_2)
         self.propietario_cmbx.addItem("")
-        self.propietario_cmbx.addItem("")
-        self.propietario_cmbx.addItem("")
         self.propietario_cmbx.setObjectName(u"propietario_cmbx")
 
         self.gridLayout_3.addWidget(self.propietario_cmbx, 2, 1, 1, 1)
@@ -172,14 +170,12 @@ class AgregarComputadoras(QMainWindow, object):
         self.label_12.setText(QCoreApplication.translate("AgregarComputadoras", u"Propietario del equipo", None))
         self.label_13.setText(QCoreApplication.translate("AgregarComputadoras", u"Rol", None))
         self.propietario_cmbx.setItemText(0, QCoreApplication.translate("AgregarComputadoras", u"Selecciona Propietario", None))
-        self.propietario_cmbx.setItemText(1, "")
-        self.propietario_cmbx.setItemText(2, "")
 
         self.rol_cmbx.setItemText(0, QCoreApplication.translate("AgregarComputadoras", u"Selecciona un rol", None))
-        self.rol_cmbx.setItemText(1, QCoreApplication.translate("AgregarComputadoras", u"Administrador", None))
-        self.rol_cmbx.setItemText(2, QCoreApplication.translate("AgregarComputadoras", u"Usuario", None))
+        self.rol_cmbx.setItemText(1, QCoreApplication.translate("AgregarComputadoras", u"Administrador - 1", None))
+        self.rol_cmbx.setItemText(2, QCoreApplication.translate("AgregarComputadoras", u"Usuario - 0", None))
 
-        self.label_2.setText(QCoreApplication.translate("AgregarComputadoras", u"<html><head/><body><p>Los roles se manejan de la siguiente manera:</p><p>- Si se desea agregar una computadora <span style=\" font-weight:600;\">Administradora</span> poner <span style=\" font-weight:600;\">1</span></p><p>- Si se desea agregar una computadora <span style=\" font-weight:600;\">Usuario</span> poner <span style=\" font-weight:600;\">0</span></p><p><br/></p></body></html>", None))
+        self.label_2.setText(QCoreApplication.translate("AgregarComputadoras", u"<html><head/><body><p><br/></p></body></html>", None))
         self.cancelar_registro_btn.setText(QCoreApplication.translate("AgregarComputadoras", u"Cancelar", None))
         self.guardar_compu_btn.setText(QCoreApplication.translate("AgregarComputadoras", u"Aceptar", None))
     # retranslateUi
