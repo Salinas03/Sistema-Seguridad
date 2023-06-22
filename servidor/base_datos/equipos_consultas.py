@@ -122,9 +122,10 @@ class EquiposConsultas():
     def borrar_equipo_computo(self, id_equipo):
         if self.conexion.is_connected():
             try:
-                cursor = self.conexio.cursor()
+                cursor = self.conexion.cursor()
                 sql = f'DELETE FROM equipos WHERE id_equipo={id_equipo}'
                 cursor.execute(sql)
+                self.conexion.commit()
                 return json.dumps({'success': True, 'msg': 'Se realizó la eliminación correctamente'})
             except Error as err:
                 print(f'Error al intentar la conexion {err}')
