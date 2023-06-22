@@ -13,19 +13,23 @@ class AdministradorSocketUI:
         self.PORT = 5050
         self.PORT_NOT = 5051
         self.PORT_BROAD = 5052
+        self.PORT_BD = 5054
         self.ADDR = (self.IP, self.PORT)
         self.ADDR_NOT = (self.IP, self.PORT_NOT)
         self.ADDR_BROAD = (self.IP, self.PORT_BROAD)
+        self.ADDR_BD = (self.IP, self.PORT_BD)
 
     def crear_sockets(self):
         #Creación de sockets, uno para atender el panel de administración y otro para manejar las notificaciones y listados
         global administrador
         global notificacion
         global broadcasting
+        global operacionesbd
         try:
             administrador = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             notificacion = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             broadcasting = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            operacionesbd = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
             print('Creación de sockets...')
             return {"success": True, "msg": "Creación de sockets exitosa :)"}
@@ -39,6 +43,7 @@ class AdministradorSocketUI:
             notificacion.connect(self.ADDR_NOT) #Se conecta con el socket de notificaciones
             administrador.connect(self.ADDR) #Linea de bloqueo de código , se conecta con el socket administrador
             broadcasting.connect(self.ADDR_BROAD)
+            operacionesbd.connect(self.ADDR_BD)
                     
             #Mensaje de primer conexión con el servidor (conexión temporal)
             respuesta_servidor = json.loads(administrador.recv(self.HEADER).decode(self.FORMAT))
@@ -49,6 +54,7 @@ class AdministradorSocketUI:
             notificacion.close()
             administrador.close()
             broadcasting.close()
+            operacionesbd.close()
             return {"success": False, "msg": "Error al conectar con el servidor :("}
 
     def validacion_conexion(self):
@@ -69,6 +75,10 @@ class AdministradorSocketUI:
             return respuesta_servidor
 
         except: 
+            notificacion.close()
+            administrador.close()
+            broadcasting.close()
+            operacionesbd.close()
             return {"success": False, "msg": "Error al validar la conexión :("}
 
     def escribir_operaciones(self, operacion):
@@ -79,9 +89,9 @@ class AdministradorSocketUI:
         except:
             print('Error al enviar el mensaje desde el administrador :(')
             administrador.close()
-            notificacion.send('SALIR'.encode())
             notificacion.close()
             broadcasting.close()
+            operacionesbd.close()
             return None
 
     def get_socket_administrador(self):
@@ -92,6 +102,9 @@ class AdministradorSocketUI:
     
     def get_socket_broadcasting(self):
         return broadcasting 
+    
+    def get_socket_operacionesbd(self):
+        return operacionesbd
 
     def obtener_numero_serie(self):
         # Connect to the WMI service
