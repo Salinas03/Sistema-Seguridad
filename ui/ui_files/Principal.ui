@@ -6,12 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1250</width>
+    <width>1309</width>
     <height>813</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Principal</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/LOGO.svg</normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/LOGO.svg</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -113,7 +117,7 @@ margin-bottom:10px;
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap>../assets/icons/column-2.ico</pixmap>
+               <pixmap>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/column-2.ico</pixmap>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -127,7 +131,7 @@ margin-bottom:10px;
               </property>
               <property name="icon">
                <iconset>
-                <normaloff>../assets/icons/home-3.ico</normaloff>../assets/icons/home-3.ico</iconset>
+                <normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/home-3.ico</normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/home-3.ico</iconset>
               </property>
               <property name="checkable">
                <bool>false</bool>
@@ -150,7 +154,7 @@ margin-bottom:10px;
               </property>
               <property name="icon">
                <iconset>
-                <normaloff>../assets/icons/desktop.svg</normaloff>../assets/icons/desktop.svg</iconset>
+                <normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/desktop.svg</normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/desktop.svg</iconset>
               </property>
               <property name="checkable">
                <bool>false</bool>
@@ -167,7 +171,7 @@ margin-bottom:10px;
               </property>
               <property name="icon">
                <iconset>
-                <normaloff>../assets/icons/administrator-32.ico</normaloff>../assets/icons/administrator-32.ico</iconset>
+                <normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/administrator-32.ico</normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/administrator-32.ico</iconset>
               </property>
              </widget>
             </item>
@@ -195,7 +199,7 @@ margin-bottom:10px;
               </property>
               <property name="icon">
                <iconset>
-                <normaloff>../assets/icons/help-circle.svg</normaloff>../assets/icons/help-circle.svg</iconset>
+                <normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/help-circle.svg</normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/help-circle.svg</iconset>
               </property>
               <property name="checkable">
                <bool>false</bool>
@@ -212,7 +216,7 @@ margin-bottom:10px;
               </property>
               <property name="icon">
                <iconset>
-                <normaloff>../assets/icons/arrow-down-left.svg</normaloff>../assets/icons/arrow-down-left.svg</iconset>
+                <normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/arrow-down-left.svg</normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/arrow-down-left.svg</iconset>
               </property>
              </widget>
             </item>
@@ -226,12 +230,11 @@ margin-bottom:10px;
          <property name="styleSheet">
           <string notr="true">QPushButton#user_btn{
 background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(20, 47, 78, 219), stop:1 rgba(85, 98, 112, 226));
-color:rgba(255, 255, 255, 210);
 border-radius:5px;
 }
 
 QPushButton#user_btn:hover{
-background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(40, 67, 98, 219), stop:1 rgba(105, 118, 132, 226));
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1.5, y2:3, stop:0 #c0c0c0, stop:1 #000000);
 }
 
 QPushButton#user_btn:pressed{
@@ -296,24 +299,7 @@ padding-bottom:7px;
 color: rgb(140, 140, 140);
 }
 
-QTableWidget{
-	background-color: rgb(255, 255, 255);
-	color: rgb(0, 0, 0);
-	gridline-color: rgb(0,206,151);
-	font-size:12pt;
-	color:#000000;
-}
-
-QHeaderView::section{
-	background-color: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);
-	color:white;
-	border-color: 1px solid rgb(255, 255, 255);
-}
-
-QTableWidget QTableCornerButton::section{
-	background-color: rgb(0, 0, 0);
-	border: 1px solid qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);
-}</string>
+</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
           <property name="spacing">
@@ -374,7 +360,7 @@ border-radius:15px;
                </property>
                <property name="icon">
                 <iconset>
-                 <normaloff>../assets/icons/user-4.ico</normaloff>../assets/icons/user-4.ico</iconset>
+                 <normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/user-4.ico</normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/user-4.ico</iconset>
                </property>
               </widget>
              </item>
@@ -614,7 +600,7 @@ border-radius:15px;
                              <string/>
                             </property>
                             <property name="pixmap">
-                             <pixmap>../assets/files/ok.png</pixmap>
+                             <pixmap>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/files/ok.png</pixmap>
                             </property>
                            </widget>
                           </item>
@@ -752,26 +738,39 @@ Computadora</string>
                  </item>
                  <item>
                   <widget class="QWidget" name="widget_10" native="true">
-                   <layout class="QGridLayout" name="gridLayout_8">
-                    <property name="leftMargin">
-                     <number>50</number>
-                    </property>
-                    <property name="topMargin">
-                     <number>60</number>
-                    </property>
+                   <layout class="QGridLayout" name="gridLayout_5">
                     <item row="0" column="0">
-                     <widget class="QLabel" name="label_15">
-                      <property name="font">
-                       <font>
-                        <pointsize>12</pointsize>
-                       </font>
+                     <widget class="QScrollArea" name="scrollArea">
+                      <property name="widgetResizable">
+                       <bool>true</bool>
                       </property>
-                      <property name="text">
-                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;- Obtener la MAC ADRESS de la computadora que va a ser registrada. &lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;- Para poder registrar una nueva computadora, se debe registrar primeramente en la sección de agregar &lt;/p&gt;&lt;p&gt;computadoras. &lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;-Instalar la segunda aplicación en la computadora que se va a monitorear. &lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;-Asegurese que ambas aplicaciones cuenten con una conexión a internet, si no, el programa no podra ser utilizado correctamente.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;- Si requiere modificar algún dato de alguna computadora o algún propietario, de doble click en el dato a modificar.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;-Si quiere agregar otro comando en la computadoras activas, de doble click en la computadora seleccionada.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                      </property>
-                      <property name="alignment">
-                       <set>Qt::AlignJustify|Qt::AlignTop</set>
-                      </property>
+                      <widget class="QWidget" name="scrollAreaWidgetContents">
+                       <property name="geometry">
+                        <rect>
+                         <x>0</x>
+                         <y>0</y>
+                         <width>1184</width>
+                         <height>562</height>
+                        </rect>
+                       </property>
+                       <layout class="QGridLayout" name="gridLayout_8">
+                        <item row="0" column="0">
+                         <widget class="QLabel" name="label_15">
+                          <property name="font">
+                           <font>
+                            <pointsize>12</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Página principal&lt;/p&gt;&lt;p&gt;-Instalar la segunda aplicación en la computadora que se va a monitorear. &lt;/p&gt;&lt;p&gt;-Asegurese que ambas aplicaciones cuenten con una conexión a internet, si no, el programa no podra ser utilizado correctamente.&lt;/p&gt;&lt;p&gt;- Obtener la MAC ADRESS de la computadora que va a ser registrada. &lt;/p&gt;&lt;p&gt;- Para poder registrar una nueva computadora, se debe registrar primeramente en la sección de agregar computadoras.&lt;/p&gt;&lt;p&gt;-Si quiere agregar otro comando en la computadoras activas, de doble click en la fila de la computadora seleccionada.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Computadoras&lt;/p&gt;&lt;p&gt;- Si requiere modificar algún dato de alguna computadora, de doble click en el dato a modificar.&lt;/p&gt;&lt;p&gt;- Si se requiere eliminar a una computadora, seleccione la fila y de click en el bóton eliminar&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Propietarios&lt;/p&gt;&lt;p&gt;- Si requiere modificar algún dato de algún propietario, de doble click en la fila del dato a modificar.&lt;/p&gt;&lt;p&gt;- Si se requiere eliminar a un propietario, seleccione la fila y de click en el bóton eliminar&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignJustify|Qt::AlignTop</set>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
                      </widget>
                     </item>
                    </layout>
@@ -1127,7 +1126,7 @@ color:white;
                             </property>
                             <property name="icon">
                              <iconset>
-                              <normaloff>../assets/icons/save-2.ico</normaloff>../assets/icons/save-2.ico</iconset>
+                              <normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/save-2.ico</normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/save-2.ico</iconset>
                             </property>
                            </widget>
                           </item>
@@ -1296,7 +1295,7 @@ información</string>
                        <string/>
                       </property>
                       <property name="pixmap">
-                       <pixmap>../assets/files/admin2.png</pixmap>
+                       <pixmap>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/files/admin2.png</pixmap>
                       </property>
                       <property name="scaledContents">
                        <bool>true</bool>
@@ -1565,6 +1564,11 @@ QPushButton#desactivar_btn:hover,
                       <layout class="QGridLayout" name="gridLayout_3">
                        <item row="0" column="0">
                         <widget class="QTableWidget" name="tabla_computadoras_desactivas">
+                         <property name="rowCount">
+                          <number>2</number>
+                         </property>
+                         <row/>
+                         <row/>
                          <column>
                           <property name="text">
                            <string>ID</string>
