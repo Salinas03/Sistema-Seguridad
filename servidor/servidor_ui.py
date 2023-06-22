@@ -328,17 +328,22 @@ def panel_base_datos(instruccion):
             return respuesta_operacion
         
         elif operacion == 'actualizar':
-            respuesta_operacion = EquiposConsultas(conexion()).actualizar_equipo_computo(instruccion['id'], instruccion['data'])
+            respuesta_operacion = EquiposConsultas(conexion()).actualizar_equipo_computo(int(instruccion['id']), instruccion['data'])
 
-            if respuesta_operacion['success']:
+            validar = json.loads(respuesta_operacion)
+
+            if validar['success']:
                 refrescar_tabla_equipos()
                 broadcast()
 
             return respuesta_operacion
         
         elif operacion == 'borrar':
-            respuesta_operacion = EquiposConsultas(conexion()).borrar_equipo_computo(instruccion['id'])
-            if respuesta_operacion['success']:
+            respuesta_operacion = EquiposConsultas(conexion()).borrar_equipo_computo(int(instruccion['id']))
+
+            validar = json.loads(respuesta_operacion)
+
+            if validar['success']:
                 refrescar_tabla_equipos()
                 broadcast()
 
@@ -348,7 +353,7 @@ def panel_base_datos(instruccion):
             return EquiposConsultas(conexion()).obtener_equipos_computo()
 
         elif operacion == 'obtener_equipo_computo_por_id':
-            return EquiposConsultas(conexion()).obtener_equipo_computo_por_id(instruccion['id'])
+            return EquiposConsultas(conexion()).obtener_equipo_computo_por_id(int(instruccion['id']))
         
         elif operacion == 'obtener_equipo_por_nombre_numero_serie':
             data = instruccion['data']
