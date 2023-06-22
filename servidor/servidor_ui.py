@@ -14,20 +14,22 @@ FORMAT = 'utf-8'
 HEADER = 20480
 #HOST = socket.gethostbyname(socket.gethostname())
 #HOST = '68.183.143.116'
-HOST = '165.22.15.59'
+HOST = '165.22.15.159'
 
 #PUERTOS DE LOS DIFERENTES SOCKETS
 PORT = 5050
 PORT_NOTI = 5051
 PORT_BROAD = 5052
 PORT_CLIEN = 5053
+PORT_BD = 5054
 
 #DIRECCIONES DE LOS DIFERENTES SOCKETS
 ADDR = (HOST, PORT)
 ADDR_NOTI = (HOST, PORT_NOTI)
 ADDR_BROAD = (HOST, PORT_BROAD)
 ADDR_CLIEN = (HOST, PORT_CLIEN)
-TIMEOUT = 3
+ADDR_BD = (HOST, PORT_BD)
+TIMEOUT = 2
 
 #ARREGLOS DE CONEXIONES CON EL SERVIDOR
 conexiones_equipos_cliente = []
@@ -37,6 +39,7 @@ conexiones_equipos_cliente_secundario = []
 conexiones_equipos_admin = []
 conexiones_equipos_admin_notificacion  = []
 conexiones_equipos_broadcast = []
+conexiones_equipos_operacionesbd = []
 
 #CONFIGURACIÓN INICIAL DE SOCKETS
 def crear_sockets():
@@ -44,12 +47,14 @@ def crear_sockets():
         global servidor
         global notificacion
         global broadcasting
+        global operacionesbd
         global cliente
 
         servidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         notificacion = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         broadcasting = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        operacionesbd = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     except socket.error as err:
         print(f'Error a la hora de crear el socket... /n {err}')
@@ -59,24 +64,29 @@ def vincular_sockets():
         servidor.bind(ADDR)
         notificacion.bind(ADDR_NOTI)
         broadcasting.bind(ADDR_BROAD)
+        operacionesbd.bind(ADDR_BD)
         cliente.bind(ADDR_CLIEN)
         
         servidor.listen()
         notificacion.listen()
         broadcasting.listen()
+        operacionesbd.listen()
         cliente.listen()
 
         print(f'HOST {HOST} corriendo en el puerto {PORT}')
         print(f'NOTIFICACION {HOST} corriendo en el puerto {PORT_NOTI}')
         print(f'BROADCASTING {HOST} corriendo en el puerto {PORT_BROAD}')
         print(f'USUARIO {HOST} corriendo en el puerto {PORT_CLIEN}')
-
+        print(f'OPERACIONESBD {HOST} corriendo en el puerto {PORT_BD}')
+        
         notificacion_thread = threading.Thread(target=aceptar_conexiones_notificacion)
         notificacion_thread.start()
         broadcasting_thread = threading.Thread(target=aceptar_conexiones_broadcast)
         broadcasting_thread.start()
         cliente_thread = threading.Thread(target=aceptar_conexiones_cliente)
         cliente_thread.start()
+        operacionesbd_thread = threading.Thread(target=aceptar_conexiones_operacionesbd)
+        operacionesbd_thread.start()
 
     except socket.error as err:
         print(f'Error al enlazar el socket... /n {err}')
@@ -84,6 +94,7 @@ def vincular_sockets():
         servidor.close()
         notificacion.close()
         broadcasting.close()
+        operacionesbd.close()
         # vincular_socket()
 
 def cerrar():
@@ -142,9 +153,6 @@ def aceptar_conexiones_notificacion():
             
             panel_notificacon_thread = threading.Thread(target=panel_notificacion, args=(conn,addr))
             panel_notificacon_thread.start()
-
-            print(f'Conexión con socket de notificaciones: {addr[0]}')
-
         except:
             print('Hubo un error al conectar con el canal de notificación')
             conn.send('{"success": False, "msg": "Error al aceptar la conexión en notificación :("}')
@@ -158,13 +166,29 @@ def aceptar_conexiones_broadcast():
     while True:
         try:
             conn, addr = broadcasting.accept()
+            broadcasting.setblocking(1)
+
             conexiones_equipos_broadcast.append((conn, addr))
 
-            print(f'Conexión con socket de broadcast {addr}')
-
+            conexiones_broadcast_thread = threading.Thread(target=panel_broadcasting, args=(conn, addr))
+            conexiones_broadcast_thread.start()
         except:
             print('Hubo un error al conectar con el canal de broadcasting')
-            conn.send('{"success": False, "msg": "Error al aceptar la conexión en broadcasting :("}')
+            conn.send('{"success": false, "msg": "Error al aceptar la conexión en broadcasting :("}')
+
+def aceptar_conexiones_operacionesbd():
+    while True:
+        try:
+            conn, addr = operacionesbd.accept()
+            operacionesbd.setblocking(1)
+
+            conexiones_equipos_operacionesbd.append((conn, addr))
+
+            conexiones_operacionesbd_thread = threading.Thread(target=panel_operacionesbd, args=(conn, addr))
+            conexiones_operacionesbd_thread.start()
+        except:
+            print('Hubo un error al conectar con el canal de operacionesbd')
+            conn.send('{"success": false, "msg": "Error al aceptar la conexión de operacionesbd :("}')
 
 def aceptar_conexiones_cliente():
     for conexion_canal_cliente in conexiones_equipos_cliente_secundario:
@@ -213,7 +237,8 @@ def guardar_conexiones(conn, addr, hostname, numero_serie):
             print('Conexión con cliente :)')
             conn.send('{"success": true, "msg": "Conexión con servidor exitosa :)"}'.encode())
 
-            enviar_notificacion(f'Usuario {hostname} con la IP {addr} se ha conectado')
+            #Broadcast function
+            broadcast()
 
         else:
             print('Conexión con administrador')
@@ -243,16 +268,13 @@ def panel_administrador(conn, administrador):
 
             #Esperar instrucción de la computadora administradora
             operacion = conn.recv(HEADER).decode(FORMAT, errors='ignore') #Línea que bloque el código
-            print(f'Operación a realizar {operacion}')
 
             #Realizar operaciones de administrador
             if operacion == 'listar':
-                print('Operación listar')
                 equipos = listar_equipos()
                 conn.send(equipos.encode())
 
             elif 'seleccionar' in operacion:
-                print('Operación seleccionar')
                 if not conexiones_equipos_cliente:
                     conn.send('No hay dispositivos activos a quienes realizar operaciones :/'.encode())
                 else:
@@ -273,7 +295,6 @@ def panel_administrador(conn, administrador):
             
             #Operaciones con la base de datos
             elif is_valid_json(operacion):
-                print('Petición para base de datos')
                 respuesta_operacion = panel_base_datos(operacion)
                 conn.send(respuesta_operacion.encode()) #Respetar el request response
 
@@ -291,12 +312,17 @@ def panel_administrador(conn, administrador):
 def panel_base_datos(instruccion): 
     instruccion = json.loads(instruccion)
     operacion = instruccion['operacion']
+    print(instruccion)
 
     if instruccion['tabla'] == 'equipos':
         if operacion == 'insertar':
             data = instruccion['data']
             respuesta_operacion = EquiposConsultas(conexion()).insertar_equipo_computo(data[0], data[1], data[2], data[3])
-            if respuesta_operacion['success']:
+
+            validar = json.loads(respuesta_operacion)
+
+            if validar['success']:
+                refrescar_tabla_equipos()
                 broadcast()
 
             return respuesta_operacion
@@ -305,6 +331,7 @@ def panel_base_datos(instruccion):
             respuesta_operacion = EquiposConsultas(conexion()).actualizar_equipo_computo(instruccion['id'], instruccion['data'])
 
             if respuesta_operacion['success']:
+                refrescar_tabla_equipos()
                 broadcast()
 
             return respuesta_operacion
@@ -312,6 +339,7 @@ def panel_base_datos(instruccion):
         elif operacion == 'borrar':
             respuesta_operacion = EquiposConsultas(conexion()).borrar_equipo_computo(instruccion['id'])
             if respuesta_operacion['success']:
+                refrescar_tabla_equipos()
                 broadcast()
 
             return respuesta_operacion
@@ -367,14 +395,13 @@ def panel_cliente(conn, addr):
     while True:
         try:    
             conn.send('*'.encode())
-            mensaje_cliente = conn.recv(HEADER).decode(FORMAT)
-            # print(f'Mensaje del cliente {mensaje_cliente}')
-
+            conn.recv(HEADER).decode(FORMAT)
 
         except ConnectionResetError:         
             print('Hubo un error al recibir el mensaje en el panel del cliente (ConnectionReset)')
             borrar_conexion_usuarios(conn)
             enviar_notificacion(f'Usuario {addr} se ha desconectado')
+            broadcast()
             conn.close()
             break
 
@@ -382,6 +409,7 @@ def panel_cliente(conn, addr):
             print('Hubo un error al recibir el mensaje en el panel del cliente (Timeout)')
             borrar_conexion_usuarios(conn)
             enviar_notificacion(f'Usuario {addr} se ha desconectado')
+            broadcast()
             conn.close()
             break
 
@@ -389,6 +417,7 @@ def panel_cliente(conn, addr):
             print('Hubo un error al recibir el mensaje en el panel del cliente (Exception)')
             borrar_conexion_usuarios(conn)
             enviar_notificacion(f'Usuario {addr} se ha desconectado')
+            broadcast()
             conn.close()
             break
           
@@ -396,17 +425,34 @@ def panel_notificacion(conn, addr):
     while True:
         try:
             print('Entró al panel de notificación')
-            respuesta_usuario = conn.recv(HEADER).decode(FORMAT)
-            print(f'Respuesta usuario {respuesta_usuario}')
-            if respuesta_usuario == 'SALIR':
-                print('Desconexión con el panel de notificación')
-                ip = borrar_administradores_notificacion(addr)
-                print(f'Administrador con la IP {ip} desconcectado de notificación')
-                conn.close()
-                break
-        except:
+            conn.recv(HEADER).decode(FORMAT)
+        except ConnectionResetError:
             ip = borrar_administradores_notificacion(addr)
-            print(f'Desconexión del equipo con la IP {ip}')
+            print(f'Desconexión del panel de notificación')
+            conn.close()
+            break
+
+def panel_broadcasting(conn, addr):
+    while True:
+        try:
+            print('Entró al panel de broadcasting')
+            conn.recv(HEADER).decode(FORMAT)
+
+        except ConnectionResetError:
+            borrar_administradores_broadcasting(addr)
+            print('Desconexión del canal de broadcasting')
+            conn.close()
+            break
+
+def panel_operacionesbd(conn, addr):
+    while True:
+        try:
+            print('Entró al panel de operacionesBD')
+            conn.recv(HEADER).decode(FORMAT)
+
+        except ConnectionResetError:
+            borrar_administradores_operacionesbd(addr)
+            print('Desconexión del canal de operacionesbd')
             conn.close()
             break
 
@@ -416,7 +462,6 @@ def listar_equipos():
     #Pero en la UI se tienen que ver tanto activos como inactivos
 
     #Copiar los equipos de cómputo a la variable de equipos inactivos
-    print('Dentro de listar')
     equipos_computo = json.loads(EquiposConsultas(conexion()).obtener_equipos_computo_clientes())
     equipos_computo = equipos_computo['data']
     equipos_inactivos = equipos_computo[:]
@@ -428,19 +473,12 @@ def listar_equipos():
     for i,conexion_equipo in enumerate(conexiones_equipos_cliente[:]):
         bandera = False
         #Mostrar solo aquellas conexiones que estan activas
-        print(f'Dentro del for, vueltas {i}')
         conexion_equipo.get_conexion().settimeout(1)
         try:
-            print('Dentro del try')
             conexion_equipo.get_conexion().send(' '.encode())
-            print(f'Se envio mensaje vacio a {conexion_equipo.get_nombre_host()}')
             conexion_equipo.get_conexion().recv(HEADER)
             bandera = True
         except:
-            #Las conexiones que no esten activas serán eliminadas
-            #El arreglo se recorre al borrar estos elementos (podría estar mal)
-            print(f'No se pudo enviar mensaje a {conexion_equipo.get_nombre_host()}')
-            print('Dentro del except')
             index = conexiones_equipos_cliente.index(conexion_equipo)
             del conexiones_equipos_cliente[index] #Borrar la conexion del cliente en esa posición en caso de que no haya respuesta
             continue
@@ -459,15 +497,9 @@ def listar_equipos():
                     equipo.append(ip_cliente)
                     conexiones_equipos_cliente_mostrar.append(equipo)
 
-    print('Equipos inactivos')
-    print(equipos_inactivos)
-
-    print('Equipos activos')
-    print(conexiones_equipos_cliente_mostrar)
-
     equipos = [equipos_inactivos, conexiones_equipos_cliente_mostrar]
     equipos = json.dumps(equipos)
-    print('Listado realizado')
+    print('[LISTADO REALIZADO]')
     return equipos
 
 def conectar_con_equipo(operacion):
@@ -514,27 +546,38 @@ def manejar_operaciones(cliente_seleccionado, conn_admin):
 
 #FUNCIONES DE BORRADO DE CONEXIONES
 def borrar_administradores_activos(conn):
-    #Borrar administrador del arreglo
     for conexion_admin in conexiones_equipos_admin:
         if conexion_admin.get_conexion() == conn:
             index = conexiones_equipos_admin.index(conexion_admin)
             del conexiones_equipos_admin[index]
+            print('[BORRADO DE ADMINISTRADORES ACTIVOS]')
             return conexion_admin
-
+        
 def borrar_administradores_notificacion(addr):
-    #Borrar arreglo notificación
     for conexion_admin_notificacion in conexiones_equipos_admin_notificacion:
         if conexion_admin_notificacion[1] == addr:
             index = conexiones_equipos_admin_notificacion.index(conexion_admin_notificacion)
             del conexiones_equipos_admin_notificacion[index]
-            print(f'Conexión admin notificación {conexion_admin_notificacion}')
+            print('[BORRADO DE CONEXIONES DE NOTIFICACIÓN]')
             return conexion_admin_notificacion[1] #Regresar IP
-
-def borrar_conexion_usuarios(conn):
-    #Borrar arreglo notificación
-    print(f'(BORRAR) Todas las conexiones equipos clientes en el arreglo')
-    print(conexiones_equipos_cliente)
-
+        
+def borrar_administradores_broadcasting(addr):
+    for conexion_broadcast in conexiones_equipos_broadcast:
+        if conexion_broadcast[1] == addr:
+            index = conexiones_equipos_broadcast.index(conexion_broadcast)
+            del conexiones_equipos_broadcast[index]
+            print('[BORRADO DE CONEXIONES BROADCASTING]')
+            return conexion_broadcast
+        
+def borrar_administradores_operacionesbd(addr):
+    for conexion_operacionbd in conexiones_equipos_operacionesbd:
+        if conexion_operacionbd[1] == addr:
+            index = conexiones_equipos_operacionesbd.index(conexion_operacionbd)
+            del conexiones_equipos_operacionesbd[index]
+            print('[BORRADO DE CONEXIONES OPERACIONESBD]')
+            return conexion_operacionbd
+        
+def borrar_conexion_usuarios(conn):    
     for i,conexion_equipo in enumerate(conexiones_equipos_cliente[:]):
         if conexion_equipo.get_conexion() == conn:
             index = conexiones_equipos_cliente.index(conexion_equipo)
@@ -545,9 +588,11 @@ def borrar_conexion_usuarios(conn):
             index = conexiones_equipos_cliente_secundario.index(conexion_equipo_secundario)
             del conexiones_equipos_cliente_secundario[index]
 
+    print('[BORRADO DE CONEXIONES CLIENTE (principal, secundario)]')
+
 #FUNCIONALIDADES BROADCAST QUE SE ENVIAN A TODOS LOS ADMINISTRADORES
 def enviar_notificacion(mensaje):
-    print('(NOTIFICACIÓN ')
+    print('[NOTIFICACIÓN]')
     print(f'Mensaje enviado: {mensaje}')
     try:
         if conexiones_equipos_admin:
@@ -557,12 +602,42 @@ def enviar_notificacion(mensaje):
         print('No se enviaron algunos de los mensajes')
 
 def broadcast():
+    print(conexiones_equipos_broadcast)
+    equipos_activos_inactivos = listar_equipos()
     try:
         if conexiones_equipos_admin:
             for conexion_broadcast in conexiones_equipos_broadcast: 
-                conexion_broadcast[0].send('REFRESH'.encode())
+                conexion_broadcast[0].send(equipos_activos_inactivos.encode())
     except:
         print('Error al enviar el mensaje de broadcast')
+        
+    print('[ENVIO DE BROADCAST]')
+
+def refrescar_tabla_equipos():
+    peticion_equipos = {
+        'tabla': 'equipos',
+        'operacion': 'obtener_equipos_computo'
+    }
+
+    equipos_computo = panel_base_datos(json.dumps(peticion_equipos))
+    equipos_computo = json.loads(equipos_computo)
+
+    respuesta = {
+        "tabla": "equipos",
+        "data": equipos_computo['data']
+    }
+
+    try:
+        if conexiones_equipos_admin:
+            for conexion_operacionesbd in conexiones_equipos_operacionesbd:
+                conexion_operacionesbd[0].send(json.dumps(respuesta).encode())
+    except:
+        print('Error al refrescar las tablas de los equipos')
+
+    print('[REFRESCADO TABLA EQUIPOS]')
+    
+def refrescar_tabla_propietarios():
+    pass
 
 atexit.register(cerrar)
 crear_sockets()

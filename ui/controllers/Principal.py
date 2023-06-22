@@ -158,6 +158,10 @@ class PrincipalWindow(Principal,QWidget):
 
         #RENDERIZADO DE TABLAS POR MEDIO DE PETICIONES ------------------------------------------------------
 
+        #Crear hilo de notificaciones
+        thread_equipos_computo = threading.Thread(target=self.escuchar_notificaciones)
+        thread_equipos_computo.start()
+
         self.peticion_equipos = {
             'tabla': 'equipos',
             'operacion': 'obtener_equipos_computo'
@@ -168,22 +172,22 @@ class PrincipalWindow(Principal,QWidget):
             'operacion': 'obtener_propietarios'
         }
 
-
         #Obtener por primera vez los equipos activos e inactivos
         equipos_activos_inactivos = admin_socket_ui.escribir_operaciones('listar')
 
         if equipos_activos_inactivos:
             self.desplegar_datos_equipos_inactivos(equipos_activos_inactivos[0])
             self.desplegar_datos_equipos_activos(equipos_activos_inactivos[1])
-            thread_equipos_activos_inactivos = threading.Thread(target=self.escuchar_cambios_equipos_activos_inactivos_notificacion)
+            thread_equipos_activos_inactivos = threading.Thread(target=self.escuchar_cambios_equipos_activos_inactivos)
             thread_equipos_activos_inactivos.start()
 
         #Obtener por primera vez los equipos de cómputo de la BD_SQL
         equipos_computo = admin_socket_ui.escribir_operaciones(json.dumps(self.peticion_equipos))
         if equipos_computo['success']:
             self.datos_compus(equipos_computo['data'])
-            thread_equipos_computo = threading.Thread(target=self.escuchar_cambios_equipos_computo)
-            thread_equipos_computo.start()
+            thread_escuchar_cambios_tablasbd = threading.Thread(target=self.escuchar_cambios_tablasbd)
+            thread_escuchar_cambios_tablasbd.start()
+            
 
 ###################################################################################################################################
 ###################################################################################################################################
@@ -217,7 +221,6 @@ class PrincipalWindow(Principal,QWidget):
         self.tabla_computadoras_desactivas.setColumnCount(len(column_header))
         self.tabla_computadoras_desactivas.setHorizontalHeaderLabels(column_header)
 
-        self.tabla_computadoras_desactivas.setEnabled(False)
 
     def desplegar_datos_equipos_activos(self, data):
         self.tabla_computadoras_activas.setRowCount(len(data))
@@ -275,7 +278,7 @@ class PrincipalWindow(Principal,QWidget):
         # CONDICION PARA SABER SI LA VENTANA ESTA ABIERTA
         if not self.ventana_abierta:
             self.ventana_abierta:True # CAMBIO DE LA VENTANA A TRUE
-            window = AgregarCompusWindow(self.datos_compus)
+            window = AgregarCompusWindow()
             window.setWindowModality(QtCore.Qt.ApplicationModal) # BLOQUEO DE LA VENTANA PRINCIPAL
             window.destroyed.connect(self.ventana_cerrada)
             window.show()
@@ -479,38 +482,46 @@ class PrincipalWindow(Principal,QWidget):
     
 
 # ////////////////////////// FUNCIONES PARA ESCUCHAR CAMBIOS EN LA BASE DE DATOS TODO//////////////////////////
-    def escuchar_cambios_equipos_activos_inactivos_notificacion(self):
-        print('Escuchar cuando se conecten o desconecten usuarios | Canal: Notificaciones')
+    def escuchar_cambios_equipos_activos_inactivos(self):
+        print('Escuchar cuando se conecten o desconecten usuarios | Canal: Broadcasting')
         while True:
             try:
-                msg_notificacion = admin_socket_ui.get_socket_notificacion().recv(admin_socket_ui.HEADER).decode(admin_socket_ui.FORMAT)
-                print('Mensaje desde el servidor por medio de enviar mensaje')
-                print(msg_notificacion)
-                
-                #Aqui necesita esperar a que obtenga los valores TODO
-                equipos_activos_inactivos = admin_socket_ui.escribir_operaciones('listar')
+                equipos_activos_inactivos = json.loads(admin_socket_ui.get_socket_broadcasting().recv(admin_socket_ui.HEADER).decode(admin_socket_ui.FORMAT))
 
-                print('Equipos activos e inactivos')
+                print('SE OBTUVIERON LOS EQUIPOS ACTIVOS E INACTIVOS')
                 print(equipos_activos_inactivos)
 
                 self.desplegar_datos_equipos_activos(equipos_activos_inactivos[1])
                 self.desplegar_datos_equipos_inactivos(equipos_activos_inactivos[0])
 
             except:
-                # admin_socket_ui.get_socket_notificacion().send('SALIR'.encode())
-                admin_socket_ui.get_socket_notificacion().close()
-                print('Hubo un problema al recibir el mensaje de notificacion')
+                admin_socket_ui.get_socket_broadcasting().close()
+                print('Hubo un problema al recibir los equipos activos e inactivos')
                 break
 
-    def escuchar_cambios_equipos_computo(self):
-        print('Escuchar cambios en la BD | Canal: Broadcasting')
+    def escuchar_notificaciones(self):
+        print('Escuchar cuando se haga una notificación | Canal: Notificación')
         while True:
-                try:
-                    msg_broadcast = admin_socket_ui.get_socket_broadcasting().recv(admin_socket_ui.HEADER).decode(admin_socket_ui.FORMAT)
-                    if msg_broadcast == 'REFRESH':
-                        equipos_computo = admin_socket_ui.escribir_operaciones(json.dumps(self.peticion_equipos))
-                        self.datos_compus(equipos_computo['data'])
-                except:
-                    admin_socket_ui.get_socket_broadcasting().close()
-                    print('Hubo un problema al recibir el mensaje del broadcasting')
-                    break
+            try:
+                notificacion = admin_socket_ui.get_socket_notificacion().recv(admin_socket_ui.HEADER).decode(admin_socket_ui.FORMAT)
+                print(f'Mensaje de notificación enviado por el servidor | {notificacion}')
+
+            except ConnectionResetError:
+                admin_socket_ui.get_socket_notificacion().close()
+                print('Hubo un problema al recibir las notificacaciones')
+                break
+    
+    def escuchar_cambios_tablasbd(self):
+        print('Escuchar cambios en la BD | Canal: OperacionesBD')
+        while True:
+            try:
+                datos = json.loads(admin_socket_ui.get_socket_operacionesbd().recv(admin_socket_ui.HEADER).decode(admin_socket_ui.FORMAT))
+                print('SE OBTUVIERON LOS DATOS DE ESCUCHAR CAMBIOS')
+                print(datos)
+
+                if datos['tabla'] == 'equipos':
+                    self.datos_compus(datos['data'])
+            except ConnectionResetError:
+                admin_socket_ui.get_socket_operacionesbd().close()
+                print('Hubo un problema al recibir los datos de operacionesBD')
+                break
