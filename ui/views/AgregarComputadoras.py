@@ -20,6 +20,9 @@ class AgregarComputadoras(QMainWindow, object):
         AgregarComputadoras.resize(700, 500)
         AgregarComputadoras.setMinimumSize(QSize(700, 500))
         AgregarComputadoras.setMaximumSize(QSize(700, 500))
+        icon = QIcon()
+        icon.addFile(u"./ui/assets/icons/LOGO.svg", QSize(), QIcon.Normal, QIcon.Off)
+        AgregarComputadoras.setWindowIcon(icon)
         self.centralwidget = QWidget(AgregarComputadoras)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -99,12 +102,6 @@ class AgregarComputadoras(QMainWindow, object):
 
         self.gridLayout_3.addWidget(self.label_12, 2, 0, 1, 1)
 
-        self.propietario_equipo_txt = QLineEdit(self.frame_2)
-        self.propietario_equipo_txt.setObjectName(u"propietario_equipo_txt")
-        self.propietario_equipo_txt.setFont(font2)
-
-        self.gridLayout_3.addWidget(self.propietario_equipo_txt, 2, 1, 1, 1)
-
         self.label_13 = QLabel(self.frame_2)
         self.label_13.setObjectName(u"label_13")
         self.label_13.setMinimumSize(QSize(0, 50))
@@ -112,14 +109,29 @@ class AgregarComputadoras(QMainWindow, object):
 
         self.gridLayout_3.addWidget(self.label_13, 3, 0, 1, 1)
 
-        self.rol_txt = QLineEdit(self.frame_2)
-        self.rol_txt.setObjectName(u"rol_txt")
-        self.rol_txt.setFont(font2)
+        self.propietario_cmbx = QComboBox(self.frame_2)
+        self.propietario_cmbx.addItem("")
+        self.propietario_cmbx.addItem("")
+        self.propietario_cmbx.addItem("")
+        self.propietario_cmbx.setObjectName(u"propietario_cmbx")
 
-        self.gridLayout_3.addWidget(self.rol_txt, 3, 1, 1, 1)
+        self.gridLayout_3.addWidget(self.propietario_cmbx, 2, 1, 1, 1)
+
+        self.rol_cmbx = QComboBox(self.frame_2)
+        self.rol_cmbx.addItem("")
+        self.rol_cmbx.addItem("")
+        self.rol_cmbx.addItem("")
+        self.rol_cmbx.setObjectName(u"rol_cmbx")
+
+        self.gridLayout_3.addWidget(self.rol_cmbx, 3, 1, 1, 1)
 
 
         self.verticalLayout.addWidget(self.frame_2)
+
+        self.label_2 = QLabel(self.frame)
+        self.label_2.setObjectName(u"label_2")
+
+        self.verticalLayout.addWidget(self.label_2)
 
         self.frame_4 = QFrame(self.frame)
         self.frame_4.setObjectName(u"frame_4")
@@ -151,16 +163,23 @@ class AgregarComputadoras(QMainWindow, object):
     # setupUi
 
     def retranslateUi(self, AgregarComputadoras):
-        AgregarComputadoras.setWindowTitle(QCoreApplication.translate("AgregarComputadoras", u"MainWindow", None))
+        AgregarComputadoras.setWindowTitle(QCoreApplication.translate("AgregarComputadoras", u"Agregar computadoras", None))
         self.label.setText(QCoreApplication.translate("AgregarComputadoras", u"Agregar Computadoras", None))
         self.label_10.setText(QCoreApplication.translate("AgregarComputadoras", u"Nombre del equipo", None))
         self.nombre_equipo_txt.setPlaceholderText(QCoreApplication.translate("AgregarComputadoras", u"Nombre del equipo", None))
         self.label_11.setText(QCoreApplication.translate("AgregarComputadoras", u"N\u00famero de serie", None))
         self.num_serie_txt.setPlaceholderText(QCoreApplication.translate("AgregarComputadoras", u"N\u00famero de serie", None))
         self.label_12.setText(QCoreApplication.translate("AgregarComputadoras", u"Propietario del equipo", None))
-        self.propietario_equipo_txt.setPlaceholderText(QCoreApplication.translate("AgregarComputadoras", u"Propietario del equipo", None))
         self.label_13.setText(QCoreApplication.translate("AgregarComputadoras", u"Rol", None))
-        self.rol_txt.setPlaceholderText(QCoreApplication.translate("AgregarComputadoras", u"Rol", None))
+        self.propietario_cmbx.setItemText(0, QCoreApplication.translate("AgregarComputadoras", u"Selecciona Propietario", None))
+        self.propietario_cmbx.setItemText(1, "")
+        self.propietario_cmbx.setItemText(2, "")
+
+        self.rol_cmbx.setItemText(0, QCoreApplication.translate("AgregarComputadoras", u"Selecciona un rol", None))
+        self.rol_cmbx.setItemText(1, QCoreApplication.translate("AgregarComputadoras", u"Administrador", None))
+        self.rol_cmbx.setItemText(2, QCoreApplication.translate("AgregarComputadoras", u"Usuario", None))
+
+        self.label_2.setText(QCoreApplication.translate("AgregarComputadoras", u"<html><head/><body><p>Los roles se manejan de la siguiente manera:</p><p>- Si se desea agregar una computadora <span style=\" font-weight:600;\">Administradora</span> poner <span style=\" font-weight:600;\">1</span></p><p>- Si se desea agregar una computadora <span style=\" font-weight:600;\">Usuario</span> poner <span style=\" font-weight:600;\">0</span></p><p><br/></p></body></html>", None))
         self.cancelar_registro_btn.setText(QCoreApplication.translate("AgregarComputadoras", u"Cancelar", None))
         self.guardar_compu_btn.setText(QCoreApplication.translate("AgregarComputadoras", u"Aceptar", None))
     # retranslateUi

@@ -193,6 +193,10 @@ class PrincipalWindow(Principal,QWidget):
     
             thread_escuchar_cambios_tablasbd = threading.Thread(target=self.escuchar_cambios_tablasbd)
             thread_escuchar_cambios_tablasbd.start()
+
+        # self.equipos_propietarios = admin_socket_ui.escribir_operaciones(json.dumps(self.peticion_propietarios))
+        # if equipos_propietarios['success']:
+
             
           
 ###################################################################################################################################
@@ -290,7 +294,7 @@ class PrincipalWindow(Principal,QWidget):
         # CONDICION PARA SABER SI LA VENTANA ESTA ABIERTA
         if not self.ventana_abierta:
             self.ventana_abierta:True # CAMBIO DE LA VENTANA A TRUE
-            window = AgregarCompusWindow()
+            window = AgregarCompusWindow(self)
             window.setWindowModality(QtCore.Qt.ApplicationModal) # BLOQUEO DE LA VENTANA PRINCIPAL
             window.destroyed.connect(self.ventana_cerrada)
             window.show()
