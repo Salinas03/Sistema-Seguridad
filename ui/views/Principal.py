@@ -198,25 +198,7 @@ class Principal(QMainWindow, object):
 "color: rgb(140, 140, 140);\n"
 "}\n"
 "\n"
-"QTableWidget{\n"
-"	background-color: rgb(255, 255, 255);\n"
-"	color: rgb(0, "
-                        "0, 0);\n"
-"	gridline-color: #2B3034;\n"
-"	font-size:12pt;\n"
-"	color:#000000;\n"
-"}\n"
-"\n"
-"QHeaderView::section{\n"
-"	background-color: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
-"	color:white;\n"
-"	border-color: 1px solid rgb(255, 255, 255);\n"
-"}\n"
-"\n"
-"QTableWidget QTableCornerButton::section{\n"
-"	background-color: rgb(0, 0, 0);\n"
-"	border: 1px solid qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
-"}")
+"")
         self.verticalLayout = QVBoxLayout(self.body_widget)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -862,7 +844,10 @@ class Principal(QMainWindow, object):
         self.tabla_computadoras_desactivas.setHorizontalHeaderItem(3, __qtablewidgetitem20)
         __qtablewidgetitem21 = QTableWidgetItem()
         self.tabla_computadoras_desactivas.setHorizontalHeaderItem(4, __qtablewidgetitem21)
+        if (self.tabla_computadoras_desactivas.rowCount() < 2):
+            self.tabla_computadoras_desactivas.setRowCount(2)
         self.tabla_computadoras_desactivas.setObjectName(u"tabla_computadoras_desactivas")
+        self.tabla_computadoras_desactivas.setRowCount(2)
 
         self.gridLayout_3.addWidget(self.tabla_computadoras_desactivas, 0, 0, 1, 1)
 

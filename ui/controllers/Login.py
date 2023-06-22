@@ -9,7 +9,6 @@ from PySide2.QtGui import QRegExpValidator
 import json
 from clases.administrador_ui import admin_socket_ui
 
-
 # CLASE PARA EL INICIO DE SESION
 class LoginWindow(Login, QWidget):    
     # FUNCION PARA PODER INICIAR
@@ -19,7 +18,7 @@ class LoginWindow(Login, QWidget):
 
         # LLAMADO DE INICIO DE SESION                                           # AQUI SE MANDAN LOS DATOS DE LOS TXT
         #self.x = self.ingresar_btn.clicked.connect(lambda:self.iniciar_sesion(self.correo_txt.text(),self.password_txt.text()))
-        self.x = self.ingresar_btn.clicked.connect(self.iniciar_sesion)
+        self.ingresar_btn.clicked.connect(self.iniciar_sesion)
 
         # VALIDACIÓN DE DATOS EN LOS QLineEdit
         only_password = QRegExpValidator(QRegExp('^[A-Za-z0-9.@/_&$%!-]{3,50}')) # VALIDACION DE DATOS ALFANUMERICOS DONDE SOLO PUEDE TENER ENTRE 3 Y 100 VALORES
@@ -31,14 +30,6 @@ class LoginWindow(Login, QWidget):
         self.correo_txt.setValidator(email)
         self.password_txt.setValidator(only_password)
     
-    
-    def eventFilter(self, obj, event):
-        if obj == self.password_txt and event.type() == event.KeyPress:
-            if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
-                self.iniciar_sesion
-                return True
-
-        return super().eventFilter(obj, event)
     
     # FUNCION PARA EL INICIO DE SESION
     def iniciar_sesion(self):
@@ -87,22 +78,3 @@ class LoginWindow(Login, QWidget):
         window = PrincipalWindow(id_propieatrio)
         window.show()
         self.setWindowFlag(Qt.Window)
-
-
-    
-
-
-
-
-
-
- 
-
-        
-
-
-
-                      
-
-
-        

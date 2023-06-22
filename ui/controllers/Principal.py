@@ -54,6 +54,8 @@ class PrincipalWindow(Principal,QWidget):
         self.desactivar_btn.clicked.connect(self.desactivar_computadora)
         self.desactivar_compus_btn.clicked.connect(self.desactivar_computadoras)
 
+        tabla_de_computadoras_activas = QTableWidget()
+        tabla_de_computadoras_activas.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         # MEDIDAS DEL ANCHO DE LAS TABLAS
         header_computadoras_activas = self.tabla_computadoras_activas.horizontalHeader()
         header_computadoras_activas.setSectionResizeMode(header_computadoras_activas.Stretch)
@@ -185,10 +187,14 @@ class PrincipalWindow(Principal,QWidget):
         equipos_computo = admin_socket_ui.escribir_operaciones(json.dumps(self.peticion_equipos))
         if equipos_computo['success']:
             self.datos_compus(equipos_computo['data'])
+            
+            thread_equipos_computo = threading.Thread(target=self.escuchar_notificaciones)
+            thread_equipos_computo.start()
+    
             thread_escuchar_cambios_tablasbd = threading.Thread(target=self.escuchar_cambios_tablasbd)
             thread_escuchar_cambios_tablasbd.start()
             
-
+          
 ###################################################################################################################################
 ###################################################################################################################################
 #
@@ -209,17 +215,23 @@ class PrincipalWindow(Principal,QWidget):
 # ////////////////////////// FUNCIONES PAGINA PRINCIPAL TODO//////////////////////////
 
     def configuracion_tabla_equipos_activos(self):
-        column_header = ('ID','Nombre del equipo', 'Número de serie', 'Propietario del equipo', 'Rol', 'IP')
-        self.tabla_computadoras_activas.setColumnCount(len(column_header))
-        self.tabla_computadoras_activas.setHorizontalHeaderLabels(column_header)
-
+        column_headers_tablas_equipos_activos = ('ID','Nombre del equipo', 'Número de serie', 'Propietario del equipo', 'Rol', 'IP')
+        self.tabla_computadoras_activas.setColumnCount(len(column_headers_tablas_equipos_activos))
+        self.tabla_computadoras_activas.setHorizontalHeaderLabels(column_headers_tablas_equipos_activos)
+        self.tabla_computadoras_activas.setSelectionMode(QAbstractItemView.SingleSelection)
         self.tabla_computadoras_activas.setSelectionBehavior(QAbstractItemView.SelectRows)# EVENTO QUE SELECCIONA TODA LA FILA
+        self.tabla_computadoras_activas.verticalHeader().setVisible(False) # Ocultar el header vertical
 
 
     def configuracion_tabla_equipos_inactivos(self):
-        column_header = ('ID','Nombre del equipo', 'Número de serie', 'Propietario del equipo', 'Rol')
-        self.tabla_computadoras_desactivas.setColumnCount(len(column_header))
-        self.tabla_computadoras_desactivas.setHorizontalHeaderLabels(column_header)
+        column_headers_tabla_equipos_inactivos = ('ID','Nombre del equipo', 'Número de serie', 'Propietario del equipo', 'Rol')
+        self.tabla_computadoras_desactivas.setColumnCount(len(column_headers_tabla_equipos_inactivos))
+        self.tabla_computadoras_desactivas.setHorizontalHeaderLabels(column_headers_tabla_equipos_inactivos)
+
+        self.tabla_computadoras_desactivas.setEditTriggers(QAbstractItemView.NoEditTriggers) #Eliminar la edicion de la tabla
+        self.tabla_computadoras_desactivas.setSelectionBehavior(QAbstractItemView.SelectRows) #Seleccionar toda la fila
+        self.tabla_computadoras_desactivas.setSelectionMode(QAbstractItemView.SingleSelection) #Seleccionar solo una fila
+        self.tabla_computadoras_desactivas.verticalHeader().setVisible(False) # Ocultar el header vertical
 
 
     def desplegar_datos_equipos_activos(self, data):
@@ -233,7 +245,7 @@ class PrincipalWindow(Principal,QWidget):
         for (index_row, row) in enumerate(data):
             if row is not None:
                 for (index_cell, cell) in enumerate(row):
-                    self.tabla_computadoras_desactivas.showRow(index_row)
+                    #self.tabla_computadoras_desactivas.showRow(index_row)
                     self.tabla_computadoras_desactivas.setItem(index_row, index_cell, QTableWidgetItem(str(cell)))
             else: 
                 self.tabla_computadoras_desactivas.hideRow(index_row)
@@ -285,11 +297,13 @@ class PrincipalWindow(Principal,QWidget):
 
     # FUNCION PARA COLOCAR LAF CONFIGURACIONES PARA LA TABLA 
     def configuracion_tabla_compus(self):
-        column_header = ('ID','Nombre de equipo', 'Número de serie', 'Propietario del equipo', 'Rol')
-        self.computadoras_registradas_table.setColumnCount(len(column_header))
-        self.computadoras_registradas_table.setHorizontalHeaderLabels(column_header)
+        column_headers_tabla_compus = ('ID','Nombre de equipo', 'Número de serie', 'Propietario del equipo', 'Rol')
+        self.computadoras_registradas_table.setColumnCount(len(column_headers_tabla_compus))
+        self.computadoras_registradas_table.setHorizontalHeaderLabels(column_headers_tabla_compus)
 
+        self.computadoras_registradas_table.setSelectionMode(QAbstractItemView.SingleSelection)
         self.computadoras_registradas_table.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.computadoras_registradas_table.verticalHeader().setVisible(False) # Ocultar el header vertical
     # FUNCION PARA VERIFICAR LA CANTIDAD DE FILAS QUE VA A TENER LA TABLA
     # ES LA QUE RENDERIZA LA TABLA
     def datos_compus(self,data): 
@@ -350,11 +364,12 @@ class PrincipalWindow(Principal,QWidget):
             QMessageBox.warning(self, "Advertencia", "La ventana ya está abierta.")
     
     def configuracion_tabla_admins(self):
-            column_headers = ("id", "nombre", "apellidos", "telefono", "correo", "rol")
-            self.administradores_tabla.setColumnCount(len(column_headers))
-            self.administradores_tabla.setHorizontalHeaderLabels(column_headers)
-
+            column_headers_tabla_admins = ("id", "nombre", "apellidos", "telefono", "correo", "rol")
+            self.administradores_tabla.setColumnCount(len(column_headers_tabla_admins))
+            self.administradores_tabla.setHorizontalHeaderLabels(column_headers_tabla_admins)
+            self.administradores_tabla.setSelectionMode(QAbstractItemView.SingleSelection)
             self.administradores_tabla.setSelectionBehavior(QAbstractItemView.SelectRows)
+            self.administradores_tabla.verticalHeader().setVisible(False) # Ocultar el header vertical
 
     def datos_admins(self,data):
         self.administradores_tabla.setRowCount(len(data))
@@ -478,8 +493,6 @@ class PrincipalWindow(Principal,QWidget):
         self.close()
         window = LoginWindow(self)
         window.show()
-
-    
 
 # ////////////////////////// FUNCIONES PARA ESCUCHAR CAMBIOS EN LA BASE DE DATOS TODO//////////////////////////
     def escuchar_cambios_equipos_activos_inactivos(self):
