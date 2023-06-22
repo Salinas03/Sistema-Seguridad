@@ -318,7 +318,8 @@ class PrincipalWindow(Principal,QWidget):
             seleccionar_fila = self.computadoras_registradas_table.selectedItems()
             if seleccionar_fila:
                 id_equipo = seleccionar_fila[0].text()
-                window = ModificarEquipoWindow(self.datos_compus,self,id_equipo)
+                
+                window = ModificarEquipoWindow(self,id_equipo)
                 window.setWindowModality(QtCore.Qt.ApplicationModal) # BLOQUEO DE LA VENTANA PRINCIPAL
                 window.destroyed.connect(self.ventana_cerrada)
                 window.show()
@@ -326,16 +327,23 @@ class PrincipalWindow(Principal,QWidget):
                QMessageBox.warning(self, "Advertencia", "La ventana ya está abierta.") 
     
     def eliminar_equipo(self):
-        equipo = Equipo(conexion())
         seleccionar_fila = self.computadoras_registradas_table.selectedItems()
 
-        resp = msg_boxes.warning_msg('Seguro?', 'Estas seguro de eliminar esta computadora?')
+        resp = msg_boxes.warning_msg('ADVERTENCIA', '¿Estas seguro de eliminar esta computadora?')
         if resp == QMessageBox.Yes:
             if seleccionar_fila:
                 id_equipo = seleccionar_fila[0].text()
                 fila = seleccionar_fila[0].row()
 
-                if equipo.eliminar_equipo(id_equipo):
+                peticion = {
+                    'tabla': 'equipos',
+                    'operacion': 'borrar',
+                    'id': id_equipo
+                }
+
+                respuesta = admin_socket_ui.escribir_operaciones(json.dumps(peticion))
+
+                if respuesta['success']:
                     self.computadoras_registradas_table.removeRow(fila)
                     QMessageBox.information(self, 'Eliminacion', 'El equipo de computo se elimino con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
 
