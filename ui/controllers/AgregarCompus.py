@@ -9,13 +9,10 @@ from clases.administrador_ui import admin_socket_ui
 import json
 
 class AgregarCompusWindow(AgregarComputadoras, QWidget):
-    def __init__(self, function):
+    def __init__(self):
         super().__init__(None)
         self.setupUi(self)
         self.setWindowFlag(Qt.Window)
-        self.equipo = Equipo(conexion())
-
-        self.actualizar_tabla = function
 
         # VALIDACIÓN DE DATOS EN LOS QLineEdit
         only_text = QRegExpValidator(QRegExp('^[A-Za-z0-9-]{3,50}')) # VALIDACION DE DATOS ALFANUMERICOS DONDE SOLO PUEDE TENER ENTRE 3 Y 100 VALORES
@@ -53,23 +50,20 @@ class AgregarCompusWindow(AgregarComputadoras, QWidget):
                     'data': [equipo, numSerie, propietario, rol]     
                 }
 
-                # respuesta = json.loads(admin_socket_ui.escribir_operaciones(json.dumps(objeto_insertar)))
-                
-                # if respuesta['success']:
-                #     #Realizar mensajes emergentes
-                #     pass
-                # else:
-                #     #Realizar mensajes emergentes
-                #     pass
+                respuesta = admin_socket_ui.escribir_operaciones(json.dumps(objeto_insertar))
 
-                self.equipo.insertar_compus(equipo,numSerie,propietario,rol)
-                self.nombre_equipo_txt.clear()
-                self.num_serie_txt.clear()
-                self.propietario_equipo_txt.clear()
-                self.rol_txt.clear()
-                QMessageBox.warning(self, 'Registro', 'El registro se hizo con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
-                self.actualizar_tabla(self.equipo.seleccionar_compus())
-                self.close()   
+                print('RESPUESTA EN AGREGAR COMPUTS')
+                print(respuesta)
+                
+                if respuesta['success']:
+                    self.nombre_equipo_txt.clear()
+                    self.num_serie_txt.clear()
+                    self.propietario_equipo_txt.clear()
+                    self.rol_txt.clear()
+                    QMessageBox.warning(self, 'Registro', 'El registro se hizo con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                    self.close()  
+                else:
+                    QMessageBox.warning(self, 'Oops, algo ocurrio', 'Hubo un problema al realizar el registro', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
 
     def cancelar_registro(self):
         self.close()     
