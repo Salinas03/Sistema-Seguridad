@@ -9,7 +9,6 @@ from controllers.ModificarPropietarios import ModificarPropietarioWindow
 from controllers.ModificarComputadoras import ModificarEquipoWindow
 from modelos.propietarios_consultas import Propietario
 from py2_msgboxes import msg_boxes
-from modelos.equipos_consultas import Equipo
 from PySide2.QtCore import *
 from PySide2.QtGui import QRegExpValidator
 
@@ -249,7 +248,7 @@ class PrincipalWindow(Principal,QWidget):
         for (index_row, row) in enumerate(data):
             if row is not None:
                 for (index_cell, cell) in enumerate(row):
-                    #self.tabla_computadoras_desactivas.showRow(index_row)
+                    self.tabla_computadoras_desactivas.showRow(index_row)
                     self.tabla_computadoras_desactivas.setItem(index_row, index_cell, QTableWidgetItem(str(cell)))
             else: 
                 self.tabla_computadoras_desactivas.hideRow(index_row)
@@ -348,7 +347,6 @@ class PrincipalWindow(Principal,QWidget):
                 respuesta = admin_socket_ui.escribir_operaciones(json.dumps(peticion))
 
                 if respuesta['success']:
-                    self.computadoras_registradas_table.removeRow(fila)
                     QMessageBox.information(self, 'Eliminacion', 'El equipo de computo se elimino con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
 
     def habilitar_eliminar_compus(self):
@@ -516,8 +514,8 @@ class PrincipalWindow(Principal,QWidget):
                 print('SE OBTUVIERON LOS EQUIPOS ACTIVOS E INACTIVOS')
                 print(equipos_activos_inactivos)
 
-                self.desplegar_datos_equipos_activos(equipos_activos_inactivos[1])
                 self.desplegar_datos_equipos_inactivos(equipos_activos_inactivos[0])
+                self.desplegar_datos_equipos_activos(equipos_activos_inactivos[1])
 
             except:
                 admin_socket_ui.get_socket_broadcasting().close()

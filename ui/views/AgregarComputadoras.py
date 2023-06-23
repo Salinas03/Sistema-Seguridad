@@ -11,12 +11,21 @@
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
-
+from clases.administrador_ui import admin_socket_ui
+import json
 
 class AgregarComputadoras(QMainWindow, object):
     def setupUi(self, AgregarComputadoras):
         if not AgregarComputadoras.objectName():
             AgregarComputadoras.setObjectName(u"AgregarComputadoras")
+
+        self.peticion_propietarios = {
+            'tabla': 'propietarios',
+            'operacion': 'obtener_propietarios'
+        }
+
+        self.propietarios = admin_socket_ui.escribir_operaciones(json.dumps(self.peticion_propietarios))
+        
         AgregarComputadoras.resize(700, 500)
         AgregarComputadoras.setMinimumSize(QSize(700, 500))
         AgregarComputadoras.setMaximumSize(QSize(700, 500))
@@ -109,8 +118,13 @@ class AgregarComputadoras(QMainWindow, object):
 
         self.gridLayout_3.addWidget(self.label_13, 3, 0, 1, 1)
 
+        #Añadir elementos al combobox por medio de un for en donde se realiza una busqueda a los propietarios
         self.propietario_cmbx = QComboBox(self.frame_2)
-        self.propietario_cmbx.addItem("")
+        self.propietario_cmbx.addItem('')
+        if self.propietarios['success']:
+            for _ in range(len(self.propietarios['data'])):
+                self.propietario_cmbx.addItem("")
+
         self.propietario_cmbx.setObjectName(u"propietario_cmbx")
 
         self.gridLayout_3.addWidget(self.propietario_cmbx, 2, 1, 1, 1)
@@ -120,7 +134,6 @@ class AgregarComputadoras(QMainWindow, object):
         self.rol_cmbx.addItem("")
         self.rol_cmbx.addItem("")
         self.rol_cmbx.setObjectName(u"rol_cmbx")
-
         self.gridLayout_3.addWidget(self.rol_cmbx, 3, 1, 1, 1)
 
 
@@ -169,11 +182,19 @@ class AgregarComputadoras(QMainWindow, object):
         self.num_serie_txt.setPlaceholderText(QCoreApplication.translate("AgregarComputadoras", u"N\u00famero de serie", None))
         self.label_12.setText(QCoreApplication.translate("AgregarComputadoras", u"Propietario del equipo", None))
         self.label_13.setText(QCoreApplication.translate("AgregarComputadoras", u"Rol", None))
-        self.propietario_cmbx.setItemText(0, QCoreApplication.translate("AgregarComputadoras", u"Selecciona Propietario", None))
 
+        self.propietario_cmbx.setItemText(0, QCoreApplication.translate("AgregarComputadoras", u"Selecciona Propietario", None))
+        
+        #Desplegar la información
+        if self.propietarios['success']:
+            propietarios = self.propietarios['data']
+
+            for i, propietario in enumerate(propietarios): 
+                self.propietario_cmbx.setItemText(i+1, QCoreApplication.translate("AgregarComputadoras", f"{propietario[0]}.-{propietario[1]} [{propietario[4]}]", None))
+    
         self.rol_cmbx.setItemText(0, QCoreApplication.translate("AgregarComputadoras", u"Selecciona un rol", None))
-        self.rol_cmbx.setItemText(1, QCoreApplication.translate("AgregarComputadoras", u"Administrador - 1", None))
-        self.rol_cmbx.setItemText(2, QCoreApplication.translate("AgregarComputadoras", u"Usuario - 0", None))
+        self.rol_cmbx.setItemText(1, QCoreApplication.translate("AgregarComputadoras", u"Administrador", None))
+        self.rol_cmbx.setItemText(2, QCoreApplication.translate("AgregarComputadoras", u"Cliente", None))
 
         self.label_2.setText(QCoreApplication.translate("AgregarComputadoras", u"<html><head/><body><p><br/></p></body></html>", None))
         self.cancelar_registro_btn.setText(QCoreApplication.translate("AgregarComputadoras", u"Cancelar", None))
