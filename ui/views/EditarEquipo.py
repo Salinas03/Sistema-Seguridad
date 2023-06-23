@@ -11,12 +11,22 @@
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
+from clases.administrador_ui import admin_socket_ui
+import json
 
 
 class EditarComputadoras(QMainWindow, object):
     def setupUi(self, EditarComputadoras):
         if not EditarComputadoras.objectName():
             EditarComputadoras.setObjectName(u"EditarComputadoras")
+
+        self.peticion_propietarios = {
+            'tabla': 'propietarios',
+            'operacion': 'obtener_propietarios'
+        }
+
+        self.propietarios = admin_socket_ui.escribir_operaciones(json.dumps(self.peticion_propietarios))
+
         EditarComputadoras.resize(700, 500)
         EditarComputadoras.setMinimumSize(QSize(700, 500))
         EditarComputadoras.setMaximumSize(QSize(700, 500))
@@ -111,11 +121,19 @@ class EditarComputadoras(QMainWindow, object):
 
         self.edita_propietario_cmbx = QComboBox(self.frame_2)
         self.edita_propietario_cmbx.setObjectName(u"edita_propietario_cmbx")
+        self.edita_propietario_cmbx.addItem('')
+        if self.propietarios['success']:
+            for _ in range(len(self.propietarios['data'])):
+                self.edita_propietario_cmbx.addItem("")
 
         self.gridLayout_3.addWidget(self.edita_propietario_cmbx, 2, 1, 1, 1)
 
+        #Combobox de ROL
         self.edita_rol_cmbx = QComboBox(self.frame_2)
         self.edita_rol_cmbx.setObjectName(u"edita_rol_cmbx")
+        self.edita_rol_cmbx.addItem('')
+        self.edita_rol_cmbx.addItem('')
+        self.edita_rol_cmbx.addItem('')
 
         self.gridLayout_3.addWidget(self.edita_rol_cmbx, 3, 1, 1, 1)
 
@@ -162,5 +180,18 @@ class EditarComputadoras(QMainWindow, object):
         self.label_13.setText(QCoreApplication.translate("EditarComputadoras", u"Rol", None))
         self.cancelar_registro_btn.setText(QCoreApplication.translate("EditarComputadoras", u"Cancelar", None))
         self.modificar_compu_btn.setText(QCoreApplication.translate("EditarComputadoras", u"Modificar", None))
-    # retranslateUi
+        
+        self.edita_propietario_cmbx.setItemText(0, QCoreApplication.translate('Seleccionar', u'Selecciona un rol', None))
+
+         #Desplegar la información
+        if self.propietarios['success']:
+            propietarios = self.propietarios['data']
+            for i, propietario in enumerate(propietarios): 
+                self.edita_propietario_cmbx.setItemText(i+1, QCoreApplication.translate("AgregarComputadoras", f"{propietario[0]}.-{propietario[1]} [{propietario[4]}]", None))
+
+        self.edita_rol_cmbx.setItemText(0, QCoreApplication.translate("Seleccionar", u"Selecciona un rol", None))
+        self.edita_rol_cmbx.setItemText(1, QCoreApplication.translate("Cliente", u"Administrador", None))
+        self.edita_rol_cmbx.setItemText(2, QCoreApplication.translate("Administrador", u"Cliente", None))
+        # self.edita_rol_cmbx.setCurrentIndex(1)
+    
 

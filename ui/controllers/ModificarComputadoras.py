@@ -17,14 +17,12 @@ class ModificarEquipoWindow(EditarComputadoras, QWidget):
         self.llenar_campos_texto()
     
         only_text = QRegExpValidator(QRegExp('^[A-Za-z0-9-]{3,50}')) # VALIDACION DE DATOS ALFANUMERICOS DONDE SOLO PUEDE TENER ENTRE 3 Y 100 VALORES
-        propietario_text = QRegExpValidator(QRegExp('^[0-9]{1,10}'))
-        rol = QRegExpValidator(QRegExp('^[0-1]{1,1}'))
 
         self.nombre_equipo_txt.setValidator(only_text)
         self.nombre_equipo_txt.setFocus()
         self.num_serie_txt.setValidator(only_text)
-        self.propietario_equipo_txt.setValidator(propietario_text)
-        self.rol_txt.setValidator(rol)
+        # self.propietario_equipo_txt.setValidator(propietario_text)
+        # self.rol_txt.setValidator(rol)
 
         self.x = self.modificar_compu_btn.clicked.connect(self.editar_compus)
         self.y = self.cancelar_registro_btn.clicked.connect(self.cancelar_registro)
@@ -36,20 +34,31 @@ class ModificarEquipoWindow(EditarComputadoras, QWidget):
             'id': self._id
         }
         
-        #REALIZAR OPERACIONES CON LAS PETICIONES DE LOS SOCKETS
         data = admin_socket_ui.escribir_operaciones(json.dumps(peticion))
-        
         if data['success']:
             data = data['data'][0]
             if len(data) >= 1:
                 equipo = data
+                #Llenado de datos con los datos de propietario por ID
                 self.nombre_equipo_txt.setText(equipo[1])
                 self.num_serie_txt.setText(equipo[2])
-                self.propietario_equipo_txt.setText(str(equipo[3]))
-                self.rol_txt.setText(str(equipo[4]))
+                indice = self.establecer_indices_combobox(equipo[3])
+                self.edita_propietario_cmbx.setCurrentIndex(indice)
+                if equipo[4] == 1:
+                    self.edita_rol_cmbx.setCurrentIndex(1)
+                elif equipo[4] == 0:
+                    self.edita_rol_cmbx.setCurrentIndex(2)
+                
             else:
                 print('No existe ningún valor')
     
+    def establecer_indices_combobox(self, id_propietario):
+        propietarios = self.propietarios['data']
+        print(propietarios)
+        for i, propietario in enumerate(propietarios):
+            if propietario[0] == id_propietario:
+                return i + 1
+
     def checar_inputs(self):
         equipo = self.nombre_equipo_txt.text()
         numSerie = self.num_serie_txt.text()
@@ -67,25 +76,46 @@ class ModificarEquipoWindow(EditarComputadoras, QWidget):
     def editar_compus(self):
         equipo = self.nombre_equipo_txt.text()
         numSerie = self.num_serie_txt.text()
-        propietario = self.propietario_equipo_txt.text()
-        rol = self.rol_txt.text()
+        propietario = self.edita_propietario_cmbx.currentText().split('.')[0]
+        rol = self.edita_rol_cmbx.currentIndex()
 
-        peticion = {
-            'tabla': 'equipos',
-            'operacion': 'actualizar',
-            'id': self._id,
-            'data': [equipo,numSerie,propietario,rol]
-        }
+        if equipo == '' or numSerie == '':
+            QMessageBox.warning(self, 'Error', 'Por favor de poner datos validos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
 
-        if self.checar_inputs():
-            respuesta = admin_socket_ui.escribir_operaciones(json.dumps(peticion))
+        else:
+            valor_rol = None
 
-            print('RESPUESTA DE OPERACIÓN DE ACTUALIZAR')
-            print(respuesta)
+            if rol == 1:  # Administrador
+                valor_rol = 1
+            elif rol == 2:  # Cliente
+                valor_rol = 0
 
-            if respuesta['success']:
-                QMessageBox.information(self, 'Actualización', 'El equipo se actualizo con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
-                self.close()
+            if propietario[0] != 'S':
+                if valor_rol is not None:
+                     
+                    peticion = {
+                        'tabla': 'equipos',
+                        'operacion': 'actualizar',
+                        'id': self._id,
+                        'data': [equipo,numSerie,propietario,valor_rol]
+                    }
+                     
+                    respuesta = admin_socket_ui.escribir_operaciones(json.dumps(peticion))
+
+                    print('RESPUESTA DE OPERACIÓN DE ACTUALIZAR')
+                    print(respuesta)
+
+                    if respuesta['success']:
+                        self.nombre_equipo_txt.clear()
+                        self.num_serie_txt.clear()
+                        QMessageBox.warning(self, 'Actualización', 'La actualización se hizo con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                        self.close() 
+
+                else:
+                    QMessageBox.warning(self, 'Advertencia', 'Seleccione un rol para el equipo', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+            else: 
+                QMessageBox.warning(self, 'Advertencia', 'Seleccione un propietario del equipo', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+            
 
     def cancelar_registro(self):
         self.close()     
