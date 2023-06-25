@@ -44,7 +44,7 @@ class PropietariosConsultas:
         if self.conexion.is_connected():
             try:
                 cursor = self.conexion.cursor()
-                sql = f"""UPDATE propietarios SET nombre_propietario = %s,apellido_propietario = %s,telefono_propietario=%s,correo_propietario=%s,contrasena_propietario=%s,rol=%s WHERE id_propietarios={id_propietarios}"""
+                sql = f"""UPDATE propietarios SET nombre_propietario = %s,apellido_propietario = %s,telefono_propietario=%s,correo_propietario=%s,rol=%s WHERE id_propietarios={id_propietarios}"""
                 cursor.execute(sql, data)
                 self.conexion.commit()
                 return json.dumps({'success': True, 'msg': 'Se ha actualizado la tabla exitosamente'})
@@ -59,11 +59,11 @@ class PropietariosConsultas:
             cursor.execute(sql)
             resultado = cursor.fetchall()  # Obtener los resultados de la consulta
             #cursor.close()  # Cerrar el cursor después de obtener los resultados
-            return {'success': True, 'data': resultado}
+            return json.dumps({'success': True, 'data': resultado})
             #self.conexion.commit()
         except Error as err:
             print(f'Error al intentar la conexion {err}')
-            return {'success': False, 'msg': 'Hubo un error al obtener el propietario por id'}
+            return json.dumps({'success': False, 'msg': 'Hubo un error al obtener el propietario por id'})
         
     def eliminar_propietario(self,id_propietarios):
         if self.conexion.is_connected():

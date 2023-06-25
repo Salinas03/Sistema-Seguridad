@@ -145,6 +145,9 @@ class EditarPropietario(QMainWindow, object):
         self.gridLayout_3.addWidget(self.apellido_propietario_txt, 1, 2, 1, 1)
 
         self.editar_rol_cmbx = QComboBox(self.widget_3)
+        self.editar_rol_cmbx.addItem('')
+        self.editar_rol_cmbx.addItem('')
+        self.editar_rol_cmbx.addItem('')
         self.editar_rol_cmbx.setObjectName(u"editar_rol_cmbx")
 
         self.gridLayout_3.addWidget(self.editar_rol_cmbx, 4, 2, 1, 1)
@@ -199,5 +202,10 @@ class EditarPropietario(QMainWindow, object):
         self.label_6.setText(QCoreApplication.translate("EditarPropietario", u"Correo", None))
         self.cancelar_admin_btn.setText(QCoreApplication.translate("EditarPropietario", u"Cancelar", None))
         self.agregar_admin_btn.setText(QCoreApplication.translate("EditarPropietario", u"Modificar", None))
+
+        self.editar_rol_cmbx.setItemText(0, QCoreApplication.translate("ActualizarPropietarios", u"Selecciona un rol", None))
+        self.editar_rol_cmbx.setItemText(1, QCoreApplication.translate("ActualizarPropietarios", u"Administrador", None))
+        self.editar_rol_cmbx.setItemText(2, QCoreApplication.translate("ActualizarPropietarios", u"Cliente", None))
+
     # retranslateUi
 

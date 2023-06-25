@@ -24,7 +24,12 @@ class AgregarCompusWindow(AgregarComputadoras, QWidget):
     def agregar_compus(self):
         equipo = self.nombre_equipo_txt.text()
         numSerie = self.num_serie_txt.text()
-        id_propietario = self.propietario_cmbx.currentText().split('.')[0]
+
+        id_propietario = None
+        cadena = self.propietario_cmbx.currentText()
+        if '.' in cadena:
+            id_propietario = cadena.split('.')[0]
+
         rol = self.rol_cmbx.currentIndex()
 
         if equipo == '' or numSerie == '' or rol == None:
@@ -38,7 +43,7 @@ class AgregarCompusWindow(AgregarComputadoras, QWidget):
             elif rol == 2:  # Cliente
                 valor_rol = 0
 
-            if id_propietario != 'S':
+            if id_propietario is not None:
                 if valor_rol is not None:
                     objeto_insertar = {
                         'tabla': 'equipos',
@@ -47,18 +52,15 @@ class AgregarCompusWindow(AgregarComputadoras, QWidget):
                     }
 
                     respuesta = admin_socket_ui.escribir_operaciones(json.dumps(objeto_insertar))
-
-                    print('RESPUESTA EN AGREGAR COMPUTS')
-                    print(respuesta)
                         
                     if respuesta['success']:
                         self.nombre_equipo_txt.clear()
                         self.num_serie_txt.clear()
-                        QMessageBox.warning(self, 'Registro', 'El registro se hizo con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                        QMessageBox.information(self, 'Registro realizado con éxito', 'El registro se hizo con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
                         self.close()  
 
                     else:
-                        QMessageBox.warning(self, 'Oops, algo ocurrio', 'Hubo un problema al realizar el registro', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                        QMessageBox.critical(self, 'Oops, algo ocurrio', 'Hubo un problema al realizar el registro', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
                 else:
                     QMessageBox.warning(self, 'Advertencia', 'Seleccione un rol para el equipo', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
             else: 

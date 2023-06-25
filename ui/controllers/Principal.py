@@ -185,18 +185,14 @@ class PrincipalWindow(Principal,QWidget):
         #Obtener por primera vez los equipos de cómputo de la BD_SQL
         equipos_computo = admin_socket_ui.escribir_operaciones(json.dumps(self.peticion_equipos))
         if equipos_computo['success']:
-            self.datos_compus(equipos_computo['data'])
-            
-            thread_equipos_computo = threading.Thread(target=self.escuchar_notificaciones)
-            thread_equipos_computo.start()
-    
+            self.datos_compus(equipos_computo['data'])    
             thread_escuchar_cambios_tablasbd = threading.Thread(target=self.escuchar_cambios_tablasbd)
             thread_escuchar_cambios_tablasbd.start()
 
-        # self.equipos_propietarios = admin_socket_ui.escribir_operaciones(json.dumps(self.peticion_propietarios))
-        # if equipos_propietarios['success']:
-
-            
+        #Obtener por primera vez los propietarios
+        propietarios = admin_socket_ui.escribir_operaciones(json.dumps(self.peticion_propietarios))
+        if propietarios['success']:
+            self.datos_admins(propietarios['data'])            
           
 ###################################################################################################################################
 ###################################################################################################################################
@@ -347,7 +343,10 @@ class PrincipalWindow(Principal,QWidget):
                 respuesta = admin_socket_ui.escribir_operaciones(json.dumps(peticion))
 
                 if respuesta['success']:
-                    QMessageBox.information(self, 'Eliminacion', 'El equipo de computo se elimino con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                    QMessageBox.information(self, 'Eliminacion realizada con éxito', 'El equipo de computo se elimino con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                else:
+                    QMessageBox.critical(self, 'Oops... algo sucedio', 'Ocurrio un error al realizar la eliiminación', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+
 
     def habilitar_eliminar_compus(self):
         self.eliminar_compu_btn.setEnabled(True)
@@ -366,7 +365,7 @@ class PrincipalWindow(Principal,QWidget):
         # CONDICION PARA SABER SI LA VENTANA ESTA ABIERTA
         if not self.ventana_abierta: 
             self.ventana_abierta:True # CAMBIO DE LA VENTANA A TRUE
-            window = AgregarpropietarioWindow(self.datos_admins)
+            window = AgregarpropietarioWindow(self)
             window.setWindowModality(QtCore.Qt.ApplicationModal) # BLOQUEO DE LA VENTANA PRINCIPAL
             window.destroyed.connect(self.ventana_cerrada)
             window.show()
@@ -393,7 +392,7 @@ class PrincipalWindow(Principal,QWidget):
             seleccionar_fila = self.administradores_tabla.selectedItems()
             if seleccionar_fila:
                 id_propietarios = seleccionar_fila[0].text()
-                window = ModificarPropietarioWindow(self.datos_admins,self,id_propietarios)
+                window = ModificarPropietarioWindow(self,id_propietarios)
                 window.setWindowModality(QtCore.Qt.ApplicationModal) # BLOQUEO DE LA VENTANA PRINCIPAL
                 window.destroyed.connect(self.ventana_cerrada)
                 window.show()
@@ -401,17 +400,29 @@ class PrincipalWindow(Principal,QWidget):
             QMessageBox.warning(self, "Advertencia", "La ventana ya está abierta.")
     
     def eliminar_propietario(self):
-        propietario = Propietario(conexion())
+
         seleccionar_fila = self.administradores_tabla.selectedItems()
-        resp = msg_boxes.warning_msg('Seguro?', 'Estas seguro de eliminar este propietario?')
+        
+        resp = msg_boxes.warning_msg('Advertencia', '¿Estas seguro de eliminar este propietario?')
         if resp == QMessageBox.Yes:
             if seleccionar_fila:
                 id_propietarios = seleccionar_fila[0].text()
                 fila = seleccionar_fila[0].row()
 
-                if propietario.eliminar_propietario(id_propietarios):
-                    self.administradores_tabla.removeRow(fila)
+                peticion = {
+                    'tabla': 'propietarios',
+                    'operacion': 'borrar',
+                    'id': id_propietarios
+                }
+
+                respuesta_borrado = admin_socket_ui.escribir_operaciones(json.dumps(peticion))
+
+                if respuesta_borrado['success']:
                     QMessageBox.information(self, 'Eliminacion', 'El propietario se elimino con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+
+                else:
+                    QMessageBox.information(self, 'Ooops.. algo ocurrio', 'Hubo algún error al realizar la eliminación', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+
 
     def habilitar_eliminar_propietario(self):
         self.eliminar_admin_btn.setEnabled(True)   
@@ -544,6 +555,10 @@ class PrincipalWindow(Principal,QWidget):
 
                 if datos['tabla'] == 'equipos':
                     self.datos_compus(datos['data'])
+
+                else:
+                    self.datos_admins(datos['data'])
+
             except ConnectionResetError:
                 admin_socket_ui.get_socket_operacionesbd().close()
                 print('Hubo un problema al recibir los datos de operacionesBD')
