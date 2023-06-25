@@ -102,13 +102,14 @@ class ModificarEquipoWindow(EditarComputadoras, QWidget):
                      
                     respuesta = admin_socket_ui.escribir_operaciones(json.dumps(peticion))
 
-                    print('RESPUESTA DE OPERACIÓN DE ACTUALIZAR')
-                    print(respuesta)
-
                     if respuesta['success']:
                         self.nombre_equipo_txt.clear()
                         self.num_serie_txt.clear()
-                        QMessageBox.warning(self, 'Actualización', 'La actualización se hizo con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                        QMessageBox.information(self, 'Actualización hecha con éxito', 'La actualización se hizo con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                        self.close() 
+
+                    else:
+                        QMessageBox.critical(self, 'Ooops... algo ocurrió', 'Hubo un error al actualizar', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
                         self.close() 
 
                 else:

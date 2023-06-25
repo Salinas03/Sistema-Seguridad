@@ -118,5 +118,11 @@ class AdministradorSocketUI:
         
         return numero_serie
 
+    def cerrar_conexiones(self):
+        notificacion.close()
+        administrador.close()
+        broadcasting.close()
+        operacionesbd.close()
+
 #Global variable scope (testing)
 admin_socket_ui = AdministradorSocketUI()

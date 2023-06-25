@@ -52,20 +52,26 @@ class LoginWindow(Login, QWidget):
                         print(respuesta['msg'])
                         respuesta = admin_socket_ui.validacion_conexion()
                         if respuesta['success']:
+
                             respuesta_servidor = admin_socket_ui.escribir_operaciones(json.dumps({
                                 'tabla': 'propietarios',
                                 'operacion': 'login',
                                 'data': [correo, password]
                             }))
+                             
+                            print('RESPUESTA')
+                            print(respuesta_servidor)
 
-                            administrador = respuesta_servidor['data'][0]
+                            administrador = respuesta_servidor['data']
 
                             if administrador:
                                 self.abrir_principal_window(administrador[0])
                                 self.close()
 
+                            else:
+                                admin_socket_ui.cerrar_conexiones()
+                                QMessageBox.critical(self, 'Advertencia', 'Correo y/o contraseña no válidos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
                         else: 
-                            QMessageBox.critical(self, 'Advertencia', 'Correo y/o contraseña invalidos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
                             print(respuesta['msg'])
                     else:
                         print(respuesta['msg'])
