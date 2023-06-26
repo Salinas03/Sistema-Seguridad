@@ -7,6 +7,7 @@ from controllers.AgregarCompus import AgregarCompusWindow
 from controllers.OpcionesComputadora import OpcionesCompusWindow
 from controllers.ModificarPropietarios import ModificarPropietarioWindow
 from controllers.ModificarComputadoras import ModificarEquipoWindow
+from controllers.ModificarPerfil import ModificarPerfil
 from modelos.propietarios_consultas import Propietario
 from py2_msgboxes import msg_boxes
 from PySide2.QtCore import *
@@ -148,7 +149,7 @@ class PrincipalWindow(Principal,QWidget):
         self.telefono_txt.setEnabled(False)
         self.correo_txt.setEnabled(False)
 
-        self.modificar_perfil_btn.clicked.connect(self.modificar_perfil) # LLAMADO PARA LA MODIFICACION DE LOS DATOS DEL PERFIL
+        self.modificar_perfil_btn.clicked.connect(self.abrir_modificar_perfil) # LLAMADO PARA LA MODIFICACION DE LOS DATOS DEL PERFIL
         self.cerrar_sesion_btn_2.clicked.connect(self.cerrar_sesion) # LLAMADO PARA CERRAR SESION 
         
         # < --------------------- PAGINA EN GENERAL --------------------- >
@@ -220,6 +221,7 @@ class PrincipalWindow(Principal,QWidget):
         self.tabla_computadoras_activas.verticalHeader().setVisible(False) # Ocultar el header vertical
 
 
+
     def configuracion_tabla_equipos_inactivos(self):
         column_headers_tabla_equipos_inactivos = ('ID','Nombre del equipo', 'Número de serie', 'Propietario del equipo', 'Rol')
         self.tabla_computadoras_desactivas.setColumnCount(len(column_headers_tabla_equipos_inactivos))
@@ -274,7 +276,8 @@ class PrincipalWindow(Principal,QWidget):
             seleccionar_fila = self.tabla_computadoras_activas.selectedItems()
             if seleccionar_fila:
                 id_propietarios = seleccionar_fila[0].text()
-                window = OpcionesCompusWindow(self,id_propietarios)
+                numero_serie = seleccionar_fila[1].text()
+                window = OpcionesCompusWindow(self,id_propietarios,numero_serie)
                 window.setWindowModality(QtCore.Qt.ApplicationModal)
                 window.destroyed.connect(self.ventana_cerrada)
                 window.show()
@@ -446,47 +449,16 @@ class PrincipalWindow(Principal,QWidget):
         self.telefono_txt.setText(self.administrador.get_tel_admin())
         self.correo_txt.setText(self.administrador.get_correo_admin())
 
-    def checar_inputs(self):
-        nombre = self.nombre_txt.text()
-        apellido = self.apellidos_txt.text()
-        telefono = self.telefono_txt.text()
-        correo = self.correo_txt.text()
-        errores_count = 0
+    def abrir_modificar_perfil(self):
+        if not self.ventana_abierta:
+            self.ventana_abierta:True # CAMBIO DE LA VENTANA A TRUE 
+            window = ModificarPerfil(self)
+            window.setWindowModality(QtCore.Qt.ApplicationModal) # BLOQUEO DE LA VENTANA PRINCIPAL
+            window.destroyed.connect(self.ventana_cerrada)
+            window.show()
+        else:
+            QMessageBox.warning(self, "Advertencia", "La ventana ya está abierta.")
 
-        # CONDICIONES PARA LA VERIFICACION DE LOS CAMPOS 
-        if nombre == '' or apellido == '' or telefono == '' or correo == '':
-            QMessageBox.warning(self, 'Error', 'Por favor de poner datos validos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
-            errores_count +=1
-        elif errores_count == 0:
-            return True
-    
-    # FUNCION PARA HABILITAR LOS CAMPOS DE PERFIL DE ADMINISTRADORS
-    def modificar_perfil(self):
-        self.nombre_txt.setEnabled(True)
-        self.apellidos_txt.setEnabled(True)
-        self.telefono_txt.setEnabled(True)
-        self.correo_txt.setEnabled(True)
-        self.modificar_perfil_btn.setEnabled(False)
-
-    def guardar_datos_perfil(self):
-        self.modificar_perfil_btn.setEnabled(True)
-        self.nombre_txt.setEnabled(False)
-        self.apellidos_txt.setEnabled(False)
-        self.telefono_txt.setEnabled(False)
-        self.correo_txt.setEnabled(False)
-        nombre = self.nombre_txt.text()
-        apellido = self.apellidos_txt.text()
-        telefono = self.telefono_txt.text()
-        correo = self.correo_txt.text()
-
-        data = [nombre,apellido,telefono,correo]
-
-        if self.checar_inputs():
-            propietario = Propietario(conexion())
-            if propietario.actualizar_perfil(self._id, data):
-                QMessageBox.information(self, 'Actualización', 'El propietario se actualizo con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
-                self.close()
-        QMessageBox.warning(self, "Guardado", "Los datos se guardaron correctamente.")
 
 
     #def llenar_campos_texto_perfil(self):

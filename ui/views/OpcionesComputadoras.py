@@ -21,7 +21,7 @@ class OpcionesComputadora(QMainWindow, object):
         OpcionesComputadora.setMinimumSize(QSize(800, 600))
         OpcionesComputadora.setMaximumSize(QSize(16777215, 600))
         icon = QIcon()
-        icon.addFile(u"../assets/icons/LOGO.svg", QSize(), QIcon.Normal, QIcon.Off)
+        icon.addFile(u"./ui/assets/icons/LOGO.svg", QSize(), QIcon.Normal, QIcon.Off)
         OpcionesComputadora.setWindowIcon(icon)
         OpcionesComputadora.setStyleSheet(u"QMainWindow#OpcionesComputadora{\n"
 "	/*background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #080f43, stop:1 #1d1e26);*/\n"
