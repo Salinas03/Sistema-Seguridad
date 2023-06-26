@@ -420,7 +420,7 @@ class Principal(QMainWindow, object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1184, 562))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1199, 664))
         self.gridLayout_8 = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_8.setObjectName(u"gridLayout_8")
         self.label_15 = QLabel(self.scrollAreaWidgetContents)
@@ -591,15 +591,6 @@ class Principal(QMainWindow, object):
         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_8.addItem(self.horizontalSpacer)
-
-        self.guardar_admin_btn = QPushButton(self.frame_15)
-        self.guardar_admin_btn.setObjectName(u"guardar_admin_btn")
-        self.guardar_admin_btn.setMinimumSize(QSize(100, 40))
-        icon7 = QIcon()
-        icon7.addFile(u"./ui/assets/icons/save-2.ico", QSize(), QIcon.Normal, QIcon.Off)
-        self.guardar_admin_btn.setIcon(icon7)
-
-        self.horizontalLayout_8.addWidget(self.guardar_admin_btn)
 
         self.modificar_perfil_btn = QPushButton(self.frame_15)
         self.modificar_perfil_btn.setObjectName(u"modificar_perfil_btn")
@@ -990,7 +981,6 @@ class Principal(QMainWindow, object):
         self.label_6.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p><span style=\" color:#ffffff;\">Nombre</span></p></body></html>", None))
         self.label_9.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p><span style=\" color:#ffffff;\">Correo</span></p></body></html>", None))
         self.cerrar_sesion_btn_2.setText(QCoreApplication.translate("Principal", u"Cerrar Sesi\u00f3n", None))
-        self.guardar_admin_btn.setText("")
         self.modificar_perfil_btn.setText(QCoreApplication.translate("Principal", u"Modificar \n"
 "informaci\u00f3n", None))
         self.label_21.setText(QCoreApplication.translate("Principal", u"TABLA DE ADMINISTRADORES", None))

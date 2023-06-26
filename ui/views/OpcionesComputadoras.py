@@ -25,7 +25,7 @@ class OpcionesComputadora(QMainWindow, object):
         OpcionesComputadora.setWindowIcon(icon)
         OpcionesComputadora.setStyleSheet(u"QMainWindow#OpcionesComputadora{\n"
 "	/*background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #080f43, stop:1 #1d1e26);*/\n"
-"background-color:#3b3b3b;\n"
+"background-color:qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
 "}")
         self.centralwidget = QWidget(OpcionesComputadora)
         self.centralwidget.setObjectName(u"centralwidget")
@@ -49,6 +49,7 @@ class OpcionesComputadora(QMainWindow, object):
 
         self.id_lbl = QLabel(self.frame)
         self.id_lbl.setObjectName(u"id_lbl")
+        self.id_lbl.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_2.addWidget(self.id_lbl)
 
@@ -58,6 +59,7 @@ class OpcionesComputadora(QMainWindow, object):
 
         self.nombre_lbl = QLabel(self.frame)
         self.nombre_lbl.setObjectName(u"nombre_lbl")
+        self.nombre_lbl.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_2.addWidget(self.nombre_lbl)
 
@@ -119,7 +121,7 @@ class OpcionesComputadora(QMainWindow, object):
 "}\n"
 "\n"
 "QPushButton:hover{\n"
-"    background:black;\n"
+"    background:qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);;\n"
 "    color:white;\n"
 "}\n"
 "\n"
@@ -127,9 +129,10 @@ class OpcionesComputadora(QMainWindow, object):
 "font-size: 12px;\n"
 "padding:10px;\n"
 "font-weight: bold;\n"
-"background-color: black;\n"
+"background-color: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);;\n"
 "color:white;\n"
-"border:none;\n"
+"border:non"
+                        "e;\n"
 "}\n"
 "")
         self.frame_2.setFrameShape(QFrame.StyledPanel)
@@ -138,68 +141,6 @@ class OpcionesComputadora(QMainWindow, object):
         self.verticalLayout.setSpacing(10)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(20, 10, 10, 10)
-        self.comando_widget = QWidget(self.frame_2)
-        self.comando_widget.setObjectName(u"comando_widget")
-        self.comando_widget.setStyleSheet(u"QPushButton#ingresar_comandos_btn{\n"
-"border:none;\n"
-"background-color: black;\n"
-"color:white;\n"
-"padding-top:10px;\n"
-"padding-left:20px;\n"
-"padding-right:20px;\n"
-"padding-bottom:10px;\n"
-"}\n"
-"\n"
-"QPushButton#ingresar_comandos_btn:hover{\n"
-"	background-color: #A1A1A2;\n"
-"}\n"
-"\n"
-"QPushButton#ingresar_comandos_btn:pressed{\n"
-"	font: 75 10pt \"MS Shell Dlg 2\";\n"
-"}")
-        self.gridLayout = QGridLayout(self.comando_widget)
-        self.gridLayout.setObjectName(u"gridLayout")
-        self.gridLayout.setContentsMargins(50, -1, 50, -1)
-        self.label_2 = QLabel(self.comando_widget)
-        self.label_2.setObjectName(u"label_2")
-        font = QFont()
-        font.setPointSize(10)
-        font.setBold(True)
-        font.setWeight(75)
-        self.label_2.setFont(font)
-        self.label_2.setAlignment(Qt.AlignCenter)
-
-        self.gridLayout.addWidget(self.label_2, 0, 0, 1, 3)
-
-        self.horizontalSpacer = QSpacerItem(226, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.gridLayout.addItem(self.horizontalSpacer, 2, 0, 1, 1)
-
-        self.ingresar_comandos_btn = QPushButton(self.comando_widget)
-        self.ingresar_comandos_btn.setObjectName(u"ingresar_comandos_btn")
-        font1 = QFont()
-        font1.setFamily(u"MS Shell Dlg 2")
-        font1.setBold(True)
-        font1.setItalic(False)
-        font1.setUnderline(False)
-        font1.setWeight(75)
-        font1.setStrikeOut(False)
-        self.ingresar_comandos_btn.setFont(font1)
-
-        self.gridLayout.addWidget(self.ingresar_comandos_btn, 2, 1, 1, 1)
-
-        self.horizontalSpacer_2 = QSpacerItem(225, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.gridLayout.addItem(self.horizontalSpacer_2, 2, 2, 1, 1)
-
-        self.comandos_txt = QLineEdit(self.comando_widget)
-        self.comandos_txt.setObjectName(u"comandos_txt")
-
-        self.gridLayout.addWidget(self.comandos_txt, 1, 0, 1, 3)
-
-
-        self.verticalLayout.addWidget(self.comando_widget)
-
         self.botones_widget = QWidget(self.frame_2)
         self.botones_widget.setObjectName(u"botones_widget")
         sizePolicy1 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
@@ -207,38 +148,49 @@ class OpcionesComputadora(QMainWindow, object):
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.botones_widget.sizePolicy().hasHeightForWidth())
         self.botones_widget.setSizePolicy(sizePolicy1)
+        self.botones_widget.setMinimumSize(QSize(537, 0))
         self.botones_widget.setStyleSheet(u"")
-        self.gridLayout_2 = QGridLayout(self.botones_widget)
-        self.gridLayout_2.setSpacing(0)
-        self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.gridLayout_2.setContentsMargins(45, 0, 0, 0)
-        self.pushButton_7 = QPushButton(self.botones_widget)
-        self.pushButton_7.setObjectName(u"pushButton_7")
+        self.verticalLayout_3 = QVBoxLayout(self.botones_widget)
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.verticalLayout_3.setContentsMargins(80, 0, 80, 0)
+        self.label_3 = QLabel(self.botones_widget)
+        self.label_3.setObjectName(u"label_3")
+        self.label_3.setMaximumSize(QSize(16777215, 100))
+        font = QFont()
+        font.setPointSize(16)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_3.setFont(font)
+        self.label_3.setAlignment(Qt.AlignCenter)
 
-        self.gridLayout_2.addWidget(self.pushButton_7, 7, 1, 1, 2)
+        self.verticalLayout_3.addWidget(self.label_3)
 
-        self.pushButton_4 = QPushButton(self.botones_widget)
-        self.pushButton_4.setObjectName(u"pushButton_4")
+        self.apagar_equipo_btn = QPushButton(self.botones_widget)
+        self.apagar_equipo_btn.setObjectName(u"apagar_equipo_btn")
         sizePolicy2 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         sizePolicy2.setHorizontalStretch(0)
         sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.pushButton_4.sizePolicy().hasHeightForWidth())
-        self.pushButton_4.setSizePolicy(sizePolicy2)
-        self.pushButton_4.setMinimumSize(QSize(100, 0))
+        sizePolicy2.setHeightForWidth(self.apagar_equipo_btn.sizePolicy().hasHeightForWidth())
+        self.apagar_equipo_btn.setSizePolicy(sizePolicy2)
+        self.apagar_equipo_btn.setMinimumSize(QSize(100, 0))
 
-        self.gridLayout_2.addWidget(self.pushButton_4, 4, 1, 1, 2)
+        self.verticalLayout_3.addWidget(self.apagar_equipo_btn)
 
-        self.horizontalSpacer_4 = QSpacerItem(167, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.supender_windows_equipo_btn = QPushButton(self.botones_widget)
+        self.supender_windows_equipo_btn.setObjectName(u"supender_windows_equipo_btn")
+        sizePolicy2.setHeightForWidth(self.supender_windows_equipo_btn.sizePolicy().hasHeightForWidth())
+        self.supender_windows_equipo_btn.setSizePolicy(sizePolicy2)
+        self.supender_windows_equipo_btn.setMinimumSize(QSize(100, 0))
 
-        self.gridLayout_2.addItem(self.horizontalSpacer_4, 1, 0, 1, 1)
+        self.verticalLayout_3.addWidget(self.supender_windows_equipo_btn)
 
-        self.pushButton_2 = QPushButton(self.botones_widget)
-        self.pushButton_2.setObjectName(u"pushButton_2")
-        sizePolicy2.setHeightForWidth(self.pushButton_2.sizePolicy().hasHeightForWidth())
-        self.pushButton_2.setSizePolicy(sizePolicy2)
-        self.pushButton_2.setMinimumSize(QSize(100, 0))
+        self.bloquear_protector_equipo_btn = QPushButton(self.botones_widget)
+        self.bloquear_protector_equipo_btn.setObjectName(u"bloquear_protector_equipo_btn")
+        sizePolicy2.setHeightForWidth(self.bloquear_protector_equipo_btn.sizePolicy().hasHeightForWidth())
+        self.bloquear_protector_equipo_btn.setSizePolicy(sizePolicy2)
+        self.bloquear_protector_equipo_btn.setMinimumSize(QSize(100, 0))
 
-        self.gridLayout_2.addWidget(self.pushButton_2, 2, 1, 1, 2)
+        self.verticalLayout_3.addWidget(self.bloquear_protector_equipo_btn)
 
         self.pushButton_6 = QPushButton(self.botones_widget)
         self.pushButton_6.setObjectName(u"pushButton_6")
@@ -246,51 +198,7 @@ class OpcionesComputadora(QMainWindow, object):
         self.pushButton_6.setSizePolicy(sizePolicy2)
         self.pushButton_6.setMinimumSize(QSize(100, 0))
 
-        self.gridLayout_2.addWidget(self.pushButton_6, 6, 1, 1, 2)
-
-        self.comandos_cbx = QComboBox(self.botones_widget)
-        self.comandos_cbx.addItem("")
-        self.comandos_cbx.addItem("")
-        self.comandos_cbx.addItem("")
-        self.comandos_cbx.addItem("")
-        self.comandos_cbx.addItem("")
-        self.comandos_cbx.addItem("")
-        self.comandos_cbx.addItem("")
-        self.comandos_cbx.setObjectName(u"comandos_cbx")
-
-        self.gridLayout_2.addWidget(self.comandos_cbx, 1, 1, 1, 2)
-
-        self.label_3 = QLabel(self.botones_widget)
-        self.label_3.setObjectName(u"label_3")
-        self.label_3.setMaximumSize(QSize(16777215, 100))
-        font2 = QFont()
-        font2.setPointSize(16)
-        font2.setBold(True)
-        font2.setWeight(75)
-        self.label_3.setFont(font2)
-        self.label_3.setAlignment(Qt.AlignCenter)
-
-        self.gridLayout_2.addWidget(self.label_3, 0, 0, 1, 4)
-
-        self.pushButton_3 = QPushButton(self.botones_widget)
-        self.pushButton_3.setObjectName(u"pushButton_3")
-        sizePolicy2.setHeightForWidth(self.pushButton_3.sizePolicy().hasHeightForWidth())
-        self.pushButton_3.setSizePolicy(sizePolicy2)
-        self.pushButton_3.setMinimumSize(QSize(100, 0))
-
-        self.gridLayout_2.addWidget(self.pushButton_3, 3, 1, 1, 2)
-
-        self.pushButton_5 = QPushButton(self.botones_widget)
-        self.pushButton_5.setObjectName(u"pushButton_5")
-        sizePolicy2.setHeightForWidth(self.pushButton_5.sizePolicy().hasHeightForWidth())
-        self.pushButton_5.setSizePolicy(sizePolicy2)
-        self.pushButton_5.setMinimumSize(QSize(100, 0))
-
-        self.gridLayout_2.addWidget(self.pushButton_5, 5, 1, 1, 2)
-
-        self.horizontalSpacer_6 = QSpacerItem(166, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.gridLayout_2.addItem(self.horizontalSpacer_6, 1, 3, 1, 1)
+        self.verticalLayout_3.addWidget(self.pushButton_6)
 
 
         self.verticalLayout.addWidget(self.botones_widget, 0, Qt.AlignHCenter)
@@ -310,23 +218,10 @@ class OpcionesComputadora(QMainWindow, object):
         self.id_lbl.setText("")
         self.nombre_lbl.setText("")
         self.label.setText("")
-        self.label_2.setText(QCoreApplication.translate("OpcionesComputadora", u"<html><head/><body><p><span style=\" color:#000000;\">Ingresa el comando a ejecutar</span></p></body></html>", None))
-        self.ingresar_comandos_btn.setText(QCoreApplication.translate("OpcionesComputadora", u"Ingresar", None))
-        self.pushButton_7.setText(QCoreApplication.translate("OpcionesComputadora", u"Ingresar Comando \n"
-"Manualmente", None))
-        self.pushButton_4.setText(QCoreApplication.translate("OpcionesComputadora", u"Bloquear", None))
-        self.pushButton_2.setText(QCoreApplication.translate("OpcionesComputadora", u"Apagar", None))
-        self.pushButton_6.setText(QCoreApplication.translate("OpcionesComputadora", u"5", None))
-        self.comandos_cbx.setItemText(0, QCoreApplication.translate("OpcionesComputadora", u"Selecciona un comando", None))
-        self.comandos_cbx.setItemText(1, QCoreApplication.translate("OpcionesComputadora", u"1", None))
-        self.comandos_cbx.setItemText(2, QCoreApplication.translate("OpcionesComputadora", u"2", None))
-        self.comandos_cbx.setItemText(3, QCoreApplication.translate("OpcionesComputadora", u"3", None))
-        self.comandos_cbx.setItemText(4, QCoreApplication.translate("OpcionesComputadora", u"4", None))
-        self.comandos_cbx.setItemText(5, QCoreApplication.translate("OpcionesComputadora", u"5", None))
-        self.comandos_cbx.setItemText(6, QCoreApplication.translate("OpcionesComputadora", u"Ingresa comando manualmente", None))
-
         self.label_3.setText(QCoreApplication.translate("OpcionesComputadora", u"<html><head/><body><p><span style=\" font-weight:600;\">Selecciona la opci\u00f3n a </span></p><p><span style=\" font-weight:600;\">ejecutar</span></p></body></html>", None))
-        self.pushButton_3.setText(QCoreApplication.translate("OpcionesComputadora", u"Suspender", None))
-        self.pushButton_5.setText(QCoreApplication.translate("OpcionesComputadora", u"4", None))
+        self.apagar_equipo_btn.setText(QCoreApplication.translate("OpcionesComputadora", u"Apagar equipo", None))
+        self.supender_windows_equipo_btn.setText(QCoreApplication.translate("OpcionesComputadora", u"Suspender - bloqueo de windows", None))
+        self.bloquear_protector_equipo_btn.setText(QCoreApplication.translate("OpcionesComputadora", u"Bloquear - protector de pantalla", None))
+        self.pushButton_6.setText(QCoreApplication.translate("OpcionesComputadora", u"T\u00e9rmial de comandos", None))
     # retranslateUi
 
