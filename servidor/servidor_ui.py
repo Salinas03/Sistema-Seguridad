@@ -371,14 +371,38 @@ def panel_base_datos(instruccion):
         if operacion == 'insertar':
             data = instruccion['data']
             respuesta_operacion = PropietariosConsultas(conexion()).insertar_propietario(data[0], data[1], data[2], data[3], data[4], data[5])
+            validar = json.loads(respuesta_operacion)
+
+            if validar['success']:
+                refrescar_tabla_propietarios()
+
             return respuesta_operacion
 
         elif operacion == 'actualizar':
-            respuesta_operacion = PropietariosConsultas(conexion()).actualizar_propietario(instruccion['id'], instruccion['data'])
+            respuesta_operacion = PropietariosConsultas(conexion()).actualizar_propietario(int(instruccion['id']), instruccion['data'])
+            validar = json.loads(respuesta_operacion)
+
+            if validar['success']:
+                refrescar_tabla_propietarios()
+
+            return respuesta_operacion
+
+        elif operacion == 'actualizar_perfil':
+            respuesta_operacion = PropietariosConsultas(conexion()).actualizar_perfil(int(instruccion['id'], instruccion['data']))
+            validar = json.loads(respuesta_operacion)
+
+            if validar['success']:
+                refrescar_tabla_propietarios()
+
             return respuesta_operacion
 
         elif operacion == 'borrar':
-            respuesta_operacion = PropietariosConsultas(conexion()).eliminar_propietario(instruccion['id'])
+            respuesta_operacion = PropietariosConsultas(conexion()).eliminar_propietario(int(instruccion['id']))
+            validar = json.loads(respuesta_operacion)
+
+            if validar['success']:
+                refrescar_tabla_propietarios()
+
             return respuesta_operacion
 
         elif operacion == 'obtener_propietarios':
@@ -387,11 +411,15 @@ def panel_base_datos(instruccion):
 
         elif operacion == 'login':
             data = instruccion['data']
+            #Busqueda para ver si ya existe este usuario que esta tratando de loguearse
+            #TODO
+
             respuesta_operacion = PropietariosConsultas(conexion()).obtener_propietario(data[0], data[1])
             return respuesta_operacion
 
         elif operacion == 'obtener_propietario_id':
-            respuesta_operacion = PropietariosConsultas(conexion()).seleccionar_propietario_id(instruccion['id'])
+            respuesta_operacion = PropietariosConsultas(conexion()).seleccionar_propietario_id(int(instruccion['id']))
+            return respuesta_operacion
 
 def panel_cliente(conn, addr):
     print(f'Entró {addr} al panel de cliente.')
@@ -642,7 +670,28 @@ def refrescar_tabla_equipos():
     print('[REFRESCADO TABLA EQUIPOS]')
     
 def refrescar_tabla_propietarios():
-    pass
+    peticion_propietarios = {
+        'tabla':'propietarios',
+        'operacion': 'obtener_propietarios'
+    }
+
+    propietarios = panel_base_datos(json.dumps(peticion_propietarios))
+    propietarios = json.loads(propietarios)
+
+    respuesta = {
+        'tabla': 'propietarios',
+        'data': propietarios['data']
+    }
+
+    try:
+        if conexiones_equipos_admin:
+            for conexion_operacionesbd in conexiones_equipos_operacionesbd:
+                conexion_operacionesbd[0].send(json.dumps(respuesta).encode())
+
+    except:
+        print('Error al refrescar las tablas de propietarios')
+
+    print('[REFRESCADO TABLA PROPIETARIOS]')
 
 atexit.register(cerrar)
 crear_sockets()

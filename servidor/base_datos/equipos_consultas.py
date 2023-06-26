@@ -130,5 +130,3 @@ class EquiposConsultas():
             except Error as err:
                 print(f'Error al intentar la conexion {err}')
                 return json.dumps({'success': False, 'msg': 'Hubo un error al realizar la eliminación'})
-
-

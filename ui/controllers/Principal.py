@@ -18,17 +18,19 @@ import threading
 import time
 from db.connection import conexion
 from clases.administrador_ui import admin_socket_ui
+from clases.administrador_sesion import AdministradorSesion
 
 class PrincipalWindow(Principal,QWidget):
 
     # CONSTRUCTOR PARA INICIO DE LA VENTANA
                 # RECEPCION DEL ID QUE ENVIA
                 # EL LOGIN
-    def __init__(self,_id):
-        self._id = _id # ASIGNACION DEL VALOR ID QUE SE OBTIENE DEL LOGIN A UNA VARIABLE GLOBAL
+    def __init__(self,data_admin):
         super().__init__(None)
         self.setupUi(self)
-        self.conexion = conexion  # LLAMADO DE LA BD
+
+        #CREACIÓN DE OBJETO DE ADMINISTRADOR PARA DESPLEGAR SU INFORMACIÓN EN EL FORMULARIO
+        self.administrador = AdministradorSesion(data_admin)
 
 ###################################################################################################################################
 ###################################################################################################################################
@@ -124,14 +126,12 @@ class PrincipalWindow(Principal,QWidget):
         self.configuracion_tabla_admins()
         self.administradores_tabla.cellPressed.connect(self.habilitar_eliminar_propietario)
 
-        self.ocultar_propietario() # LLAMADO PARA PODER OCULTAR EL PROPIETARIO QUE TIENE LA SESION INICIADA ACTUALMENTE
-
         # HABILITAR EL BOTON DE ELIMINAR CUANDO SELECCIONE UNA FILA DE LA TABLA PROPIETARIO
         self.administradores_tabla.cellPressed.connect(self.habilitar_eliminar_propietario)
 
         # < --------------------- PAGINA PERFIL --------------------- >
 
-        self.llenar_campos_texto()
+        self.llenar_campos_administrador()
 
         email = QRegExpValidator(QRegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@(?:gmail|hotmail|msn|yahoo|outlook|live|[.]{1,1})+(?:com|com.mx|net|org|edu|gov|mil|biz|info|name|museum|coop|aero|xxx|[a-zA-Z]{2})$"))
         only_text = QRegExpValidator(QRegExp('^[A-Za-z]{3,50}')) # VALIDACION DE DATOS ALFANUMERICOS DONDE SOLO PUEDE TENER ENTRE 3 Y 100 VALORES
@@ -183,18 +183,14 @@ class PrincipalWindow(Principal,QWidget):
         #Obtener por primera vez los equipos de cómputo de la BD_SQL
         equipos_computo = admin_socket_ui.escribir_operaciones(json.dumps(self.peticion_equipos))
         if equipos_computo['success']:
-            self.datos_compus(equipos_computo['data'])
-            
-            thread_equipos_computo = threading.Thread(target=self.escuchar_notificaciones)
-            thread_equipos_computo.start()
-    
+            self.datos_compus(equipos_computo['data'])    
             thread_escuchar_cambios_tablasbd = threading.Thread(target=self.escuchar_cambios_tablasbd)
             thread_escuchar_cambios_tablasbd.start()
 
-        # self.equipos_propietarios = admin_socket_ui.escribir_operaciones(json.dumps(self.peticion_propietarios))
-        # if equipos_propietarios['success']:
-
-            
+        #Obtener por primera vez los propietarios
+        propietarios = admin_socket_ui.escribir_operaciones(json.dumps(self.peticion_propietarios))
+        if propietarios['success']:
+            self.datos_admins(propietarios['data'])            
           
 ###################################################################################################################################
 ###################################################################################################################################
@@ -345,7 +341,10 @@ class PrincipalWindow(Principal,QWidget):
                 respuesta = admin_socket_ui.escribir_operaciones(json.dumps(peticion))
 
                 if respuesta['success']:
-                    QMessageBox.information(self, 'Eliminacion', 'El equipo de computo se elimino con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                    QMessageBox.information(self, 'Eliminacion realizada con éxito', 'El equipo de computo se elimino con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                else:
+                    QMessageBox.critical(self, 'Oops... algo sucedio', 'Ocurrio un error al realizar la eliiminación', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+
 
     def habilitar_eliminar_compus(self):
         self.eliminar_compu_btn.setEnabled(True)
@@ -364,7 +363,7 @@ class PrincipalWindow(Principal,QWidget):
         # CONDICION PARA SABER SI LA VENTANA ESTA ABIERTA
         if not self.ventana_abierta: 
             self.ventana_abierta:True # CAMBIO DE LA VENTANA A TRUE
-            window = AgregarpropietarioWindow(self.datos_admins)
+            window = AgregarpropietarioWindow(self)
             window.setWindowModality(QtCore.Qt.ApplicationModal) # BLOQUEO DE LA VENTANA PRINCIPAL
             window.destroyed.connect(self.ventana_cerrada)
             window.show()
@@ -391,7 +390,7 @@ class PrincipalWindow(Principal,QWidget):
             seleccionar_fila = self.administradores_tabla.selectedItems()
             if seleccionar_fila:
                 id_propietarios = seleccionar_fila[0].text()
-                window = ModificarPropietarioWindow(self.datos_admins,self,id_propietarios)
+                window = ModificarPropietarioWindow(self,id_propietarios)
                 window.setWindowModality(QtCore.Qt.ApplicationModal) # BLOQUEO DE LA VENTANA PRINCIPAL
                 window.destroyed.connect(self.ventana_cerrada)
                 window.show()
@@ -399,45 +398,53 @@ class PrincipalWindow(Principal,QWidget):
             QMessageBox.warning(self, "Advertencia", "La ventana ya está abierta.")
     
     def eliminar_propietario(self):
-        propietario = Propietario(conexion())
+
         seleccionar_fila = self.administradores_tabla.selectedItems()
-        resp = msg_boxes.warning_msg('Seguro?', 'Estas seguro de eliminar este propietario?')
+        
+        resp = msg_boxes.warning_msg('Advertencia', '¿Estas seguro de eliminar este propietario?')
         if resp == QMessageBox.Yes:
             if seleccionar_fila:
                 id_propietarios = seleccionar_fila[0].text()
                 fila = seleccionar_fila[0].row()
 
-                if propietario.eliminar_propietario(id_propietarios):
-                    self.administradores_tabla.removeRow(fila)
+                peticion = {
+                    'tabla': 'propietarios',
+                    'operacion': 'borrar',
+                    'id': id_propietarios
+                }
+
+                respuesta_borrado = admin_socket_ui.escribir_operaciones(json.dumps(peticion))
+
+                if respuesta_borrado['success']:
                     QMessageBox.information(self, 'Eliminacion', 'El propietario se elimino con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+
+                else:
+                    QMessageBox.information(self, 'Ooops.. algo ocurrio', 'Hubo algún error al realizar la eliminación', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+
 
     def habilitar_eliminar_propietario(self):
         self.eliminar_admin_btn.setEnabled(True)   
 
     # FUNCION PARA OCULTAR EL ADMINISTRADOR QUE TIENE LA SESION INICIADA
-    def ocultar_propietario(self):
-        usuario_actual = -1  # Valor predeterminado en caso de que no se encuentre ninguna fila
-        nombre_propietario = Propietario(conexion()).seleccionar_nombre_perfil(self._id) # OBTENCION DE LOS DATOS DE LA CONSULTA DE LA BD
-        # CICLO PARA VERIFICAR QUE EL NOMBRE DEL ADMINISTRADOR EXISTA EN LA TABLA
-        for fila in range(self.administradores_tabla.rowCount()):
-            if self.administradores_tabla.item(fila, 1).text() == nombre_propietario[0][0]: # OBTENCION DEL NOMBRE DE LOS CAMPOS DE NOMBRE EN LA TABLA
-                usuario_actual = fila
-                break
-        if usuario_actual != -1: # CONDICION QUE VALIDA QUE SI HAY UN NOMBRE IGUAL EN LA TABLA
-            self.administradores_tabla.hideRow(usuario_actual) # EVENTO QUE OCULTA UNA FILA DE LA TABLA        
+    # def ocultar_propietario(self):
+    #     usuario_actual = -1  # Valor predeterminado en caso de que no se encuentre ninguna fila
+    #     nombre_propietario = Propietario(conexion()).seleccionar_nombre_perfil(self._id) # OBTENCION DE LOS DATOS DE LA CONSULTA DE LA BD
+    #     # CICLO PARA VERIFICAR QUE EL NOMBRE DEL ADMINISTRADOR EXISTA EN LA TABLA
+    #     for fila in range(self.administradores_tabla.rowCount()):
+    #         if self.administradores_tabla.item(fila, 1).text() == nombre_propietario[0][0]: # OBTENCION DEL NOMBRE DE LOS CAMPOS DE NOMBRE EN LA TABLA
+    #             usuario_actual = fila
+    #             break
+    #     if usuario_actual != -1: # CONDICION QUE VALIDA QUE SI HAY UN NOMBRE IGUAL EN LA TABLA
+    #         self.administradores_tabla.hideRow(usuario_actual) # EVENTO QUE OCULTA UNA FILA DE LA TABLA        
+
 # ////////////////////////// FUNCIONES PAGINA PERFIL //////////////////////////
 
 
-    def llenar_campos_texto(self):
-        data  = Propietario(conexion()).seleccionar_propietario_id(self._id)
-        if data is not None and len(data) >=1:
-            propietario = data[0]
-            self.nombre_txt.setText(propietario[1])
-            self.apellidos_txt.setText(propietario[2])
-            self.telefono_txt.setText(propietario[3])
-            self.correo_txt.setText(propietario[4])
-        else:
-            print('No existe ningún valor')
+    def llenar_campos_administrador(self):
+        self.nombre_txt.setText(self.administrador.get_nombre_admin())
+        self.apellidos_txt.setText(self.administrador.get_apellido_admin())
+        self.telefono_txt.setText(self.administrador.get_tel_admin())
+        self.correo_txt.setText(self.administrador.get_correo_admin())
 
     def checar_inputs(self):
         nombre = self.nombre_txt.text()
@@ -483,7 +490,7 @@ class PrincipalWindow(Principal,QWidget):
 
 
     #def llenar_campos_texto_perfil(self):
-        data = Propietario(conexion()).seleccionar_datos_perfil(self._id)
+        # data = Propietario(conexion()).seleccionar_datos_perfil(self._id)
 
 
 # ////////////////////////// FUNCIONES PARA LAS PAGINAS //////////////////////////
@@ -540,6 +547,10 @@ class PrincipalWindow(Principal,QWidget):
 
                 if datos['tabla'] == 'equipos':
                     self.datos_compus(datos['data'])
+
+                else:
+                    self.datos_admins(datos['data'])
+
             except ConnectionResetError:
                 admin_socket_ui.get_socket_operacionesbd().close()
                 print('Hubo un problema al recibir los datos de operacionesBD')

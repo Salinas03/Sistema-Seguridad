@@ -29,8 +29,7 @@ class LoginWindow(Login, QWidget):
         # LLAMADO DE LAS VALIDACIONES EN LOS CAMPOS REQUERIDOS
         self.correo_txt.setValidator(email)
         self.password_txt.setValidator(only_password)
-    
-    
+     
     # FUNCION PARA EL INICIO DE SESION
     def iniciar_sesion(self):
         correo = self.correo_txt.text()
@@ -57,20 +56,30 @@ class LoginWindow(Login, QWidget):
                                 'operacion': 'login',
                                 'data': [correo, password]
                             }))
+                             
+                            print('[RESPUESTA SERVIDOR]')
+                            print(respuesta_servidor)
 
-                            administrador = respuesta_servidor['data'][0]
+                            administrador = respuesta_servidor['data']
 
                             if administrador:
-                                self.abrir_principal_window(administrador[0])
-                                self.close()
+                                conexion_secundarios = admin_socket_ui.conexiones_canales_secundarios()
 
+                                if conexion_secundarios['success']:
+                                    self.abrir_principal_window(administrador[0])
+                                    self.close()
+                                else:
+                                    admin_socket_ui.cerrar_conexiones()
+                                    QMessageBox.critical(self, 'Advertencia', 'No se pudo realizar la conexión con los canales secundarios', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
+                            else:
+                                admin_socket_ui.cerrar_conexiones()
+                                QMessageBox.critical(self, 'Advertencia', 'Correo y/o contraseña no válidos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
                         else: 
-                            QMessageBox.critical(self, 'Advertencia', 'Correo y/o contraseña invalidos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
-                            print(respuesta['msg'])
+                            QMessageBox.critical(self, 'Error', 'Esta intentando ingresar al servidor como administrador desde una computadora cliente, acción no válida', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
                     else:
-                        print(respuesta['msg'])
+                        QMessageBox.critical(self, 'Ooops.. algo ocurrió', 'No se pudo realizar la conexión temporal con el servidor', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
                 else:
-                    print(respuesta['msg'])
+                    QMessageBox.critical(self, 'Ooops... algo ocurrió', 'No se pudieron crear los sockets de manera correcta', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
 
     # FUNCION PARA EL LLLAMADO DE LA PAGINA PRINCIPAL 
     def abrir_principal_window(self, id_propieatrio):
