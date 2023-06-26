@@ -39,11 +39,7 @@ class AdministradorSocketUI:
 
     def conexion_temporal(self):
         try:
-            #Conexión de los sockets con los sockets del administrador
-            notificacion.connect(self.ADDR_NOT) #Se conecta con el socket de notificaciones
             administrador.connect(self.ADDR) #Linea de bloqueo de código , se conecta con el socket administrador
-            broadcasting.connect(self.ADDR_BROAD)
-            operacionesbd.connect(self.ADDR_BD)
                     
             #Mensaje de primer conexión con el servidor (conexión temporal)
             respuesta_servidor = json.loads(administrador.recv(self.HEADER).decode(self.FORMAT))
@@ -57,11 +53,23 @@ class AdministradorSocketUI:
             operacionesbd.close()
             return {"success": False, "msg": "Error al conectar con el servidor :("}
 
+    def conexiones_canales_secundarios(self):
+        try:
+            broadcasting.connect(self.ADDR_BROAD)
+            operacionesbd.connect(self.ADDR_BD)
+            notificacion.connect(self.ADDR_NOT) #Se conecta con el socket de notificaciones
+
+            return {'success': True, 'msg': 'Conexión con canales secundarios exitosa'}
+        except:
+            notificacion.close()
+            broadcasting.close()
+            operacionesbd.close()
+            return {'success': False, 'msg': 'Error al conectar con los canales secundarios'}
+
     def validacion_conexion(self):
         #Obtener el número de seríe del administrador que se va a conectar
         try:
             numero_de_serie = self.obtener_numero_serie()
-            print(f'Número de serie: {numero_de_serie}')
 
             #Se envia el hostname de la computadora a su vez con el identificador que en este caso será el número de serie
             administrador.send(socket.gethostname().encode())

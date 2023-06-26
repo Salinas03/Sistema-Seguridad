@@ -387,6 +387,15 @@ def panel_base_datos(instruccion):
 
             return respuesta_operacion
 
+        elif operacion == 'actualizar_perfil':
+            respuesta_operacion = PropietariosConsultas(conexion()).actualizar_perfil(int(instruccion['id'], instruccion['data']))
+            validar = json.loads(respuesta_operacion)
+
+            if validar['success']:
+                refrescar_tabla_propietarios()
+
+            return respuesta_operacion
+
         elif operacion == 'borrar':
             respuesta_operacion = PropietariosConsultas(conexion()).eliminar_propietario(int(instruccion['id']))
             validar = json.loads(respuesta_operacion)
@@ -402,6 +411,9 @@ def panel_base_datos(instruccion):
 
         elif operacion == 'login':
             data = instruccion['data']
+            #Busqueda para ver si ya existe este usuario que esta tratando de loguearse
+            #TODO
+
             respuesta_operacion = PropietariosConsultas(conexion()).obtener_propietario(data[0], data[1])
             return respuesta_operacion
 
