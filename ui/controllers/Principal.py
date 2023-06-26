@@ -18,17 +18,19 @@ import threading
 import time
 from db.connection import conexion
 from clases.administrador_ui import admin_socket_ui
+from clases.administrador_sesion import AdministradorSesion
 
 class PrincipalWindow(Principal,QWidget):
 
     # CONSTRUCTOR PARA INICIO DE LA VENTANA
                 # RECEPCION DEL ID QUE ENVIA
                 # EL LOGIN
-    def __init__(self,_id):
-        self._id = _id # ASIGNACION DEL VALOR ID QUE SE OBTIENE DEL LOGIN A UNA VARIABLE GLOBAL
+    def __init__(self,data_admin):
         super().__init__(None)
         self.setupUi(self)
-        self.conexion = conexion  # LLAMADO DE LA BD
+
+        #CREACIÓN DE OBJETO DE ADMINISTRADOR PARA DESPLEGAR SU INFORMACIÓN EN EL FORMULARIO
+        self.administrador = AdministradorSesion(data_admin)
 
 ###################################################################################################################################
 ###################################################################################################################################
@@ -124,14 +126,12 @@ class PrincipalWindow(Principal,QWidget):
         self.configuracion_tabla_admins()
         self.administradores_tabla.cellPressed.connect(self.habilitar_eliminar_propietario)
 
-        self.ocultar_propietario() # LLAMADO PARA PODER OCULTAR EL PROPIETARIO QUE TIENE LA SESION INICIADA ACTUALMENTE
-
         # HABILITAR EL BOTON DE ELIMINAR CUANDO SELECCIONE UNA FILA DE LA TABLA PROPIETARIO
         self.administradores_tabla.cellPressed.connect(self.habilitar_eliminar_propietario)
 
         # < --------------------- PAGINA PERFIL --------------------- >
 
-        self.llenar_campos_texto()
+        self.llenar_campos_administrador()
 
         email = QRegExpValidator(QRegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@(?:gmail|hotmail|msn|yahoo|outlook|live|[.]{1,1})+(?:com|com.mx|net|org|edu|gov|mil|biz|info|name|museum|coop|aero|xxx|[a-zA-Z]{2})$"))
         only_text = QRegExpValidator(QRegExp('^[A-Za-z]{3,50}')) # VALIDACION DE DATOS ALFANUMERICOS DONDE SOLO PUEDE TENER ENTRE 3 Y 100 VALORES
@@ -428,29 +428,25 @@ class PrincipalWindow(Principal,QWidget):
         self.eliminar_admin_btn.setEnabled(True)   
 
     # FUNCION PARA OCULTAR EL ADMINISTRADOR QUE TIENE LA SESION INICIADA
-    def ocultar_propietario(self):
-        usuario_actual = -1  # Valor predeterminado en caso de que no se encuentre ninguna fila
-        nombre_propietario = Propietario(conexion()).seleccionar_nombre_perfil(self._id) # OBTENCION DE LOS DATOS DE LA CONSULTA DE LA BD
-        # CICLO PARA VERIFICAR QUE EL NOMBRE DEL ADMINISTRADOR EXISTA EN LA TABLA
-        for fila in range(self.administradores_tabla.rowCount()):
-            if self.administradores_tabla.item(fila, 1).text() == nombre_propietario[0][0]: # OBTENCION DEL NOMBRE DE LOS CAMPOS DE NOMBRE EN LA TABLA
-                usuario_actual = fila
-                break
-        if usuario_actual != -1: # CONDICION QUE VALIDA QUE SI HAY UN NOMBRE IGUAL EN LA TABLA
-            self.administradores_tabla.hideRow(usuario_actual) # EVENTO QUE OCULTA UNA FILA DE LA TABLA        
+    # def ocultar_propietario(self):
+    #     usuario_actual = -1  # Valor predeterminado en caso de que no se encuentre ninguna fila
+    #     nombre_propietario = Propietario(conexion()).seleccionar_nombre_perfil(self._id) # OBTENCION DE LOS DATOS DE LA CONSULTA DE LA BD
+    #     # CICLO PARA VERIFICAR QUE EL NOMBRE DEL ADMINISTRADOR EXISTA EN LA TABLA
+    #     for fila in range(self.administradores_tabla.rowCount()):
+    #         if self.administradores_tabla.item(fila, 1).text() == nombre_propietario[0][0]: # OBTENCION DEL NOMBRE DE LOS CAMPOS DE NOMBRE EN LA TABLA
+    #             usuario_actual = fila
+    #             break
+    #     if usuario_actual != -1: # CONDICION QUE VALIDA QUE SI HAY UN NOMBRE IGUAL EN LA TABLA
+    #         self.administradores_tabla.hideRow(usuario_actual) # EVENTO QUE OCULTA UNA FILA DE LA TABLA        
+
 # ////////////////////////// FUNCIONES PAGINA PERFIL //////////////////////////
 
 
-    def llenar_campos_texto(self):
-        data  = Propietario(conexion()).seleccionar_propietario_id(self._id)
-        if data is not None and len(data) >=1:
-            propietario = data[0]
-            self.nombre_txt.setText(propietario[1])
-            self.apellidos_txt.setText(propietario[2])
-            self.telefono_txt.setText(propietario[3])
-            self.correo_txt.setText(propietario[4])
-        else:
-            print('No existe ningún valor')
+    def llenar_campos_administrador(self):
+        self.nombre_txt.setText(self.administrador.get_nombre_admin())
+        self.apellidos_txt.setText(self.administrador.get_apellido_admin())
+        self.telefono_txt.setText(self.administrador.get_tel_admin())
+        self.correo_txt.setText(self.administrador.get_correo_admin())
 
     def checar_inputs(self):
         nombre = self.nombre_txt.text()
@@ -468,12 +464,7 @@ class PrincipalWindow(Principal,QWidget):
     
     # FUNCION PARA HABILITAR LOS CAMPOS DE PERFIL DE ADMINISTRADORS
     def modificar_perfil(self):
-        self.nombre_txt.setEnabled(True)
-        self.apellidos_txt.setEnabled(True)
-        self.telefono_txt.setEnabled(True)
-        self.correo_txt.setEnabled(True)
-        self.guardar_admin_btn.setEnabled(True)
-        self.modificar_perfil_btn.setEnabled(False)
+        pass
 
     def guardar_datos_perfil(self):
         self.modificar_perfil_btn.setEnabled(True)
@@ -498,7 +489,7 @@ class PrincipalWindow(Principal,QWidget):
 
 
     #def llenar_campos_texto_perfil(self):
-        data = Propietario(conexion()).seleccionar_datos_perfil(self._id)
+        # data = Propietario(conexion()).seleccionar_datos_perfil(self._id)
 
 
 # ////////////////////////// FUNCIONES PARA LAS PAGINAS //////////////////////////

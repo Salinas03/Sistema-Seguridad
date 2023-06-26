@@ -52,6 +52,18 @@ class PropietariosConsultas:
                 print(f'Error al intentar la conexion {err}')
                 return json.dumps({'success': False, 'msg': 'Hubo un error al actualizar la tabla de propietarios'})
 
+    def actualizar_perfil(self, id_propietario, data):
+        if self.conexion.is_connected():
+            try:
+                cursor = self.conexion.cursor()
+                sql = f"""UPDATE propietarios SET nombre_propietario = %s,apellido_propietario = %s,telefono_propietario=%s,correo_propietario=%s WHERE id_propietarios={id_propietario}"""
+                cursor.execute(sql, data)
+                self.conexion.commit()
+                return json.dumps({'success': True, 'msg': 'Se ha actualizado el perfil exitosamente'})
+            except Error as err:
+                print(f'Error al intentar la conexion {err}')
+                return json.dumps({'success': False, 'msg': 'Hubo un error al actualizar la tabla de propietarios'})
+
     def seleccionar_propietario_id(self, id_propietarios):
         try:
             cursor = self.conexion.cursor()
