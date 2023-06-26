@@ -147,10 +147,8 @@ class PrincipalWindow(Principal,QWidget):
         self.apellidos_txt.setEnabled(False)
         self.telefono_txt.setEnabled(False)
         self.correo_txt.setEnabled(False)
-        self.guardar_admin_btn.setEnabled(False)
 
         self.modificar_perfil_btn.clicked.connect(self.modificar_perfil) # LLAMADO PARA LA MODIFICACION DE LOS DATOS DEL PERFIL
-        self.guardar_admin_btn.clicked.connect(self.guardar_datos_perfil) # LLAMADO PARA GUARDAR LOS DATOS NUEVOS DEL PERFIL
         self.cerrar_sesion_btn_2.clicked.connect(self.cerrar_sesion) # LLAMADO PARA CERRAR SESION 
         
         # < --------------------- PAGINA EN GENERAL --------------------- >
@@ -464,11 +462,14 @@ class PrincipalWindow(Principal,QWidget):
     
     # FUNCION PARA HABILITAR LOS CAMPOS DE PERFIL DE ADMINISTRADORS
     def modificar_perfil(self):
-        pass
+        self.nombre_txt.setEnabled(True)
+        self.apellidos_txt.setEnabled(True)
+        self.telefono_txt.setEnabled(True)
+        self.correo_txt.setEnabled(True)
+        self.modificar_perfil_btn.setEnabled(False)
 
     def guardar_datos_perfil(self):
         self.modificar_perfil_btn.setEnabled(True)
-        self.guardar_admin_btn.setEnabled(False)
         self.nombre_txt.setEnabled(False)
         self.apellidos_txt.setEnabled(False)
         self.telefono_txt.setEnabled(False)
