@@ -13,7 +13,7 @@ from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
 
-class Ui_EditarPerfil(object):
+class EditarPerfil(QMainWindow, object):
     def setupUi(self, EditarPerfil):
         if not EditarPerfil.objectName():
             EditarPerfil.setObjectName(u"EditarPerfil")
