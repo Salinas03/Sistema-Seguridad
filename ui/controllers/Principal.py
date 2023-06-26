@@ -73,7 +73,7 @@ class PrincipalWindow(Principal,QWidget):
 
         self.otros_comandos_btn.clicked.connect(self.abrir_opciones_computadora)
 
-        # < --------------------- PAGINA COMPUTADORAS ACTIVAS E INACTIVAS TODO--------------------- >
+        # < --------------------- PAGINA COMPUTADORAS ACTIVAS E INACTIVAS--------------------- >
         
         header_computadoras_activas_tabla = self.tabla_computadoras_activas.horizontalHeader()
         header_computadoras_activas_tabla.setSectionResizeMode(header_computadoras_activas_tabla.Stretch)
@@ -82,7 +82,8 @@ class PrincipalWindow(Principal,QWidget):
         header_computadoras_inactivas_tabla = self.tabla_computadoras_desactivas.horizontalHeader()
         header_computadoras_inactivas_tabla.setSectionResizeMode(header_computadoras_inactivas_tabla.Stretch)
         self.configuracion_tabla_equipos_inactivos()
-
+        
+        #TODO Pensar como realizar la selección de computadoras
         self.tabla_computadoras_activas.itemDoubleClicked.connect(self.abrir_opciones_computadora)
 
 
@@ -221,7 +222,6 @@ class PrincipalWindow(Principal,QWidget):
         self.tabla_computadoras_activas.setSelectionBehavior(QAbstractItemView.SelectRows)# EVENTO QUE SELECCIONA TODA LA FILA
         self.tabla_computadoras_activas.verticalHeader().setVisible(False) # Ocultar el header vertical
 
-
     def configuracion_tabla_equipos_inactivos(self):
         column_headers_tabla_equipos_inactivos = ('ID','Nombre del equipo', 'Número de serie', 'Propietario del equipo', 'Rol')
         self.tabla_computadoras_desactivas.setColumnCount(len(column_headers_tabla_equipos_inactivos))
@@ -231,7 +231,6 @@ class PrincipalWindow(Principal,QWidget):
         self.tabla_computadoras_desactivas.setSelectionBehavior(QAbstractItemView.SelectRows) #Seleccionar toda la fila
         self.tabla_computadoras_desactivas.setSelectionMode(QAbstractItemView.SingleSelection) #Seleccionar solo una fila
         self.tabla_computadoras_desactivas.verticalHeader().setVisible(False) # Ocultar el header vertical
-
 
     def desplegar_datos_equipos_activos(self, data):
         self.tabla_computadoras_activas.setRowCount(len(data))
@@ -248,7 +247,6 @@ class PrincipalWindow(Principal,QWidget):
                     self.tabla_computadoras_desactivas.setItem(index_row, index_cell, QTableWidgetItem(str(cell)))
             else: 
                 self.tabla_computadoras_desactivas.hideRow(index_row)
-
 
     def activar_computadora(self):
         self.desactivar_btn.setVisible(True)
@@ -271,10 +269,23 @@ class PrincipalWindow(Principal,QWidget):
 
     # FUNCION PARA MANDAR LLAMAR LA VENTANA DE OPCIONES DE COMPUTADORA
     def abrir_opciones_computadora(self):
+        
         if not self.ventana_abierta:
             self.ventana_abierta:True
             seleccionar_fila = self.tabla_computadoras_activas.selectedItems()
             if seleccionar_fila:
+                index = seleccionar_fila[0].row()
+
+                respuesta = admin_socket_ui.escribir_operaciones(f'seleccionar {index}')
+                print(respuesta)
+                respuesta = json.loads(respuesta)
+
+                if respuesta['success']:
+                    pass
+                else:
+                    pass
+                
+
                 id_propietarios = seleccionar_fila[0].text()
                 window = OpcionesCompusWindow(self,id_propietarios)
                 window.setWindowModality(QtCore.Qt.ApplicationModal)
@@ -346,7 +357,6 @@ class PrincipalWindow(Principal,QWidget):
                     QMessageBox.information(self, 'Eliminacion realizada con éxito', 'El equipo de computo se elimino con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
                 else:
                     QMessageBox.critical(self, 'Oops... algo sucedio', 'Ocurrio un error al realizar la eliiminación', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
-
 
     def habilitar_eliminar_compus(self):
         self.eliminar_compu_btn.setEnabled(True)
@@ -423,24 +433,10 @@ class PrincipalWindow(Principal,QWidget):
                 else:
                     QMessageBox.information(self, 'Ooops.. algo ocurrio', 'Hubo algún error al realizar la eliminación', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
 
-
     def habilitar_eliminar_propietario(self):
         self.eliminar_admin_btn.setEnabled(True)   
-
-    # FUNCION PARA OCULTAR EL ADMINISTRADOR QUE TIENE LA SESION INICIADA
-    # def ocultar_propietario(self):
-    #     usuario_actual = -1  # Valor predeterminado en caso de que no se encuentre ninguna fila
-    #     nombre_propietario = Propietario(conexion()).seleccionar_nombre_perfil(self._id) # OBTENCION DE LOS DATOS DE LA CONSULTA DE LA BD
-    #     # CICLO PARA VERIFICAR QUE EL NOMBRE DEL ADMINISTRADOR EXISTA EN LA TABLA
-    #     for fila in range(self.administradores_tabla.rowCount()):
-    #         if self.administradores_tabla.item(fila, 1).text() == nombre_propietario[0][0]: # OBTENCION DEL NOMBRE DE LOS CAMPOS DE NOMBRE EN LA TABLA
-    #             usuario_actual = fila
-    #             break
-    #     if usuario_actual != -1: # CONDICION QUE VALIDA QUE SI HAY UN NOMBRE IGUAL EN LA TABLA
-    #         self.administradores_tabla.hideRow(usuario_actual) # EVENTO QUE OCULTA UNA FILA DE LA TABLA        
-
+    
 # ////////////////////////// FUNCIONES PAGINA PERFIL //////////////////////////
-
 
     def llenar_campos_administrador(self):
         self.nombre_txt.setText(self.administrador.get_nombre_admin())
@@ -486,11 +482,6 @@ class PrincipalWindow(Principal,QWidget):
                 QMessageBox.information(self, 'Actualización', 'El propietario se actualizo con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
                 self.close()
         QMessageBox.warning(self, "Guardado", "Los datos se guardaron correctamente.")
-
-
-    #def llenar_campos_texto_perfil(self):
-        # data = Propietario(conexion()).seleccionar_datos_perfil(self._id)
-
 
 # ////////////////////////// FUNCIONES PARA LAS PAGINAS //////////////////////////
             
