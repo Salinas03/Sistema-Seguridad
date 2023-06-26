@@ -6,9 +6,10 @@ import os
 import time
 
 class ClienteSocket:
-    def __init__(self):
+    def _init_(self):
         self.FORMAT = "utf-8"
         self.HEADER = 20480
+        # self.IP = '68.183.143.116'
         self.IP = '165.22.15.159'
         #self.IP = socket.gethostbyname(socket.gethostname())
         self.PORT = 5050
@@ -102,7 +103,12 @@ def manejar_canal_cliente():
                 try:
                     print(f'Instrucción a aplicar {respuesta_servidor}')
 
-                    if respuesta_servidor == 'apagar' or respuesta_servidor == 'bloquear':
+                    if respuesta_servidor == 'apagar':
+                        cliente_socket.get_socket_cliente().send(json.dumps({'success': True, 'msg': 'Apagado realizado exitosamente'}).encode())
+                        os.system(f'{os.getcwd()}/comandos/{respuesta_servidor}.bat')
+
+                    elif respuesta_servidor == 'bloquear':
+                        cliente_socket.get_socket_cliente().send(json.dumps({'success': True, 'msg': 'Bloqueo de windows realizado exitosamente'}).encode())
                         os.system(f'{os.getcwd()}/comandos/{respuesta_servidor}.bat')
 
                     elif respuesta_servidor == 'cmd':   
@@ -112,7 +118,9 @@ def manejar_canal_cliente():
                         print('Instruccion no encontrada')
 
                 except:
-                    print('Hubo un error al aplicar la instrucción aplicada')
+                    mensaje_respuesta = json.dumps({'success': False, 'msg': 'Hubo un error al ejecutar la instrucción mandada'})
+                    print(mensaje_respuesta)
+                    cliente_socket.get_socket_cliente().send(mensaje_respuesta.encode())
         except (socket.error, socket.timeout) as err:
 
             #SE HACE LA ESEPCIÓN DE QUE SI SE VA EL INTERNET
@@ -133,8 +141,7 @@ def manejar_canal_cliente_secundario():
     while True:
         try:
             mensaje = cliente_socket.get_socket_cliente_secundario().recv(cliente_socket.HEADER).decode(cliente_socket.FORMAT)
-            print(f'Mensaje del servidor {mensaje}')
-
+            # print(f'Mensaje del servidor {mensaje}')
             cliente_socket.get_socket_cliente_secundario().send('*'.encode())
             
         except:
