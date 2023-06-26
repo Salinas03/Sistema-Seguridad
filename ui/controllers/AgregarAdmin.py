@@ -27,7 +27,6 @@ class AgregarpropietarioWindow(AgregarPropietario,QWidget):
         #   OTRO VALOR ALFANUMERICO Y LA ACEPTACION DEL .COM U OTRO DOMINIO
         #email = QRegExpValidator(QRegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"))
         email = QRegExpValidator(QRegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@(?:gmail|hotmail|msn|yahoo|outlook|live|[.]{1,1})+(?:com|com.mx|net|org|edu|gov|mil|biz|info|name|museum|coop|aero|xxx|)"))
-        rol = QRegExpValidator(QRegExp('^[0-1]{1,1}'))
 
         self.nombre_propietario_txt.setValidator(only_text)
         self.nombre_propietario_txt.setFocus()
@@ -36,11 +35,16 @@ class AgregarpropietarioWindow(AgregarPropietario,QWidget):
         self.correo_propietario_txt.setValidator(email)
         self.password_propietario_txt.setValidator(only_password)
         self.confirma_contrasenia_txt.setValidator(only_password)
+
         # self.rol_propietario_txt.setValidator(rol)
 
         # LLAMADO DE LA FUNCION AGREGAR propietario Y ENVIO DE LOS DATOS DE LOS TXT 
         self.agregar_admin_btn.clicked.connect(self.agregar_propietario)
         self.y = self.cancelar_admin_btn.clicked.connect(self.cancelar_registro)
+
+        # LLAMADO DE LA FUNCION AGREGAR propietario Y ENVIO DE LOS DATOS DE LOS TXT 
+        self.agregar_admin_btn.clicked.connect(lambda:self.agregar_propietario())
+        self.cancelar_admin_btn.clicked.connect(self.cancelar_registro)
 
     # FUNCION PARA AGREGAR ADMIB
     #                   RECEPCION DE DATOS ENVIADOS POR LOS TXT
@@ -52,11 +56,10 @@ class AgregarpropietarioWindow(AgregarPropietario,QWidget):
         correo = self.correo_propietario_txt.text()
         password = self.password_propietario_txt.text()
         password2 = self.confirma_contrasenia_txt.text()
-
         rol = self.rol_propietario_cmbx.currentIndex()
 
         # CONDICIONES PARA LA VERIFICACION DE LOS CAMPOS 
-        if nombre == '' or apellido == '' or telefono == '' or correo == '' or password == '' or  password2 == '' or rol == '' :
+        if nombre == '' or apellido == '' or telefono == '' or correo == '' or password == '' or  password2 == '':
             QMessageBox.warning(self, 'Error', 'Por favor de poner datos validos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
         
         elif password != password2: 
