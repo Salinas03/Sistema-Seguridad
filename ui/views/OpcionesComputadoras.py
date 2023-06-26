@@ -25,7 +25,7 @@ class OpcionesComputadora(QMainWindow, object):
         OpcionesComputadora.setWindowIcon(icon)
         OpcionesComputadora.setStyleSheet(u"QMainWindow#OpcionesComputadora{\n"
 "	/*background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #080f43, stop:1 #1d1e26);*/\n"
-"background-color:#3b3b3b;\n"
+"background-color:qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
 "}")
         self.centralwidget = QWidget(OpcionesComputadora)
         self.centralwidget.setObjectName(u"centralwidget")
@@ -49,6 +49,7 @@ class OpcionesComputadora(QMainWindow, object):
 
         self.id_lbl = QLabel(self.frame)
         self.id_lbl.setObjectName(u"id_lbl")
+        self.id_lbl.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_2.addWidget(self.id_lbl)
 
@@ -58,6 +59,7 @@ class OpcionesComputadora(QMainWindow, object):
 
         self.nombre_lbl = QLabel(self.frame)
         self.nombre_lbl.setObjectName(u"nombre_lbl")
+        self.nombre_lbl.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_2.addWidget(self.nombre_lbl)
 
@@ -119,7 +121,7 @@ class OpcionesComputadora(QMainWindow, object):
 "}\n"
 "\n"
 "QPushButton:hover{\n"
-"    background:black;\n"
+"    background:qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);;\n"
 "    color:white;\n"
 "}\n"
 "\n"
@@ -127,9 +129,10 @@ class OpcionesComputadora(QMainWindow, object):
 "font-size: 12px;\n"
 "padding:10px;\n"
 "font-weight: bold;\n"
-"background-color: black;\n"
+"background-color: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);;\n"
 "color:white;\n"
-"border:none;\n"
+"border:non"
+                        "e;\n"
 "}\n"
 "")
         self.frame_2.setFrameShape(QFrame.StyledPanel)
@@ -142,7 +145,7 @@ class OpcionesComputadora(QMainWindow, object):
         self.comando_widget.setObjectName(u"comando_widget")
         self.comando_widget.setStyleSheet(u"QPushButton#ingresar_comandos_btn{\n"
 "border:none;\n"
-"background-color: black;\n"
+"background-color:qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
 "color:white;\n"
 "padding-top:10px;\n"
 "padding-left:20px;\n"
