@@ -276,14 +276,15 @@ def panel_administrador(conn, administrador):
 
             elif 'seleccionar' in operacion:
                 if not conexiones_equipos_cliente:
-                    conn.send('No hay dispositivos activos a quienes realizar operaciones :/'.encode())
+                    conn.send(json.dumps({'success': False, 'msg': 'No hay dispositivos activos a quienes realizar operaciones :/'}).encode())
                 else:
                     cliente_seleccionado = conectar_con_equipo(operacion)
                     if cliente_seleccionado is not None:
-                        conn.send(f'Conexión con el usuario {cliente_seleccionado.get_direccion()[0]}'.encode())
+                        mensaje = f'Conexión con el usuario {cliente_seleccionado.get_direccion()[0]}'
+                        conn.send(json.dumps({'success': True, 'msg': mensaje}).encode())
                         manejar_operaciones(cliente_seleccionado, conn)
                     else:
-                        conn.send('Selección no válida :/'.encode())
+                        conn.send(json.dumps({'success': False, 'msg': 'Selección no válida :/'}).encode())
 
             elif operacion == 'salir':
                 print('Administrador desconectado...')
@@ -556,7 +557,7 @@ def manejar_operaciones(cliente_seleccionado, conn_admin):
     while True:
         try:
             #Dibujar prompt para el administrador
-            conn_admin.send(f'administrador/{cliente_seleccionado.get_nombre_host()}>'.encode())
+            # conn_admin.send(f'administrador/{cliente_seleccionado.get_nombre_host()}>'.encode())
 
             #Tomar la instrucción del administrador
             operacion = conn_admin.recv(HEADER).decode(FORMAT, errors='ignore')
