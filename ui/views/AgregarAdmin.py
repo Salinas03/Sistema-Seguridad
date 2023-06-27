@@ -23,6 +23,35 @@ class AgregarPropietario(QMainWindow, object):
         icon = QIcon()
         icon.addFile(u"./ui/assets/icons/LOGO.svg", QSize(), QIcon.Normal, QIcon.Off)
         AgregarPropietario.setWindowIcon(icon)
+        AgregarPropietario.setStyleSheet(u"QLineEdit,QComboBox{\n"
+"border:1px solid rgba(0,0,0,0);\n"
+"background:qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
+"border-radius:10px;\n"
+"border-bottom-color:rgba(255,255,255,255);\n"
+"color:rgb(255,255,255);\n"
+"font: 75 10pt \"MS Shell Dlg 2\";\n"
+"padding:7px;\n"
+"}\n"
+"\n"
+"\n"
+"QPushButton{\n"
+"    text-decoration: none;\n"
+"    width:50%;\n"
+"    padding:10px;\n"
+"    border: 1px solid black;\n"
+"    border-radius:10px;\n"
+"    text-decoration: none;\n"
+"    color:black;\n"
+"    font-weight: bold;\n"
+"    text-align: center;\n"
+"    font-size: 12px;\n"
+"	margin:10px;\n"
+"}\n"
+"\n"
+"QPushButton:hover{\n"
+"    background:qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);;\n"
+"    color:white;\n"
+"}")
         self.centralwidget = QWidget(AgregarPropietario)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -97,7 +126,11 @@ class AgregarPropietario(QMainWindow, object):
         self.correo_propietario_txt = QLineEdit(self.widget_3)
         self.correo_propietario_txt.setObjectName(u"correo_propietario_txt")
         font1 = QFont()
-        font1.setPointSize(12)
+        font1.setFamily(u"MS Shell Dlg 2")
+        font1.setPointSize(10)
+        font1.setBold(False)
+        font1.setItalic(False)
+        font1.setWeight(9)
         self.correo_propietario_txt.setFont(font1)
 
         self.gridLayout_3.addWidget(self.correo_propietario_txt, 3, 2, 1, 1)
@@ -118,7 +151,9 @@ class AgregarPropietario(QMainWindow, object):
 
         self.label_6 = QLabel(self.widget_3)
         self.label_6.setObjectName(u"label_6")
-        self.label_6.setFont(font1)
+        font2 = QFont()
+        font2.setPointSize(12)
+        self.label_6.setFont(font2)
 
         self.gridLayout_3.addWidget(self.label_6, 3, 0, 1, 1)
 
@@ -130,14 +165,14 @@ class AgregarPropietario(QMainWindow, object):
 
         self.label_3 = QLabel(self.widget_3)
         self.label_3.setObjectName(u"label_3")
-        self.label_3.setFont(font1)
+        self.label_3.setFont(font2)
 
         self.gridLayout_3.addWidget(self.label_3, 0, 0, 1, 1)
 
         self.label_7 = QLabel(self.widget_3)
         self.label_7.setObjectName(u"label_7")
         self.label_7.setMinimumSize(QSize(0, 30))
-        self.label_7.setFont(font1)
+        self.label_7.setFont(font2)
 
         self.gridLayout_3.addWidget(self.label_7, 5, 0, 1, 1)
 
@@ -149,13 +184,13 @@ class AgregarPropietario(QMainWindow, object):
 
         self.label_11 = QLabel(self.widget_3)
         self.label_11.setObjectName(u"label_11")
-        self.label_11.setFont(font1)
+        self.label_11.setFont(font2)
 
         self.gridLayout_3.addWidget(self.label_11, 4, 0, 1, 1)
 
         self.label_4 = QLabel(self.widget_3)
         self.label_4.setObjectName(u"label_4")
-        self.label_4.setFont(font1)
+        self.label_4.setFont(font2)
 
         self.gridLayout_3.addWidget(self.label_4, 1, 0, 1, 1)
 
@@ -168,7 +203,7 @@ class AgregarPropietario(QMainWindow, object):
 
         self.label_8 = QLabel(self.widget_3)
         self.label_8.setObjectName(u"label_8")
-        self.label_8.setFont(font1)
+        self.label_8.setFont(font2)
 
         self.gridLayout_3.addWidget(self.label_8, 6, 0, 1, 1)
 
@@ -180,7 +215,7 @@ class AgregarPropietario(QMainWindow, object):
 
         self.label_5 = QLabel(self.widget_3)
         self.label_5.setObjectName(u"label_5")
-        self.label_5.setFont(font1)
+        self.label_5.setFont(font2)
 
         self.gridLayout_3.addWidget(self.label_5, 2, 0, 1, 1)
 
@@ -229,10 +264,9 @@ class AgregarPropietario(QMainWindow, object):
         AgregarPropietario.setWindowTitle(QCoreApplication.translate("AgregarPropietario", u"Agregar propietario", None))
         self.label.setText(QCoreApplication.translate("AgregarPropietario", u"Agregar Propietario o Administrador", None))
         self.label_2.setText(QCoreApplication.translate("AgregarPropietario", u"<html><head/><body><p><span style=\" font-size:10pt; font-weight:600; color:#ff0000;\">ADVERTENCIA</span><span style=\" font-size:10pt;\">: Si agregas a un administrador, debes de saber que el tambien tendra </span></p><p><span style=\" font-size:10pt;\">acceso a las computadoras que se hayan registrado, esto para el acceso remoto</span></p><p><span style=\" font-size:10pt;\">a ellas.</span></p></body></html>", None))
-        
         self.rol_propietario_cmbx.setItemText(0, QCoreApplication.translate("AgregarPropietario", u"Selecciona el rol", None))
-        self.rol_propietario_cmbx.setItemText(1, QCoreApplication.translate("AgregarPropietario", u"Administrador", None))
-        self.rol_propietario_cmbx.setItemText(2, QCoreApplication.translate("AgregarPropietario", u"Cliente", None))
+        self.rol_propietario_cmbx.setItemText(1, QCoreApplication.translate("AgregarPropietario", u"Administrador - 1", None))
+        self.rol_propietario_cmbx.setItemText(2, QCoreApplication.translate("AgregarPropietario", u"Normal - 0", None))
 
         self.label_6.setText(QCoreApplication.translate("AgregarPropietario", u"Correo", None))
         self.label_3.setText(QCoreApplication.translate("AgregarPropietario", u"Nombre", None))
