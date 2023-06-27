@@ -23,6 +23,23 @@ class EditarPropietario(QMainWindow, object):
         icon = QIcon()
         icon.addFile(u"./ui/assets/icons/LOGO.svg", QSize(), QIcon.Normal, QIcon.Off)
         EditarPropietario.setWindowIcon(icon)
+        EditarPropietario.setStyleSheet(u"QMainWindow{\n"
+"background:qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
+"}\n"
+"\n"
+"QLineEdit,QComboBox{\n"
+"border:1px solid rgba(0,0,0,0);\n"
+"background-color: rgb(216, 216, 216);\n"
+"border-radius:10px;\n"
+"border-bottom-color:rgba(255,255,255,255);\n"
+"color:rgb(0,0,0);\n"
+"font: 75 10pt \"MS Shell Dlg 2\";\n"
+"padding:7px;\n"
+"}\n"
+"\n"
+"QLabel{\n"
+"color:white;\n"
+"}")
         self.centralwidget = QWidget(EditarPropietario)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)

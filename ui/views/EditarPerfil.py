@@ -20,12 +20,29 @@ class EditarPerfil(QMainWindow, object):
         EditarPerfil.resize(800, 500)
         EditarPerfil.setMinimumSize(QSize(800, 500))
         EditarPerfil.setMaximumSize(QSize(800, 500))
+        EditarPerfil.setStyleSheet(u"QMainWindow{\n"
+"background:qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
+"}")
         self.centralwidget = QWidget(EditarPerfil)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName(u"gridLayout")
         self.frame = QFrame(self.centralwidget)
         self.frame.setObjectName(u"frame")
+        self.frame.setStyleSheet(u"QLineEdit{\n"
+"border:1px solid rgba(0,0,0,0);\n"
+"background-color: rgb(216, 216, 216);\n"
+"border-radius:10px;\n"
+"border-bottom-color:rgba(255,255,255,255);\n"
+"color:rgb(0,0,0);\n"
+"font: 75 10pt \"MS Shell Dlg 2\";\n"
+"padding:7px;\n"
+"}\n"
+"\n"
+"QLabel{\n"
+"color:white;\n"
+"}\n"
+"")
         self.frame.setFrameShape(QFrame.StyledPanel)
         self.frame.setFrameShadow(QFrame.Raised)
         self.verticalLayout = QVBoxLayout(self.frame)
