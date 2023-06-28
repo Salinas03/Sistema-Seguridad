@@ -275,6 +275,7 @@ def panel_administrador(conn, administrador):
                 conn.send(equipos.encode())
 
             elif 'seleccionar' in operacion:
+                print('DENTRO DE SELECCIONAR')
                 if not conexiones_equipos_cliente:
                     conn.send(json.dumps({'success': False, 'msg': 'No hay dispositivos activos a quienes realizar operaciones :/'}).encode())
                 else:
@@ -537,7 +538,7 @@ def listar_equipos():
     return equipos
 
 def conectar_con_equipo(operacion):
-    
+    print('CONECTAR CON EQUIPO')
     try: 
         posicion = operacion.replace('seleccionar', '')
         posicion = int(posicion)
@@ -553,29 +554,31 @@ def conectar_con_equipo(operacion):
         return None
     
 def manejar_operaciones(cliente_seleccionado, conn_admin):
-
+    #Tomar la instrucción del administrador
+    print('Dentro de manejar operaciones...')
+    
     while True:
         try:
-            #Dibujar prompt para el administrador
-            # conn_admin.send(f'administrador/{cliente_seleccionado.get_nombre_host()}>'.encode())
+            operacion = conn_admin.recv(HEADER).decode(FORMAT)
+            print(f'Operación a realizar {operacion}')
 
-            #Tomar la instrucción del administrador
-            operacion = conn_admin.recv(HEADER).decode(FORMAT, errors='ignore')
-
-            #Notificar al administrador que el mensaje se ha enviado con éxito
-            conn_admin.send(f'Mensaje enviado con éxito'.encode())
-
-            if operacion == 'salir': 
+            if operacion == 'salir':
+                conn_admin.send(json.dumps({'success': True, 'msg': 'Se realizó la salida con éxito'}).encode()) 
                 break
 
             #Enviar la insturcción al cliente
             cliente_seleccionado.get_conexion().send(operacion.encode())
 
             #Obtener respuesta del cliente
-            # . . .
+            respuesta_cliente = cliente_seleccionado.get_conexion().recv(HEADER).decode(FORMAT)
+            print('Respuesta cliente')
+            print(respuesta_cliente)
+
+            #Enviar la respuesta cdel cliente al administrador
+            conn_admin.send(respuesta_cliente.encode())
         except:
-            
             print('Error al enviar el comando')
+            conn_admin.send(json.dumps({'success': False, 'msg': 'Hubo un error al realizar la operación al equipo'}).encode())
             break
 
 #FUNCIONES DE BORRADO DE CONEXIONES

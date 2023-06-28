@@ -11,9 +11,16 @@
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
+from clases.administrador_ui import admin_socket_ui
 
 
 class OpcionesComputadora(QMainWindow, object):
+
+    def closeEvent(self, event):
+        print('Cerrado de selección')
+        admin_socket_ui.escribir_operaciones('salir')
+        event.accept()
+
     def setupUi(self, OpcionesComputadora):
         if not OpcionesComputadora.objectName():
             OpcionesComputadora.setObjectName(u"OpcionesComputadora")
@@ -27,6 +34,7 @@ class OpcionesComputadora(QMainWindow, object):
 "	/*background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #080f43, stop:1 #1d1e26);*/\n"
 "background-color:qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
 "}")
+        
         self.centralwidget = QWidget(OpcionesComputadora)
         self.centralwidget.setObjectName(u"centralwidget")
         self.horizontalLayout = QHBoxLayout(self.centralwidget)
