@@ -19,19 +19,48 @@ class AgregarComputadoras(QMainWindow, object):
         if not AgregarComputadoras.objectName():
             AgregarComputadoras.setObjectName(u"AgregarComputadoras")
 
+                 
         self.peticion_propietarios = {
             'tabla': 'propietarios',
             'operacion': 'obtener_propietarios'
         }
 
         self.propietarios = admin_socket_ui.escribir_operaciones(json.dumps(self.peticion_propietarios))
-        
+
         AgregarComputadoras.resize(700, 500)
         AgregarComputadoras.setMinimumSize(QSize(700, 500))
         AgregarComputadoras.setMaximumSize(QSize(700, 500))
         icon = QIcon()
         icon.addFile(u"./ui/assets/icons/LOGO.svg", QSize(), QIcon.Normal, QIcon.Off)
         AgregarComputadoras.setWindowIcon(icon)
+        AgregarComputadoras.setStyleSheet(u"QLineEdit,QComboBox{\n"
+"border:1px solid rgba(0,0,0,0);\n"
+"background:qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
+"border-radius:10px;\n"
+"border-bottom-color:rgba(255,255,255,255);\n"
+"color:rgb(255,255,255);\n"
+"font: 75 10pt \"MS Shell Dlg 2\";\n"
+"padding:7px;\n"
+"}\n"
+"\n"
+"\n"
+"QPushButton{\n"
+"    text-decoration: none;\n"
+"    width:50%;\n"
+"    padding:10px;\n"
+"    border: 1px solid black;\n"
+"    border-radius:10px;\n"
+"    text-decoration: none;\n"
+"    color:black;\n"
+"    font-weight: bold;\n"
+"    text-align: center;\n"
+"    font-size: 12px;\n"
+"}\n"
+"\n"
+"QPushButton:hover{\n"
+"    background:qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);;\n"
+"    color:white;\n"
+"}")
         self.centralwidget = QWidget(AgregarComputadoras)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -86,7 +115,11 @@ class AgregarComputadoras(QMainWindow, object):
         self.nombre_equipo_txt = QLineEdit(self.frame_2)
         self.nombre_equipo_txt.setObjectName(u"nombre_equipo_txt")
         font2 = QFont()
-        font2.setPointSize(12)
+        font2.setFamily(u"MS Shell Dlg 2")
+        font2.setPointSize(10)
+        font2.setBold(False)
+        font2.setItalic(False)
+        font2.setWeight(9)
         self.nombre_equipo_txt.setFont(font2)
 
         self.gridLayout_3.addWidget(self.nombre_equipo_txt, 0, 1, 1, 1)
@@ -118,13 +151,11 @@ class AgregarComputadoras(QMainWindow, object):
 
         self.gridLayout_3.addWidget(self.label_13, 3, 0, 1, 1)
 
-        #Añadir elementos al combobox por medio de un for en donde se realiza una busqueda a los propietarios
         self.propietario_cmbx = QComboBox(self.frame_2)
-        self.propietario_cmbx.addItem('')
+        self.propietario_cmbx.addItem("")
         if self.propietarios['success']:
             for _ in range(len(self.propietarios['data'])):
                 self.propietario_cmbx.addItem("")
-
         self.propietario_cmbx.setObjectName(u"propietario_cmbx")
 
         self.gridLayout_3.addWidget(self.propietario_cmbx, 2, 1, 1, 1)
@@ -134,6 +165,7 @@ class AgregarComputadoras(QMainWindow, object):
         self.rol_cmbx.addItem("")
         self.rol_cmbx.addItem("")
         self.rol_cmbx.setObjectName(u"rol_cmbx")
+
         self.gridLayout_3.addWidget(self.rol_cmbx, 3, 1, 1, 1)
 
 
@@ -183,8 +215,8 @@ class AgregarComputadoras(QMainWindow, object):
         self.label_12.setText(QCoreApplication.translate("AgregarComputadoras", u"Propietario del equipo", None))
         self.label_13.setText(QCoreApplication.translate("AgregarComputadoras", u"Rol", None))
 
+
         self.propietario_cmbx.setItemText(0, QCoreApplication.translate("AgregarComputadoras", u"Selecciona Propietario", None))
-        
         #Desplegar la información
         if self.propietarios['success']:
             propietarios = self.propietarios['data']
@@ -192,10 +224,10 @@ class AgregarComputadoras(QMainWindow, object):
             for i, propietario in enumerate(propietarios): 
                 self.propietario_cmbx.setItemText(i+1, QCoreApplication.translate("AgregarComputadoras", f"{propietario[0]}.-{propietario[1]} [{propietario[4]}]", None))
     
+
         self.rol_cmbx.setItemText(0, QCoreApplication.translate("AgregarComputadoras", u"Selecciona un rol", None))
         self.rol_cmbx.setItemText(1, QCoreApplication.translate("AgregarComputadoras", u"Administrador", None))
         self.rol_cmbx.setItemText(2, QCoreApplication.translate("AgregarComputadoras", u"Cliente", None))
-
         self.label_2.setText(QCoreApplication.translate("AgregarComputadoras", u"<html><head/><body><p><br/></p></body></html>", None))
         self.cancelar_registro_btn.setText(QCoreApplication.translate("AgregarComputadoras", u"Cancelar", None))
         self.guardar_compu_btn.setText(QCoreApplication.translate("AgregarComputadoras", u"Aceptar", None))
