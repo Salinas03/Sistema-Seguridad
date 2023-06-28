@@ -1,7 +1,10 @@
 from PySide2.QtWidgets import QWidget,QMessageBox, QPushButton
 from views.OpcionesComputadoras import OpcionesComputadora
-from clases.administrador_ui import admin_socket_ui
 from utils.abrir_consola import abrir_consola_ejecutar_script
+
+import sys
+sys.path.append('D:/RedesLA/SistemaSeguridad/ui')
+from clases.administrador_ui import admin_socket_ui
 
 class OpcionesCompusWindow(OpcionesComputadora, QWidget):
     def __init__(self, parent = None, _id = None, numSerie = None):
@@ -42,9 +45,21 @@ class OpcionesCompusWindow(OpcionesComputadora, QWidget):
             QMessageBox.critical(self, 'Ooops... Algo ocurrió', 'Hubo un fallo al suspender el equipo', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
 
     def bloquear_protector(self):
-        print('Bloqueo protector')
+        print('desbloquear')
+        respuesta = admin_socket_ui.escribir_operaciones('desbloquear')
+        print(respuesta)
+        if respuesta['success']:
+            QMessageBox.information(self, 'Desbloquear', 'Se realizó la función desbloqueo de manera correcta', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
+            self.close()
+        else:
+            QMessageBox.critical(self, 'Ooops... Algo ocurrió', 'Hubo un fallo al desbloquear el equipo', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
 
     def abrir_consola(self):
         print('Abrir consola')
-        abrir_consola_ejecutar_script()
+        respuesta = admin_socket_ui.escribir_operaciones('consola')
+        print(respuesta)
+
+        if respuesta['success']:
+            consola = respuesta['consola']
+            abrir_consola_ejecutar_script(consola)
         

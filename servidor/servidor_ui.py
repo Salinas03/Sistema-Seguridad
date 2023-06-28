@@ -554,11 +554,11 @@ def conectar_con_equipo(operacion):
         return None
     
 def manejar_operaciones(cliente_seleccionado, conn_admin):
+    #Tomar la instrucción del administrador
+    print('Dentro de manejar operaciones...')
+    
     while True:
         try:
-            #Tomar la instrucción del administrador
-            print('Dentro de manejar operaciones...')
-
             operacion = conn_admin.recv(HEADER).decode(FORMAT)
             print(f'Operación a realizar {operacion}')
 

