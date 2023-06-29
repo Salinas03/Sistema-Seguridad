@@ -224,7 +224,7 @@ def guardar_conexiones(conn, addr, hostname, numero_serie):
         enviar_notificacion(f'Un dispositivo con la IP {addr} y número de serie {numero_serie} intento entrar al canal sin permisos')
         #Realizar un método para guardar estas conexiones intrusivas en algún otro lado TODO
     else:
-        #Verificar si el dispositvo que se esta conectando es un administrador o un usuario dependiendo de la tabla SQL
+        #Verificar si el dispositivo que se esta conectando es un administrador o un usuario dependiendo de la tabla SQL
         resultado = json.loads(EquiposConsultas(conexion()).obtener_equipo_admin_por_nombre_numero_serie(hostname, numero_serie))
 
         resultado = resultado['data']
@@ -235,7 +235,7 @@ def guardar_conexiones(conn, addr, hostname, numero_serie):
             equipo_cliente = EquipoConectado(conn, addr, hostname, numero_serie)
             conexiones_equipos_cliente.append(equipo_cliente)
             print('Conexión con cliente :)')
-            conn.send('{"success": true, "msg": "Conexión con servidor exitosa :)"}'.encode())
+            conn.send(json.dumps({'success': True, 'msg': 'Conexión de cliente con servidor exitosa :)'}).encode())
 
             #Broadcast function
             broadcast()
@@ -283,7 +283,7 @@ def panel_administrador(conn, administrador):
                     if cliente_seleccionado is not None:
                         mensaje = f'Conexión con el usuario {cliente_seleccionado.get_direccion()[0]}'
                         conn.send(json.dumps({'success': True, 'msg': mensaje}).encode())
-                        manejar_operaciones(cliente_seleccionado, conn)
+                        manejar_operaciones_seleccion(cliente_seleccionado, conn)
                     else:
                         conn.send(json.dumps({'success': False, 'msg': 'Selección no válida :/'}).encode())
 
@@ -553,33 +553,69 @@ def conectar_con_equipo(operacion):
         print('Selección no válida :/')
         return None
     
-def manejar_operaciones(cliente_seleccionado, conn_admin):
+def manejar_operaciones_seleccion(cliente_seleccionado, conn_admin):
     #Tomar la instrucción del administrador
     print('Dentro de manejar operaciones...')
     
+    # Verificar si esta en el req/res de la consola o de las operaciones normales
     while True:
         try:
             operacion = conn_admin.recv(HEADER).decode(FORMAT)
             print(f'Operación a realizar {operacion}')
 
+            #Operación de salir de la selección
             if operacion == 'salir':
-                conn_admin.send(json.dumps({'success': True, 'msg': 'Se realizó la salida con éxito'}).encode()) 
+                conn_admin.send(json.dumps({'success': True, 'msg': 'Se realizó la salida de la consola con éxito'}).encode()) 
                 break
 
-            #Enviar la insturcción al cliente
-            cliente_seleccionado.get_conexion().send(operacion.encode())
+            #Abrir consola en caso que se requiere usar manejo de la consola
+            if operacion == 'consola':
+                cliente_seleccionado.get_conexion().send(operacion.encode())
+                manejar_consola_cliente(cliente_seleccionado, conn_admin)
+                print('Se salio de la consola en el servidor')
 
-            #Obtener respuesta del cliente
-            respuesta_cliente = cliente_seleccionado.get_conexion().recv(HEADER).decode(FORMAT)
-            print('Respuesta cliente')
-            print(respuesta_cliente)
+            else:
+                #Enviar la insturcción al cliente
+                cliente_seleccionado.get_conexion().send(operacion.encode())
 
-            #Enviar la respuesta cdel cliente al administrador
-            conn_admin.send(respuesta_cliente.encode())
+                #Obtener respuesta del cliente
+                respuesta_cliente = cliente_seleccionado.get_conexion().recv(HEADER).decode(FORMAT)
+                print('Respuesta cliente')
+                print(respuesta_cliente)
+
+                #Enviar la respuesta cdel cliente al administrador
+                conn_admin.send(respuesta_cliente.encode())
+
         except:
             print('Error al enviar el comando')
             conn_admin.send(json.dumps({'success': False, 'msg': 'Hubo un error al realizar la operación al equipo'}).encode())
             break
+
+def manejar_consola_cliente(conn_cli, conn_admin):
+    print('[MANEJAR CONSOLA admin/servidor/cliente]')
+    while True:
+        try:
+            #Recibir el prompt de la consola la primera vez y despúes esperar las salidas de la consola del cliente
+            respuesta_cliente = conn_cli.get_conexion().recv(HEADER).decode(FORMAT)
+            print('Respuesta cliente')
+            print(respuesta_cliente)
+
+            #Enviar salida del cliente al administrador
+            conn_admin.send(respuesta_cliente.encode())
+
+            #Esperar nueva instrucción del administrador para el cliente
+            instruccion_admin = conn_admin.recv(HEADER).decode(FORMAT)
+            print('Instrucción del administrador al cliente')
+            print(instruccion_admin)
+
+            if instruccion_admin == 'salir':
+                conn_cli.get_conexion().send(instruccion_admin.encode()) #Mandar mensaje de salida de la consola al cliente
+                break
+
+            #Enviar instrucción al cliente
+            conn_cli.get_conexion().send(instruccion_admin.encode())
+        except:
+            pass
 
 #FUNCIONES DE BORRADO DE CONEXIONES
 def borrar_administradores_activos(conn):
