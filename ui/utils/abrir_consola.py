@@ -31,11 +31,18 @@ def abrir_consola_ejecutar_script(consola):
             #Enviar el mensaje al servidor
             admin_socket_ui.get_socket_administrador().send(msg.encode())
 
+            #Si el mensaje enviado por el subproceso es salir y ya no esperamos una respuesta del servidor y salimos del ciclo
+            if msg == 'salir':
+                break
+
+            #Recibir respuesta del servidor/cliente
             respuesta_servidor_cliente = admin_socket_ui.get_socket_administrador().recv(admin_socket_ui.HEADER).decode(admin_socket_ui.FORMAT)
 
+            #Imprimir la respuesta
             print('Respuesta servidor cliente')
             print(respuesta_servidor_cliente)
 
+            #Enviar la respuesta al subproceso
             conn_subproceso.send(respuesta_servidor_cliente.encode())
 
         except:

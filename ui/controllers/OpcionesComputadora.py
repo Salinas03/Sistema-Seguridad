@@ -62,4 +62,6 @@ class OpcionesCompusWindow(OpcionesComputadora, QWidget):
         if respuesta['success']:
             consola = respuesta['consola']
             abrir_consola_ejecutar_script(consola)
+
+        print('Proceso realizado')
         
