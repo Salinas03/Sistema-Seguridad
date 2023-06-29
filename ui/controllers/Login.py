@@ -51,33 +51,36 @@ class LoginWindow(Login, QWidget):
                         print(respuesta['msg'])
                         respuesta = admin_socket_ui.validacion_conexion()
                         if respuesta['success']:
-                            respuesta_servidor = admin_socket_ui.escribir_operaciones(json.dumps({
-                                'tabla': 'propietarios',
-                                'operacion': 'login',
-                                'data': [correo, password]
-                            }))
-                             
-                            print('[RESPUESTA SERVIDOR]')
-                            print(respuesta_servidor)
+                            if 'cliente' not in respuesta['msg']:
+                                respuesta_servidor = admin_socket_ui.escribir_operaciones(json.dumps({
+                                    'tabla': 'propietarios',
+                                    'operacion': 'login',
+                                    'data': [correo, password]
+                                }))
+                                
+                                print('[RESPUESTA SERVIDOR]')
+                                print(respuesta_servidor)
 
-                            administrador = respuesta_servidor['data']
+                                administrador = respuesta_servidor['data']
 
-                            if administrador:
-                                conexion_secundarios = admin_socket_ui.conexiones_canales_secundarios()
+                                if administrador:
+                                    conexion_secundarios = admin_socket_ui.conexiones_canales_secundarios()
 
-                                if conexion_secundarios['success']:
-                                    self.abrir_principal_window(administrador[0])
-                                    self.close()
+                                    if conexion_secundarios['success']:
+                                        self.abrir_principal_window(administrador[0])
+                                        self.close()
+                                    else:
+                                        admin_socket_ui.cerrar_conexiones()
+                                        QMessageBox.critical(self, 'Advertencia', 'No se pudo realizar la conexión con los canales secundarios', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
                                 else:
                                     admin_socket_ui.cerrar_conexiones()
-                                    QMessageBox.critical(self, 'Advertencia', 'No se pudo realizar la conexión con los canales secundarios', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
-                            else:
-                                admin_socket_ui.cerrar_conexiones()
-                                QMessageBox.critical(self, 'Advertencia', 'Correo y/o contraseña no válidos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
-                        else: 
-                            QMessageBox.critical(self, 'Error', 'Esta intentando ingresar al servidor como administrador desde una computadora cliente, acción no válida', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
+                                    QMessageBox.critical(self, 'Advertencia', 'Correo y/o contraseña no válidos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
+                            else: 
+                                QMessageBox.critical(self, 'Error', 'Esta intentando ingresar al servidor como administrador desde una  computadora cliente, acción no válida', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
+                        else:
+                            QMessageBox.critical(self, 'Ooops... algo ocurrió', 'No se pudo realizar la validación de la conexión correctamente', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
                     else:
-                        QMessageBox.critical(self, 'Ooops.. algo ocurrió', 'No se pudo realizar la conexión temporal con el servidor', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
+                        QMessageBox.critical(self, 'Ooops... algo ocurrió', 'No se pudo realizar la conexión temporal con el servidor', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
                 else:
                     QMessageBox.critical(self, 'Ooops... algo ocurrió', 'No se pudieron crear los sockets de manera correcta', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
 

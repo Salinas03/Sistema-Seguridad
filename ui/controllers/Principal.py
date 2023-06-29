@@ -276,21 +276,17 @@ class PrincipalWindow(Principal,QWidget):
                 index = seleccionar_fila[0].row()
 
                 respuesta = admin_socket_ui.escribir_operaciones(f'seleccionar {index}')
-                print(respuesta)
-                respuesta = json.loads(respuesta)
-
-                if respuesta['success']:
-                    pass
-                else:
-                    pass
                 
-
-                id_propietarios = seleccionar_fila[0].text()
-                numero_serie = seleccionar_fila[1].text()
-                window = OpcionesCompusWindow(self,id_propietarios,numero_serie)
-                window.setWindowModality(QtCore.Qt.ApplicationModal)
-                window.destroyed.connect(self.ventana_cerrada)
-                window.show()
+                if respuesta['success']:
+                    id_propietarios = seleccionar_fila[0].text()
+                    numero_serie = seleccionar_fila[1].text()
+                    window = OpcionesCompusWindow(self,id_propietarios,numero_serie)
+                    window.setWindowModality(QtCore.Qt.ApplicationModal)
+                    window.destroyed.connect(self.ventana_cerrada)
+                    window.show()
+                else:
+                    print('No se pudo seleccionar el dispositivo')
+                
             else:
                 QMessageBox.warning(self, "Advertencia", "La ventana ya está abierta.")
 # ////////////////////////// FUNCIONES PAGINA COMPUTADORAS REGISTRADAS //////////////////////////
