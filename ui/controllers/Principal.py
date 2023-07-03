@@ -179,15 +179,15 @@ class PrincipalWindow(Principal,QWidget):
         if equipos_activos_inactivos:
             self.desplegar_datos_equipos_inactivos(equipos_activos_inactivos[0])
             self.desplegar_datos_equipos_activos(equipos_activos_inactivos[1])
-            thread_equipos_activos_inactivos = threading.Thread(target=self.escuchar_cambios_equipos_activos_inactivos)
-            thread_equipos_activos_inactivos.start()
+            self.thread_equipos_activos_inactivos = threading.Thread(target=self.escuchar_cambios_equipos_activos_inactivos)
+            self.thread_equipos_activos_inactivos.start()
 
         #Obtener por primera vez los equipos de cómputo de la BD_SQL
         equipos_computo = admin_socket_ui.escribir_operaciones(json.dumps(self.peticion_equipos))
         if equipos_computo['success']:
             self.datos_compus(equipos_computo['data'])    
-            thread_escuchar_cambios_tablasbd = threading.Thread(target=self.escuchar_cambios_tablasbd)
-            thread_escuchar_cambios_tablasbd.start()
+            self.thread_escuchar_cambios_tablasbd = threading.Thread(target=self.escuchar_cambios_tablasbd)
+            self.thread_escuchar_cambios_tablasbd.start()
 
         #Obtener por primera vez los propietarios
         propietarios = admin_socket_ui.escribir_operaciones(json.dumps(self.peticion_propietarios))
@@ -513,3 +513,7 @@ class PrincipalWindow(Principal,QWidget):
                 admin_socket_ui.get_socket_operacionesbd().close()
                 print('Hubo un problema al recibir los datos de operacionesBD')
                 break
+
+    def escuchar_pintar_seleccion(self):
+        print('Escuchar cambios en')
+        pass

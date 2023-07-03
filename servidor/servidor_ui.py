@@ -22,12 +22,14 @@ PORT_NOTI = 5051
 PORT_BROAD = 5052
 PORT_CLIEN = 5053
 PORT_BD = 5054
+PORT_SEL = 5055
 
 #DIRECCIONES DE LOS DIFERENTES SOCKETS
 ADDR = (HOST, PORT)
 ADDR_NOTI = (HOST, PORT_NOTI)
 ADDR_BROAD = (HOST, PORT_BROAD)
 ADDR_CLIEN = (HOST, PORT_CLIEN)
+ADDR_SEL = (HOST, PORT_SEL)
 ADDR_BD = (HOST, PORT_BD)
 TIMEOUT = 2
 
@@ -40,6 +42,7 @@ conexiones_equipos_admin = []
 conexiones_equipos_admin_notificacion  = []
 conexiones_equipos_broadcast = []
 conexiones_equipos_operacionesbd = []
+conexiones_equipos_seleccion = []
 
 #CONFIGURACIÓN INICIAL DE SOCKETS
 def crear_sockets():
@@ -48,6 +51,7 @@ def crear_sockets():
         global notificacion
         global broadcasting
         global operacionesbd
+        global seleccion
         global cliente
 
         servidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -55,6 +59,7 @@ def crear_sockets():
         broadcasting = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         operacionesbd = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        seleccion = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     except socket.error as err:
         print(f'Error a la hora de crear el socket... /n {err}')
@@ -66,19 +71,23 @@ def vincular_sockets():
         broadcasting.bind(ADDR_BROAD)
         operacionesbd.bind(ADDR_BD)
         cliente.bind(ADDR_CLIEN)
+        seleccion.bind(ADDR_SEL)
         
         servidor.listen()
         notificacion.listen()
         broadcasting.listen()
         operacionesbd.listen()
         cliente.listen()
+        seleccion.listen()
 
         print(f'HOST {HOST} corriendo en el puerto {PORT}')
         print(f'NOTIFICACION {HOST} corriendo en el puerto {PORT_NOTI}')
         print(f'BROADCASTING {HOST} corriendo en el puerto {PORT_BROAD}')
         print(f'USUARIO {HOST} corriendo en el puerto {PORT_CLIEN}')
         print(f'OPERACIONESBD {HOST} corriendo en el puerto {PORT_BD}')
-        
+        print(f'SELECCIÓN {HOST} corriendo en el puerto {PORT_SEL}')
+
+        #CREACIÓN DE HILOS
         notificacion_thread = threading.Thread(target=aceptar_conexiones_notificacion)
         notificacion_thread.start()
         broadcasting_thread = threading.Thread(target=aceptar_conexiones_broadcast)
@@ -87,6 +96,8 @@ def vincular_sockets():
         cliente_thread.start()
         operacionesbd_thread = threading.Thread(target=aceptar_conexiones_operacionesbd)
         operacionesbd_thread.start()
+        seleccion_thread = threading.Thread(target=aceptar_conexiones_seleccion)
+        seleccion_thread.start()
 
     except socket.error as err:
         print(f'Error al enlazar el socket... /n {err}')
@@ -95,7 +106,8 @@ def vincular_sockets():
         notificacion.close()
         broadcasting.close()
         operacionesbd.close()
-        # vincular_socket()
+        seleccion.close()
+        # vincular_sockets()
 
 def cerrar():
     servidor.close()
@@ -205,7 +217,24 @@ def aceptar_conexiones_cliente():
             panel_cliente_thread.start()
         except:
             print('Hubo un error al conectar con el canal de cliente')
-            conn.send('{"success": False, "msg": "Error al aceptar la conexión en cliente :("}')
+            conn.send('{"success": false, "msg": "Error al aceptar la conexión en cliente :("}'.encode())
+
+def aceptar_conexiones_seleccion():
+    for conexion_seleccion in conexiones_equipos_seleccion:
+        conexion_seleccion[0].close()
+
+    del conexiones_equipos_seleccion[:]
+
+    while True:
+        try:
+            conn, addr = seleccion.accept()
+            seleccion.setblocking(1)
+            conexiones_equipos_seleccion.append((conn,addr))
+            #abrir panel de conexión
+
+        except:
+            print('Hubo un error al conectar con el canal de selección')
+            conn.send('{"success": false, "msg": "Error al aceptar la conexión con canal de selección :("}'.encode())
 
 #GUARDAR CONEXIONES DEL SOCKET PRINCIPAL
 def guardar_conexiones(conn, addr, hostname, numero_serie):
@@ -281,6 +310,15 @@ def panel_administrador(conn, administrador):
                 else:
                     cliente_seleccionado = conectar_con_equipo(operacion)
                     if cliente_seleccionado is not None:
+
+                        #Obtener la posición de la selección
+                        posicion = operacion.replace('seleccionar', '')
+                        posicion = int(posicion)
+
+                        #Notificar a los demas administradores que se ha hecho una selección 
+                        enviar_seleccion(posicion)
+
+                        #Manejar las operaciones de la selección
                         mensaje = f'Conexión con el usuario {cliente_seleccionado.get_direccion()[0]}'
                         conn.send(json.dumps({'success': True, 'msg': mensaje}).encode())
                         manejar_operaciones_seleccion(cliente_seleccionado, conn)
@@ -491,6 +529,18 @@ def panel_operacionesbd(conn, addr):
             conn.close()
             break
 
+def panel_seleccion(conn, addr):
+    while True:
+        try:
+            print('Entró al panel de selección')
+            conn.recv(HEADER).decode(FORMAT)
+
+        except ConnectionResetError:
+            borrar_administradores_seleccion(addr)
+            print('Desconexión del canal de selección')
+            conn.close()
+            break
+
 #OPERACIONES QUE PUEDEN REALIZAR LOS ADMINISTRADORES CON LOS EQUIPOS
 def listar_equipos():
     #Se tienen que listar los equipos que estan activos 
@@ -615,7 +665,8 @@ def manejar_consola_cliente(conn_cli, conn_admin):
             #Enviar instrucción al cliente
             conn_cli.get_conexion().send(instruccion_admin.encode())
         except:
-            pass
+            conn_cli.get_conexion().send('salir'.encode()) #Mandar mensaje de salida de la consola al cliente
+            break
 
 #FUNCIONES DE BORRADO DE CONEXIONES
 def borrar_administradores_activos(conn):
@@ -649,7 +700,15 @@ def borrar_administradores_operacionesbd(addr):
             del conexiones_equipos_operacionesbd[index]
             print('[BORRADO DE CONEXIONES OPERACIONESBD]')
             return conexion_operacionbd
-        
+
+def borrar_administradores_seleccion(addr):
+    for conexion_seleccion in conexiones_equipos_seleccion:
+        if conexion_seleccion[1] == addr:
+            index = conexiones_equipos_operacionesbd.index(conexion_seleccion)
+            del conexiones_equipos_operacionesbd[index]
+            print('[BORRADO DE CONEXIONES SELECCIÓN]')
+            return conexion_seleccion   
+
 def borrar_conexion_usuarios(conn):    
     for i,conexion_equipo in enumerate(conexiones_equipos_cliente[:]):
         if conexion_equipo.get_conexion() == conn:
@@ -732,6 +791,15 @@ def refrescar_tabla_propietarios():
         print('Error al refrescar las tablas de propietarios')
 
     print('[REFRESCADO TABLA PROPIETARIOS]')
+
+def enviar_seleccion(id):
+    try:
+        if conexiones_equipos_admin:
+            for conexion_seleccion in conexiones_equipos_seleccion:
+                conexion_seleccion[0].send(id.encode())
+
+    except:
+        print('Hubo un error al enviar quien se ha seleccionado')
 
 atexit.register(cerrar)
 crear_sockets()

@@ -11,9 +11,14 @@
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
+from clases.administrador_ui import admin_socket_ui
 
 
 class Principal(QMainWindow, object):
+    def closeEvent(self, event):
+        admin_socket_ui.cerrar_conexiones()
+        event.accept()
+
     def setupUi(self, Principal):
         if not Principal.objectName():
             Principal.setObjectName(u"Principal")

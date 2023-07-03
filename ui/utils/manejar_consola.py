@@ -30,5 +30,6 @@ while True:
 
     except:
         print('Error al enviar el comando')
+        socket_subproceso.send('salir'.encode())
         socket_subproceso.close()
         break
