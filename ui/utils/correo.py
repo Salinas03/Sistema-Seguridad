@@ -25,6 +25,7 @@ def enviar_correo(correo):
 
     try:
         yag.send(destinatario,asunto,mensaje)
+        print(codigo_verificacion)
         print('Envio correcto del codigo')
         return codigo_verificacion
     

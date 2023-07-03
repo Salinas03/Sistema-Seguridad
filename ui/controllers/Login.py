@@ -3,6 +3,7 @@ from PySide2.QtWidgets import *
 from views.Login import Login
 from PySide2.QtCore import Qt
 from controllers.Principal import PrincipalWindow
+from controllers.RecuperaPassword import RecuperarPasswordWindow
 from PySide2.QtCore import QRegExp
 from PySide2.QtGui import QRegExpValidator
 
@@ -29,6 +30,8 @@ class LoginWindow(Login, QWidget):
         # LLAMADO DE LAS VALIDACIONES EN LOS CAMPOS REQUERIDOS
         self.correo_txt.setValidator(email)
         self.password_txt.setValidator(only_password)
+
+        self.recuperar_contrasenia_btn.clicked.connect(self.abrir_recuperar_password)
      
     # FUNCION PARA EL INICIO DE SESION
     def iniciar_sesion(self):
@@ -88,5 +91,11 @@ class LoginWindow(Login, QWidget):
     def abrir_principal_window(self, id_propieatrio):
         self.close()
         window = PrincipalWindow(id_propieatrio)
+        window.show()
+        self.setWindowFlag(Qt.Window)
+    
+    def abrir_recuperar_password(self):
+        self.close()
+        window = RecuperarPasswordWindow(self)
         window.show()
         self.setWindowFlag(Qt.Window)

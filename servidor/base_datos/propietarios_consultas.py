@@ -70,9 +70,7 @@ class PropietariosConsultas:
             sql = f'SELECT id_propietarios,nombre_propietario,apellido_propietario,telefono_propietario,correo_propietario,rol FROM propietarios WHERE id_propietarios = {id_propietarios}'
             cursor.execute(sql)
             resultado = cursor.fetchall()  # Obtener los resultados de la consulta
-            #cursor.close()  # Cerrar el cursor después de obtener los resultados
             return json.dumps({'success': True, 'data': resultado})
-            #self.conexion.commit()
         except Error as err:
             print(f'Error al intentar la conexion {err}')
             return json.dumps({'success': False, 'msg': 'Hubo un error al obtener el propietario por id'})
@@ -89,3 +87,15 @@ class PropietariosConsultas:
             except Error as err:
                 print(f'Error al intentar la conexion {err}')
                 return json.dumps({'success': False, 'msg': 'Hubo un error al eliminar'})
+            
+    def obtener_propietario_correo(self,correo):
+        try:
+            cursor = self.conexion.cursor()
+            sql = f'SELECT * FROM propietarios WHERE correo_propietario = {correo}'
+            cursor.execute(sql)
+            resultado = cursor.fetchall()  # Obtener los resultados de la consulta
+            return json.dumps({'success': True, 'data': resultado})
+        except Error as err:
+            print(f'Error al intentar la conexion {err}')
+            return json.dumps({'success': False, 'msg': 'Hubo un error al obtener el propietario por id'})
+    

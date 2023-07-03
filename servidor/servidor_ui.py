@@ -13,8 +13,8 @@ from clases.validar_json import is_valid_json
 FORMAT = 'utf-8'
 HEADER = 20480
 #HOST = socket.gethostbyname(socket.gethostname())
-# HOST = '68.183.143.116'
-HOST = '165.22.15.159'
+HOST = '68.183.143.116'
+#HOST = '165.22.15.159'
 
 #PUERTOS DE LOS DIFERENTES SOCKETS
 PORT = 5050
@@ -415,12 +415,20 @@ def panel_base_datos(instruccion):
             data = instruccion['data']
             #Busqueda para ver si ya existe este usuario que esta tratando de loguearse
             #TODO
-
+            print('Dentro de LOGIN')
             respuesta_operacion = PropietariosConsultas(conexion()).obtener_propietario(data[0], data[1])
+            print('RESPUESTA LOGIN')
+            print(respuesta_operacion)
+            
             return respuesta_operacion
 
         elif operacion == 'obtener_propietario_id':
             respuesta_operacion = PropietariosConsultas(conexion()).seleccionar_propietario_id(int(instruccion['id']))
+            return respuesta_operacion
+        
+        elif operacion == 'obtener_propietario_correo':
+            correo = operacion['data']
+            respuesta_operacion = PropietariosConsultas(conexion().obtener_propietario_correos(operacion[correo]))
             return respuesta_operacion
 
 def panel_cliente(conn, addr):

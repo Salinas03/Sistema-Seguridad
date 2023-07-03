@@ -1,5 +1,4 @@
 from views.VerificarCorreo import VerificarCorreo
-from views.AgregarAdmin import AgregarPropietario
 from PySide2.QtWidgets import *
 from PySide2.QtCore import Qt
 from clases.administrador_ui import admin_socket_ui
@@ -45,7 +44,9 @@ class VerificarCorreoWindow(VerificarCorreo, QWidget):
             else:
                 QMessageBox.warning(self, 'Advertencia', 'El codigo que ingreso no es valido', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
                 self.close()
-    
+
+
+                
 
 
 

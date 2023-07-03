@@ -1,6 +1,7 @@
 import sys
 import socket
-sys.path.append('D:/RedesLA/SistemaSeguridad/ui')
+import os
+sys.path.append(f'{os.getcwd()}/ui')
 from clases.administrador_ui import admin_socket_ui
 
 #Socket para conectar con el proceso principal
