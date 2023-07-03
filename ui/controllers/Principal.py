@@ -8,16 +8,13 @@ from controllers.OpcionesComputadora import OpcionesCompusWindow
 from controllers.ModificarPropietarios import ModificarPropietarioWindow
 from controllers.ModificarComputadoras import ModificarEquipoWindow
 from controllers.ModificarPerfil import ModificarPerfil
-from modelos.propietarios_consultas import Propietario
 from py2_msgboxes import msg_boxes
 from PySide2.QtCore import *
-from PySide2.QtGui import QRegExpValidator
+from PySide2.QtGui import QRegExpValidator,QCursor
 
 #TODO Librerias agregadas para la implementación de tablas dinámicas
 import json
 import threading
-import time
-from db.connection import conexion
 from clases.administrador_ui import admin_socket_ui
 from clases.administrador_sesion import AdministradorSesion
 
@@ -214,7 +211,7 @@ class PrincipalWindow(Principal,QWidget):
 # ////////////////////////// FUNCIONES PAGINA PRINCIPAL TODO//////////////////////////
 
     def configuracion_tabla_equipos_activos(self):
-        column_headers_tablas_equipos_activos = ('ID','Nombre del equipo', 'Número de serie', 'Propietario del equipo', 'Rol', 'IP')
+        column_headers_tablas_equipos_activos = ('ID','Nombre del equipo', 'Número de serie', 'Propietario del equipo', 'Rol', 'IP')   
         self.tabla_computadoras_activas.setColumnCount(len(column_headers_tablas_equipos_activos))
         self.tabla_computadoras_activas.setHorizontalHeaderLabels(column_headers_tablas_equipos_activos)
         self.tabla_computadoras_activas.setSelectionMode(QAbstractItemView.SingleSelection)

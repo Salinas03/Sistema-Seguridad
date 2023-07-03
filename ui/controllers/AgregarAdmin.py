@@ -23,7 +23,7 @@ class AgregarpropietarioWindow(AgregarPropietario,QWidget):
 
         # VALIDACIÓN DE DATOS EN LOS QLineEdit
         only_password = QRegExpValidator(QRegExp('^[A-Za-z0-9.@/_&$%!-]{3,50}')) # VALIDACION DE DATOS ALFANUMERICOS DONDE SOLO PUEDE TENER ENTRE 3 Y 100 VALORES
-        only_text = QRegExpValidator(QRegExp('^[A-Za-z]{3,50}')) # VALIDACION DE DATOS ALFANUMERICOS DONDE SOLO PUEDE TENER ENTRE 3 Y 100 VALORES
+        only_text = QRegExpValidator(QRegExp('^[A-Za-z ]{3,50}')) # VALIDACION DE DATOS ALFANUMERICOS DONDE SOLO PUEDE TENER ENTRE 3 Y 100 VALORES
         only_number = QRegExpValidator(QRegExp('^[0-9]{0,10}'))
         #   VALIDACION PARA CAMPO DE CORREO, DONDE SE DEBE PONER UN VALOR ALFANUMERICO, DESPUES LA ACEPTACION DEL @, POR CONSIGUIENTE
         #   OTRO VALOR ALFANUMERICO Y LA ACEPTACION DEL .COM U OTRO DOMINIO
@@ -65,10 +65,6 @@ class AgregarpropietarioWindow(AgregarPropietario,QWidget):
         elif password != password2: 
             QMessageBox.warning(self, 'Error', 'Las contraseñas no coinciden, favor de verificar',QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
         
-        # elif '@' not in correo:
-        #     QMessageBox.warning(self, 'Inserta datos validos' , 'Ingresa un correo valido \nRecuerda que deben de llevar @', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
-        # elif '.com' or '.com.mx' or '.net' or '.org' or '.edu' or '.gov' or '.mil' or '.biz' or '.info' or '.name' or '.museum' or '.coop' or '.aero' or '.xxx' not in correo:
-        #     QMessageBox.warning(self, 'Inserta datos validos' , 'Ingresa un correo valido \nRecuerda que deben de llevar un dominio \nEjemplo: .com', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
         else:
 
             valor_rol = None
@@ -79,8 +75,7 @@ class AgregarpropietarioWindow(AgregarPropietario,QWidget):
                 valor_rol = 0
 
 
-            if valor_rol is not None:
-                
+            if valor_rol is not None:       
                 if not self.ventana_abierta:
                     codigo = enviar_correo(correo)
                     if codigo is not None:
