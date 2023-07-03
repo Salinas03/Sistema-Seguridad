@@ -264,6 +264,7 @@ def guardar_conexiones(conn, addr, hostname, numero_serie):
             equipo_cliente = EquipoConectado(conn, addr, hostname, numero_serie)
             conexiones_equipos_cliente.append(equipo_cliente)
             print('Conexión con cliente :)')
+            print(conexiones_equipos_cliente)
             conn.send(json.dumps({'success': True, 'msg': 'Conexión de cliente con servidor exitosa :)'}).encode())
 
             #Broadcast function
@@ -304,23 +305,15 @@ def panel_administrador(conn, administrador):
                 conn.send(equipos.encode())
 
             elif 'seleccionar' in operacion:
-                print('DENTRO DE SELECCIONAR')
                 if not conexiones_equipos_cliente:
                     conn.send(json.dumps({'success': False, 'msg': 'No hay dispositivos activos a quienes realizar operaciones :/'}).encode())
                 else:
                     cliente_seleccionado = conectar_con_equipo(operacion)
                     if cliente_seleccionado is not None:
-
-                        #Obtener la posición de la selección
-                        posicion = operacion.replace('seleccionar', '')
-                        posicion = int(posicion)
-
-                        #Notificar a los demas administradores que se ha hecho una selección 
-                        enviar_seleccion(posicion)
-
                         #Manejar las operaciones de la selección
-                        mensaje = f'Conexión con el usuario {cliente_seleccionado.get_direccion()[0]}'
+                        mensaje = f'Selección con el usuario {cliente_seleccionado.get_direccion()[0]}'
                         conn.send(json.dumps({'success': True, 'msg': mensaje}).encode())
+
                         manejar_operaciones_seleccion(cliente_seleccionado, conn)
                     else:
                         conn.send(json.dumps({'success': False, 'msg': 'Selección no válida :/'}).encode())
@@ -555,7 +548,7 @@ def listar_equipos():
     if conexiones_equipos_cliente_mostrar:
         del conexiones_equipos_cliente_mostrar[:]
 
-    for i,conexion_equipo in enumerate(conexiones_equipos_cliente[:]):
+    for i, conexion_equipo in enumerate(conexiones_equipos_cliente[:]):
         bandera = False
         #Mostrar solo aquellas conexiones que estan activas
         conexion_equipo.get_conexion().settimeout(1)
@@ -568,18 +561,25 @@ def listar_equipos():
             del conexiones_equipos_cliente[index] #Borrar la conexion del cliente en esa posición en caso de que no haya respuesta
             continue
         
+        print('CONEXIONES EQUIPOS CLIENTE BANDERA')
         if bandera:
             ip_cliente = conexion_equipo.get_direccion()[0]
+            seleccionado = conexion_equipo.get_seleccionado()
+
+            print('IMPRIMIR VARIABLES DE SELECCION')
+            print(seleccionado)
 
             #Obtener los equipos de cómputo inactivos y activos
             for x, equipo_computo in enumerate(equipos_computo):
 
                 if conexion_equipo.get_nombre_host() == equipo_computo[1]: #equipo_computo[1] = nombre_host
                     equipos_inactivos[x] = None
-                    equipo = list(equipo_computo)
 
-                    #Agregar la IP al cliente activo para mostrar
-                    equipo.append(ip_cliente)
+                    equipo = list(equipo_computo) #Convertir la tupla de los equipos en un arreglo
+                    equipo.append(ip_cliente)     #Agregar la IP al arreglo
+                    equipo.append(seleccionado)   #Agregar la variable de selección
+                    print('IMPRIMIR EQUIPO')
+                    print(equipo)
                     conexiones_equipos_cliente_mostrar.append(equipo)
 
     equipos = [equipos_inactivos, conexiones_equipos_cliente_mostrar]
@@ -593,10 +593,18 @@ def conectar_con_equipo(operacion):
         posicion = operacion.replace('seleccionar', '')
         posicion = int(posicion)
         print(f'Posición: {posicion}')
+        
+        #Obtener el elemento del arreglo en esa posición
         objeto_cliente_activo = conexiones_equipos_cliente[posicion]
 
-        print(f'Conexión con el usuario {objeto_cliente_activo.get_direccion()[0]}')
+        if objeto_cliente_activo is None:
+            return None
         
+        #Marcar ese elemento del arreglo en específico como seleccionado
+        conexiones_equipos_cliente[posicion].set_seleccionado(True)
+        # broadcast()
+
+        print(f'Conexión con el usuario {objeto_cliente_activo.get_direccion()[0]}')
         return objeto_cliente_activo
     
     except:
@@ -734,7 +742,7 @@ def enviar_notificacion(mensaje):
         print('No se enviaron algunos de los mensajes')
 
 def broadcast():
-    print(conexiones_equipos_broadcast)
+    print('[BROADCASTING]')
     equipos_activos_inactivos = listar_equipos()
     try:
         if conexiones_equipos_admin:

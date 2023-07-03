@@ -232,10 +232,22 @@ class PrincipalWindow(Principal,QWidget):
         self.tabla_computadoras_desactivas.verticalHeader().setVisible(False) # Ocultar el header vertical
 
     def desplegar_datos_equipos_activos(self, data):
+        # data = [ID, nombre_equipo, numero_serie, propietario, Rol, IP, seleccionado]
+        print('DATA')
+        print(data)
         self.tabla_computadoras_activas.setRowCount(len(data))
         for (index_row, row) in enumerate(data):
             for (index_cell, cell) in enumerate(row):
-                self.tabla_computadoras_activas.setItem(index_row, index_cell, QTableWidgetItem(str(cell)))
+                item = QTableWidgetItem(str(cell))
+                self.tabla_computadoras_activas.setItem(index_row, index_cell, item)
+
+                if index_cell == 6:
+                    print('Dentro del index cell')
+                    if cell:  #Cell has a boolean value
+                        print('Dentro del cell False ?')
+                        item.setFlags(item.flags() & ~QTableWidgetItem.ItemIsEnabled)
+                        gray_color = QStyle.QColor(QStyle.QColor(220, 220, 220))  # Gray color
+                        item.setBackground(QStyle.QBrush(gray_color))
 
     def desplegar_datos_equipos_inactivos(self, data):
         self.tabla_computadoras_desactivas.setRowCount(len(data))
