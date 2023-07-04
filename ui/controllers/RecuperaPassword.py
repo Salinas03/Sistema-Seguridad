@@ -2,9 +2,9 @@ from PySide2.QtWidgets import *
 from views.RecuperaPassword import RecuperarContrasenia
 from PySide2.QtGui import QRegExpValidator
 from utils.correo import *
-from clases.administrador_ui import admin_socket_ui
 from utils.correo import verificacion
-import json
+from db.connection import conexion
+from modelos.propietarios_consultas import Propietario
 
 from PySide2.QtCore import * 
 
@@ -43,7 +43,11 @@ class RecuperarPasswordWindow(RecuperarContrasenia,QWidget):
         correo = self.correo_recuperacion_txt.text()
         if  correo != '':
             if self.codigo_verificacion is None:
-                self.codigo_verificacion = enviar_correo(correo)
+                respuesta = Propietario(conexion()).seleccionar_propietario_correo(correo)
+
+                if respuesta['success']:
+                    if respuesta['data']:
+                        self.codigo_verificacion = enviar_correo(correo)
             if self.codigo_verificacion is not None:
                 self.ingresa_correo_widget.hide()
                 self.confirma_codigo_widget.show()
@@ -87,11 +91,28 @@ class RecuperarPasswordWindow(RecuperarContrasenia,QWidget):
         self.confirmar_nuevo_password_txt.clear()
 
     def cambio_password(self):
-        if self.nuevo_password_txt.text() == '' or self.confirmar_nuevo_password_txt.text() == '':
+        from controllers.Login import LoginWindow
+        nuevo_password = self.nuevo_password_txt.text()
+        correo = self.correo_recuperacion_txt.text()
+        confirmar_password = self.confirmar_nuevo_password_txt.text()
+
+        print('CORREO')
+        print(correo)
+
+        if nuevo_password == '' or confirmar_password == '':
             QMessageBox.warning(self, 'Error', 'Ingresa la contraseña', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
 
-        elif self.nuevo_password_txt.text() != self.confirmar_nuevo_password_txt.text():
+        elif nuevo_password != confirmar_password:
              QMessageBox.warning(self, 'Error', 'Las contraseñas no coinciden', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+        else:
+            respuesta = Propietario(conexion()).actualizar_contrasena_propietario(nuevo_password, correo)
+            if respuesta['success']:
+                QMessageBox.information(self, 'Actualización', 'La recuperación de la contraseña fue existosa', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                self.close()
+                window = LoginWindow(self)
+                window.show()
+            else:
+                print('No se recibio respuesta')
 
     
     

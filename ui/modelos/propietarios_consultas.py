@@ -139,6 +139,31 @@ class Propietario:
         except Error as err:
             print(f'Error al intentar la conexion {err}')
 
+    def seleccionar_propietario_correo(self, correo):
+        try:
+            cursor = self.conexion.cursor()
+            sql = f'SELECT * FROM propietarios WHERE correo_propietario = %s'
+            cursor.execute(sql, (correo,))
+            resultado = cursor.fetchall()  # Obtener los resultados de la consulta
+            #cursor.close()  # Cerrar el cursor después de obtener los resultados
+            return {'success': True, 'data': resultado}
+            #self.conexion.commit()
+        except Error as err:
+            return {'success': False, 'msg': 'Hubo un error al hacer la consulta'}
+    
+    def actualizar_contrasena_propietario(self, nuevo_password,correo):
+        if self.conexion.is_connected():
+            try:
+                cursor = self.conexion.cursor()
+                sql = """UPDATE propietarios SET 
+                                                contrasena_propietario = %s
+                            WHERE correo_propietario = %s"""
+                cursor.execute(sql, (nuevo_password, correo))
+                self.conexion.commit()
+                return {'success': True, 'msg':'Actualización de contraseña exitosa'}
+            except Error as err:
+                return {'success': False, 'msg':'Hubo un error al realizar la modificación'}
+
   
     
 
