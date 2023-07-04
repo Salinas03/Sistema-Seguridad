@@ -198,11 +198,9 @@ class Principal(QMainWindow, object):
 "color: rgb(140, 140, 140);\n"
 "}\n"
 "\n"
-"QTableWidget#tabla_computadoras_activas::item::selected {\n"
-"        background-color: transparent;  /* Eliminar el color de fondo de resaltado */\n"
-"        cursor: default;  /* Cambiar el puntero a predeterminado */\n"
-"        color:black;   \n"
-"    }")
+"QTableWidget#tabla_computadoras_activas{"
+"   selection-background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 0), stop:1 rgba(255, 255, 255, 0));"
+"}")
         self.verticalLayout = QVBoxLayout(self.body_widget)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")

@@ -7,7 +7,7 @@ from controllers.AgregarCompus import AgregarCompusWindow
 from controllers.OpcionesComputadora import OpcionesCompusWindow
 from controllers.ModificarPropietarios import ModificarPropietarioWindow
 from controllers.ModificarComputadoras import ModificarEquipoWindow
-from controllers.ModificarPerfil import ModificarPerfil
+from controllers.ModificarPerfil import ModificarPerfilWindow
 from py2_msgboxes import msg_boxes
 from PySide2.QtCore import *
 from PySide2.QtGui import QRegExpValidator,QCursor
@@ -440,7 +440,7 @@ class PrincipalWindow(Principal,QWidget):
     def abrir_modificar_perfil(self):
         if not self.ventana_abierta:
             self.ventana_abierta:True # CAMBIO DE LA VENTANA A TRUE 
-            window = ModificarPerfil(self)
+            window = ModificarPerfilWindow(self)
             window.setWindowModality(QtCore.Qt.ApplicationModal) # BLOQUEO DE LA VENTANA PRINCIPAL
             window.destroyed.connect(self.ventana_cerrada)
             window.show()
