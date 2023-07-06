@@ -6,8 +6,13 @@ import subprocess
 import time
 from clases.cliente import cliente_socket
 
+global salida
+salida = False
+
 #Función de dos hilos que corren en el programa
 def manejar_canal_cliente():
+    global salida
+
     while True:
         try:
             print('Manejar canal de cliente')
@@ -54,11 +59,13 @@ def manejar_canal_cliente():
                 cliente_socket.get_socket_cliente().close()
                 cliente_socket.get_socket_cliente_secundario().close()
                 #CREAR UNA FUNCIÓN DE RECONEXIÓN TODO
+                salida = True
                 break
             else:
                 print('Ocurrió un error en el canal cliente principal')
                 cliente_socket.get_socket_cliente().close()
                 cliente_socket.get_socket_cliente_secundario().close()
+                salida = True
                 break
 
 #Función que permite al servidor saber si el cliente sigue activo
@@ -66,6 +73,7 @@ def manejar_canal_cliente_secundario():
     cliente_socket.get_socket_cliente_secundario().settimeout(5)
     while True:
         try:
+            # print('Manejar canal de cliente')
             mensaje = cliente_socket.get_socket_cliente_secundario().recv(cliente_socket.HEADER).decode(cliente_socket.FORMAT)
             # print(f'Mensaje del servidor {mensaje}')
             cliente_socket.get_socket_cliente_secundario().send('*'.encode())
@@ -74,6 +82,8 @@ def manejar_canal_cliente_secundario():
             print('Ocurrio un error en el canal cliente secunadrio')
             cliente_socket.get_socket_cliente().close()
             cliente_socket.get_socket_cliente_secundario().close()
+            global salida
+            salida = True
             break
 
 #Función que maneja los comandos de la consola con respecto al administrador
@@ -100,6 +110,25 @@ def manejar_comandos_consola():
             print('Ocurrio en la función de manejar comandos en la consola')
             break
 
+def observar_salida():
+    global salida
+    print(f'PRINT DE SALIDA {salida}')
+    while True:
+        if salida:
+            print('SALIDA')
+            salida = False
+            realizar_conexion()
+            break
+
+#Función para verificar la conexión a internet de la misma
+def verificar_conexion_internet():
+    try:
+        # Attempt to connect to a well-known website
+        socket.create_connection(("www.google.com", 80))
+        return True
+    except OSError:
+        return False
+
 #Función principal
 def main():
     respuesta = cliente_socket.crear_sockets()
@@ -118,36 +147,23 @@ def main():
                     cliente_secundario_thread = threading.Thread(target=manejar_canal_cliente_secundario)
                     cliente_secundario_thread.start()
                     print('Esperando instrucciones ...')
-
+                    observar_salida() #Esta función nunca termina
                 else: 
                     print('Hubo un error al conectar con el canal secundario')
-            else:
-                print(respuesta['msg'])
-        else:
-            print(respuesta['msg'])
-    else:
-        print(respuesta['msg'])
+                    time.sleep(30)
+                    realizar_conexion()
 
-#Función para verificar la conexión a internet de la misma
-def verificar_conexion_internet():
-    try:
-        # Attempt to connect to a well-known website
-        socket.create_connection(("www.google.com", 80))
-        return True
-    except OSError:
-        return False
+    print(respuesta['msg'])
+    print('Reconectando con servidor en 30 segundos...')
+    time.sleep(30)
+    realizar_conexion()      
 
 #Realizar conexión la primera vez
 def realizar_conexion():
     if verificar_conexion_internet():
-        try:
-            main()
-        except:
-            print('Algo sucedio en el programa principal, intentando reconexión...')
-            time.sleep(30)
-            realizar_conexion()
+        main()
     else:
-        print('Intentando conexión')
+        print('Intentando reconexión en 30 segundos...')
         time.sleep(30)
         realizar_conexion()
 

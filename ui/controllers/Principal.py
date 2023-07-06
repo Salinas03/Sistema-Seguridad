@@ -1,6 +1,6 @@
 # IMPORTACION DE LA LIBRERIAS A OCUPAR
 from PySide2.QtWidgets import *
-from PySide2 import QtCore
+from PySide2 import QtCore, QtGui
 from views.Principal import Principal
 from controllers.AgregarAdmin import AgregarpropietarioWindow
 from controllers.AgregarCompus import AgregarCompusWindow
@@ -8,15 +8,14 @@ from controllers.OpcionesComputadora import OpcionesCompusWindow
 from controllers.ModificarPropietarios import ModificarPropietarioWindow
 from controllers.ModificarComputadoras import ModificarEquipoWindow
 from controllers.ModificarPerfil import ModificarPerfil
-from modelos.propietarios_consultas import Propietario
 from py2_msgboxes import msg_boxes
 from PySide2.QtCore import *
 from PySide2.QtGui import QRegExpValidator
-
 #TODO Librerias agregadas para la implementación de tablas dinámicas
 import json
 import threading
 import time
+import socket
 from db.connection import conexion
 from clases.administrador_ui import admin_socket_ui
 from clases.administrador_sesion import AdministradorSesion
@@ -33,13 +32,13 @@ class PrincipalWindow(Principal,QWidget):
         #CREACIÓN DE OBJETO DE ADMINISTRADOR PARA DESPLEGAR SU INFORMACIÓN EN EL FORMULARIO
         self.administrador = AdministradorSesion(data_admin)
 
-###################################################################################################################################
-###################################################################################################################################
-#
-#       FUNCIONES QUE SE EJECUTAN CUANDO DE EJECUTA LA VENTANA PRINCIPAL
-#
-###################################################################################################################################
-###################################################################################################################################
+    ###################################################################################################################################
+    ###################################################################################################################################
+    #
+    #       FUNCIONES QUE SE EJECUTAN CUANDO DE EJECUTA LA VENTANA PRINCIPAL
+    #
+    ###################################################################################################################################
+    ###################################################################################################################################
 
         # BOTONES QUE REDIRIGEN A LAS PAGINAS DEL STACKEDWIDGET
         self.home_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_2))
@@ -163,6 +162,10 @@ class PrincipalWindow(Principal,QWidget):
         thread_equipos_computo = threading.Thread(target=self.escuchar_notificaciones)
         thread_equipos_computo.start()
 
+        #Crear hilo para escuchar la conexión a internet
+        thread_conexion_internet = threading.Thread(target=self.escuchar_conexion_internet)
+        thread_conexion_internet.start()
+
         self.peticion_equipos = {
             'tabla': 'equipos',
             'operacion': 'obtener_equipos_computo'
@@ -194,24 +197,24 @@ class PrincipalWindow(Principal,QWidget):
         if propietarios['success']:
             self.datos_admins(propietarios['data'])            
           
-###################################################################################################################################
-###################################################################################################################################
-#
-#       FIN DE LAS FUNCIONES QUE SE EJECUTAN CUANDO DE EJECUTA LA VENTANA PRINCIPAL
-#
-###################################################################################################################################
-###################################################################################################################################
+        ###################################################################################################################################
+        ###################################################################################################################################
+        #
+        #       FIN DE LAS FUNCIONES QUE SE EJECUTAN CUANDO DE EJECUTA LA VENTANA PRINCIPAL
+        #
+        ###################################################################################################################################
+        ###################################################################################################################################
 
 
-###################################################################################################################################
-###################################################################################################################################
-#
-#       FUNCIONES SECUNDARIAS, DEPENDEN DEL LLAMADO DE LAS INICIALES
-#
-###################################################################################################################################
-###################################################################################################################################
+        ###################################################################################################################################
+        ###################################################################################################################################
+        #
+        #       FUNCIONES SECUNDARIAS, DEPENDEN DEL LLAMADO DE LAS INICIALES
+        #
+        ###################################################################################################################################
+        ###################################################################################################################################
 
-# ////////////////////////// FUNCIONES PAGINA PRINCIPAL TODO//////////////////////////
+    # ////////////////////////// FUNCIONES PAGINA PRINCIPAL TODO//////////////////////////
 
     def configuracion_tabla_equipos_activos(self):
         column_headers_tablas_equipos_activos = ('ID','Nombre del equipo', 'Número de serie', 'Propietario del equipo', 'Rol', 'IP')
@@ -229,7 +232,38 @@ class PrincipalWindow(Principal,QWidget):
         self.tabla_computadoras_desactivas.setEditTriggers(QAbstractItemView.NoEditTriggers) #Eliminar la edicion de la tabla
         self.tabla_computadoras_desactivas.setSelectionBehavior(QAbstractItemView.SelectRows) #Seleccionar toda la fila
         self.tabla_computadoras_desactivas.setSelectionMode(QAbstractItemView.SingleSelection) #Seleccionar solo una fila
-        self.tabla_computadoras_desactivas.verticalHeader().setVisible(False) # Ocultar el header vertical
+        self.tabla_computadoras_desactivas.verticalHeader().setVisible(False) # Ocultar el header 
+
+    @QtCore.Slot()
+    def _mostrar_mensaje(self):
+        QMessageBox.critical(
+            self, 'Desonexión de internet', 'Ocurrió algo con el su red wifi, intente denuevo por favor', 
+            QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close
+        ) 
+    
+    def mostrar_mensaje(self):
+        try:
+            QtCore.QMetaObject.invokeMethod(self, '_mostrar_mensaje', Qt.QueuedConnection)
+
+        except:
+            print('Hubo un error al evocar la función de desconexión de internet')
+
+    def verificar_conexion_internet(self):
+        try:
+            socket.create_connection(('www.google.com', 80))
+            return True
+        
+        except OSError:
+            return False
+        
+    def escuchar_conexion_internet(self):
+        while True:
+            if not self.verificar_conexion_internet():
+                print('Se fue el internet')
+                self.mostrar_mensaje()
+                break
+
+            time.sleep(1)
 
     def desplegar_datos_equipos_activos(self, data):
         # data = [ID, nombre_equipo, numero_serie, propietario, Rol, IP, seleccionado]
@@ -240,15 +274,7 @@ class PrincipalWindow(Principal,QWidget):
             for (index_cell, cell) in enumerate(row):
                 item = QTableWidgetItem(str(cell))
                 self.tabla_computadoras_activas.setItem(index_row, index_cell, item)
-
-                if index_cell == 6:
-                    print('Dentro del index cell')
-                    if cell:  #Cell has a boolean value
-                        print('Dentro del cell False ?')
-                        item.setFlags(item.flags() & ~QTableWidgetItem.ItemIsEnabled)
-                        gray_color = QStyle.QColor(QStyle.QColor(220, 220, 220))  # Gray color
-                        item.setBackground(QStyle.QBrush(gray_color))
-
+        
     def desplegar_datos_equipos_inactivos(self, data):
         self.tabla_computadoras_desactivas.setRowCount(len(data))
         for (index_row, row) in enumerate(data):
@@ -297,7 +323,7 @@ class PrincipalWindow(Principal,QWidget):
                     window.destroyed.connect(self.ventana_cerrada)
                     window.show()
                 else:
-                    print('No se pudo seleccionar el dispositivo')
+                    QMessageBox.information(self, 'Selección no válida', respuesta['msg'], QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
                 
             else:
                 QMessageBox.warning(self, "Advertencia", "La ventana ya está abierta.")

@@ -203,6 +203,10 @@ class Principal(QMainWindow, object):
 "color: rgb(140, 140, 140);\n"
 "}\n"
 "\n"
+"QTableWidget#tabla_computadoras_activas::item::selected {\n"
+"        background-color: transparent;  /* Eliminar el color de fondo de resaltado */\n"
+"          /* Cambiar el puntero a predeterminado */\n"
+"        color:black;   \n}"
 "")
         self.verticalLayout = QVBoxLayout(self.body_widget)
         self.verticalLayout.setSpacing(0)

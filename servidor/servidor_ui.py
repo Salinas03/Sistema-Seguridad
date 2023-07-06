@@ -217,6 +217,7 @@ def aceptar_conexiones_cliente():
             panel_cliente_thread.start()
         except:
             print('Hubo un error al conectar con el canal de cliente')
+            borrar_conexion_usuarios_secundarios(conn)
             conn.send('{"success": false, "msg": "Error al aceptar la conexión en cliente :("}'.encode())
 
 def aceptar_conexiones_seleccion():
@@ -310,13 +311,16 @@ def panel_administrador(conn, administrador):
                 else:
                     cliente_seleccionado = conectar_con_equipo(operacion)
                     if cliente_seleccionado is not None:
-                        #Manejar las operaciones de la selección
-                        mensaje = f'Selección con el usuario {cliente_seleccionado.get_direccion()[0]}'
-                        conn.send(json.dumps({'success': True, 'msg': mensaje}).encode())
+                        if cliente_seleccionado:
+                            #Manejar las operaciones de la selección
+                            mensaje = f'Selección con el usuario {cliente_seleccionado.get_direccion()[0]}'
+                            conn.send(json.dumps({'success': True, 'msg': mensaje}).encode())
 
-                        manejar_operaciones_seleccion(cliente_seleccionado, conn)
+                            manejar_operaciones_seleccion(cliente_seleccionado, conn)
+                        else:
+                            conn.send(json.dumps({'success': False, 'msg': 'La computadora ya esta seleccionada por alguien más, espere un momento...'}).encode())
                     else:
-                        conn.send(json.dumps({'success': False, 'msg': 'Selección no válida :/'}).encode())
+                        conn.send(json.dumps({'success': False, 'msg': 'Selección no válida, computadora inexistente :/'}).encode())
 
             elif operacion == 'salir':
                 print('Administrador desconectado...')
@@ -561,13 +565,9 @@ def listar_equipos():
             del conexiones_equipos_cliente[index] #Borrar la conexion del cliente en esa posición en caso de que no haya respuesta
             continue
         
-        print('CONEXIONES EQUIPOS CLIENTE BANDERA')
         if bandera:
             ip_cliente = conexion_equipo.get_direccion()[0]
             seleccionado = conexion_equipo.get_seleccionado()
-
-            print('IMPRIMIR VARIABLES DE SELECCION')
-            print(seleccionado)
 
             #Obtener los equipos de cómputo inactivos y activos
             for x, equipo_computo in enumerate(equipos_computo):
@@ -578,34 +578,39 @@ def listar_equipos():
                     equipo = list(equipo_computo) #Convertir la tupla de los equipos en un arreglo
                     equipo.append(ip_cliente)     #Agregar la IP al arreglo
                     equipo.append(seleccionado)   #Agregar la variable de selección
-                    print('IMPRIMIR EQUIPO')
-                    print(equipo)
                     conexiones_equipos_cliente_mostrar.append(equipo)
 
     equipos = [equipos_inactivos, conexiones_equipos_cliente_mostrar]
     equipos = json.dumps(equipos)
-    print('[LISTADO REALIZADO]')
+    print('[EQUIPOS ACTIVOS]')
+    print(conexiones_equipos_cliente_mostrar)
+    print('[EQUIPOS INACTIVOS]')
+    print(equipos_inactivos)
     return equipos
 
 def conectar_con_equipo(operacion):
-    print('CONECTAR CON EQUIPO')
+    print('[CONECTAR CON EQUIPO]')
     try: 
         posicion = operacion.replace('seleccionar', '')
         posicion = int(posicion)
         print(f'Posición: {posicion}')
         
         #Obtener el elemento del arreglo en esa posición
-        objeto_cliente_activo = conexiones_equipos_cliente[posicion]
+        objeto_cliente_seleccionado = conexiones_equipos_cliente[posicion]
 
-        if objeto_cliente_activo is None:
+        if objeto_cliente_seleccionado is None:
             return None
         
+        #Checar si ya esta seleccionado o no 
+        if objeto_cliente_seleccionado.get_seleccionado():
+            return False
+
         #Marcar ese elemento del arreglo en específico como seleccionado
         conexiones_equipos_cliente[posicion].set_seleccionado(True)
-        # broadcast()
 
-        print(f'Conexión con el usuario {objeto_cliente_activo.get_direccion()[0]}')
-        return objeto_cliente_activo
+
+        print(f'Conexión con el usuario {objeto_cliente_seleccionado.get_direccion()[0]}')
+        return objeto_cliente_seleccionado
     
     except:
         print('Selección no válida :/')
@@ -623,6 +628,14 @@ def manejar_operaciones_seleccion(cliente_seleccionado, conn_admin):
 
             #Operación de salir de la selección
             if operacion == 'salir':
+                #Buscar el elemento seleccionado en el arreglo y cambiar su selección
+
+                for i in range(len(conexiones_equipos_cliente)):
+                    if conexiones_equipos_cliente[i] == cliente_seleccionado:
+                        index_seleccionado = conexiones_equipos_cliente.index(cliente_seleccionado)
+                        conexiones_equipos_cliente[index_seleccionado].set_seleccionado(False)
+
+                print('Cambio de selección a False')
                 conn_admin.send(json.dumps({'success': True, 'msg': 'Se realizó la salida de la consola con éxito'}).encode()) 
                 break
 
@@ -718,17 +731,20 @@ def borrar_administradores_seleccion(addr):
             return conexion_seleccion   
 
 def borrar_conexion_usuarios(conn):    
-    for i,conexion_equipo in enumerate(conexiones_equipos_cliente[:]):
+    for conexion_equipo in conexiones_equipos_cliente[:]:
         if conexion_equipo.get_conexion() == conn:
             index = conexiones_equipos_cliente.index(conexion_equipo)
             del conexiones_equipos_cliente[index]
 
+    print('[BORRADO DE CONEXIONES CLIENTE PRINCIPAL]')
+
+def borrar_conexion_usuarios_secundarios(conn):
     for conexion_equipo_secundario in conexiones_equipos_cliente_secundario[:]:
         if conexion_equipo_secundario[0] == conn:
             index = conexiones_equipos_cliente_secundario.index(conexion_equipo_secundario)
             del conexiones_equipos_cliente_secundario[index]
 
-    print('[BORRADO DE CONEXIONES CLIENTE (principal, secundario)]')
+    print('[BORRADO DE CONEXIONES CLIENTE SECUNDARIO]')
 
 #FUNCIONALIDADES BROADCAST QUE SE ENVIAN A TODOS LOS ADMINISTRADORES
 def enviar_notificacion(mensaje):
@@ -808,6 +824,18 @@ def enviar_seleccion(id):
 
     except:
         print('Hubo un error al enviar quien se ha seleccionado')
+
+def enviar_mensaje_cliente(conn):
+    try:
+        conn.send('*'.encode())
+        print('Se envio el mensaje al cliente')
+        respuesta = conn.recv(HEADER).decode(FORMAT)
+        print('Se recibio el mensaje del cliente')
+
+        return {'success': True, 'msg': 'Cliente seleccionado activo'}
+    except:
+        borrar_conexion_usuarios(conn)
+        return {'success': True, 'msg': 'Cliente seleccionado inactivo'}
 
 atexit.register(cerrar)
 crear_sockets()

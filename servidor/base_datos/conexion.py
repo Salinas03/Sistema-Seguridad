@@ -12,7 +12,7 @@ def conexion():
             database=config('MYSQLDATABASE'),
             auth_plugin='mysql_native_password'
         )
-        print('Conexión exitosa con la base de datos MYSQL railway')
+        print('Conexión exitosa con la base de datos MYSQL cloud')
 
         return conexion
 
