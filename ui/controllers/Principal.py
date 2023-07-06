@@ -7,7 +7,7 @@ from controllers.AgregarCompus import AgregarCompusWindow
 from controllers.OpcionesComputadora import OpcionesCompusWindow
 from controllers.ModificarPropietarios import ModificarPropietarioWindow
 from controllers.ModificarComputadoras import ModificarEquipoWindow
-from controllers.ModificarPerfil import ModificarPerfil
+from controllers.ModificarPerfil import ModificarPerfilWindow
 from py2_msgboxes import msg_boxes
 from PySide2.QtCore import *
 from PySide2.QtGui import QRegExpValidator
