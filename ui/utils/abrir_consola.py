@@ -47,7 +47,8 @@ def abrir_consola_ejecutar_script(consola):
 
         except:
             print('Algo paso en el socket de subproceso')
-            proceso_consola.close()
+            admin_socket_ui.get_socket_administrador().send('salir'.encode())
+            conn_subproceso.close()
             break
     
     #Esperar el proceso

@@ -1,20 +1,22 @@
 # IMPORTACION DE LA LIBRERIAS A OCUPAR
 from PySide2.QtWidgets import *
-from PySide2 import QtCore
+from PySide2 import QtCore, QtGui
 from views.Principal import Principal
 from controllers.AgregarAdmin import AgregarpropietarioWindow
 from controllers.AgregarCompus import AgregarCompusWindow
 from controllers.OpcionesComputadora import OpcionesCompusWindow
 from controllers.ModificarPropietarios import ModificarPropietarioWindow
 from controllers.ModificarComputadoras import ModificarEquipoWindow
-from controllers.ModificarPerfil import ModificarPerfilWindow
+from controllers.ModificarPerfil import ModificarPerfil
 from py2_msgboxes import msg_boxes
 from PySide2.QtCore import *
-from PySide2.QtGui import QRegExpValidator,QCursor
-
+from PySide2.QtGui import QRegExpValidator
 #TODO Librerias agregadas para la implementación de tablas dinámicas
 import json
 import threading
+import time
+import socket
+from db.connection import conexion
 from clases.administrador_ui import admin_socket_ui
 from clases.administrador_sesion import AdministradorSesion
 
@@ -30,13 +32,13 @@ class PrincipalWindow(Principal,QWidget):
         #CREACIÓN DE OBJETO DE ADMINISTRADOR PARA DESPLEGAR SU INFORMACIÓN EN EL FORMULARIO
         self.administrador = AdministradorSesion(data_admin)
 
-###################################################################################################################################
-###################################################################################################################################
-#
-#       FUNCIONES QUE SE EJECUTAN CUANDO DE EJECUTA LA VENTANA PRINCIPAL
-#
-###################################################################################################################################
-###################################################################################################################################
+    ###################################################################################################################################
+    ###################################################################################################################################
+    #
+    #       FUNCIONES QUE SE EJECUTAN CUANDO DE EJECUTA LA VENTANA PRINCIPAL
+    #
+    ###################################################################################################################################
+    ###################################################################################################################################
 
         # BOTONES QUE REDIRIGEN A LAS PAGINAS DEL STACKEDWIDGET
         self.home_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_2))
@@ -160,6 +162,10 @@ class PrincipalWindow(Principal,QWidget):
         thread_equipos_computo = threading.Thread(target=self.escuchar_notificaciones)
         thread_equipos_computo.start()
 
+        #Crear hilo para escuchar la conexión a internet
+        thread_conexion_internet = threading.Thread(target=self.escuchar_conexion_internet)
+        thread_conexion_internet.start()
+
         self.peticion_equipos = {
             'tabla': 'equipos',
             'operacion': 'obtener_equipos_computo'
@@ -176,39 +182,39 @@ class PrincipalWindow(Principal,QWidget):
         if equipos_activos_inactivos:
             self.desplegar_datos_equipos_inactivos(equipos_activos_inactivos[0])
             self.desplegar_datos_equipos_activos(equipos_activos_inactivos[1])
-            thread_equipos_activos_inactivos = threading.Thread(target=self.escuchar_cambios_equipos_activos_inactivos)
-            thread_equipos_activos_inactivos.start()
+            self.thread_equipos_activos_inactivos = threading.Thread(target=self.escuchar_cambios_equipos_activos_inactivos)
+            self.thread_equipos_activos_inactivos.start()
 
         #Obtener por primera vez los equipos de cómputo de la BD_SQL
         equipos_computo = admin_socket_ui.escribir_operaciones(json.dumps(self.peticion_equipos))
         if equipos_computo['success']:
             self.datos_compus(equipos_computo['data'])    
-            thread_escuchar_cambios_tablasbd = threading.Thread(target=self.escuchar_cambios_tablasbd)
-            thread_escuchar_cambios_tablasbd.start()
+            self.thread_escuchar_cambios_tablasbd = threading.Thread(target=self.escuchar_cambios_tablasbd)
+            self.thread_escuchar_cambios_tablasbd.start()
 
         #Obtener por primera vez los propietarios
         propietarios = admin_socket_ui.escribir_operaciones(json.dumps(self.peticion_propietarios))
         if propietarios['success']:
             self.datos_admins(propietarios['data'])            
           
-###################################################################################################################################
-###################################################################################################################################
-#
-#       FIN DE LAS FUNCIONES QUE SE EJECUTAN CUANDO DE EJECUTA LA VENTANA PRINCIPAL
-#
-###################################################################################################################################
-###################################################################################################################################
+        ###################################################################################################################################
+        ###################################################################################################################################
+        #
+        #       FIN DE LAS FUNCIONES QUE SE EJECUTAN CUANDO DE EJECUTA LA VENTANA PRINCIPAL
+        #
+        ###################################################################################################################################
+        ###################################################################################################################################
 
 
-###################################################################################################################################
-###################################################################################################################################
-#
-#       FUNCIONES SECUNDARIAS, DEPENDEN DEL LLAMADO DE LAS INICIALES
-#
-###################################################################################################################################
-###################################################################################################################################
+        ###################################################################################################################################
+        ###################################################################################################################################
+        #
+        #       FUNCIONES SECUNDARIAS, DEPENDEN DEL LLAMADO DE LAS INICIALES
+        #
+        ###################################################################################################################################
+        ###################################################################################################################################
 
-# ////////////////////////// FUNCIONES PAGINA PRINCIPAL TODO//////////////////////////
+    # ////////////////////////// FUNCIONES PAGINA PRINCIPAL TODO//////////////////////////
 
     def configuracion_tabla_equipos_activos(self):
         column_headers_tablas_equipos_activos = ('ID','Nombre del equipo', 'Número de serie', 'Propietario del equipo', 'Rol', 'IP')   
@@ -226,14 +232,49 @@ class PrincipalWindow(Principal,QWidget):
         self.tabla_computadoras_desactivas.setEditTriggers(QAbstractItemView.NoEditTriggers) #Eliminar la edicion de la tabla
         self.tabla_computadoras_desactivas.setSelectionBehavior(QAbstractItemView.SelectRows) #Seleccionar toda la fila
         self.tabla_computadoras_desactivas.setSelectionMode(QAbstractItemView.SingleSelection) #Seleccionar solo una fila
-        self.tabla_computadoras_desactivas.verticalHeader().setVisible(False) # Ocultar el header vertical
+        self.tabla_computadoras_desactivas.verticalHeader().setVisible(False) # Ocultar el header 
+
+    @QtCore.Slot()
+    def _mostrar_mensaje(self):
+        QMessageBox.critical(
+            self, 'Desonexión de internet', 'Ocurrió algo con el su red wifi, intente denuevo por favor', 
+            QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close
+        ) 
+    
+    def mostrar_mensaje(self):
+        try:
+            QtCore.QMetaObject.invokeMethod(self, '_mostrar_mensaje', Qt.QueuedConnection)
+
+        except:
+            print('Hubo un error al evocar la función de desconexión de internet')
+
+    def verificar_conexion_internet(self):
+        try:
+            socket.create_connection(('www.google.com', 80))
+            return True
+        
+        except OSError:
+            return False
+        
+    def escuchar_conexion_internet(self):
+        while True:
+            if not self.verificar_conexion_internet():
+                print('Se fue el internet')
+                self.mostrar_mensaje()
+                break
+
+            time.sleep(1)
 
     def desplegar_datos_equipos_activos(self, data):
+        # data = [ID, nombre_equipo, numero_serie, propietario, Rol, IP, seleccionado]
+        print('DATA')
+        print(data)
         self.tabla_computadoras_activas.setRowCount(len(data))
         for (index_row, row) in enumerate(data):
             for (index_cell, cell) in enumerate(row):
-                self.tabla_computadoras_activas.setItem(index_row, index_cell, QTableWidgetItem(str(cell)))
-
+                item = QTableWidgetItem(str(cell))
+                self.tabla_computadoras_activas.setItem(index_row, index_cell, item)
+        
     def desplegar_datos_equipos_inactivos(self, data):
         self.tabla_computadoras_desactivas.setRowCount(len(data))
         for (index_row, row) in enumerate(data):
@@ -284,7 +325,7 @@ class PrincipalWindow(Principal,QWidget):
                     window.destroyed.connect(self.ventana_cerrada)
                     window.show()
                 else:
-                    print('No se pudo seleccionar el dispositivo')
+                    QMessageBox.information(self, 'Selección no válida', respuesta['msg'], QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
                 
             else:
                 QMessageBox.warning(self, "Advertencia", "La ventana ya está abierta.")
@@ -512,3 +553,7 @@ class PrincipalWindow(Principal,QWidget):
                 admin_socket_ui.get_socket_operacionesbd().close()
                 print('Hubo un problema al recibir los datos de operacionesBD')
                 break
+
+    def escuchar_pintar_seleccion(self):
+        print('Escuchar cambios en')
+        pass

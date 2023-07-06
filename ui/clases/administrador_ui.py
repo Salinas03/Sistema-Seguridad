@@ -14,16 +14,19 @@ class AdministradorSocketUI:
         self.PORT_NOT = 5051
         self.PORT_BROAD = 5052
         self.PORT_BD = 5054
+        self.PORT_SEL = 5055
         self.ADDR = (self.IP, self.PORT)
         self.ADDR_NOT = (self.IP, self.PORT_NOT)
         self.ADDR_BROAD = (self.IP, self.PORT_BROAD)
         self.ADDR_BD = (self.IP, self.PORT_BD)
+        self.ADDR_SEL = (self.IP, self.PORT_SEL)
         
         #Variables de sockets
         self.administrador = None
         self.notificacion = None
         self.broadcasting = None
         self.operacionesbd = None
+        self.seleccion = None
 
     def crear_sockets(self):
         #Creación de sockets, uno para atender el panel de administración y otro para manejar las notificaciones y listados
@@ -32,6 +35,7 @@ class AdministradorSocketUI:
             self.notificacion = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.broadcasting = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.operacionesbd = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.seleccion = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
             print('Creación de sockets...')
             return {"success": True, "msg": "Creación de sockets exitosa :)"}
@@ -58,13 +62,15 @@ class AdministradorSocketUI:
         try:
             self.broadcasting.connect(self.ADDR_BROAD)
             self.operacionesbd.connect(self.ADDR_BD)
-            self.notificacion.connect(self.ADDR_NOT) #Se conecta con el socket de notificaciones
+            self.notificacion.connect(self.ADDR_NOT) 
+            self.seleccion.connect(self.ADDR_SEL)
 
             return {'success': True, 'msg': 'Conexión con canales secundarios exitosa'}
         except:
             self.notificacion.close()
             self.broadcasting.close()
             self.operacionesbd.close()
+            self.seleccion.close()
             return {'success': False, 'msg': 'Error al conectar con los canales secundarios'}
 
     def validacion_conexion(self):
@@ -114,6 +120,9 @@ class AdministradorSocketUI:
 
     def get_socket_operacionesbd(self):
         return self.operacionesbd
+
+    def get_socket_seleccion(self):
+        return self.seleccion
 
     def obtener_numero_serie(self):
         # Connect to the WMI service

@@ -11,9 +11,14 @@
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
+from clases.administrador_ui import admin_socket_ui
 
 
 class Principal(QMainWindow, object):
+    def closeEvent(self, event):
+        admin_socket_ui.cerrar_conexiones()
+        event.accept()
+
     def setupUi(self, Principal):
         if not Principal.objectName():
             Principal.setObjectName(u"Principal")
@@ -198,9 +203,12 @@ class Principal(QMainWindow, object):
 "color: rgb(140, 140, 140);\n"
 "}\n"
 "\n"
-"QTableWidget#tabla_computadoras_activas{"
-"   selection-background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 0), stop:1 rgba(255, 255, 255, 0));"
-"}")
+"QTableWidget#tabla_computadoras_activas::item::selected {\n"
+"        background-color: transparent;  /* Eliminar el color de fondo de resaltado */\n"
+"          /* Cambiar el puntero a predeterminado */\n"
+"        color:black;   \n}"
+"")
+
         self.verticalLayout = QVBoxLayout(self.body_widget)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")
