@@ -1,15 +1,17 @@
-from PySide2.QtWidgets import QWidget,QMessageBox, QPushButton
+from PySide2.QtWidgets import QWidget,QMessageBox
+from PySide2 import QtCore
 from views.OpcionesComputadoras import OpcionesComputadora
 from utils.abrir_consola import abrir_consola_ejecutar_script
+from controllers.Mapa import MapaWindow
 
 import sys
 sys.path.append('D:/RedesLA/SistemaSeguridad/ui')
 from clases.administrador_ui import admin_socket_ui
 
 class OpcionesCompusWindow(OpcionesComputadora, QWidget):
-    def __init__(self, parent = None, _id = None, numSerie = None):
-        self._id = _id
-        self.numSerie= numSerie
+    def __init__(self, parent = None, data = None):
+        self.data = data
+        print(data)
         super().__init__(parent)
         self.setupUi(self)
         self.llenar_etiquetas()
@@ -17,12 +19,15 @@ class OpcionesCompusWindow(OpcionesComputadora, QWidget):
         
         self.apagar_equipo_btn.clicked.connect(self.apagar_equipo)
         self.supender_windows_equipo_btn.clicked.connect(self.suspender_windows)
-        self.bloquear_protector_equipo_btn.clicked.connect(self.bloquear_protector)
         self.consola_btn.clicked.connect(self.abrir_consola)
 
+        self.ventana_abierta = False # IDENTIFICACION DE QUE LA VENTANA ESTA CERRADA
+
+
     def llenar_etiquetas(self):
-        self.id_lbl.setText(str(self._id))
-        self.nombre_lbl.setText(str(self.numSerie))
+        self.id_lbl.setText(str(self.data[0]))
+        self.nombre_lbl.setText(str(self.data[1]))
+        
 
     def apagar_equipo(self):
         print('Apagar')
@@ -44,16 +49,6 @@ class OpcionesCompusWindow(OpcionesComputadora, QWidget):
         else:
             QMessageBox.critical(self, 'Ooops... Algo ocurrió', 'Hubo un fallo al suspender el equipo', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
 
-    def bloquear_protector(self):
-        print('desbloquear')
-        respuesta = admin_socket_ui.escribir_operaciones('desbloquear')
-        print(respuesta)
-        if respuesta['success']:
-            QMessageBox.information(self, 'Desbloquear', 'Se realizó la función desbloqueo de manera correcta', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
-            self.close()
-        else:
-            QMessageBox.critical(self, 'Ooops... Algo ocurrió', 'Hubo un fallo al desbloquear el equipo', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
-
     def abrir_consola(self):
         print('Abrir consola')
         respuesta = admin_socket_ui.escribir_operaciones('consola')
@@ -64,4 +59,20 @@ class OpcionesCompusWindow(OpcionesComputadora, QWidget):
             abrir_consola_ejecutar_script(consola)
 
         print('Proceso realizado')
+    
+    def mostrar_ubicacion(self):
+        ip_publica = str(self.data[2])
+        if not self.ventana_abierta:
+            self.ventana_abierta:True
+            window = MapaWindow(self,ip_publica)
+            window.setWindowModality(QtCore.Qt.ApplicationModal)
+            window.destroyed.connect(self.ventana_cerrada)
+            window.show()
+        else:
+            QMessageBox.warning(self, "Advertencia", "La ventana ya está abierta.")
+
+
+    
+    def ventana_cerrada(self):
+        self.ventana_abierta = False
         

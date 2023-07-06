@@ -11,16 +11,9 @@
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
-from clases.administrador_ui import admin_socket_ui
 
 
 class OpcionesComputadora(QMainWindow, object):
-
-    def closeEvent(self, event):
-        print('Cerrado de selección')
-        admin_socket_ui.escribir_operaciones('salir')
-        event.accept()
-
     def setupUi(self, OpcionesComputadora):
         if not OpcionesComputadora.objectName():
             OpcionesComputadora.setObjectName(u"OpcionesComputadora")
@@ -34,7 +27,6 @@ class OpcionesComputadora(QMainWindow, object):
 "	/*background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #080f43, stop:1 #1d1e26);*/\n"
 "background-color:qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
 "}")
-        
         self.centralwidget = QWidget(OpcionesComputadora)
         self.centralwidget.setObjectName(u"centralwidget")
         self.horizontalLayout = QHBoxLayout(self.centralwidget)
@@ -192,13 +184,13 @@ class OpcionesComputadora(QMainWindow, object):
 
         self.verticalLayout_3.addWidget(self.supender_windows_equipo_btn)
 
-        self.bloquear_protector_equipo_btn = QPushButton(self.botones_widget)
-        self.bloquear_protector_equipo_btn.setObjectName(u"bloquear_protector_equipo_btn")
-        sizePolicy2.setHeightForWidth(self.bloquear_protector_equipo_btn.sizePolicy().hasHeightForWidth())
-        self.bloquear_protector_equipo_btn.setSizePolicy(sizePolicy2)
-        self.bloquear_protector_equipo_btn.setMinimumSize(QSize(100, 0))
+        self.localizacion_btn = QPushButton(self.botones_widget)
+        self.localizacion_btn.setObjectName(u"localizacion_btn")
+        sizePolicy2.setHeightForWidth(self.localizacion_btn.sizePolicy().hasHeightForWidth())
+        self.localizacion_btn.setSizePolicy(sizePolicy2)
+        self.localizacion_btn.setMinimumSize(QSize(100, 0))
 
-        self.verticalLayout_3.addWidget(self.bloquear_protector_equipo_btn)
+        self.verticalLayout_3.addWidget(self.localizacion_btn)
 
         self.pushButton_6 = QPushButton(self.botones_widget)
         self.pushButton_6.setObjectName(u"pushButton_6")
@@ -229,7 +221,7 @@ class OpcionesComputadora(QMainWindow, object):
         self.label_3.setText(QCoreApplication.translate("OpcionesComputadora", u"<html><head/><body><p><span style=\" font-weight:600;\">Selecciona la opci\u00f3n a </span></p><p><span style=\" font-weight:600;\">ejecutar</span></p></body></html>", None))
         self.apagar_equipo_btn.setText(QCoreApplication.translate("OpcionesComputadora", u"Apagar equipo", None))
         self.supender_windows_equipo_btn.setText(QCoreApplication.translate("OpcionesComputadora", u"Suspender - bloqueo de windows", None))
-        self.bloquear_protector_equipo_btn.setText(QCoreApplication.translate("OpcionesComputadora", u"Bloquear - protector de pantalla", None))
+        self.localizacion_btn.setText(QCoreApplication.translate("OpcionesComputadora", u"Localizaci\u00f3n", None))
         self.pushButton_6.setText(QCoreApplication.translate("OpcionesComputadora", u"T\u00e9rmial de comandos", None))
     # retranslateUi
 

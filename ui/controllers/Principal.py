@@ -277,7 +277,9 @@ class PrincipalWindow(Principal,QWidget):
                 if respuesta['success']:
                     id_propietarios = seleccionar_fila[0].text()
                     numero_serie = seleccionar_fila[1].text()
-                    window = OpcionesCompusWindow(self,id_propietarios,numero_serie)
+                    ip_publica = seleccionar_fila[5].text()
+                    data = [id_propietarios,numero_serie,ip_publica]
+                    window = OpcionesCompusWindow(self,data)
                     window.setWindowModality(QtCore.Qt.ApplicationModal)
                     window.destroyed.connect(self.ventana_cerrada)
                     window.show()
