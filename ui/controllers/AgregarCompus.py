@@ -1,6 +1,5 @@
 from PySide2.QtWidgets import QWidget,QMessageBox
 from views.AgregarComputadoras import AgregarComputadoras
-from PySide2.QtCore import Qt
 from PySide2.QtCore import *
 from PySide2.QtGui import QRegExpValidator
 from clases.administrador_ui import admin_socket_ui
