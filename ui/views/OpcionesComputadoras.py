@@ -20,6 +20,7 @@ class OpcionesComputadora(QMainWindow, object):
         print('Cerrado de selección')
         admin_socket_ui.escribir_operaciones('salir')
         event.accept()
+
     def setupUi(self, OpcionesComputadora):
         if not OpcionesComputadora.objectName():
             OpcionesComputadora.setObjectName(u"OpcionesComputadora")
