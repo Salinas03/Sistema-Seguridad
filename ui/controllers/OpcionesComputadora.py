@@ -20,6 +20,7 @@ class OpcionesCompusWindow(OpcionesComputadora, QWidget):
         self.apagar_equipo_btn.clicked.connect(self.apagar_equipo)
         self.supender_windows_equipo_btn.clicked.connect(self.suspender_windows)
         self.consola_btn.clicked.connect(self.abrir_consola)
+        self.localizacion_btn.clicked.connect(self.mostrar_ubicacion)
 
         self.ventana_abierta = False # IDENTIFICACION DE QUE LA VENTANA ESTA CERRADA
 
