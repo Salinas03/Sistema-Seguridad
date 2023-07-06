@@ -217,7 +217,7 @@ class PrincipalWindow(Principal,QWidget):
     # ////////////////////////// FUNCIONES PAGINA PRINCIPAL TODO//////////////////////////
 
     def configuracion_tabla_equipos_activos(self):
-        column_headers_tablas_equipos_activos = ('ID','Nombre del equipo', 'Número de serie', 'Propietario del equipo', 'Rol', 'IP')
+        column_headers_tablas_equipos_activos = ('ID','Nombre del equipo', 'Número de serie', 'Propietario del equipo', 'Rol', 'IP')   
         self.tabla_computadoras_activas.setColumnCount(len(column_headers_tablas_equipos_activos))
         self.tabla_computadoras_activas.setHorizontalHeaderLabels(column_headers_tablas_equipos_activos)
         self.tabla_computadoras_activas.setSelectionMode(QAbstractItemView.SingleSelection)
@@ -318,7 +318,9 @@ class PrincipalWindow(Principal,QWidget):
                 if respuesta['success']:
                     id_propietarios = seleccionar_fila[0].text()
                     numero_serie = seleccionar_fila[1].text()
-                    window = OpcionesCompusWindow(self,id_propietarios,numero_serie)
+                    ip_publica = seleccionar_fila[5].text()
+                    data = [id_propietarios,numero_serie,ip_publica]
+                    window = OpcionesCompusWindow(self,data)
                     window.setWindowModality(QtCore.Qt.ApplicationModal)
                     window.destroyed.connect(self.ventana_cerrada)
                     window.show()
@@ -481,7 +483,7 @@ class PrincipalWindow(Principal,QWidget):
     def abrir_modificar_perfil(self):
         if not self.ventana_abierta:
             self.ventana_abierta:True # CAMBIO DE LA VENTANA A TRUE 
-            window = ModificarPerfil(self)
+            window = ModificarPerfilWindow(self)
             window.setWindowModality(QtCore.Qt.ApplicationModal) # BLOQUEO DE LA VENTANA PRINCIPAL
             window.destroyed.connect(self.ventana_cerrada)
             window.show()

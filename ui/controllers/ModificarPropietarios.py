@@ -1,7 +1,5 @@
 from PySide2.QtWidgets import *
 from views.EditarPropietario import EditarPropietario
-from db.connection import conexion
-from modelos.propietarios_consultas import Propietario
 from PySide2.QtCore import Qt, QRegExp 
 from PySide2.QtGui import QRegExpValidator
 from clases.administrador_ui import admin_socket_ui
@@ -20,16 +18,10 @@ class ModificarPropietarioWindow(EditarPropietario,QWidget):
         only_text = QRegExpValidator(QRegExp('^[A-Za-z]{3,50}')) # VALIDACION DE DATOS ALFANUMERICOS DONDE SOLO PUEDE TENER ENTRE 3 Y 100 VALORES
         only_number = QRegExpValidator(QRegExp('^[0-9]{0,10}'))
         #   VALIDACION PARA CAMPO DE CORREO, DONDE SE DEBE PONER UN VALOR ALFANUMERICO, DESPUES LA ACEPTACION DEL @, POR CONSIGUIENTE
-        #   OTRO VALOR ALFANUMERICO Y LA ACEPTACION DEL .COM U OTRO DOMINIO
-        #email = QRegExpValidator(QRegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"))
-        email = QRegExpValidator(QRegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@(?:gmail|hotmail|msn|yahoo|outlook|live|[.]{1,1})+(?:com|com.mx|net|org|edu|gov|mil|biz|info|name|museum|coop|aero|xxx|[a-zA-Z]{2})$"))
-        rol = QRegExpValidator(QRegExp('^[0-1]{1,1}'))
-
         self.nombre_propietario_txt.setValidator(only_text)
         self.nombre_propietario_txt.setFocus()
         self.apellido_propietario_txt.setValidator(only_text)
         self.telefono_propietario_txt.setValidator(only_number)
-        self.correo_propietario_txt.setValidator(email)
         # self.rol_propietario_txt.setValidator(rol)
 
         #self.editar_admin_btn.clicked.connect(self.editar_propietario)
