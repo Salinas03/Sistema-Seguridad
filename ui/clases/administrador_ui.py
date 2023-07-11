@@ -103,10 +103,10 @@ class AdministradorSocketUI:
             return respuesta_servidor
         except:
             print('Error al enviar el mensaje desde el administrador :(')
-            self.administrador.close()
-            self.notificacion.close()
-            self.broadcasting.close()
-            self.operacionesbd.close()
+            # self.administrador.close()
+            # self.notificacion.close()
+            # self.broadcasting.close()
+            # self.operacionesbd.close()
             return None
 
     def get_socket_administrador(self):
