@@ -14,8 +14,8 @@ from clases.validar_json import is_valid_json
 FORMAT = 'utf-8'
 HEADER = 20480
 #HOST = socket.gethostbyname(socket.gethostname())
-# HOST = '68.183.143.116'
-HOST = '165.22.15.159'
+HOST = '68.183.143.116'
+#HOST = '165.22.15.159'
 
 #PUERTOS DE LOS DIFERENTES SOCKETS
 PORT = 5050
@@ -335,6 +335,13 @@ def panel_administrador(conn, administrador):
                     print('Error al enviar el comando no reconocido')
                     conn.close()
                     break
+
+        except ConnectionResetError:
+            print('Administrador desconectado por que no le jalo el izzi')
+            borrar_administradores_activos(conn)
+            enviar_notificacion(f'Administrador {administrador_desconexion.get_nombre_host()} desconectado')
+            conn.close()
+            break
 
         except:
             print('Administrador desconectado espontáneamente...')
