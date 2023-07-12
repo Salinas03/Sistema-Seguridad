@@ -26,7 +26,6 @@ class AdministradorSocketUI:
         self.notificacion = None
         self.broadcasting = None
         self.operacionesbd = None
-        self.seleccion = None
 
     def crear_sockets(self):
         #Creación de sockets, uno para atender el panel de administración y otro para manejar las notificaciones y listados
@@ -35,7 +34,6 @@ class AdministradorSocketUI:
             self.notificacion = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.broadcasting = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.operacionesbd = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.seleccion = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
             print('Creación de sockets...')
             return {"success": True, "msg": "Creación de sockets exitosa :)"}
@@ -52,26 +50,45 @@ class AdministradorSocketUI:
 
             return respuesta_servidor
         except:
-            self.notificacion.close()
             self.administrador.close()
+            self.notificacion.close()
             self.broadcasting.close()
             self.operacionesbd.close()
             return {"success": False, "msg": "Error al conectar con el servidor :("}
 
     def conexiones_canales_secundarios(self):
         try:
+            self.notificacion.connect(self.ADDR_NOT) 
             self.broadcasting.connect(self.ADDR_BROAD)
             self.operacionesbd.connect(self.ADDR_BD)
-            self.notificacion.connect(self.ADDR_NOT) 
-            self.seleccion.connect(self.ADDR_SEL)
 
             return {'success': True, 'msg': 'Conexión con canales secundarios exitosa'}
         except:
             self.notificacion.close()
             self.broadcasting.close()
             self.operacionesbd.close()
-            self.seleccion.close()
             return {'success': False, 'msg': 'Error al conectar con los canales secundarios'}
+
+    def validacion_canales_secundarios(self):
+
+        try:
+            numero_serie = self.obtener_numero_serie()
+
+            self.notificacion.send(numero_serie.encode())
+            respuesta = self.notificacion.recv(self.HEADER).decode(self.FORMAT)
+            print(respuesta)
+
+            self.broadcasting.send(numero_serie.encode())
+            respuesta = self.broadcasting.recv(self.HEADER).decode(self.FORMAT)
+            print(respuesta)
+
+            self.operacionesbd.send(numero_serie.encode())
+            respuesta = self.operacionesbd.recv(self.HEADER).decode(self.FORMAT)
+            print(respuesta)
+
+            return {'success': True, 'msg': 'Validación con canales secundarios'}
+        except:
+            return {'success': False, 'msg': 'Error al validar los canales secundarios'}
 
     def validacion_conexion(self):
         #Obtener el número de seríe del administrador que se va a conectar
@@ -90,8 +107,8 @@ class AdministradorSocketUI:
             return respuesta_servidor
 
         except: 
-            self.notificacion.close()
             self.administrador.close()
+            self.notificacion.close()
             self.broadcasting.close()
             self.operacionesbd.close()
             return {"success": False, "msg": "Error al validar la conexión :("}
@@ -120,9 +137,6 @@ class AdministradorSocketUI:
 
     def get_socket_operacionesbd(self):
         return self.operacionesbd
-
-    def get_socket_seleccion(self):
-        return self.seleccion
 
     def obtener_numero_serie(self):
         # Connect to the WMI service

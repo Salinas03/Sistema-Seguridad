@@ -3,7 +3,7 @@ import json
 import wmi
 
 class ClienteSocket:
-    def __init__(self):
+    def _init_(self):
         self.FORMAT = "utf-8"
         self.HEADER = 20480
         # self.IP = '68.183.143.116'
@@ -13,6 +13,7 @@ class ClienteSocket:
         self.PORT_CLIENTE = 5053
         self.ADDR = (self.IP, self.PORT)
         self.ADDR_CLIENTE = (self.IP, self.PORT_CLIENTE)
+        self.TIMEOUT = 2
 
     def crear_sockets(self):
         global cliente
@@ -22,7 +23,6 @@ class ClienteSocket:
             cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             cliente_secundario = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-            print('Creación de sockets...')
             return {"success": True, "msg": "Creación de sockets exitosa :)"}
         
         except:
@@ -30,43 +30,44 @@ class ClienteSocket:
 
     def conexion_temporal(self):
         try:
-
             cliente.connect(self.ADDR)
-
             respuesta_servidor = json.loads(cliente.recv(self.HEADER).decode(self.FORMAT))
-
             return respuesta_servidor
-    
+        
         except:
             cliente.close()
             cliente_secundario.close()
-
-    def conexion_canal_secundario(self):
-        try:
-            cliente_secundario.connect(self.ADDR_CLIENTE)
-            return True
-
-        except:
-            cliente.close()
-            cliente_secundario.close()
-            return False
+            return {'success': False, 'msg': 'No se pudo realizar la conexión temporal'}
 
     def validacion_conexion(self):
         try:
             numero_de_serie = self.obtener_numero_serie()
             cliente.send(socket.gethostname().encode())
             cliente.send(numero_de_serie.encode())
-
             respuesta_servidor = json.loads(cliente.recv(self.HEADER).decode(self.FORMAT))
-
-            print(respuesta_servidor)
-
             return respuesta_servidor
         
         except:
             cliente.close()
             cliente_secundario.close()
             return {'success': False, 'msg': 'Error al validar la conexión :('}
+
+    def conexion_canal_secundario(self):
+        try:
+            #Conexión con cliente
+            cliente_secundario.connect(self.ADDR_CLIENTE)
+
+            #Envio de número de serie y esperar respuesta
+            numero_serie = self.obtener_numero_serie()
+            cliente_secundario.send(numero_serie.encode())
+            respuesta = json.loads(cliente_secundario.recv(self.HEADER).decode(self.FORMAT))
+
+            return respuesta
+        
+        except:
+            cliente.close()
+            cliente_secundario.close()
+            return {'success': False, 'msg': 'Hubo un error al conectar y enviar el número de serie'}
 
     def get_socket_cliente(self):
         return cliente

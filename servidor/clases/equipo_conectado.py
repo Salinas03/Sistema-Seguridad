@@ -19,7 +19,7 @@ class EquipoConectado:
         return self.nombre_host
     
     def get_identificador(self):
-        return self.get_identificador
+        return self.identificador
     
     def get_seleccionado(self):
         return self.seleccionado
