@@ -47,7 +47,7 @@ class EditarComputadoras(QMainWindow, object):
 "padding:7px;\n"
 "}\n"
 "\n"
-"QLabel{\n"
+"QLabel#label,#label_10,#label_11,#label_12,#label_13{\n"
 "color:white;\n"
 "}")
         self.centralwidget = QWidget(EditarComputadoras)
@@ -206,9 +206,9 @@ class EditarComputadoras(QMainWindow, object):
             for i, propietario in enumerate(propietarios): 
                 self.edita_propietario_cmbx.setItemText(i+1, QCoreApplication.translate("AgregarComputadoras", f"{propietario[0]}.-{propietario[1]} [{propietario[4]}]", None))
 
-        self.edita_rol_cmbx.setItemText(0, QCoreApplication.translate("Seleccionar", u"Selecciona un rol", None))
-        self.edita_rol_cmbx.setItemText(1, QCoreApplication.translate("Cliente", u"Administrador", None))
-        self.edita_rol_cmbx.setItemText(2, QCoreApplication.translate("Administrador", u"Cliente", None))
+        self.edita_rol_cmbx.setItemText(0, QCoreApplication.translate("ActualizarComputadoras", u"Selecciona un rol", None))
+        self.edita_rol_cmbx.setItemText(1, QCoreApplication.translate("ActualizarComputadoras", u"Administrador", None))
+        self.edita_rol_cmbx.setItemText(2, QCoreApplication.translate("ActualizarComputadoras", u"Cliente", None))
         # self.edita_rol_cmbx.setCurrentIndex(1)
     
 

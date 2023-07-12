@@ -255,15 +255,6 @@ class PrincipalWindow(Principal,QWidget):
         
         except OSError:
             return False
-        
-    def escuchar_conexion_internet(self):
-        while True:
-            if not self.verificar_conexion_internet():
-                print('Se fue el internet')
-                self.mostrar_mensaje()
-                break
-
-            time.sleep(1)
 
     def desplegar_datos_equipos_activos(self, data):
         # data = [ID, nombre_equipo, numero_serie, propietario, Rol, IP, seleccionado]
@@ -512,8 +503,10 @@ class PrincipalWindow(Principal,QWidget):
             try:
                 equipos_activos_inactivos = json.loads(admin_socket_ui.get_socket_broadcasting().recv(admin_socket_ui.HEADER).decode(admin_socket_ui.FORMAT))
 
-                print('SE OBTUVIERON LOS EQUIPOS ACTIVOS E INACTIVOS')
-                print(equipos_activos_inactivos)
+                print('EQUIPOS ACTIVOS')
+                print(equipos_activos_inactivos[1])
+                print('EQUIPOS INACTIVOS')
+                print(equipos_activos_inactivos[0])
 
                 self.desplegar_datos_equipos_inactivos(equipos_activos_inactivos[0])
                 self.desplegar_datos_equipos_activos(equipos_activos_inactivos[1])
@@ -554,6 +547,11 @@ class PrincipalWindow(Principal,QWidget):
                 print('Hubo un problema al recibir los datos de operacionesBD')
                 break
 
-    def escuchar_pintar_seleccion(self):
-        print('Escuchar cambios en')
-        pass
+    def escuchar_conexion_internet(self):
+        while True:
+            if not self.verificar_conexion_internet():
+                print('Se fue el internet')
+                self.mostrar_mensaje()
+                break
+
+            time.sleep(1)

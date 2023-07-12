@@ -37,7 +37,7 @@ class EditarPropietario(QMainWindow, object):
 "padding:7px;\n"
 "}\n"
 "\n"
-"QLabel{\n"
+"QLabel#label,#label_3,#label_4,#label_5,#label_6,#label_8{\n"
 "color:white;\n"
 "}")
         self.centralwidget = QWidget(EditarPropietario)

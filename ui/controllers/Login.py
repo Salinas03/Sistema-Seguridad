@@ -71,13 +71,16 @@ class LoginWindow(Login, QWidget):
 
                                 if administrador:
                                     conexion_secundarios = admin_socket_ui.conexiones_canales_secundarios()
-
                                     if conexion_secundarios['success']:
-                                        # self.abrir_principal_window(administrador[0])
-                                        # self.close()
-                                        window = CargaWindow(self, administrador[0], self.close)
-                                        window.setWindowModality(QtCore.Qt.ApplicationModal)
-                                        window.show()
+
+                                        validacion_secundarios = admin_socket_ui.validacion_canales_secundarios()
+                                        if validacion_secundarios['success']:
+                                            window = CargaWindow(self, administrador[0], self.close)
+                                            window.setWindowModality(QtCore.Qt.ApplicationModal)
+                                            window.show()
+                                        else:
+                                            admin_socket_ui.cerrar_conexiones()
+                                            QMessageBox.critical(self, 'Advertencia', 'No se pudo realizar la validación con los canales secundarios', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
                                     else:
                                         admin_socket_ui.cerrar_conexiones()
                                         QMessageBox.critical(self, 'Advertencia', 'No se pudo realizar la conexión con los canales secundarios', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 

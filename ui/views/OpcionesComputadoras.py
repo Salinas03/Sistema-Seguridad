@@ -16,10 +16,23 @@ from clases.administrador_ui import admin_socket_ui
 
 class OpcionesComputadora(QMainWindow, object):
 
+    bandera = True
+
     def closeEvent(self, event):
         print('Cerrado de selección')
-        admin_socket_ui.escribir_operaciones('salir')
+
+        if self.bandera:
+            try:
+                #Esta salir es salir de las operaciones de selección pero esta la excepción que salga del panel de administrador
+                admin_socket_ui.escribir_operaciones('salir')
+            except:
+                print('No se pudo enviar el mensaje de salir, porque probablemente el dispositivo se haya desonectado')
+
+        self.bandera = True
         event.accept()
+
+    def decidir_cerrado(self, bandera):
+        return bandera
 
     def setupUi(self, OpcionesComputadora):
         if not OpcionesComputadora.objectName():
