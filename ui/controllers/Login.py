@@ -4,8 +4,11 @@ from views.Login import Login
 from PySide2.QtCore import Qt
 from controllers.Principal import PrincipalWindow
 from controllers.RecuperaPassword import RecuperarPasswordWindow
+from controllers.Carga import CargaWindow
 from PySide2.QtCore import QRegExp
 from PySide2.QtGui import QRegExpValidator
+from PySide2 import QtCore 
+
 
 import json
 from clases.administrador_ui import admin_socket_ui
@@ -69,10 +72,12 @@ class LoginWindow(Login, QWidget):
                                 if administrador:
                                     conexion_secundarios = admin_socket_ui.conexiones_canales_secundarios()
                                     if conexion_secundarios['success']:
+
                                         validacion_secundarios = admin_socket_ui.validacion_canales_secundarios()
                                         if validacion_secundarios['success']:
-                                            self.abrir_principal_window(administrador[0])
-                                            self.close()
+                                            window = CargaWindow(self, administrador[0], self.close)
+                                            window.setWindowModality(QtCore.Qt.ApplicationModal)
+                                            window.show()
                                         else:
                                             admin_socket_ui.cerrar_conexiones()
                                             QMessageBox.critical(self, 'Advertencia', 'No se pudo realizar la validación con los canales secundarios', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
@@ -103,3 +108,4 @@ class LoginWindow(Login, QWidget):
         window = RecuperarPasswordWindow(self)
         window.show()
         self.setWindowFlag(Qt.Window)
+    
