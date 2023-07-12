@@ -8,6 +8,7 @@ from clases.cliente import cliente_socket
 
 global salida
 salida = False
+BASE_DIR = os.getcwd()
 
 #Función de dos hilos que corren en el programa
 def manejar_canal_cliente():
@@ -17,6 +18,7 @@ def manejar_canal_cliente():
         try:
             print('Manejar canal de cliente')
             respuesta_servidor = cliente_socket.get_socket_cliente().recv(cliente_socket.HEADER).decode(cliente_socket.FORMAT)
+            print('Se recibio mensaje vacio del servidor')
             if respuesta_servidor == ' ':
                 cliente_socket.get_socket_cliente().send(' '.encode())
                 print('Se envió mensaje vacio')
@@ -26,15 +28,16 @@ def manejar_canal_cliente():
 
                     if respuesta_servidor == 'apagar':
                         cliente_socket.get_socket_cliente().send(json.dumps({'success': True, 'msg': 'Apagado realizado exitosamente'}).encode())
-                        os.system(f'{os.getcwd()}/comandos/{respuesta_servidor}.bat')
+                        os.system(f'{BASE_DIR}/comandos/{respuesta_servidor}.bat')
 
                     elif respuesta_servidor == 'bloquear':
                         cliente_socket.get_socket_cliente().send(json.dumps({'success': True, 'msg': 'Bloqueo de windows realizado exitosamente'}).encode())
-                        os.system(f'{os.getcwd()}/comandos/{respuesta_servidor}.bat')
+                        print(f'{os.getcwd()}/comandos/{respuesta_servidor}.bat')
+                        os.system(f'{BASE_DIR}/comandos/{respuesta_servidor}.bat')
 
                     elif respuesta_servidor == 'desbloquear':
                         cliente_socket.get_socket_cliente().send(json.dumps({'success': True, 'msg': 'Bloqueo de windows realizado exitosamente'}).encode())
-                        os.system(f'{os.getcwd()}/comandos/{respuesta_servidor}.bat')
+                        os.system(f'{BASE_DIR}/comandos/{respuesta_servidor}.bat')
 
                     elif respuesta_servidor == 'consola':
                         print('Abrir consola')
@@ -51,8 +54,8 @@ def manejar_canal_cliente():
                     mensaje_respuesta = json.dumps({'success': False, 'msg': 'Hubo un error al ejecutar la instrucción mandada'})
                     print(mensaje_respuesta)
                     cliente_socket.get_socket_cliente().send(mensaje_respuesta.encode())
-        except (socket.error, socket.timeout) as err:
 
+        except (socket.error, socket.timeout) as err:
             #SE HACE LA ESEPCIÓN DE QUE SI SE VA EL INTERNET
             if isinstance(err, (socket.error, socket.timeout)):
                 print('Desconexión de internet del canal principal')
@@ -70,10 +73,10 @@ def manejar_canal_cliente():
 
 #Función que permite al servidor saber si el cliente sigue activo
 def manejar_canal_cliente_secundario():
-    cliente_socket.get_socket_cliente_secundario().settimeout(5)
+    print('Manejar canal de cliente secundario')
+    cliente_socket.get_socket_cliente_secundario().settimeout(2)
     while True:
         try:
-            # print('Manejar canal de cliente')
             mensaje = cliente_socket.get_socket_cliente_secundario().recv(cliente_socket.HEADER).decode(cliente_socket.FORMAT)
             # print(f'Mensaje del servidor {mensaje}')
             cliente_socket.get_socket_cliente_secundario().send('*'.encode())
@@ -97,7 +100,10 @@ def manejar_comandos_consola():
                 break
 
             if comando[:2] == 'cd':
-                os.chdir(comando[3:])
+                try:
+                    os.chdir(comando[3:])
+                except: 
+                    print('comando cd no reconocido')
 
             if len(comando) > 0:
                 cmd = subprocess.Popen(comando[:],shell=True, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -133,21 +139,29 @@ def verificar_conexion_internet():
 def main():
     respuesta = cliente_socket.crear_sockets()
     if respuesta['success']:
-        print(respuesta['msg'])
+        print(respuesta)
         respuesta = cliente_socket.conexion_temporal()
-        print(respuesta)    
         if respuesta['success']:
-            print(respuesta['msg'])
+            print(respuesta)
             respuesta = cliente_socket.validacion_conexion()
             if respuesta['success']:
+                print(respuesta)
+                
                 #Conexión con el canal secundario despúes de la validación del socket principal
-                if cliente_socket.conexion_canal_secundario():
+                respuesta = cliente_socket.conexion_canal_secundario()
+                print(respuesta)
+
+                if respuesta['success']:
+                    print('Conexión con canal secundario exitosa ;3')
+
+                    #Abrir los dos procesos que van a estar corriendo al mismo tiempo
                     cliente_thread = threading.Thread(target=manejar_canal_cliente)
                     cliente_thread.start()
                     cliente_secundario_thread = threading.Thread(target=manejar_canal_cliente_secundario)
                     cliente_secundario_thread.start()
-                    print('Esperando instrucciones ...')
-                    observar_salida() #Esta función nunca termina
+
+                    #Función en el hilo principal para observar si ha habido un fallo y realizar función de desconexión
+                    observar_salida() 
                 else: 
                     print('Hubo un error al conectar con el canal secundario')
                     time.sleep(30)

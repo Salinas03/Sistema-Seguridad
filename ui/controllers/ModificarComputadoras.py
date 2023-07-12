@@ -44,9 +44,12 @@ class ModificarEquipoWindow(EditarComputadoras, QWidget):
                 self.num_serie_txt.setText(equipo[2])
                 indice = self.establecer_indices_combobox(equipo[3])
                 self.edita_propietario_cmbx.setCurrentIndex(indice)
-                if equipo[4] == 1:
+
+                print(f'Rol: {equipo[4]} Type: {type(equipo[4])}')
+
+                if equipo[4] == '1':
                     self.edita_rol_cmbx.setCurrentIndex(1)
-                elif equipo[4] == 0:
+                elif equipo[4] == '0':
                     self.edita_rol_cmbx.setCurrentIndex(2)
                 
             else:
@@ -105,7 +108,7 @@ class ModificarEquipoWindow(EditarComputadoras, QWidget):
                     if respuesta['success']:
                         self.nombre_equipo_txt.clear()
                         self.num_serie_txt.clear()
-                        QMessageBox.information(self, 'Actualización hecha con éxito', 'La actualización se hizo con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                        QMessageBox.information(self, 'Actualización hecha con éxito', 'La actualización se ha realizado exitosamente', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
                         self.close() 
 
                     else:
