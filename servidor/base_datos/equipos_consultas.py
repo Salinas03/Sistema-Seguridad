@@ -117,7 +117,7 @@ class EquiposConsultas():
                 return json.dumps({'success': True, 'msg': 'Se realizó la actualización correctamente'})
             except Error as err:
                 print(f'Error al intentar la conexion {err}')
-                return json.dumps({'success': True, 'msg': 'Hubo un error al realizar la actualización'})
+                return json.dumps({'success': False, 'msg': 'Hubo un error al realizar la actualización'})
 
     def borrar_equipo_computo(self, id_equipo):
         if self.conexion.is_connected():
