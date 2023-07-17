@@ -258,8 +258,6 @@ class PrincipalWindow(Principal,QWidget):
 
     def desplegar_datos_equipos_activos(self, data):
         # data = [ID, nombre_equipo, numero_serie, propietario, Rol, IP, seleccionado]
-        print('DATA')
-        print(data)
         self.tabla_computadoras_activas.setRowCount(len(data))
         for (index_row, row) in enumerate(data):
             for (index_cell, cell) in enumerate(row):
@@ -502,18 +500,17 @@ class PrincipalWindow(Principal,QWidget):
         while True:
             try:
                 equipos_activos_inactivos = json.loads(admin_socket_ui.get_socket_broadcasting().recv(admin_socket_ui.HEADER).decode(admin_socket_ui.FORMAT))
-
-                print('EQUIPOS ACTIVOS')
-                print(equipos_activos_inactivos[1])
-                print('EQUIPOS INACTIVOS')
-                print(equipos_activos_inactivos[0])
-
                 self.desplegar_datos_equipos_inactivos(equipos_activos_inactivos[0])
                 self.desplegar_datos_equipos_activos(equipos_activos_inactivos[1])
+                print('[ACTUALIZACIÓN DE EQUIPOS ACTIVOS E INACTIVOS]')
 
-            except:
-                admin_socket_ui.get_socket_broadcasting().close()
+            except ConnectionResetError:
                 print('Hubo un problema al recibir los equipos activos e inactivos')
+                break
+
+            except socket.error as e:
+                admin_socket_ui.get_socket_broadcasting().close()
+                print(f'Ocurrió un error en el socket de broadcast {e}')
                 break
 
     def escuchar_notificaciones(self):
@@ -524,8 +521,11 @@ class PrincipalWindow(Principal,QWidget):
                 print(f'Mensaje de notificación enviado por el servidor | {notificacion}')
 
             except ConnectionResetError:
-                admin_socket_ui.get_socket_notificacion().close()
                 print('Hubo un problema al recibir las notificacaciones')
+                break
+
+            except socket.error as e:
+                print(f'Ocurrió un error en el socket de notificación {e}')
                 break
     
     def escuchar_cambios_tablasbd(self):
@@ -533,8 +533,10 @@ class PrincipalWindow(Principal,QWidget):
         while True:
             try:
                 datos = json.loads(admin_socket_ui.get_socket_operacionesbd().recv(admin_socket_ui.HEADER).decode(admin_socket_ui.FORMAT))
-                print('SE OBTUVIERON LOS DATOS DE ESCUCHAR CAMBIOS')
+
+                print(f'[SE OBTUVIERON LOS DATOS DE ESCUCHAR CAMBIOS EN LAS TABLAS EQUIPOS/PROPIETARIOS]')
                 print(datos)
+                print("")
 
                 if datos['tabla'] == 'equipos':
                     self.datos_compus(datos['data'])
@@ -545,6 +547,10 @@ class PrincipalWindow(Principal,QWidget):
             except ConnectionResetError:
                 admin_socket_ui.get_socket_operacionesbd().close()
                 print('Hubo un problema al recibir los datos de operacionesBD')
+                break
+
+            except socket.error as e:
+                print(f'Ocurrió un error en el socket de operacionesBD {e}')
                 break
 
     def escuchar_conexion_internet(self):

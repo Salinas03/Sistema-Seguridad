@@ -12,12 +12,17 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 from clases.administrador_ui import admin_socket_ui
-import sys
+import socket
 
 
 class Principal(QMainWindow, object):
     def closeEvent(self, event):
-        admin_socket_ui.cerrar_conexiones()
+        try:
+            admin_socket_ui.get_socket_administrador().send('salir'.encode())
+            admin_socket_ui.cerrar_conexiones()
+        except socket.error as e:
+            print(f'Ocurrio un error al realizar la salida {e}')
+
         event.accept()
 
     def setupUi(self, Principal):
