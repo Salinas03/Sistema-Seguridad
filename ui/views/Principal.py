@@ -13,6 +13,8 @@ from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 from clases.administrador_ui import admin_socket_ui
 import socket
+import sys
+import os
 
 
 class Principal(QMainWindow, object):
@@ -29,9 +31,60 @@ class Principal(QMainWindow, object):
         if not Principal.objectName():
             Principal.setObjectName(u"Principal")
         Principal.resize(1309, 813)
-        icon = QIcon()
-        icon.addFile(u"./ui./assets/icons/LOGO.svg", QSize(), QIcon.Normal, QIcon.Off)
+
+        # Rutas de las imágenes
+        logo_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../assets/icons/LOGO.svg'
+        )
+        column_icon_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../assets/icons/column-2.ico'
+        )
+        home_icon_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../assets/icons/home-3.ico'
+        )
+        desktop_icon_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../assets/icons/desktop.svg'
+        )
+        admin_icon_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../assets/icons/administrator-32.ico'
+        )
+        help_icon_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../assets/icons/help-circle.svg'
+        )
+        arrow_icon_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../assets/icons/arrow-down-left.svg'
+        )
+        user_4_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../assets/icons/user-4.ico'
+        )
+        computadora_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../assets/files/ok.png'
+        )
+        admin_2_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../assets/files/admin2.png'
+        )
+
+        icon = QIcon(logo_path)
+        icon1 = QIcon(home_icon_path)
+        icon2 = QIcon(desktop_icon_path)
+        icon3 = QIcon(admin_icon_path)
+        icon4 = QIcon(help_icon_path)
+        icon5 = QIcon(arrow_icon_path)
+        icon6 = QIcon(user_4_path)
+
         Principal.setWindowIcon(icon)
+
+
         self.centralwidget = QWidget(Principal)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -67,15 +120,13 @@ class Principal(QMainWindow, object):
         self.label.setObjectName(u"label")
         self.label.setMinimumSize(QSize(0, 55))
         self.label.setMaximumSize(QSize(16777215, 50))
-        self.label.setPixmap(QPixmap(u"./ui./assets/icons/column-2.ico"))
+        self.label.setPixmap(QPixmap(column_icon_path))
         self.label.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_3.addWidget(self.label)
 
         self.home_btn = QPushButton(self.menu_widget)
         self.home_btn.setObjectName(u"home_btn")
-        icon1 = QIcon()
-        icon1.addFile(u"./ui./assets/icons/home-3.ico", QSize(), QIcon.Normal, QIcon.Off)
         self.home_btn.setIcon(icon1)
         self.home_btn.setCheckable(False)
         self.home_btn.setChecked(False)
@@ -86,8 +137,6 @@ class Principal(QMainWindow, object):
 
         self.compus_btn = QPushButton(self.menu_widget)
         self.compus_btn.setObjectName(u"compus_btn")
-        icon2 = QIcon()
-        icon2.addFile(u"./ui./assets/icons/desktop.svg", QSize(), QIcon.Normal, QIcon.Off)
         self.compus_btn.setIcon(icon2)
         self.compus_btn.setCheckable(False)
         self.compus_btn.setAutoExclusive(False)
@@ -96,8 +145,6 @@ class Principal(QMainWindow, object):
 
         self.admins_btn = QPushButton(self.menu_widget)
         self.admins_btn.setObjectName(u"admins_btn")
-        icon3 = QIcon()
-        icon3.addFile(u"./ui./assets/icons/administrator-32.ico", QSize(), QIcon.Normal, QIcon.Off)
         self.admins_btn.setIcon(icon3)
 
         self.verticalLayout_3.addWidget(self.admins_btn)
@@ -113,8 +160,6 @@ class Principal(QMainWindow, object):
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.settings_btn = QPushButton(self.menu_widget)
         self.settings_btn.setObjectName(u"settings_btn")
-        icon4 = QIcon()
-        icon4.addFile(u"./ui./assets/icons/help-circle.svg", QSize(), QIcon.Normal, QIcon.Off)
         self.settings_btn.setIcon(icon4)
         self.settings_btn.setCheckable(False)
         self.settings_btn.setAutoExclusive(False)
@@ -123,8 +168,6 @@ class Principal(QMainWindow, object):
 
         self.pushButton_4 = QPushButton(self.menu_widget)
         self.pushButton_4.setObjectName(u"pushButton_4")
-        icon5 = QIcon()
-        icon5.addFile(u"./ui./assets/icons/arrow-down-left.svg", QSize(), QIcon.Normal, QIcon.Off)
         self.pushButton_4.setIcon(icon5)
 
         self.verticalLayout_2.addWidget(self.pushButton_4)
@@ -235,8 +278,6 @@ class Principal(QMainWindow, object):
         self.user_btn.setObjectName(u"user_btn")
         self.user_btn.setMaximumSize(QSize(50, 16777215))
         self.user_btn.setStyleSheet(u"")
-        icon6 = QIcon()
-        icon6.addFile(u"./ui./assets/icons/user-4.ico", QSize(), QIcon.Normal, QIcon.Off)
         self.user_btn.setIcon(icon6)
 
         self.horizontalLayout_2.addWidget(self.user_btn)
@@ -348,7 +389,7 @@ class Principal(QMainWindow, object):
         self.verticalLayout_11.setContentsMargins(0, 0, 10, 0)
         self.label_14 = QLabel(self.widget_8)
         self.label_14.setObjectName(u"label_14")
-        self.label_14.setPixmap(QPixmap(u"./ui./assets/files/ok.png"))
+        self.label_14.setPixmap(QPixmap(computadora_path))
 
         self.verticalLayout_11.addWidget(self.label_14, 0, Qt.AlignHCenter)
 
@@ -691,7 +732,7 @@ class Principal(QMainWindow, object):
         self.label_10 = QLabel(self.frame_8)
         self.label_10.setObjectName(u"label_10")
         self.label_10.setMaximumSize(QSize(16777215, 150))
-        self.label_10.setPixmap(QPixmap(u"./ui./assets/files/admin2.png"))
+        self.label_10.setPixmap(QPixmap(admin_2_path))
         self.label_10.setScaledContents(True)
         self.label_10.setAlignment(Qt.AlignCenter)
 

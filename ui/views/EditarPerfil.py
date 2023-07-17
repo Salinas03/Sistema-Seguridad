@@ -11,6 +11,7 @@
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
+import os
 
 
 class EditarPerfil(QMainWindow, object):
@@ -20,6 +21,12 @@ class EditarPerfil(QMainWindow, object):
         EditarPerfil.resize(800, 500)
         EditarPerfil.setMinimumSize(QSize(800, 500))
         EditarPerfil.setMaximumSize(QSize(800, 500))
+        icon_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../assets/icons/LOGO.svg'
+        )
+        icon = QIcon(icon_path)
+        EditarPerfil.setWindowIcon(icon)
         EditarPerfil.setStyleSheet(u"QMainWindow{\n"
 "background:qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
 "}")
