@@ -12,6 +12,7 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 from clases.administrador_ui import admin_socket_ui
+import os
 
 
 class OpcionesComputadora(QMainWindow, object):
@@ -40,8 +41,11 @@ class OpcionesComputadora(QMainWindow, object):
         OpcionesComputadora.resize(800, 600)
         OpcionesComputadora.setMinimumSize(QSize(800, 600))
         OpcionesComputadora.setMaximumSize(QSize(16777215, 600))
-        icon = QIcon()
-        icon.addFile(u"./ui/assets/icons/LOGO.svg", QSize(), QIcon.Normal, QIcon.Off)
+        icon_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../assets/icons/LOGO.svg'
+        )
+        icon = QIcon(icon_path)
         OpcionesComputadora.setWindowIcon(icon)
         OpcionesComputadora.setStyleSheet(u"QMainWindow#OpcionesComputadora{\n"
 "	/*background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #080f43, stop:1 #1d1e26);*/\n"

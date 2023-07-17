@@ -13,6 +13,7 @@ from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 from clases.administrador_ui import admin_socket_ui
 import json
+import os
 
 class AgregarComputadoras(QMainWindow, object):
     def setupUi(self, AgregarComputadoras):
@@ -30,8 +31,11 @@ class AgregarComputadoras(QMainWindow, object):
         AgregarComputadoras.resize(700, 500)
         AgregarComputadoras.setMinimumSize(QSize(700, 500))
         AgregarComputadoras.setMaximumSize(QSize(700, 500))
-        icon = QIcon()
-        icon.addFile(u"./ui/assets/icons/LOGO.svg", QSize(), QIcon.Normal, QIcon.Off)
+        icon_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../assets/icons/LOGO.svg'
+        )
+        icon = QIcon(icon_path)
         AgregarComputadoras.setWindowIcon(icon)
         AgregarComputadoras.setStyleSheet(u"QLineEdit,QComboBox{\n"
 "border:1px solid rgba(0,0,0,0);\n"

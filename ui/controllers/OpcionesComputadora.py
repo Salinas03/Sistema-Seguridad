@@ -2,7 +2,6 @@ from PySide2.QtWidgets import QWidget,QMessageBox
 from PySide2 import QtCore
 from views.OpcionesComputadoras import OpcionesComputadora
 from utils.abrir_consola import abrir_consola_ejecutar_script
-from controllers.Mapa import MapaWindow
 
 import sys
 import webbrowser

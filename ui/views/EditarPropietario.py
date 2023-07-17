@@ -11,6 +11,7 @@
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
+import os
 
 
 class EditarPropietario(QMainWindow, object):
@@ -20,8 +21,11 @@ class EditarPropietario(QMainWindow, object):
         EditarPropietario.resize(700, 500)
         EditarPropietario.setMinimumSize(QSize(700, 500))
         EditarPropietario.setMaximumSize(QSize(700, 500))
-        icon = QIcon()
-        icon.addFile(u"./ui/assets/icons/LOGO.svg", QSize(), QIcon.Normal, QIcon.Off)
+        icon_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../assets/icons/LOGO.svg'
+        )
+        icon = QIcon(icon_path)
         EditarPropietario.setWindowIcon(icon)
         EditarPropietario.setStyleSheet(u"QMainWindow{\n"
 "background:qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
