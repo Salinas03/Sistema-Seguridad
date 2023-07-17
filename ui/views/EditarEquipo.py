@@ -13,6 +13,7 @@ from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 from clases.administrador_ui import admin_socket_ui
 import json
+import os
 
 
 class EditarComputadoras(QMainWindow, object):
@@ -30,8 +31,11 @@ class EditarComputadoras(QMainWindow, object):
         EditarComputadoras.resize(700, 500)
         EditarComputadoras.setMinimumSize(QSize(700, 500))
         EditarComputadoras.setMaximumSize(QSize(700, 500))
-        icon = QIcon()
-        icon.addFile(u"./ui/assets/icons/LOGO.svg", QSize(), QIcon.Normal, QIcon.Off)
+        icon_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../assets/icons/LOGO.svg'
+        )
+        icon = QIcon(icon_path)
         EditarComputadoras.setWindowIcon(icon)
         EditarComputadoras.setStyleSheet(u"QMainWindow{\n"
 "background:qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"

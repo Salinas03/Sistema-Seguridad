@@ -11,6 +11,7 @@
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
+import os
 
 
 class RecuperarContrasenia(QMainWindow, object):
@@ -20,6 +21,12 @@ class RecuperarContrasenia(QMainWindow, object):
         RecuperarContrasenia.resize(600, 600)
         RecuperarContrasenia.setMinimumSize(QSize(600, 600))
         RecuperarContrasenia.setMaximumSize(QSize(600, 600))
+        icon_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../assets/icons/LOGO.svg'
+        )
+        icon = QIcon(icon_path)
+        RecuperarContrasenia.setWindowIcon(icon)
         RecuperarContrasenia.setStyleSheet(u"QPushButton#cambiar_password_btn,#recuperacion_codigo_btn,#recuperacion_btn{\n"
 "    text-decoration: none;\n"
 "    width:50%;\n"
