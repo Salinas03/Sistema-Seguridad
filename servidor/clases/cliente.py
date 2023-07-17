@@ -1,6 +1,7 @@
 import socket
 import json
 import wmi
+import os
 
 class ClienteSocket:
     def _init_(self):
@@ -14,6 +15,8 @@ class ClienteSocket:
         self.ADDR = (self.IP, self.PORT)
         self.ADDR_CLIENTE = (self.IP, self.PORT_CLIENTE)
         self.TIMEOUT = 2
+        self.TIMEOUT_SECUNDARIO = 3
+        self.BASE_DIR = os.getcwd()
 
     def crear_sockets(self):
         global cliente
@@ -22,6 +25,10 @@ class ClienteSocket:
         try:
             cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             cliente_secundario = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+            #Establecer los TIMOUTS de los sockets
+            cliente.settimeout(self.TIMEOUT)
+            cliente_secundario.settimeout(self.TIMEOUT)
 
             return {"success": True, "msg": "Creación de sockets exitosa :)"}
         
@@ -34,6 +41,11 @@ class ClienteSocket:
             respuesta_servidor = json.loads(cliente.recv(self.HEADER).decode(self.FORMAT))
             return respuesta_servidor
         
+        except socket.timeout:
+            cliente.close()
+            cliente_secundario.close()
+            return {'success': False, 'msg': 'Error al realizar la conexión temporal (SocketTimeout)'}
+
         except:
             cliente.close()
             cliente_secundario.close()
@@ -47,6 +59,11 @@ class ClienteSocket:
             respuesta_servidor = json.loads(cliente.recv(self.HEADER).decode(self.FORMAT))
             return respuesta_servidor
         
+        except socket.timeout:
+            cliente.close()
+            cliente_secundario.close()
+            return {'success': False, 'msg': 'Error al validar la conexión (SocketTimeout)'}
+
         except:
             cliente.close()
             cliente_secundario.close()
@@ -64,10 +81,15 @@ class ClienteSocket:
 
             return respuesta
         
+        except socket.timeout:
+            cliente.close()
+            cliente_secundario.close()
+            return {'success': False, 'msg': 'Hubo un error al conectar con el canal secundario y enviar el número de serie'}
+        
         except:
             cliente.close()
             cliente_secundario.close()
-            return {'success': False, 'msg': 'Hubo un error al conectar y enviar el número de serie'}
+            return {'success': False, 'msg': 'Hubo un error al conectar con el canal secundario y enviar el número de serie'}
 
     def get_socket_cliente(self):
         return cliente

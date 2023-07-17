@@ -7,8 +7,8 @@ class AdministradorSocketUI:
         # 165.22.15.159
         self.FORMAT = "utf-8"
         self.HEADER = 20480
-        self.IP = '68.183.143.116'
-        # self.IP = '165.22.15.159'
+        # self.IP = '68.183.143.116'
+        self.IP = '165.22.15.159'
         #self.IP = socket.gethostbyname(socket.gethostname())
         self.PORT = 5050
         self.PORT_NOT = 5051
@@ -31,9 +31,22 @@ class AdministradorSocketUI:
         #Creación de sockets, uno para atender el panel de administración y otro para manejar las notificaciones y listados
         try:
             self.administrador = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+            #Conexiones que requieren estar encendidas
             self.notificacion = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.notificacion.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+            self.notificacion.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, 120)
+            self.notificacion.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, 60)
+
             self.broadcasting = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.broadcasting.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+            self.broadcasting.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, 120)
+            self.broadcasting.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, 60)
+
             self.operacionesbd = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.operacionesbd.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+            self.operacionesbd.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, 120)
+            self.operacionesbd.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, 60)
 
             print('Creación de sockets...')
             return {"success": True, "msg": "Creación de sockets exitosa :)"}
@@ -55,6 +68,29 @@ class AdministradorSocketUI:
             self.broadcasting.close()
             self.operacionesbd.close()
             return {"success": False, "msg": "Error al conectar con el servidor :("}
+    
+    def validacion_conexion(self):
+        #Obtener el número de seríe del administrador que se va a conectar
+        try:
+            numero_de_serie = self.obtener_numero_serie()
+
+            #Se envia el hostname de la computadora a su vez con el identificador que en este caso será el número de serie
+            self.administrador.send(socket.gethostname().encode())
+            self.administrador.send(numero_de_serie.encode())
+
+            #Mensaje de segunda conexión con el servidor
+            #Aqui tanto se puede conectar como no se puede conectar
+            respuesta_servidor = json.loads(self.administrador.recv(self.HEADER).decode(self.FORMAT))
+            print(respuesta_servidor)
+
+            return respuesta_servidor
+
+        except: 
+            self.administrador.close()
+            self.notificacion.close()
+            self.broadcasting.close()
+            self.operacionesbd.close()
+            return {"success": False, "msg": "Error al validar la conexión :("}
 
     def conexiones_canales_secundarios(self):
         try:
@@ -90,36 +126,13 @@ class AdministradorSocketUI:
         except:
             return {'success': False, 'msg': 'Error al validar los canales secundarios'}
 
-    def validacion_conexion(self):
-        #Obtener el número de seríe del administrador que se va a conectar
-        try:
-            numero_de_serie = self.obtener_numero_serie()
-
-            #Se envia el hostname de la computadora a su vez con el identificador que en este caso será el número de serie
-            self.administrador.send(socket.gethostname().encode())
-            self.administrador.send(numero_de_serie.encode())
-
-            #Mensaje de segunda conexión con el servidor
-            #Aqui tanto se puede conectar como no se puede conectar
-            respuesta_servidor = json.loads(self.administrador.recv(self.HEADER).decode(self.FORMAT))
-            print(respuesta_servidor)
-
-            return respuesta_servidor
-
-        except: 
-            self.administrador.close()
-            self.notificacion.close()
-            self.broadcasting.close()
-            self.operacionesbd.close()
-            return {"success": False, "msg": "Error al validar la conexión :("}
-
     def escribir_operaciones(self, operacion):
         try:
             self.administrador.send(operacion.encode())
             respuesta_servidor = json.loads(self.administrador.recv(self.HEADER).decode(self.FORMAT))
             return respuesta_servidor
-        except:
-            print('Error al enviar el mensaje desde el administrador :(')
+        except socket.error as e:
+            print(f'Error al enviar el mensaje desde el administrador {e}')
             # self.administrador.close()
             # self.notificacion.close()
             # self.broadcasting.close()
@@ -151,6 +164,12 @@ class AdministradorSocketUI:
         return numero_serie
 
     def cerrar_conexiones(self):
+        #Desactividar los sockets
+        self.notificacion.shutdown(socket.SHUT_RDWR)
+        self.administrador.shutdown(socket.SHUT_RDWR)
+        self.broadcasting.shutdown(socket.SHUT_RDWR)
+        self.operacionesbd.shutdown(socket.SHUT_RDWR)
+
         self.notificacion.close()
         self.administrador.close()
         self.broadcasting.close()

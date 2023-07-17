@@ -8,11 +8,13 @@ from clases.cliente import cliente_socket
 
 global salida
 salida = False
-BASE_DIR = os.getcwd()
 
 #Función de dos hilos que corren en el programa
 def manejar_canal_cliente():
     global salida
+
+    #Desactivar el timeout en esta ocasión
+    cliente_socket.get_socket_cliente().settimeout(None)
 
     while True:
         try:
@@ -28,16 +30,16 @@ def manejar_canal_cliente():
 
                     if respuesta_servidor == 'apagar':
                         cliente_socket.get_socket_cliente().send(json.dumps({'success': True, 'msg': 'Apagado realizado exitosamente'}).encode())
-                        os.system(f'{BASE_DIR}/comandos/{respuesta_servidor}.bat')
+                        os.system(f'{cliente_socket.BASE_DIR}/comandos/{respuesta_servidor}.bat')
 
                     elif respuesta_servidor == 'bloquear':
                         cliente_socket.get_socket_cliente().send(json.dumps({'success': True, 'msg': 'Bloqueo de windows realizado exitosamente'}).encode())
                         print(f'{os.getcwd()}/comandos/{respuesta_servidor}.bat')
-                        os.system(f'{BASE_DIR}/comandos/{respuesta_servidor}.bat')
+                        os.system(f'{cliente_socket.BASE_DIR}/comandos/{respuesta_servidor}.bat')
 
                     elif respuesta_servidor == 'desbloquear':
                         cliente_socket.get_socket_cliente().send(json.dumps({'success': True, 'msg': 'Bloqueo de windows realizado exitosamente'}).encode())
-                        os.system(f'{BASE_DIR}/comandos/{respuesta_servidor}.bat')
+                        os.system(f'{cliente_socket.BASE_DIR}/comandos/{respuesta_servidor}.bat')
 
                     elif respuesta_servidor == 'consola':
                         print('Abrir consola')
@@ -55,32 +57,23 @@ def manejar_canal_cliente():
                     print(mensaje_respuesta)
                     cliente_socket.get_socket_cliente().send(mensaje_respuesta.encode())
 
-        except (socket.error, socket.timeout) as err:
-            #SE HACE LA ESEPCIÓN DE QUE SI SE VA EL INTERNET
-            if isinstance(err, (socket.error, socket.timeout)):
-                print('Desconexión de internet del canal principal')
-                cliente_socket.get_socket_cliente().close()
-                cliente_socket.get_socket_cliente_secundario().close()
-                #CREAR UNA FUNCIÓN DE RECONEXIÓN TODO
-                salida = True
-                break
-            else:
-                print('Ocurrió un error en el canal cliente principal')
-                cliente_socket.get_socket_cliente().close()
-                cliente_socket.get_socket_cliente_secundario().close()
-                salida = True
-                break
+        except socket.error:
+            print('Ocurrió un error en el canal cliente principal')
+            cliente_socket.get_socket_cliente().close()
+            cliente_socket.get_socket_cliente_secundario().close()
+            salida = True
+            break
 
 #Función que permite al servidor saber si el cliente sigue activo
 def manejar_canal_cliente_secundario():
     print('Manejar canal de cliente secundario')
-    cliente_socket.get_socket_cliente_secundario().settimeout(2)
+    cliente_socket.get_socket_cliente_secundario().settimeout(cliente_socket.TIMEOUT_SECUNDARIO)
     while True:
         try:
             mensaje = cliente_socket.get_socket_cliente_secundario().recv(cliente_socket.HEADER).decode(cliente_socket.FORMAT)
             # print(f'Mensaje del servidor {mensaje}')
             cliente_socket.get_socket_cliente_secundario().send('*'.encode())
-            
+
         except:
             print('Ocurrio un error en el canal cliente secunadrio')
             cliente_socket.get_socket_cliente().close()

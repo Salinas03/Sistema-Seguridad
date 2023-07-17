@@ -45,8 +45,6 @@ class ModificarEquipoWindow(EditarComputadoras, QWidget):
                 indice = self.establecer_indices_combobox(equipo[3])
                 self.edita_propietario_cmbx.setCurrentIndex(indice)
 
-                print(f'Rol: {equipo[4]} Type: {type(equipo[4])}')
-
                 if equipo[4] == '1':
                     self.edita_rol_cmbx.setCurrentIndex(1)
                 elif equipo[4] == '0':
@@ -57,7 +55,6 @@ class ModificarEquipoWindow(EditarComputadoras, QWidget):
     
     def establecer_indices_combobox(self, id_propietario):
         propietarios = self.propietarios['data']
-        print(propietarios)
         for i, propietario in enumerate(propietarios):
             if propietario[0] == id_propietario:
                 return i + 1
