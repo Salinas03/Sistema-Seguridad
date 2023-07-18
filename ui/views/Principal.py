@@ -16,12 +16,12 @@ import socket
 import sys
 import os
 
-
 class Principal(QMainWindow, object):
+
     def closeEvent(self, event):
         try:
             admin_socket_ui.get_socket_administrador().send('salir'.encode())
-            admin_socket_ui.cerrar_conexiones()
+            
         except socket.error as e:
             print(f'Ocurrio un error al realizar la salida {e}')
 

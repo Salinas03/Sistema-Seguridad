@@ -59,7 +59,7 @@ class AgregarCompusWindow(AgregarComputadoras, QWidget):
                         self.close()  
 
                     else:
-                        QMessageBox.critical(self, 'Oops, algo ocurrio', 'Hubo un problema al realizar el registro', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                        QMessageBox.critical(self, 'Oops, algo ocurrio', respuesta['msg'], QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
                 else:
                     QMessageBox.warning(self, 'Advertencia', 'Seleccione un rol para el equipo', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
             else: 

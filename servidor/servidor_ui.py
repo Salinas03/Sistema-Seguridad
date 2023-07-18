@@ -439,8 +439,27 @@ def panel_base_datos(instruccion):
     if instruccion['tabla'] == 'equipos':
         if operacion == 'insertar':
             data = instruccion['data']
-            respuesta_operacion = EquiposConsultas(conexion()).insertar_equipo_computo(data[0], data[1], data[2], data[3])
+            nombre_equipo = data[0]
+            numero_serie = data[1]
 
+            #Validación de la inserción, checar si ya existe ese nombre de equipo o ese número de serie
+            respuesta_operacion = json.loads(EquiposConsultas(conexion()).obtener_equipo_por_nombre(nombre_equipo))
+            if respuesta_operacion['success']:
+                if respuesta_operacion['data']:
+                    return json.dumps({'success': False, 'msg': 'Inserción incorrecta, ya existe un equipo con ese nombre'})
+            else:
+                return json.dumps({'success': False, 'msg': 'Ocurrió un error al realizar la inserción'})
+
+                
+            respuesta_operacion = json.loads(EquiposConsultas(conexion()).obtener_equipo_por_numero_serie(numero_serie))
+            if respuesta_operacion['success']:
+                if respuesta_operacion['data']:
+                    return json.dumps({'success': False, 'msg': 'Inserción incorrecta, ya existe un equipo con ese número de serie'})
+            else:
+                return json.dumps({'success': False, 'msg': 'Ocurrió un error al realizar la inserción'})
+
+            #Realizar la inserción
+            respuesta_operacion = EquiposConsultas(conexion()).insertar_equipo_computo(nombre_equipo, numero_serie, data[2], data[3])
             validar = json.loads(respuesta_operacion)
 
             if validar['success']:
