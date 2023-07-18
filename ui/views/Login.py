@@ -11,6 +11,7 @@
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
+import os
 
 
 class Login(QMainWindow, object):
@@ -20,6 +21,14 @@ class Login(QMainWindow, object):
         Login.resize(800, 800)
         Login.setMinimumSize(QSize(800, 800))
         Login.setMaximumSize(QSize(800, 800))
+
+        icon_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../assets/icons/LOGO.svg'
+        )
+        icon = QIcon(icon_path)
+        Login.setWindowIcon(icon)
+
         Login.setStyleSheet(u"\n"
 "QMainWindow#Login{\n"
 "background: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"

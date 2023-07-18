@@ -11,6 +11,7 @@
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
+import os
 
 
 class VerificarCorreo(QMainWindow, object):
@@ -20,6 +21,12 @@ class VerificarCorreo(QMainWindow, object):
         VerificarCorreo.resize(400, 400)
         VerificarCorreo.setMinimumSize(QSize(400, 400))
         VerificarCorreo.setMaximumSize(QSize(400, 400))
+        icon_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../assets/icons/LOGO.svg'
+        )
+        icon = QIcon(icon_path)
+        VerificarCorreo.setWindowIcon(icon)
         self.centralwidget = QWidget(VerificarCorreo)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
