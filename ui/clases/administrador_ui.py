@@ -163,17 +163,5 @@ class AdministradorSocketUI:
         
         return numero_serie
 
-    def cerrar_conexiones(self):
-        #Desactividar los sockets
-        self.notificacion.shutdown(socket.SHUT_RDWR)
-        self.administrador.shutdown(socket.SHUT_RDWR)
-        self.broadcasting.shutdown(socket.SHUT_RDWR)
-        self.operacionesbd.shutdown(socket.SHUT_RDWR)
-
-        self.notificacion.close()
-        self.administrador.close()
-        self.broadcasting.close()
-        self.operacionesbd.close()
-
 #Global variable scope (testing)
 admin_socket_ui = AdministradorSocketUI()
