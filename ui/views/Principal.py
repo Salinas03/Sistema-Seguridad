@@ -14,12 +14,12 @@ from PySide2.QtWidgets import *
 from clases.administrador_ui import admin_socket_ui
 import socket
 
-
 class Principal(QMainWindow, object):
+
     def closeEvent(self, event):
         try:
             admin_socket_ui.get_socket_administrador().send('salir'.encode())
-            admin_socket_ui.cerrar_conexiones()
+            
         except socket.error as e:
             print(f'Ocurrio un error al realizar la salida {e}')
 

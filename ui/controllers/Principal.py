@@ -159,12 +159,14 @@ class PrincipalWindow(Principal,QWidget):
         #RENDERIZADO DE TABLAS POR MEDIO DE PETICIONES ------------------------------------------------------
 
         #Crear hilo de notificaciones
-        thread_equipos_computo = threading.Thread(target=self.escuchar_notificaciones)
-        thread_equipos_computo.start()
+        self.thread_notificacion = threading.Thread(target=self.escuchar_notificaciones)
+        self.thread_notificacion.daemon = True
+        self.thread_notificacion.start()
 
         #Crear hilo para escuchar la conexión a internet
-        thread_conexion_internet = threading.Thread(target=self.escuchar_conexion_internet)
-        thread_conexion_internet.start()
+        self.thread_conexion_internet = threading.Thread(target=self.escuchar_conexion_internet)
+        self.thread_conexion_internet.daemon = True
+        self.thread_conexion_internet.start()
 
         self.peticion_equipos = {
             'tabla': 'equipos',
@@ -183,6 +185,7 @@ class PrincipalWindow(Principal,QWidget):
             self.desplegar_datos_equipos_inactivos(equipos_activos_inactivos[0])
             self.desplegar_datos_equipos_activos(equipos_activos_inactivos[1])
             self.thread_equipos_activos_inactivos = threading.Thread(target=self.escuchar_cambios_equipos_activos_inactivos)
+            self.thread_equipos_activos_inactivos.daemon = True
             self.thread_equipos_activos_inactivos.start()
 
         #Obtener por primera vez los equipos de cómputo de la BD_SQL
@@ -190,6 +193,7 @@ class PrincipalWindow(Principal,QWidget):
         if equipos_computo['success']:
             self.datos_compus(equipos_computo['data'])    
             self.thread_escuchar_cambios_tablasbd = threading.Thread(target=self.escuchar_cambios_tablasbd)
+            self.thread_escuchar_cambios_tablasbd.daemon = True
             self.thread_escuchar_cambios_tablasbd.start()
 
         #Obtener por primera vez los propietarios
@@ -494,6 +498,7 @@ class PrincipalWindow(Principal,QWidget):
         window = LoginWindow(self)
         window.show()
 
+
 # ////////////////////////// FUNCIONES PARA ESCUCHAR CAMBIOS EN LA BASE DE DATOS TODO//////////////////////////
     def escuchar_cambios_equipos_activos_inactivos(self):
         print('Escuchar cuando se conecten o desconecten usuarios | Canal: Broadcasting')
@@ -513,6 +518,13 @@ class PrincipalWindow(Principal,QWidget):
                 print(f'Ocurrió un error en el socket de broadcast {e}')
                 break
 
+        print('Fuera del while de broadcasting')
+
+        try:
+            self.thread_equipos_activos_inactivos.join()
+        except threading.ThreadError as e:
+            print('Cerrado de hilos correcto')
+
     def escuchar_notificaciones(self):
         print('Escuchar cuando se haga una notificación | Canal: Notificación')
         while True:
@@ -527,7 +539,13 @@ class PrincipalWindow(Principal,QWidget):
             except socket.error as e:
                 print(f'Ocurrió un error en el socket de notificación {e}')
                 break
-    
+
+        print('Fuera del while de notificación')      
+        try:
+            self.thread_notificacion.join()
+        except threading.ThreadError as e:
+            print('Cerrado de hilos correcto')  
+
     def escuchar_cambios_tablasbd(self):
         print('Escuchar cambios en la BD | Canal: OperacionesBD')
         while True:
@@ -553,6 +571,13 @@ class PrincipalWindow(Principal,QWidget):
                 print(f'Ocurrió un error en el socket de operacionesBD {e}')
                 break
 
+        print('Fuera del while de operacionesBD')
+
+        try:
+            self.thread_escuchar_cambios_tablasbd.join()
+        except threading.ThreadError as e:
+            print('Cerrado de hilos correcto')
+
     def escuchar_conexion_internet(self):
         while True:
             if not self.verificar_conexion_internet():
@@ -560,4 +585,11 @@ class PrincipalWindow(Principal,QWidget):
                 self.mostrar_mensaje()
                 break
 
-            time.sleep(1)
+            time.sleep(1)   
+
+        print('Fuera del while de internat')
+
+        try:
+            self.thread_conexion_internet.join()
+        except threading.ThreadError as e:
+            print('Cerrado de hilos correcto')

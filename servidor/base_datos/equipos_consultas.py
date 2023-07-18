@@ -61,6 +61,17 @@ class EquiposConsultas():
                 print(f'Error al obtener equipo por nombre {err}')
                 return json.dumps({'success': False, 'msg': f'Error al obtener el equipo por nombre {err}'})
 
+    def obtener_equipo_por_numero_serie(self, numero_serie):
+        if self.conexion.is_connected():
+            try:
+                cursor = self.conexion.cursor()
+                cursor.execute(f'SELECT * FROM equipos WHERE numero_serie_equipo="{numero_serie}"')
+                resultado = cursor.fetchall()
+                return json.dumps({'success': True, 'data': resultado})
+            except Error as err:
+                print(f'Error al obtener equipo por nombre {err}')
+                return json.dumps({'success': False, 'msg': f'Error al obtener el equipo por nombre {err}'})
+
     def obtener_equipo_por_nombre_numero_serie(self, nombre, numero_serie):
         if self.conexion.is_connected():
             try:
