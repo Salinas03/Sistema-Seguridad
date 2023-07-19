@@ -23,6 +23,7 @@ PORT_NOTI = 5051
 PORT_BROAD = 5052
 PORT_CLIEN = 5053
 PORT_BD = 5054
+PORT_CONA = 5055
 
 #DIRECCIONES DE LOS DIFERENTES SOCKETS
 ADDR = (HOST, PORT)
@@ -30,7 +31,8 @@ ADDR_NOTI = (HOST, PORT_NOTI)
 ADDR_BROAD = (HOST, PORT_BROAD)
 ADDR_CLIEN = (HOST, PORT_CLIEN)
 ADDR_BD = (HOST, PORT_BD)
-TIMEOUT = 2
+ADDR_CONA = (HOST, PORT_CONA)
+TIMEOUT = 3
 
 #ARREGLOS DE CONEXIONES CON EL SERVIDOR
 conexiones_equipos_cliente = [] #GUARDAR OBJETO DE EQUIPO CONECTADO
@@ -39,6 +41,7 @@ conexiones_equipos_cliente_secundario = []
 
 #ARREGLOS DE CONEXIONES DE ADMINISTRADORES
 conexiones_equipos_admin = [] #GUARDAR OBJETO DE EQUIPO CONECTADO
+conexiones_conectividad_admin = []
 conexiones_equipos_admin_notificacion  = []
 conexiones_equipos_broadcast = []
 conexiones_equipos_operacionesbd = []
@@ -48,6 +51,7 @@ def crear_sockets():
     try:
         #VARIABLES GLOBALES DE LOS SOCKETS
         global servidor
+        global conectividad_admin
         global notificacion
         global broadcasting
         global operacionesbd
@@ -55,6 +59,7 @@ def crear_sockets():
 
         #CREACIÓN DE DE SOCKETS
         servidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        conectividad_admin = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         
         #CONEXIONES QUE SE GUARDARAN EN ARREGLOS LAS CUALES HAY QUE MANTENER ENCENDIDAS
@@ -74,6 +79,7 @@ def vincular_sockets():
     try:
         #CONEXIÓN DE SOCKETS CREADOS ANTERIORMENTE
         servidor.bind(ADDR)
+        conectividad_admin.bind(ADDR_CONA)
         notificacion.bind(ADDR_NOTI)
         broadcasting.bind(ADDR_BROAD)
         operacionesbd.bind(ADDR_BD)
@@ -81,21 +87,25 @@ def vincular_sockets():
         
         #ABRIR LOS SOCKETS Y ESCUCHAR LAS PETICIONES DE LAS CONEXIONES
         servidor.listen()
+        conectividad_admin.listen()
         cliente.listen()
         notificacion.listen()
         broadcasting.listen()
         operacionesbd.listen()
 
-        print(f'HOST {HOST} corriendo en el puerto {PORT}')
+        print(f'SERVIDOR {HOST} corriendo en el puerto {PORT}')
+        print(f'CONECTIVIDAD {HOST} corriendo en el puerto {PORT_CONA}')
         print(f'NOTIFICACION {HOST} corriendo en el puerto {PORT_NOTI}')
         print(f'BROADCASTING {HOST} corriendo en el puerto {PORT_BROAD}')
         print(f'USUARIO {HOST} corriendo en el puerto {PORT_CLIEN}')
         print(f'OPERACIONESBD {HOST} corriendo en el puerto {PORT_BD}')
 
         #CREACIÓN DE HILOS DE LOS SOCKETS PARA ESCUCHAR LAS CONEXIONES
+        # conectividad_thread = threading.Thread(target=)
         cliente_thread = threading.Thread(target=aceptar_conexiones_cliente)
         cliente_thread.start()
-
+        conectividad_thread = threading.Thread(target=aceptar_conexiones_conectividad)
+        conectividad_thread.start()
         notificacion_thread = threading.Thread(target=aceptar_conexiones_notificacion)
         notificacion_thread.start()
         broadcasting_thread = threading.Thread(target=aceptar_conexiones_broadcast)
@@ -151,6 +161,29 @@ def aceptar_conexiones():
         except:
             # conn.send('{"success": false, "msg": "Error al aceptar la conexión :("}'.encode())
             print('Error al aceptar la conexión :(')
+
+def aceptar_conexiones_conectividad():
+    for conexion_conectividad in conexiones_conectividad_admin:
+        conexion_conectividad[0].close()
+
+    del conexiones_conectividad_admin[:]
+
+    while True:
+        try:
+            conn, addr = conectividad_admin.accept()
+            conectividad_admin.setblocking(1)
+
+            numero_serie = conn.recv(HEADER).decode(FORMAT)
+            conn.send('{"success": true, "msg": "Se recibió el número de serie en [conectividadadmin]"}'.encode())
+            print('Se recibió el número de serie en [conectividadadmin]')
+
+            conexiones_conectividad_admin.append((conn, addr))
+            conectividad_thread = threading.Thread(target=panel_conectividad_admin, args=(conn, addr, numero_serie))
+            conectividad_thread.start()
+
+        except socket.error as e:
+            print(f'Hubo un error al conectar con el canal de conectividad admin {e}')
+            conn.send('{"success": false, "msg": "Error al aceptar la conexión en conectividada :("}'.encode())
 
 def aceptar_conexiones_notificacion():
     #Cerrar todas las conexiones al iniciar el servidor
@@ -331,7 +364,7 @@ def panel_administrador(conn, administrador):
                     if cliente_seleccionado is not None:
                         if cliente_seleccionado:
                             #Manejar las operaciones de la selección
-                            mensaje = f'Selección con el usuario {cliente_seleccionado.get_direccion()[0]}'
+                            mensaje = f'Selección con el usuario {cliente_seleccionado.get_nombre_host()}'
                             conn.send(json.dumps({'success': True, 'msg': mensaje}).encode())
 
                             manejar_operaciones_seleccion(cliente_seleccionado, conn)
@@ -340,59 +373,48 @@ def panel_administrador(conn, administrador):
                     else:
                         conn.send(json.dumps({'success': False, 'msg': 'Selección no válida, computadora inexistente :/'}).encode())
 
-            elif operacion == 'salir':
-                print('Administrador desconectado por salida , Bye Bye...')
-                administrador_desconexion = borrar_administradores_activos(conn)
-                enviar_notificacion(f'Administrador {administrador_desconexion.get_nombre_host()} desconectado')
-
-                numero_serie = administrador_desconexion.get_identificador()
-                borrar_administradores_notificacion(numero_serie)
-                borrar_administradores_broadcasting(numero_serie)
-                borrar_administradores_operacionesbd(numero_serie)
-                conn.close()
-                break
-            
             #Operaciones con la base de datos
             elif is_valid_json(operacion):
                 respuesta_operacion = panel_base_datos(operacion)
                 conn.send(respuesta_operacion.encode()) #Respetar el request response
 
             else:
-                try:
-                    conn.send('Comando no reconocido'.encode())
-                    # print('Comando no reconocido [server]')
-                    #APLICAR FUNCIÓN DE SALIR
-                except:
-                    print('Error al enviar el comando no reconocido')
-                    conn.close()
-                    break
+                print(f'Salida del administrador {administrador.get_nombre_host()}, Bye bye...')
+                conn.close()
+                
+        except socket.error as e:
+            print(f'EXCPETION [PanelAdministrador]: {e}')
 
-        except ConnectionResetError:
-            print('Administrador desconectado espontáneamente...(ConnectionResetError)')
-            administrador_desconexion = borrar_administradores_activos(conn)
-            enviar_notificacion(f'Administrador {administrador_desconexion.get_nombre_host()} desconectado')
+def panel_conectividad_admin(conn, addr, numero_serie):
+    print(f'Entró {numero_serie} al panel de conectividad de administrador')
+    conn.settimeout(TIMEOUT)
 
-            #Borrar todas las conexiones si el admin se va
-            numero_serie = administrador_desconexion.get_identificador()
+    while True:
+        try:
+            time.sleep(1)
+            conn.send('*'.encode())
+            conn.recv(HEADER).decode(FORMAT)
+
+        except socket.error as e:
+            print(f'EXCEPTION [PanelConectividad]: {e}')
+
+            #Realizar borrado del canal principal
+            administrador_desconectado = borrar_administradores_numero_serie(numero_serie)
+            print(f'Administrador {administrador_desconectado.get_nombre_host()} desconectado por panel de conectividad')
+
+            #Enviar notificación a los administradores de la desconexión
+            enviar_notificacion(f'Administrador {administrador_desconectado.get_nombre_host()} desconectado')
+
+            #Borrado de canales secundarios
+            borrar_conectividad_administradores(conn)
             borrar_administradores_notificacion(numero_serie)
             borrar_administradores_broadcasting(numero_serie)
             borrar_administradores_operacionesbd(numero_serie)
+
+            #Realizar un borrado para esta conexión de conectividad
             conn.close()
             break
-
-        except:
-            print('Administrador desconectado espontáneamente...')
-            administrador_desconexion = borrar_administradores_activos(conn)
-            enviar_notificacion(f'Administrador {administrador_desconexion.get_nombre_host()} desconectado')
-
-            #Borrar todas las conexiones si el admin se va
-            numero_serie = administrador_desconexion.get_identificador()
-            borrar_administradores_notificacion(numero_serie)
-            borrar_administradores_broadcasting(numero_serie)
-            borrar_administradores_operacionesbd(numero_serie)
-            conn.close()
-            break
-
+        
 def panel_cliente(conn, addr, numero_serie):
     print(f'Entró {numero_serie} al panel de cliente secundario.')
     conn.settimeout(TIMEOUT)
@@ -733,6 +755,22 @@ def borrar_administradores_activos(conn):
             print('[BORRADO DE ADMINISTRADORES ACTIVOS]')
             return conexion_admin
         
+def borrar_administradores_numero_serie(numero_serie):
+    for conexion_admin in conexiones_equipos_admin:
+        if conexion_admin.get_identificador() == numero_serie:
+            index = conexiones_equipos_admin.index(conexion_admin)
+            del conexiones_equipos_admin[index]
+            print('[BORRADO DE ADMINISTRADORES ACTIVOS POR NUMERO DE SERIE]')
+            return conexion_admin
+        
+def borrar_conectividad_administradores(conn):
+    for conexion_conectividad in conexiones_conectividad_admin[:]:
+        if conexion_conectividad[0] == conn:
+            index = conexiones_conectividad_admin.index(conexion_conectividad)
+            del conexiones_conectividad_admin[index]
+
+    print('[BORRADO DE CONEXIONES DE CONECTIVIDAD ADMINISTRADOR]')
+
 def borrar_administradores_notificacion(numero_serie):
     for conexion_admin_notificacion in conexiones_equipos_admin_notificacion:
         if conexion_admin_notificacion[2] == numero_serie:
