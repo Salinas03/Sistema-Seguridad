@@ -6,7 +6,11 @@ class EquipoConectado:
         self.direccion = direccion
         self.nombre_host = nombre_host
         self.identificador = identificador
+
+        #Propiedades de clientes
         self.seleccionado = False
+        self.seleccion_numero_serie = ''
+        self.consola = False
 
     #Getters
     def get_conexion(self):
@@ -23,6 +27,9 @@ class EquipoConectado:
     
     def get_seleccionado(self):
         return self.seleccionado
+    
+    def get_seleccion_numero_serie(self):
+        return self.seleccion_numero_serie
 
     #Setters
     def set_conexion(self, conexion):
@@ -39,3 +46,6 @@ class EquipoConectado:
 
     def set_seleccionado(self, seleccionado):
         self.seleccionado = seleccionado
+
+    def set_seleccion_numero_serie(self, numero_serie):
+        self.seleccion_numero_serie = numero_serie

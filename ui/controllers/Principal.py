@@ -19,6 +19,7 @@ import socket
 from db.connection import conexion
 from clases.administrador_ui import admin_socket_ui
 from clases.administrador_sesion import AdministradorSesion
+import datetime
 
 class PrincipalWindow(Principal,QWidget):
 
@@ -157,6 +158,8 @@ class PrincipalWindow(Principal,QWidget):
         self.ventana_abierta = False # IDENTIFICACION DE QUE LA VENTANA ESTA CERRADA
 
         #RENDERIZADO DE TABLAS POR MEDIO DE PETICIONES ------------------------------------------------------
+        self.bandera_internet = True
+        self.conectar_canal_conectividad()
 
         #Crear hilo de notificaciones
         self.thread_notificacion = threading.Thread(target=self.escuchar_notificaciones)
@@ -244,6 +247,7 @@ class PrincipalWindow(Principal,QWidget):
             self, 'Desonexión de internet', 'Ocurrió algo con el su red wifi, intente denuevo por favor', 
             QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close
         ) 
+        self.close()
     
     def mostrar_mensaje(self):
         try:
@@ -306,7 +310,7 @@ class PrincipalWindow(Principal,QWidget):
             if seleccionar_fila:
                 index = seleccionar_fila[0].row()
 
-                respuesta = admin_socket_ui.escribir_operaciones(f'seleccionar {index}')
+                respuesta = admin_socket_ui.escribir_operaciones(f'seleccionar {index},{admin_socket_ui.obtener_numero_serie()}')
                 
                 if respuesta['success']:
                     id_propietarios = seleccionar_fila[0].text()
@@ -498,8 +502,53 @@ class PrincipalWindow(Principal,QWidget):
         window = LoginWindow(self)
         window.show()
 
+    def conectar_canal_conectividad(self):
+        try:
+            #Conectar 
+            admin_socket_ui.get_socket_conectividadadmin().connect(admin_socket_ui.ADDR_CONA)
+
+            #Enviar numero de serie
+            numero_serie = admin_socket_ui.obtener_numero_serie()
+            admin_socket_ui.get_socket_conectividadadmin().send(numero_serie.encode())
+            respuesta = admin_socket_ui.get_socket_conectividadadmin().recv(admin_socket_ui.HEADER).decode(admin_socket_ui.FORMAT)
+            print('Conexión con canal de conectividad')
+            print(respuesta)
+
+            self.thread_conectividad = threading.Thread(target=self.escuchar_conectividad)
+            self.thread_conectividad.start()
+        except socket.error as e:
+            print(f'Hubo un error al conectar con el canal de conectividad {e}')
+            self.close()
+
+    def cerrar_procesos_hilos(self):
+        try:
+            self.thread_equipos_activos_inactivos.join()
+            self.thread_notificacion.join()
+            self.thread_escuchar_cambios_tablasbd.join()
+            self.bandera_internet = False
+            self.thread_conexion_internet.join()
+        except threading.ThreadError as e:
+            print(f'Hubo un error al realizar el cerrado de los HILOS {e}')
 
 # ////////////////////////// FUNCIONES PARA ESCUCHAR CAMBIOS EN LA BASE DE DATOS TODO//////////////////////////
+
+    def escuchar_conectividad(self):
+        admin_socket_ui.get_socket_conectividadadmin().settimeout(admin_socket_ui.TIMEOUT)
+        while True:
+            try:
+                mensaje = admin_socket_ui.get_socket_conectividadadmin().recv(admin_socket_ui.HEADER).decode(admin_socket_ui.FORMAT)
+                print(f'Mensaje del servidor {mensaje} {datetime.datetime.now()}')
+                admin_socket_ui.get_socket_conectividadadmin().send('*'.encode())
+
+            except socket.error as e:
+                print(f'Ocurrio un error en el canal de conectividad {e}')
+                break
+
+        #Cerrar los procesos de los hilos       
+        print('Salida de procesos [escuchar conectividad]') 
+        admin_socket_ui.cerrado_sockets()
+        self.cerrar_procesos_hilos()
+
     def escuchar_cambios_equipos_activos_inactivos(self):
         print('Escuchar cuando se conecten o desconecten usuarios | Canal: Broadcasting')
         while True:
@@ -509,21 +558,14 @@ class PrincipalWindow(Principal,QWidget):
                 self.desplegar_datos_equipos_activos(equipos_activos_inactivos[1])
                 print('[ACTUALIZACIÓN DE EQUIPOS ACTIVOS E INACTIVOS]')
 
-            except ConnectionResetError:
-                print('Hubo un problema al recibir los equipos activos e inactivos')
+            except ConnectionResetError as e:
+                print(f'Hubo un problema al recibir los equipos activos e inactivos {e}')
                 break
 
             except socket.error as e:
                 admin_socket_ui.get_socket_broadcasting().close()
                 print(f'Ocurrió un error en el socket de broadcast {e}')
                 break
-
-        print('Fuera del while de broadcasting')
-
-        try:
-            self.thread_equipos_activos_inactivos.join()
-        except threading.ThreadError as e:
-            print('Cerrado de hilos correcto')
 
     def escuchar_notificaciones(self):
         print('Escuchar cuando se haga una notificación | Canal: Notificación')
@@ -532,19 +574,13 @@ class PrincipalWindow(Principal,QWidget):
                 notificacion = admin_socket_ui.get_socket_notificacion().recv(admin_socket_ui.HEADER).decode(admin_socket_ui.FORMAT)
                 print(f'Mensaje de notificación enviado por el servidor | {notificacion}')
 
-            except ConnectionResetError:
-                print('Hubo un problema al recibir las notificacaciones')
+            except ConnectionResetError as e:
+                print(f'Hubo un problema al recibir las notificacaciones {e}')
                 break
 
             except socket.error as e:
                 print(f'Ocurrió un error en el socket de notificación {e}')
                 break
-
-        print('Fuera del while de notificación')      
-        try:
-            self.thread_notificacion.join()
-        except threading.ThreadError as e:
-            print('Cerrado de hilos correcto')  
 
     def escuchar_cambios_tablasbd(self):
         print('Escuchar cambios en la BD | Canal: OperacionesBD')
@@ -562,34 +598,20 @@ class PrincipalWindow(Principal,QWidget):
                 else:
                     self.datos_admins(datos['data'])
 
-            except ConnectionResetError:
+            except ConnectionResetError as e:
                 admin_socket_ui.get_socket_operacionesbd().close()
-                print('Hubo un problema al recibir los datos de operacionesBD')
+                print(f'Hubo un problema al recibir los datos de operacionesBD {e}')
                 break
 
             except socket.error as e:
                 print(f'Ocurrió un error en el socket de operacionesBD {e}')
                 break
 
-        print('Fuera del while de operacionesBD')
-
-        try:
-            self.thread_escuchar_cambios_tablasbd.join()
-        except threading.ThreadError as e:
-            print('Cerrado de hilos correcto')
-
     def escuchar_conexion_internet(self):
-        while True:
+        while self.bandera_internet:
             if not self.verificar_conexion_internet():
                 print('Se fue el internet')
                 self.mostrar_mensaje()
                 break
 
-            time.sleep(1)   
-
-        print('Fuera del while de internat')
-
-        try:
-            self.thread_conexion_internet.join()
-        except threading.ThreadError as e:
-            print('Cerrado de hilos correcto')
+            time.sleep(1)

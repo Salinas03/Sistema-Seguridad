@@ -43,5 +43,5 @@ class CargaWindow(Carga,QWidget):
             self.close()
             self.cerrar_login()
 
-        COUNTER += 0.5
+        COUNTER += 6
     

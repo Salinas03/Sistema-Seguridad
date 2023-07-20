@@ -71,6 +71,7 @@ class LoginWindow(Login, QWidget):
 
                                 if administrador:
                                     conexion_secundarios = admin_socket_ui.conexiones_canales_secundarios()
+                                    print(conexion_secundarios)
                                     if conexion_secundarios['success']:
 
                                         validacion_secundarios = admin_socket_ui.validacion_canales_secundarios()
