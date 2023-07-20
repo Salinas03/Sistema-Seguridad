@@ -19,6 +19,7 @@ import socket
 from db.connection import conexion
 from clases.administrador_ui import admin_socket_ui
 from clases.administrador_sesion import AdministradorSesion
+import datetime
 
 class PrincipalWindow(Principal,QWidget):
 
@@ -309,7 +310,7 @@ class PrincipalWindow(Principal,QWidget):
             if seleccionar_fila:
                 index = seleccionar_fila[0].row()
 
-                respuesta = admin_socket_ui.escribir_operaciones(f'seleccionar {index}')
+                respuesta = admin_socket_ui.escribir_operaciones(f'seleccionar {index},{admin_socket_ui.obtener_numero_serie()}')
                 
                 if respuesta['success']:
                     id_propietarios = seleccionar_fila[0].text()
@@ -536,7 +537,7 @@ class PrincipalWindow(Principal,QWidget):
         while True:
             try:
                 mensaje = admin_socket_ui.get_socket_conectividadadmin().recv(admin_socket_ui.HEADER).decode(admin_socket_ui.FORMAT)
-                print(f'Mensaje del servidor {mensaje}')
+                print(f'Mensaje del servidor {mensaje} {datetime.datetime.now()}')
                 admin_socket_ui.get_socket_conectividadadmin().send('*'.encode())
 
             except socket.error as e:

@@ -33,6 +33,7 @@ ADDR_CLIEN = (HOST, PORT_CLIEN)
 ADDR_BD = (HOST, PORT_BD)
 ADDR_CONA = (HOST, PORT_CONA)
 TIMEOUT = 3
+TIME_TO_SEND_MESSAGES = 2
 
 #ARREGLOS DE CONEXIONES CON EL SERVIDOR
 conexiones_equipos_cliente = [] #GUARDAR OBJETO DE EQUIPO CONECTADO
@@ -158,9 +159,9 @@ def aceptar_conexiones():
             #Si esta en la base de datos se determina si es administrador o cliente
             guardar_conexiones(conn,addr, nombre_host, numero_serie)
 
-        except:
+        except socket.error as e:
             # conn.send('{"success": false, "msg": "Error al aceptar la conexión :("}'.encode())
-            print('Error al aceptar la conexión :(')
+            print(f'Error al aceptar la conexión {e}')
 
 def aceptar_conexiones_conectividad():
     for conexion_conectividad in conexiones_conectividad_admin:
@@ -381,9 +382,12 @@ def panel_administrador(conn, administrador):
             else:
                 print(f'Salida del administrador {administrador.get_nombre_host()}, Bye bye...')
                 conn.close()
+                break
                 
         except socket.error as e:
             print(f'EXCPETION [PanelAdministrador]: {e}')
+            conn.close()
+            break
 
 def panel_conectividad_admin(conn, addr, numero_serie):
     print(f'Entró {numero_serie} al panel de conectividad de administrador')
@@ -391,7 +395,7 @@ def panel_conectividad_admin(conn, addr, numero_serie):
 
     while True:
         try:
-            time.sleep(1)
+            time.sleep(TIME_TO_SEND_MESSAGES)
             conn.send('*'.encode())
             conn.recv(HEADER).decode(FORMAT)
 
@@ -410,6 +414,9 @@ def panel_conectividad_admin(conn, addr, numero_serie):
             borrar_administradores_notificacion(numero_serie)
             borrar_administradores_broadcasting(numero_serie)
             borrar_administradores_operacionesbd(numero_serie)
+
+            #Cerrar las selecciones en caso de que haya computadoras seleccionadas
+            cerrar_selecciones(numero_serie, administrador_desconectado)
 
             #Realizar un borrado para esta conexión de conectividad
             conn.close()
@@ -646,9 +653,9 @@ def listar_equipos():
 def conectar_con_equipo(operacion):
     print('[CONECTAR CON EQUIPO]')
     try: 
-        posicion = operacion.replace('seleccionar', '')
-        posicion = int(posicion)
-        print(f'Posición: {posicion}')
+        cadena = operacion.replace('seleccionar', '').strip().split(',')
+        posicion = int(cadena[0])
+        seleccionador = cadena[1]
         
         #Obtener el elemento del arreglo en esa posición
         objeto_cliente_seleccionado = conexiones_equipos_cliente[posicion]
@@ -661,10 +668,10 @@ def conectar_con_equipo(operacion):
             return False
 
         #Marcar ese elemento del arreglo en específico como seleccionado
-        conexiones_equipos_cliente[posicion].set_seleccionado(True)
-        print(f'Nombre Host: {objeto_cliente_seleccionado.get_nombre_host()} Ha cambiado a True la selección')
+        objeto_cliente_seleccionado.set_seleccionado(True)
+        objeto_cliente_seleccionado.set_seleccion_numero_serie(seleccionador)
 
-        print(f'Conexión con el usuario {objeto_cliente_seleccionado.get_direccion()[0]}')
+        print(f'Selección con el usuario {posicion}:{objeto_cliente_seleccionado.get_nombre_host()} por el equipo con el número de serie {seleccionador}')
         return objeto_cliente_seleccionado
     
     except:
@@ -683,13 +690,10 @@ def manejar_operaciones_seleccion(cliente_seleccionado, conn_admin):
 
             #Operación de salir de la selección
             if operacion == 'salir':
-                #Buscar el elemento seleccionado en el arreglo y cambiar su selección
-                if conexiones_equipos_cliente:
-                    for i in range(len(conexiones_equipos_cliente)):
-                        print(conexiones_equipos_cliente[i].get_seleccionado())
-                        if conexiones_equipos_cliente[i] == cliente_seleccionado:
-                            index_seleccionado = conexiones_equipos_cliente.index(cliente_seleccionado)
-                            conexiones_equipos_cliente[index_seleccionado].set_seleccionado(False)
+                
+                #Cambiar la selección, que también se cambia dentro del arreglo
+                cliente_seleccionado.set_seleccionado(False)
+                cliente_seleccionado.set_seleccion_numero_serie('')
 
                 print('Cambio de selección a False')
                 print('Se salio de la selección')
@@ -702,8 +706,9 @@ def manejar_operaciones_seleccion(cliente_seleccionado, conn_admin):
                 manejar_consola_cliente(cliente_seleccionado, conn_admin)
                 print('Se salio de la consola en el servidor')
 
+            #Realizar operaciones de suspensión de computadora o apagado
             else:
-                #Enviar la insturcción al cliente
+                #Enviar la instrucción al cliente
                 cliente_seleccionado.get_conexion().send(operacion.encode())
 
                 #Obtener respuesta del cliente
@@ -747,14 +752,6 @@ def manejar_consola_cliente(conn_cli, conn_admin):
             break
 
 #FUNCIONES DE BORRADO DE CONEXIONES
-def borrar_administradores_activos(conn):
-    for conexion_admin in conexiones_equipos_admin:
-        if conexion_admin.get_conexion() == conn:
-            index = conexiones_equipos_admin.index(conexion_admin)
-            del conexiones_equipos_admin[index]
-            print('[BORRADO DE ADMINISTRADORES ACTIVOS]')
-            return conexion_admin
-        
 def borrar_administradores_numero_serie(numero_serie):
     for conexion_admin in conexiones_equipos_admin:
         if conexion_admin.get_identificador() == numero_serie:
@@ -810,6 +807,24 @@ def borrar_conexion_cliente_secundario(conn):
             del conexiones_equipos_cliente_secundario[index]
 
     print('[BORRADO DE CONEXIONES CLIENTE SECUNDARIO]')
+
+def cerrar_selecciones(numero_serie, administrador_desconectado):
+    if conexiones_equipos_cliente:
+        equipos_seleccionados = list(filter(lambda conexion_equipo : conexion_equipo.get_seleccionado() == True, conexiones_equipos_cliente))
+
+        if equipos_seleccionados:
+            equipo_seleccionado = list(filter(lambda equipo_seleccionado : equipo_seleccionado.get_seleccion_numero_serie() == numero_serie, equipos_seleccionados))
+
+            if equipo_seleccionado:
+                if len(equipo_seleccionado) == 1:
+                    equipo_seleccionado[0].set_seleccionado(False)
+                    equipo_seleccionado[0].set_seleccion_numero_serie('')
+                    print(f'RESETEO DE SELECCIÓN DEL EQUIPO {equipo_seleccionado[0].get_nombre_host()}')
+                else:
+                    for seleccionado in equipo_seleccionado:
+                        print(seleccionado.get_nombre_host())
+            else:
+                print(f'No hay equipos seleccionados por el equipo {administrador_desconectado.get_nombre_host()}')
 
 #FUNCIONALIDADES BROADCAST QUE SE ENVIAN A TODOS LOS ADMINISTRADORES
 def enviar_notificacion(mensaje):

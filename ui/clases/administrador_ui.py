@@ -21,7 +21,7 @@ class AdministradorSocketUI:
         self.ADDR_BROAD = (self.IP, self.PORT_BROAD)
         self.ADDR_BD = (self.IP, self.PORT_BD)
         self.ADDR_CONA = (self.IP, self.PORT_CONA)
-        self.TIMEOUT = 3
+        self.TIMEOUT = 4
         
         #Variables de sockets
         self.administrador = None
