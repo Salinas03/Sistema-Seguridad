@@ -703,6 +703,7 @@ def manejar_operaciones_seleccion(cliente_seleccionado, conn_admin):
             #Abrir consola en caso que se requiere usar manejo de la consola
             if operacion == 'consola':
                 cliente_seleccionado.get_conexion().send(operacion.encode())
+                cliente_seleccionado.set_consola(True)
                 manejar_consola_cliente(cliente_seleccionado, conn_admin)
                 print('Se salio de la consola en el servidor')
 
@@ -742,13 +743,23 @@ def manejar_consola_cliente(conn_cli, conn_admin):
             print(instruccion_admin)
 
             if instruccion_admin == 'salir':
-                conn_cli.get_conexion().send(instruccion_admin.encode()) #Mandar mensaje de salida de la consola al cliente
-                break
+                try:
+                    conn_cli.get_conexion().send(instruccion_admin.encode()) #Mandar mensaje de salida de la consola al cliente
+                    break
+                except:
+                    break
 
             #Enviar instrucción al cliente
-            conn_cli.get_conexion().send(instruccion_admin.encode())
-        except:
-            conn_cli.get_conexion().send('salir'.encode()) #Mandar mensaje de salida de la consola al cliente
+            try:
+                conn_cli.get_conexion().send(instruccion_admin.encode())
+            except socket.error as e:
+                print(f'Desconexión del cliente: {e}')
+                #Enviar mensaje de desconexión al administrador
+                conn_admin.send('desconectado'.encode())
+                break
+
+        except socket.error as e:
+            print(f'Algo sucedio en la conosola del cliente {e}')
             break
 
 #FUNCIONES DE BORRADO DE CONEXIONES
@@ -819,12 +830,28 @@ def cerrar_selecciones(numero_serie, administrador_desconectado):
                 if len(equipo_seleccionado) == 1:
                     equipo_seleccionado[0].set_seleccionado(False)
                     equipo_seleccionado[0].set_seleccion_numero_serie('')
+                    cerrar_consola_seleccion(equipo_seleccionado[0])
                     print(f'RESETEO DE SELECCIÓN DEL EQUIPO {equipo_seleccionado[0].get_nombre_host()}')
                 else:
                     for seleccionado in equipo_seleccionado:
                         print(seleccionado.get_nombre_host())
             else:
                 print(f'No hay equipos seleccionados por el equipo {administrador_desconectado.get_nombre_host()}')
+
+def cerrar_consola_seleccion(equipo):
+    if equipo.get_consola():
+        try:
+            equipo.get_conexion().send('salir'.encode())
+            equipo.set_consola(False)
+            print(f'RESETEO DE CONSOLA EQUIPO {equipo.get_nombre_host()}')
+        except socket.error as e:
+            print(f'No se pudo enviar el mensaje de salida de consola [desconexión administrador] {e}')
+            print('Intentando denuevo...')
+            
+            try:
+                equipo.get_conexion().send('salir'.encode())
+            except socket.error as e:
+                print(f'{e}')
 
 #FUNCIONALIDADES BROADCAST QUE SE ENVIAN A TODOS LOS ADMINISTRADORES
 def enviar_notificacion(mensaje):
