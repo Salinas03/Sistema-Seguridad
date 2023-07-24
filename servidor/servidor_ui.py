@@ -14,8 +14,8 @@ from clases.validar_json import is_valid_json
 FORMAT = 'utf-8'
 HEADER = 20480
 #HOST = socket.gethostbyname(socket.gethostname())
-HOST = '68.183.143.116'
-# HOST = '165.22.15.159'
+# HOST = '68.183.143.116'
+HOST = '165.22.15.159'
 
 #PUERTOS DE LOS DIFERENTES SOCKETS
 PORT = 5050
@@ -630,9 +630,11 @@ def listar_equipos():
             conexion_equipo.get_conexion().send(' '.encode())
             conexion_equipo.get_conexion().recv(HEADER)
             bandera = True
-        except:
+            print('Se envio el mensaje de verificación de conectividad [ListarEquipos]')
+        except socket.error as e:
             index = conexiones_equipos_cliente.index(conexion_equipo)
             del conexiones_equipos_cliente[index] #Borrar la conexion del cliente en esa posición en caso de que no haya respuesta
+            print(f'NO se envio el mensaje de verificación (Exception) {e}')
             continue
         
         if bandera:
