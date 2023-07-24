@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/LOGO.svg</normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/LOGO.svg</iconset>
+    <normaloff>../assets/icons/LOGO.svg</normaloff>../assets/icons/LOGO.svg</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -117,7 +117,7 @@ margin-bottom:10px;
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/column-2.ico</pixmap>
+               <pixmap>../assets/icons/column-2.ico</pixmap>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -131,7 +131,7 @@ margin-bottom:10px;
               </property>
               <property name="icon">
                <iconset>
-                <normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/home-3.ico</normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/home-3.ico</iconset>
+                <normaloff>../assets/icons/home-3.ico</normaloff>../assets/icons/home-3.ico</iconset>
               </property>
               <property name="checkable">
                <bool>false</bool>
@@ -154,7 +154,7 @@ margin-bottom:10px;
               </property>
               <property name="icon">
                <iconset>
-                <normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/desktop.svg</normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/desktop.svg</iconset>
+                <normaloff>../assets/icons/desktop.svg</normaloff>../assets/icons/desktop.svg</iconset>
               </property>
               <property name="checkable">
                <bool>false</bool>
@@ -171,7 +171,7 @@ margin-bottom:10px;
               </property>
               <property name="icon">
                <iconset>
-                <normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/administrator-32.ico</normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/administrator-32.ico</iconset>
+                <normaloff>../assets/icons/administrator-32.ico</normaloff>../assets/icons/administrator-32.ico</iconset>
               </property>
              </widget>
             </item>
@@ -199,7 +199,7 @@ margin-bottom:10px;
               </property>
               <property name="icon">
                <iconset>
-                <normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/help-circle.svg</normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/help-circle.svg</iconset>
+                <normaloff>../assets/icons/help-circle.svg</normaloff>../assets/icons/help-circle.svg</iconset>
               </property>
               <property name="checkable">
                <bool>false</bool>
@@ -216,7 +216,7 @@ margin-bottom:10px;
               </property>
               <property name="icon">
                <iconset>
-                <normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/arrow-down-left.svg</normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/arrow-down-left.svg</iconset>
+                <normaloff>../assets/icons/arrow-down-left.svg</normaloff>../assets/icons/arrow-down-left.svg</iconset>
               </property>
              </widget>
             </item>
@@ -299,7 +299,12 @@ padding-bottom:7px;
 color: rgb(140, 140, 140);
 }
 
-</string>
+QTableWidget#tabla_computadoras_activas::item:selected {
+        background-color: none;  /* Eliminar el color de resaltado */
+        selection-color: none;  /* Eliminar el color de texto de resaltado */
+        selection-background-color: none;  /* Eliminar el color de fondo de resaltado */
+        cursor: default;  /* Cambiar el puntero a predeterminado */
+    }</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
           <property name="spacing">
@@ -360,7 +365,7 @@ border-radius:15px;
                </property>
                <property name="icon">
                 <iconset>
-                 <normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/user-4.ico</normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/user-4.ico</iconset>
+                 <normaloff>../assets/icons/user-4.ico</normaloff>../assets/icons/user-4.ico</iconset>
                </property>
               </widget>
              </item>
@@ -600,7 +605,7 @@ border-radius:15px;
                              <string/>
                             </property>
                             <property name="pixmap">
-                             <pixmap>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/files/ok.png</pixmap>
+                             <pixmap>../assets/files/ok.png</pixmap>
                             </property>
                            </widget>
                           </item>
@@ -749,8 +754,8 @@ Computadora</string>
                         <rect>
                          <x>0</x>
                          <y>0</y>
-                         <width>1184</width>
-                         <height>562</height>
+                         <width>1200</width>
+                         <height>643</height>
                         </rect>
                        </property>
                        <layout class="QGridLayout" name="gridLayout_8">
@@ -762,7 +767,7 @@ Computadora</string>
                            </font>
                           </property>
                           <property name="text">
-                           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Página principal&lt;/p&gt;&lt;p&gt;-Instalar la segunda aplicación en la computadora que se va a monitorear. &lt;/p&gt;&lt;p&gt;-Asegurese que ambas aplicaciones cuenten con una conexión a internet, si no, el programa no podra ser utilizado correctamente.&lt;/p&gt;&lt;p&gt;- Obtener la MAC ADRESS de la computadora que va a ser registrada. &lt;/p&gt;&lt;p&gt;- Para poder registrar una nueva computadora, se debe registrar primeramente en la sección de agregar computadoras.&lt;/p&gt;&lt;p&gt;-Si quiere agregar otro comando en la computadoras activas, de doble click en la fila de la computadora seleccionada.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Computadoras&lt;/p&gt;&lt;p&gt;- Si requiere modificar algún dato de alguna computadora, de doble click en el dato a modificar.&lt;/p&gt;&lt;p&gt;- Si se requiere eliminar a una computadora, seleccione la fila y de click en el bóton eliminar&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Propietarios&lt;/p&gt;&lt;p&gt;- Si requiere modificar algún dato de algún propietario, de doble click en la fila del dato a modificar.&lt;/p&gt;&lt;p&gt;- Si se requiere eliminar a un propietario, seleccione la fila y de click en el bóton eliminar&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Página principal&lt;/p&gt;&lt;p&gt;-Instalar la segunda aplicación en la computadora que se va a monitorear. &lt;/p&gt;&lt;p&gt;-Asegurese que ambas aplicaciones cuenten con una conexión a internet, si no, el programa no podra ser utilizado correctamente.&lt;/p&gt;&lt;p&gt;- Obtener el número de serie de la computadora que va a ser registrada, este número sera tomado como dato único de los equipos &lt;/p&gt;&lt;p&gt;de computo y poder distinguirlos con más facilidad.&lt;/p&gt;&lt;p&gt;- Para poder registrar una nueva computadora, se debe registrar primeramente en la sección de agregar computadoras.&lt;/p&gt;&lt;p&gt;-Si quiere agregar otro comando en la computadoras activas, de doble click en la fila de la computadora que desea controlar.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Computadoras&lt;/p&gt;&lt;p&gt;- Si requiere modificar algún dato de alguna computadora, de doble click en el dato a modificar.&lt;/p&gt;&lt;p&gt;- Si se requiere eliminar a una computadora, seleccione la fila y de click en el bóton eliminar&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Propietarios&lt;/p&gt;&lt;p&gt;- Si requiere modificar algún dato de algún propietario, de doble click en la fila del dato a modificar.&lt;/p&gt;&lt;p&gt;- Si se requiere eliminar a un propietario, seleccione la fila y de click en el bóton eliminar&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignJustify|Qt::AlignTop</set>
@@ -1086,7 +1091,7 @@ color:white;
                             <property name="minimumSize">
                              <size>
                               <width>120</width>
-                              <height>30</height>
+                              <height>40</height>
                              </size>
                             </property>
                             <property name="maximumSize">
@@ -1114,28 +1119,11 @@ color:white;
                            </spacer>
                           </item>
                           <item>
-                           <widget class="QPushButton" name="guardar_admin_btn">
-                            <property name="minimumSize">
-                             <size>
-                              <width>100</width>
-                              <height>40</height>
-                             </size>
-                            </property>
-                            <property name="text">
-                             <string/>
-                            </property>
-                            <property name="icon">
-                             <iconset>
-                              <normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/save-2.ico</normaloff>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/icons/save-2.ico</iconset>
-                            </property>
-                           </widget>
-                          </item>
-                          <item>
                            <widget class="QPushButton" name="modificar_perfil_btn">
                             <property name="minimumSize">
                              <size>
                               <width>200</width>
-                              <height>40</height>
+                              <height>60</height>
                              </size>
                             </property>
                             <property name="font">
@@ -1295,7 +1283,7 @@ información</string>
                        <string/>
                       </property>
                       <property name="pixmap">
-                       <pixmap>../../../../../Users/diego/OneDrive/Escritorio/ProyectoRedesla/assets/files/admin2.png</pixmap>
+                       <pixmap>../assets/files/admin2.png</pixmap>
                       </property>
                       <property name="scaledContents">
                        <bool>true</bool>
@@ -1574,26 +1562,10 @@ QPushButton#desactivar_btn:hover,
                            <string>ID</string>
                           </property>
                          </column>
-                         <column>
-                          <property name="text">
-                           <string>Nombre del equipo</string>
-                          </property>
-                         </column>
-                         <column>
-                          <property name="text">
-                           <string>Número de serie</string>
-                          </property>
-                         </column>
-                         <column>
-                          <property name="text">
-                           <string>Rol</string>
-                          </property>
-                         </column>
-                         <column>
-                          <property name="text">
-                           <string>Rol</string>
-                          </property>
-                         </column>
+                         <column/>
+                         <column/>
+                         <column/>
+                         <column/>
                         </widget>
                        </item>
                       </layout>
@@ -1663,33 +1635,6 @@ QPushButton#otros_comandos_btn:pressed{
                      </spacer>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="activar_btn">
-                      <property name="minimumSize">
-                       <size>
-                        <width>0</width>
-                        <height>50</height>
-                       </size>
-                      </property>
-                      <property name="text">
-                       <string>Activar</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="activar_compus_btn">
-                      <property name="minimumSize">
-                       <size>
-                        <width>0</width>
-                        <height>50</height>
-                       </size>
-                      </property>
-                      <property name="text">
-                       <string>Activar 
-Computadoras</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
                      <spacer name="verticalSpacer_8">
                       <property name="orientation">
                        <enum>Qt::Vertical</enum>
@@ -1703,14 +1648,6 @@ Computadoras</string>
                      </spacer>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="otros_comandos_btn">
-                      <property name="text">
-                       <string>Otros 
-comandos</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
                      <spacer name="verticalSpacer_2">
                       <property name="orientation">
                        <enum>Qt::Vertical</enum>
@@ -1722,33 +1659,6 @@ comandos</string>
                        </size>
                       </property>
                      </spacer>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="desactivar_btn">
-                      <property name="minimumSize">
-                       <size>
-                        <width>0</width>
-                        <height>50</height>
-                       </size>
-                      </property>
-                      <property name="text">
-                       <string>Desactivar</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="desactivar_compus_btn">
-                      <property name="minimumSize">
-                       <size>
-                        <width>0</width>
-                        <height>50</height>
-                       </size>
-                      </property>
-                      <property name="text">
-                       <string>Desactivar 
-Computadoras</string>
-                      </property>
-                     </widget>
                     </item>
                     <item>
                      <spacer name="verticalSpacer_4">
