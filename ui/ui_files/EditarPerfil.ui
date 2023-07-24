@@ -25,10 +25,31 @@
   <property name="windowTitle">
    <string>Editar Perfil</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QMainWindow{
+background:qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);
+}</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
      <widget class="QFrame" name="frame">
+      <property name="styleSheet">
+       <string notr="true">QLineEdit{
+border:1px solid rgba(0,0,0,0);
+background-color: rgb(216, 216, 216);
+border-radius:10px;
+border-bottom-color:rgba(255,255,255,255);
+color:rgb(0,0,0);
+font: 75 10pt &quot;MS Shell Dlg 2&quot;;
+padding:7px;
+}
+
+QLabel{
+color:white;
+}
+</string>
+      </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>

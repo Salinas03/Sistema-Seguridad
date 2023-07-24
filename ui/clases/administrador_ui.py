@@ -8,8 +8,8 @@ class AdministradorSocketUI:
         self.FORMAT = "utf-8"
         self.HEADER = 20480
         # self.IP = '68.183.143.116'
-        # self.IP = '165.22.15.159'
-        self.IP = '165.22.0.170'
+        self.IP = '165.22.15.159'
+        # self.IP = '165.22.0.170'
         #self.IP = socket.gethostbyname(socket.gethostname())
         self.PORT = 5050
         self.PORT_NOT = 5051
