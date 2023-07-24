@@ -34,7 +34,14 @@ class AdministradorSocketUI:
         #Creación de sockets, uno para atender el panel de administración y otro para manejar las notificaciones y listados
         try:
             self.administrador = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.administrador.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+            self.administrador.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, 120)
+            self.administrador.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, 60)
+    
             self.conectividad_admin = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.conectividad_admin.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+            self.conectividad_admin.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, 120)
+            self.conectividad_admin.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, 60)
 
             #Conexiones que requieren estar encendidas
             self.notificacion = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

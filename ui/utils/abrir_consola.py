@@ -38,6 +38,9 @@ def abrir_consola_ejecutar_script(consola):
             #Recibir respuesta del servidor/cliente
             respuesta_servidor_cliente = admin_socket_ui.get_socket_administrador().recv(admin_socket_ui.HEADER).decode(admin_socket_ui.FORMAT)
 
+            if respuesta_servidor_cliente == 'desconectado':
+                break
+
             #Imprimir la respuesta
             print('Respuesta servidor cliente')
             print(respuesta_servidor_cliente)
@@ -52,7 +55,7 @@ def abrir_consola_ejecutar_script(consola):
             break
     
     #Esperar el proceso
-    proceso_consola.wait()
+    # proceso_consola.wait()
 
     # #Cerrar la consola una vez el proceso se haya realizado
     subprocess.Popen(['taskkill', '/F', '/IM', 'cmd.exe'])
