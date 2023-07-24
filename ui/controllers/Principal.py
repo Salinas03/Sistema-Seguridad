@@ -48,13 +48,7 @@ class PrincipalWindow(Principal,QWidget):
         self.user_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_4))
         self.admins_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_5))
 
-        # < --------------------- PAGINA PRINCIPAL --------------------- > 
-
-        # CONTROL DE COMPUTADORAS
-        self.activar_btn.clicked.connect(self.activar_computadora)
-        self.activar_compus_btn.clicked.connect(self.activar_computadoras)
-        self.desactivar_btn.clicked.connect(self.desactivar_computadora)
-        self.desactivar_compus_btn.clicked.connect(self.desactivar_computadoras)
+        # < --------------------- PAGINA PRINCIPAL --------------------- >
 
         tabla_de_computadoras_activas = QTableWidget()
         tabla_de_computadoras_activas.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
@@ -64,15 +58,6 @@ class PrincipalWindow(Principal,QWidget):
 
         header_computadoras_desactivas = self.tabla_computadoras_desactivas.horizontalHeader()
         header_computadoras_desactivas.setSectionResizeMode(header_computadoras_desactivas.Stretch)
-
-        # OCULTAR LOS BOTONES DE ACTIVACION DE Y DESACTIVACION DE COMPUTADORAS
-        self.desactivar_btn.setVisible(False)
-        self.desactivar_compus_btn.setVisible(False)
-
-        # BlOQUEO DE BOTON OTROS COMANDOS
-        self.otros_comandos_btn.setVisible(False)
-
-        self.otros_comandos_btn.clicked.connect(self.abrir_opciones_computadora)
 
         # < --------------------- PAGINA COMPUTADORAS ACTIVAS E INACTIVAS--------------------- >
         
@@ -281,25 +266,6 @@ class PrincipalWindow(Principal,QWidget):
                     self.tabla_computadoras_desactivas.setItem(index_row, index_cell, QTableWidgetItem(str(cell)))
             else: 
                 self.tabla_computadoras_desactivas.hideRow(index_row)
-
-    def activar_computadora(self):
-        self.desactivar_btn.setVisible(True)
-        self.desactivar_compus_btn.setVisible(True)
-
-    def activar_computadoras(self):
-        self.desactivar_btn.setVisible(True)
-        self.desactivar_compus_btn.setVisible(True)
-        self.activar_compus_btn.setVisible(False)
-        self.activar_btn.setVisible(False)
-
-    def desactivar_computadora(self):
-        pass
-
-    def desactivar_computadoras(self):
-        self.activar_compus_btn.setVisible(True)
-        self.activar_btn.setVisible(True)
-        self.desactivar_compus_btn.setVisible(False)
-        self.desactivar_btn.setVisible(False)
 
     # FUNCION PARA MANDAR LLAMAR LA VENTANA DE OPCIONES DE COMPUTADORA
     def abrir_opciones_computadora(self):

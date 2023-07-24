@@ -55,7 +55,7 @@ class RecuperarPasswordWindow(RecuperarContrasenia,QWidget):
                 self.codigo_recuperacion_txt.setFocus()
                 return self.codigo_verificacion
             else:
-                QMessageBox.critical(self, 'Oops, algo ocurrio', 'No se pudo enviar el correo de verificacion, intente denuevo', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                QMessageBox.critical(self, 'Oops, algo ocurrio', 'No se pudo enviar el correo de verificacion, intente de nuevo', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
                 return None
         else:
             QMessageBox.critical(self, 'Error', 'Introduzca un correo en el campo de texto', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
