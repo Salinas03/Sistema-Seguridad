@@ -17,6 +17,18 @@ import sys
 import os
 
 class Principal(QMainWindow, object):
+
+
+    def closeEvent(self, event):
+        try:
+            admin_socket_ui.cerrado_sockets()
+            # admin_socket_ui.get_socket_administrador().send('salir'.encode())
+            
+        except socket.error as e:
+            print(f'Ocurrio un error al realizar la salida {e}')
+
+        event.accept()
+
     def setupUi(self, Principal):
         if not Principal.objectName():
             Principal.setObjectName(u"Principal")

@@ -5,7 +5,7 @@ from clases.administrador_ui import admin_socket_ui
 
 def abrir_consola_ejecutar_script(consola):
 
-    #Creación de socket con el subproceso
+    #Creación de socket con el subproceso IPC
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind(('127.0.0.1', 7777))
     sock.listen()

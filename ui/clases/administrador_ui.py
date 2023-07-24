@@ -15,23 +15,26 @@ class AdministradorSocketUI:
         self.PORT_NOT = 5051
         self.PORT_BROAD = 5052
         self.PORT_BD = 5054
-        self.PORT_SEL = 5055
+        self.PORT_CONA = 5055
         self.ADDR = (self.IP, self.PORT)
         self.ADDR_NOT = (self.IP, self.PORT_NOT)
         self.ADDR_BROAD = (self.IP, self.PORT_BROAD)
         self.ADDR_BD = (self.IP, self.PORT_BD)
-        self.ADDR_SEL = (self.IP, self.PORT_SEL)
+        self.ADDR_CONA = (self.IP, self.PORT_CONA)
+        self.TIMEOUT = 4
         
         #Variables de sockets
         self.administrador = None
         self.notificacion = None
         self.broadcasting = None
         self.operacionesbd = None
+        self.conectividad_admin = None
 
     def crear_sockets(self):
         #Creación de sockets, uno para atender el panel de administración y otro para manejar las notificaciones y listados
         try:
             self.administrador = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.conectividad_admin = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
             #Conexiones que requieren estar encendidas
             self.notificacion = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -139,7 +142,7 @@ class AdministradorSocketUI:
             # self.broadcasting.close()
             # self.operacionesbd.close()
             return None
-
+   
     def get_socket_administrador(self):
         return self.administrador
 
@@ -151,6 +154,16 @@ class AdministradorSocketUI:
 
     def get_socket_operacionesbd(self):
         return self.operacionesbd
+    
+    def get_socket_conectividadadmin(self):
+        return self.conectividad_admin
+
+    def cerrado_sockets(self):
+        self.administrador.close()
+        self.conectividad_admin.close()
+        self.notificacion.close()
+        self.broadcasting.close()
+        self.operacionesbd.close()
 
     def obtener_numero_serie(self):
         # Connect to the WMI service
