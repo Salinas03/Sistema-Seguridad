@@ -60,9 +60,14 @@ def crear_sockets():
 
         #CREACIÓN DE DE SOCKETS
         servidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        servidor.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
         conectividad_admin = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        conectividad_admin.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
         cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        
+        cliente.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
         #CONEXIONES QUE SE GUARDARAN EN ARREGLOS LAS CUALES HAY QUE MANTENER ENCENDIDAS
         notificacion = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         notificacion.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -612,6 +617,9 @@ def listar_equipos():
     #Borrar elementos del arreglo auxiliar
     if conexiones_equipos_cliente_mostrar:
         del conexiones_equipos_cliente_mostrar[:]
+
+    print('CONEXIONES EQUIPOS CLIENTE')
+    print(conexiones_equipos_cliente)
 
     for i, conexion_equipo in enumerate(conexiones_equipos_cliente[:]):
         bandera = False
