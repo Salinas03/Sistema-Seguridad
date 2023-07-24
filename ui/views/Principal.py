@@ -17,20 +17,10 @@ import sys
 import os
 
 class Principal(QMainWindow, object):
-
-    def closeEvent(self, event):
-        try:
-            admin_socket_ui.get_socket_administrador().send('salir'.encode())
-            
-        except socket.error as e:
-            print(f'Ocurrio un error al realizar la salida {e}')
-
-        event.accept()
-
     def setupUi(self, Principal):
         if not Principal.objectName():
             Principal.setObjectName(u"Principal")
-        Principal.resize(1309, 813)
+        Principal.resize(1388, 813)
 
         # Rutas de las imágenes
         logo_path = os.path.join(
@@ -166,12 +156,6 @@ class Principal(QMainWindow, object):
 
         self.verticalLayout_2.addWidget(self.settings_btn)
 
-        self.pushButton_4 = QPushButton(self.menu_widget)
-        self.pushButton_4.setObjectName(u"pushButton_4")
-        self.pushButton_4.setIcon(icon5)
-
-        self.verticalLayout_2.addWidget(self.pushButton_4)
-
 
         self.verticalLayout_4.addLayout(self.verticalLayout_2)
 
@@ -257,7 +241,7 @@ class Principal(QMainWindow, object):
 "          /* Cambiar el puntero a predeterminado */\n"
 "        color:black;   \n}"
 "")
-
+        
         self.verticalLayout = QVBoxLayout(self.body_widget)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -477,7 +461,7 @@ class Principal(QMainWindow, object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1184, 562))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1278, 664))
         self.gridLayout_8 = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_8.setObjectName(u"gridLayout_8")
         self.label_15 = QLabel(self.scrollAreaWidgetContents)
@@ -640,7 +624,7 @@ class Principal(QMainWindow, object):
         self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
         self.cerrar_sesion_btn_2 = QPushButton(self.frame_15)
         self.cerrar_sesion_btn_2.setObjectName(u"cerrar_sesion_btn_2")
-        self.cerrar_sesion_btn_2.setMinimumSize(QSize(120, 30))
+        self.cerrar_sesion_btn_2.setMinimumSize(QSize(120, 40))
         self.cerrar_sesion_btn_2.setMaximumSize(QSize(120, 16777215))
 
         self.horizontalLayout_8.addWidget(self.cerrar_sesion_btn_2)
@@ -651,7 +635,7 @@ class Principal(QMainWindow, object):
 
         self.modificar_perfil_btn = QPushButton(self.frame_15)
         self.modificar_perfil_btn.setObjectName(u"modificar_perfil_btn")
-        self.modificar_perfil_btn.setMinimumSize(QSize(200, 40))
+        self.modificar_perfil_btn.setMinimumSize(QSize(200, 60))
         font7 = QFont()
         font7.setPointSize(10)
         self.modificar_perfil_btn.setFont(font7)
@@ -826,6 +810,14 @@ class Principal(QMainWindow, object):
 
         self.horizontalLayout_5.addItem(self.horizontalSpacer_2)
 
+        self.actualizar_btn = QPushButton(self.widget)
+        self.actualizar_btn.setObjectName(u"actualizar_btn")
+        icon6 = QIcon()
+        icon6.addFile(u"../assets/icons/refresh-cw.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.actualizar_btn.setIcon(icon6)
+
+        self.horizontalLayout_5.addWidget(self.actualizar_btn)
+
 
         self.verticalLayout_6.addWidget(self.widget)
 
@@ -933,42 +925,13 @@ class Principal(QMainWindow, object):
 
         self.verticalLayout_5.addItem(self.verticalSpacer_3)
 
-        self.activar_btn = QPushButton(self.frame_5)
-        self.activar_btn.setObjectName(u"activar_btn")
-        self.activar_btn.setMinimumSize(QSize(0, 50))
-
-        self.verticalLayout_5.addWidget(self.activar_btn)
-
-        self.activar_compus_btn = QPushButton(self.frame_5)
-        self.activar_compus_btn.setObjectName(u"activar_compus_btn")
-        self.activar_compus_btn.setMinimumSize(QSize(0, 50))
-
-        self.verticalLayout_5.addWidget(self.activar_compus_btn)
-
         self.verticalSpacer_8 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout_5.addItem(self.verticalSpacer_8)
 
-        self.otros_comandos_btn = QPushButton(self.frame_5)
-        self.otros_comandos_btn.setObjectName(u"otros_comandos_btn")
-
-        self.verticalLayout_5.addWidget(self.otros_comandos_btn)
-
         self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout_5.addItem(self.verticalSpacer_2)
-
-        self.desactivar_btn = QPushButton(self.frame_5)
-        self.desactivar_btn.setObjectName(u"desactivar_btn")
-        self.desactivar_btn.setMinimumSize(QSize(0, 50))
-
-        self.verticalLayout_5.addWidget(self.desactivar_btn)
-
-        self.desactivar_compus_btn = QPushButton(self.frame_5)
-        self.desactivar_compus_btn.setObjectName(u"desactivar_compus_btn")
-        self.desactivar_compus_btn.setMinimumSize(QSize(0, 50))
-
-        self.verticalLayout_5.addWidget(self.desactivar_compus_btn)
 
         self.verticalSpacer_4 = QSpacerItem(20, 174, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
@@ -993,7 +956,6 @@ class Principal(QMainWindow, object):
         Principal.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(Principal)
-        self.pushButton_4.clicked.connect(Principal.close)
 
         self.stackedWidget.setCurrentIndex(4)
 
@@ -1008,7 +970,6 @@ class Principal(QMainWindow, object):
         self.compus_btn.setText("")
         self.admins_btn.setText("")
         self.settings_btn.setText("")
-        self.pushButton_4.setText("")
         self.user_btn.setText("")
         self.label_20.setText(QCoreApplication.translate("Principal", u"Computadoras registradas", None))
         ___qtablewidgetitem = self.computadoras_registradas_table.horizontalHeaderItem(0)
@@ -1061,6 +1022,7 @@ class Principal(QMainWindow, object):
 "Adminstrador", None))
         self.label_12.setText("")
         self.label_2.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p><span style=\" font-size:12pt;\">Computadoras </span><span style=\" font-size:12pt; color:#00aa00;\">activas</span></p></body></html>", None))
+        self.actualizar_btn.setText("")
         ___qtablewidgetitem11 = self.tabla_computadoras_activas.horizontalHeaderItem(0)
         ___qtablewidgetitem11.setText(QCoreApplication.translate("Principal", u"ID", None));
         ___qtablewidgetitem12 = self.tabla_computadoras_activas.horizontalHeaderItem(1)
@@ -1084,13 +1046,4 @@ class Principal(QMainWindow, object):
         ___qtablewidgetitem20.setText(QCoreApplication.translate("Principal", u"Rol", None));
         ___qtablewidgetitem21 = self.tabla_computadoras_desactivas.horizontalHeaderItem(4)
         ___qtablewidgetitem21.setText(QCoreApplication.translate("Principal", u"Rol", None));
-        self.activar_btn.setText(QCoreApplication.translate("Principal", u"Activar", None))
-        self.activar_compus_btn.setText(QCoreApplication.translate("Principal", u"Activar \n"
-"Computadoras", None))
-        self.otros_comandos_btn.setText(QCoreApplication.translate("Principal", u"Otros \n"
-"comandos", None))
-        self.desactivar_btn.setText(QCoreApplication.translate("Principal", u"Desactivar", None))
-        self.desactivar_compus_btn.setText(QCoreApplication.translate("Principal", u"Desactivar \n"
-"Computadoras", None))
-    # retranslateUi
 

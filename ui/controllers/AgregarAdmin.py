@@ -86,7 +86,7 @@ class AgregarpropietarioWindow(AgregarPropietario,QWidget):
                         window.destroyed.connect(self.ventana_cerrada)
                         window.show()
                     else:
-                        QMessageBox.critical(self, 'Oops, algo ocurrio', 'No se pudo enviar el correo de verificacion, intente denuevo', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                        QMessageBox.critical(self, 'Oops, algo ocurrio', 'No se pudo enviar el correo de verificacion, intente de nuevo', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
 
             else:
                 QMessageBox.warning(self, 'Selecciona un rol' , 'Seleccione un rol correctamente', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)

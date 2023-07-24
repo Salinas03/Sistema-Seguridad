@@ -23,7 +23,41 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Agregar computadoras</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../assets/icons/LOGO.svg</normaloff>../assets/icons/LOGO.svg</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QLineEdit,QComboBox{
+border:1px solid rgba(0,0,0,0);
+background:qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);
+border-radius:10px;
+border-bottom-color:rgba(255,255,255,255);
+color:rgb(255,255,255);
+font: 75 10pt &quot;MS Shell Dlg 2&quot;;
+padding:7px;
+}
+
+
+QPushButton{
+    text-decoration: none;
+    width:50%;
+    padding:10px;
+    border: 1px solid black;
+    border-radius:10px;
+    text-decoration: none;
+    color:black;
+    font-weight: bold;
+    text-align: center;
+    font-size: 12px;
+}
+
+QPushButton:hover{
+    background:qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);;
+    color:white;
+}</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -125,7 +159,11 @@
            <widget class="QLineEdit" name="nombre_equipo_txt">
             <property name="font">
              <font>
-              <pointsize>12</pointsize>
+              <family>MS Shell Dlg 2</family>
+              <pointsize>10</pointsize>
+              <weight>9</weight>
+              <italic>false</italic>
+              <bold>false</bold>
              </font>
             </property>
             <property name="placeholderText">
@@ -157,7 +195,11 @@
            <widget class="QLineEdit" name="num_serie_txt">
             <property name="font">
              <font>
-              <pointsize>12</pointsize>
+              <family>MS Shell Dlg 2</family>
+              <pointsize>10</pointsize>
+              <weight>9</weight>
+              <italic>false</italic>
+              <bold>false</bold>
              </font>
             </property>
             <property name="placeholderText">
@@ -185,18 +227,6 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
-           <widget class="QLineEdit" name="propietario_equipo_txt">
-            <property name="font">
-             <font>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="placeholderText">
-             <string>Propietario del equipo</string>
-            </property>
-           </widget>
-          </item>
           <item row="3" column="0">
            <widget class="QLabel" name="label_13">
             <property name="minimumSize">
@@ -217,16 +247,32 @@
             </property>
            </widget>
           </item>
+          <item row="2" column="1">
+           <widget class="QComboBox" name="propietario_cmbx">
+            <item>
+             <property name="text">
+              <string>Selecciona Propietario</string>
+             </property>
+            </item>
+           </widget>
+          </item>
           <item row="3" column="1">
-           <widget class="QLineEdit" name="rol_txt">
-            <property name="font">
-             <font>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="placeholderText">
-             <string>Rol</string>
-            </property>
+           <widget class="QComboBox" name="rol_cmbx">
+            <item>
+             <property name="text">
+              <string>Selecciona un rol</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Administrador - 1</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Usuario - 0</string>
+             </property>
+            </item>
            </widget>
           </item>
          </layout>
@@ -235,7 +281,7 @@
        <item>
         <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Los roles se manejan de la siguiente manera:&lt;/p&gt;&lt;p&gt;- Si se desea agregar una computadora &lt;span style=&quot; font-weight:600;&quot;&gt;Administradora&lt;/span&gt; poner &lt;span style=&quot; font-weight:600;&quot;&gt;1&lt;/span&gt;&lt;/p&gt;&lt;p&gt;- Si se desea agregar una computadora &lt;span style=&quot; font-weight:600;&quot;&gt;Usuario&lt;/span&gt; poner &lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
        </item>
