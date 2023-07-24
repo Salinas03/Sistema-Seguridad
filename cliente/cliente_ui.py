@@ -4,7 +4,8 @@ import threading
 import os
 import subprocess
 import time
-from clases.cliente import cliente_socket
+import datetime
+from cliente import cliente_socket
 
 global salida
 salida = False
@@ -20,10 +21,10 @@ def manejar_canal_cliente():
         try:
             print('Manejar canal de cliente')
             respuesta_servidor = cliente_socket.get_socket_cliente().recv(cliente_socket.HEADER).decode(cliente_socket.FORMAT)
-            print('Se recibio mensaje vacio del servidor')
+            print(f'Se recibio mensaje vacio del servidor {datetime.datetime.now()}')
             if respuesta_servidor == ' ':
                 cliente_socket.get_socket_cliente().send(' '.encode())
-                print('Se envió mensaje vacio')
+                print(f'Se envió mensaje vacio {datetime.datetime.now()}')
             else:
                 try:
                     print(f'Instrucción a aplicar {respuesta_servidor}')

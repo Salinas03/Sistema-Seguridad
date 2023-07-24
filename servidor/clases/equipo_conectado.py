@@ -30,6 +30,9 @@ class EquipoConectado:
     
     def get_seleccion_numero_serie(self):
         return self.seleccion_numero_serie
+    
+    def get_consola(self):
+        return self.consola
 
     #Setters
     def set_conexion(self, conexion):
@@ -49,3 +52,6 @@ class EquipoConectado:
 
     def set_seleccion_numero_serie(self, numero_serie):
         self.seleccion_numero_serie = numero_serie
+
+    def set_consola(self, consola):
+        self.consola = consola

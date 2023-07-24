@@ -75,6 +75,10 @@ class Principal(QMainWindow, object):
             os.path.dirname(os.path.abspath(__file__)),
             '../assets/files/admin2.png'
         )
+        actualizar_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../assets/icons/refresh-ccw.svg'
+        )
 
         icon = QIcon(logo_path)
         icon1 = QIcon(home_icon_path)
@@ -83,6 +87,7 @@ class Principal(QMainWindow, object):
         icon4 = QIcon(help_icon_path)
         icon5 = QIcon(arrow_icon_path)
         icon6 = QIcon(user_4_path)
+        icon7 = QIcon(actualizar_path)
 
         Principal.setWindowIcon(icon)
 
@@ -824,9 +829,9 @@ class Principal(QMainWindow, object):
 
         self.actualizar_btn = QPushButton(self.widget)
         self.actualizar_btn.setObjectName(u"actualizar_btn")
-        icon6 = QIcon()
-        icon6.addFile(u"../assets/icons/refresh-cw.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.actualizar_btn.setIcon(icon6)
+        # icon6 = QIcon()
+        # icon6.addFile(u"../assets/icons/refresh-cw.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.actualizar_btn.setIcon(icon7)
 
         self.horizontalLayout_5.addWidget(self.actualizar_btn)
 

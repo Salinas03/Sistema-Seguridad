@@ -9,6 +9,7 @@ class ClienteSocket:
         self.HEADER = 20480
         # self.IP = '68.183.143.116'
         self.IP = '165.22.15.159'
+        # self.IP = '165.22.0.170'
         #self.IP = socket.gethostbyname(socket.gethostname())
         self.PORT = 5050
         self.PORT_CLIENTE = 5053
@@ -24,7 +25,14 @@ class ClienteSocket:
 
         try:
             cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            cliente.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+            cliente.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, 120)
+            cliente.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, 60)
+
             cliente_secundario = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            cliente_secundario.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+            cliente_secundario.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, 120)
+            cliente_secundario.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, 60)
 
             #Establecer los TIMOUTS de los sockets
             cliente.settimeout(self.TIMEOUT)
@@ -32,7 +40,8 @@ class ClienteSocket:
 
             return {"success": True, "msg": "Creación de sockets exitosa :)"}
         
-        except:
+        except socket.error as e:
+            print(f'Error al crear los sockets {e}')
             return {"success": False, "msg": "Hubo un error al crear los sockets :("}
 
     def conexion_temporal(self):

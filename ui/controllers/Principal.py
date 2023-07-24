@@ -503,7 +503,7 @@ class PrincipalWindow(Principal,QWidget):
         while True:
             try:
                 mensaje = admin_socket_ui.get_socket_conectividadadmin().recv(admin_socket_ui.HEADER).decode(admin_socket_ui.FORMAT)
-                print(f'Mensaje del servidor {mensaje} {datetime.datetime.now()}')
+                # print(f'Mensaje del servidor {mensaje} {datetime.datetime.now()}')
                 admin_socket_ui.get_socket_conectividadadmin().send('*'.encode())
 
             except socket.error as e:
