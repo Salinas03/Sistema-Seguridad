@@ -8,7 +8,7 @@ from base_datos.conexion import conexion
 from base_datos.equipos_consultas import EquiposConsultas
 from base_datos.propietarios_consultas import PropietariosConsultas
 from clases.equipo_conectado import EquipoConectado
-from clases.administrador import Administrador
+# from clases.administrador import Administrador
 from clases.validar_json import is_valid_json
 
 #VARIABLES GLOBALES PARA LA CONFIGURACIÓN DE SOCKETS
@@ -594,17 +594,6 @@ def panel_base_datos(instruccion):
             #Busqueda para ver si ya existe este usuario que esta tratando de loguearse
             print('Dentro de LOGIN')
             respuesta_operacion = PropietariosConsultas(conexion()).obtener_propietario(data[0], data[1])
-
-            data = respuesta_operacion['data']
-
-            if data:
-                #Checar si esa sesión ya existe o no existe
-                for sesion in sesiones_administradores:
-                    if sesion.get_id_admin() == data[0]: #ID 
-                        return json.dumps({'success': False, 'msg': 'Ya hay un usuario con esa sesión'})
-
-                #Si no existe crear la sesión de ese administrador de lo contrario mandar un mensaje diciendo que ya existe la sesión
-                sesiones_administradores.append(Administrador(data[0], data[1], data[2],data[3], data[4], data[5]))
 
             print('RESPUESTA LOGIN')
             print(respuesta_operacion)
