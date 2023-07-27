@@ -224,7 +224,7 @@ class PrincipalWindow(Principal,QWidget):
         ###################################################################################################################################
         ###################################################################################################################################
 
-    # ////////////////////////// FUNCIONES PAGINA PRINCIPAL TODO//////////////////////////
+    """ # ////////////////////////// FUNCIONES PAGINA PRINCIPAL TODO//////////////////////////"""
 
     def configuracion_tabla_equipos_activos(self):
         column_headers_tablas_equipos_activos = ('ID','Nombre del equipo', 'Número de serie', 'Propietario del equipo', 'Rol', 'IP')   
@@ -310,8 +310,9 @@ class PrincipalWindow(Principal,QWidget):
                 
             else:
                 QMessageBox.warning(self, "Advertencia", "La ventana ya está abierta.")
-# ////////////////////////// FUNCIONES PAGINA COMPUTADORAS REGISTRADAS //////////////////////////
 
+    """ # ////////////////////////// FUNCIONES PAGINA COMPUTADORAS REGISTRADAS //////////////////////////"""
+    
     def apply_hover_effect_computadoras(self, button):
         button.enterEvent = lambda event, button=button: self.on_enter_event_computadoras(event, button)
         button.leaveEvent = lambda event, button=button: self.on_leave_event_computadoras(event, button)
@@ -414,7 +415,7 @@ class PrincipalWindow(Principal,QWidget):
         else:
             self.eliminar_compu_btn.setEnabled(False)   
 
-# ////////////////////////// FUNCIONES PAGINA ADMINISTRADORES REGISTRADOS //////////////////////////
+    """ # ////////////////////////// FUNCIONES PAGINA ADMINISTRADORES REGISTRADOS //////////////////////////"""
 
     def apply_hover_effect(self, button):
         button.enterEvent = lambda event, button=button: self.on_enter_event(event, button)
@@ -444,7 +445,7 @@ class PrincipalWindow(Principal,QWidget):
             button.setText(button.original_text)  # Restaura el texto original del botón
         button.setIcon(QIcon())  # Configura un QIcon vacío para eliminar la imagen
 
-# FUNCION PARA MANDAR LLAMAR LA VENTANA DE AGREGAR ADMIN
+    # FUNCION PARA MANDAR LLAMAR LA VENTANA DE AGREGAR ADMIN
     def abrir_agregar_admin(self):
         # CONDICION PARA SABER SI LA VENTANA ESTA ABIERTA
         if not self.ventana_abierta: 
@@ -510,7 +511,7 @@ class PrincipalWindow(Principal,QWidget):
     def habilitar_eliminar_propietario(self):
         self.eliminar_admin_btn.setEnabled(True)   
     
-# ////////////////////////// FUNCIONES PAGINA PERFIL //////////////////////////
+    """ # ////////////////////////// FUNCIONES PAGINA PERFIL //////////////////////////"""
 
     def llenar_campos_administrador(self):
         self.nombre_txt.setText(self.administrador.get_nombre_admin())
@@ -529,7 +530,7 @@ class PrincipalWindow(Principal,QWidget):
             QMessageBox.warning(self, "Advertencia", "La ventana ya está abierta.")
 
 
-# ////////////////////////// FUNCIONES PARA LAS PAGINAS //////////////////////////
+    """ # ////////////////////////// FUNCIONES PARA LAS PAGINAS //////////////////////////"""
             
     # FUNCION PARA DEFINIR QUE LA VENTANA CAMBIE SU ESTADO A FALSE        
     def ventana_cerrada(self):
@@ -571,7 +572,7 @@ class PrincipalWindow(Principal,QWidget):
         except threading.ThreadError as e:
             print(f'Hubo un error al realizar el cerrado de los HILOS {e}')
 
-# ////////////////////////// FUNCIONES PARA ESCUCHAR CAMBIOS EN LA BASE DE DATOS TODO//////////////////////////
+    """# ////////////////////////// FUNCIONES PARA ESCUCHAR CAMBIOS EN LA BASE DE DATOS TODO//////////////////////////"""
 
     def escuchar_conectividad(self):
         admin_socket_ui.get_socket_conectividadadmin().settimeout(admin_socket_ui.TIMEOUT)
