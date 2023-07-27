@@ -80,13 +80,13 @@ class LoginWindow(Login, QWidget):
                                             window.setWindowModality(QtCore.Qt.ApplicationModal)
                                             window.show()
                                         else:
-                                            admin_socket_ui.cerrar_conexiones()
+                                            admin_socket_ui.cerrado_sockets()
                                             QMessageBox.critical(self, 'Advertencia', 'No se pudo realizar la validación con los canales secundarios', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
                                     else:
-                                        admin_socket_ui.cerrar_conexiones()
+                                        admin_socket_ui.cerrado_sockets()
                                         QMessageBox.critical(self, 'Advertencia', 'No se pudo realizar la conexión con los canales secundarios', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
                                 else:
-                                    admin_socket_ui.cerrar_conexiones()
+                                    admin_socket_ui.cerrado_sockets()
                                     QMessageBox.critical(self, 'Advertencia', 'Correo y/o contraseña no válidos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
                             else: 
                                 QMessageBox.critical(self, 'Error', 'Esta intentando ingresar al servidor como administrador desde una  computadora cliente, acción no válida', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 

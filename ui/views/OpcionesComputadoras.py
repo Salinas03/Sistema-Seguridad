@@ -95,9 +95,14 @@ class OpcionesComputadora(QMainWindow, object):
 
         self.formLayout.setItem(6, QFormLayout.SpanningRole, self.verticalSpacer_5)
 
+        computadora_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../assets/files/desktop-opciones.png'
+        )
+
         self.label = QLabel(self.frame)
         self.label.setObjectName(u"label")
-        self.label.setPixmap(QPixmap(u"../assets/files/desktop-opciones.png"))
+        self.label.setPixmap(QPixmap(computadora_path))
         self.label.setScaledContents(True)
         self.label.setAlignment(Qt.AlignCenter)
 
