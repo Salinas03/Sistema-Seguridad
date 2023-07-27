@@ -8,6 +8,7 @@ from controllers.Principal import Principal
 from controllers.VerificarCorreo import VerificarCorreoWindow
 from PySide2 import QtCore
 from utils.correo import *
+from utils.crear_mensaje_emergente import crear_message_box
 
 
 # CLASE DE AGREGACION DE propietarioISTRADORES
@@ -60,10 +61,10 @@ class AgregarpropietarioWindow(AgregarPropietario,QWidget):
 
         # CONDICIONES PARA LA VERIFICACION DE LOS CAMPOS 
         if nombre == '' or apellido == '' or telefono == '' or correo == '' or password == '' or  password2 == '':
-            QMessageBox.warning(self, 'Error', 'Por favor de poner datos validos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+            crear_message_box('Error', 'Favor de escribir los datos válidos', 'warning').exec_()
         
-        elif password != password2: 
-            QMessageBox.warning(self, 'Error', 'Las contraseñas no coinciden, favor de verificar',QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+        elif password != password2:
+            crear_message_box('Error', 'Las contraseñas no coinciden, facor de verificar', 'warning').exec_()
         
         else:
 
@@ -86,10 +87,10 @@ class AgregarpropietarioWindow(AgregarPropietario,QWidget):
                         window.destroyed.connect(self.ventana_cerrada)
                         window.show()
                     else:
-                        QMessageBox.critical(self, 'Oops, algo ocurrio', 'No se pudo enviar el correo de verificacion, intente de nuevo', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                        crear_message_box('Ooops, algo ocurrió', 'No se pudo enviar el correo de verificación, intente denuevo', 'error').exec_()
 
             else:
-                QMessageBox.warning(self, 'Selecciona un rol' , 'Seleccione un rol correctamente', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                crear_message_box('Selecciona un rol', 'Seleccione un rol correctamente', 'warning').exec_()
 
     def cancelar_registro(self):
         self.close()  

@@ -3,6 +3,7 @@ from PySide2.QtCore import Qt, QRegExp
 from views.EditarPerfil import EditarPerfil
 from PySide2.QtGui import QRegExpValidator
 from clases.administrador_ui import admin_socket_ui
+from utils.crear_mensaje_emergente import crear_message_box
 import json
 
 class ModificarPerfilWindow(EditarPerfil, QWidget):
@@ -34,14 +35,13 @@ class ModificarPerfilWindow(EditarPerfil, QWidget):
 
         data = admin_socket_ui.escribir_operaciones(json.dumps(peticion))
 
-
         if data['success']:
             data = data['data'][0]
             if len(data) >= 1:
                 propietario = data
                 self.nombre_perfil_editar_txt.setText(propietario[1])
                 self.apellidos_perfil_editar_txt.setText(propietario[2])
-                self.telefono_perfil_editar_txt.setText(int(propietario[3]))
+                self.telefono_perfil_editar_txt.setText(propietario[3])
                 self.correo_perfil_editar_txt.setText(propietario[4])
 
             else:
@@ -56,7 +56,7 @@ class ModificarPerfilWindow(EditarPerfil, QWidget):
         errores_count = 0
 
         if nombre == '' or apellido == '' or telefono == '' or correo == '':
-            QMessageBox.warning(self, 'Error', 'Por favor de poner datos validos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+            crear_message_box('Error', 'Favor de escribir datos válidos', 'warning').exec_()
             errores_count += 1
         elif errores_count == 0:
             return True
@@ -80,14 +80,14 @@ class ModificarPerfilWindow(EditarPerfil, QWidget):
             respuesta = admin_socket_ui.escribir_operaciones(json.dumps(peticion))
 
             if respuesta['success']:
-                QMessageBox.information(self, 'Actualización', 'El propietario se actualizo con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                crear_message_box('Actualización', 'El propietario se actualizó con éxito', 'information').exec_()
                 self.close()
 
             else:
-                QMessageBox.critical(self, 'Ooops... algo ocurrio', 'Hubo un error al realizar la actualización', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                crear_message_box('Ooops... algo ocurrió', 'Hubo un error al realizar la actualización', 'error').exec_()
                 self.close()
         else:
-            QMessageBox.warning(self, 'Advertencia', 'Seleccione un rol para el propietario', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+            crear_message_box('Advertencia', 'Seleccione un rol para el propietario', 'warning').exec_()
             self.close()
     
     def cancelar_modificacion(self):

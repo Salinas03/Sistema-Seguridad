@@ -5,6 +5,7 @@ from modelos.equipos_consultas import Equipo
 from PySide2.QtCore import Qt, QRegExp
 from PySide2.QtGui import QRegExpValidator
 from clases.administrador_ui import admin_socket_ui
+from utils.crear_mensaje_emergente import crear_message_box
 import json
 
 class ModificarEquipoWindow(EditarComputadoras, QWidget):
@@ -68,7 +69,7 @@ class ModificarEquipoWindow(EditarComputadoras, QWidget):
         errores_count = 0
 
         if equipo == '' or numSerie == '' or propietario == '' or rol == '':
-            QMessageBox.warning(self, 'Error', 'Por favor de poner datos validos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+            crear_message_box('Error', 'Favor de escribir datos válidos', 'warning').exec_()
             errores_count +=1
         elif errores_count == 0:
             return True
@@ -80,7 +81,7 @@ class ModificarEquipoWindow(EditarComputadoras, QWidget):
         rol = self.edita_rol_cmbx.currentIndex()
 
         if equipo == '' or numSerie == '':
-            QMessageBox.warning(self, 'Error', 'Por favor de poner datos validos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+            crear_message_box('Error', 'Favor de escribir datos válidos', 'warning').exec_()
 
         else:
             valor_rol = None
@@ -105,17 +106,17 @@ class ModificarEquipoWindow(EditarComputadoras, QWidget):
                     if respuesta['success']:
                         self.nombre_equipo_txt.clear()
                         self.num_serie_txt.clear()
-                        QMessageBox.information(self, 'Actualización hecha con éxito', 'La actualización se ha realizado exitosamente', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                        crear_message_box('Actualización hecha con éxito', 'La actualización se ha realizado exitosamente', 'information').exec_()
                         self.close() 
 
                     else:
-                        QMessageBox.critical(self, 'Ooops... algo ocurrió', 'Hubo un error al actualizar', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                        crear_message_box('Ooops... algo ocurrió', 'Hubo un error al actualizar', 'error').exec_()
                         self.close() 
 
                 else:
-                    QMessageBox.warning(self, 'Advertencia', 'Seleccione un rol para el equipo', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                    crear_message_box('Advertencia', 'Seleccione un rol para el equipo', 'warning').exec_()
             else: 
-                QMessageBox.warning(self, 'Advertencia', 'Seleccione un propietario del equipo', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                crear_message_box('Advertencia', 'Seleccione un propietario del equipo', 'warning').exec_()
             
 
     def cancelar_registro(self):
