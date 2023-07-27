@@ -4,7 +4,7 @@ import wmi
 import os
 
 class ClienteSocket:
-    def _init_(self):
+    def __init__(self):
         self.FORMAT = "utf-8"
         self.HEADER = 20480
         # self.IP = '68.183.143.116'
@@ -15,8 +15,8 @@ class ClienteSocket:
         self.PORT_CLIENTE = 5053
         self.ADDR = (self.IP, self.PORT)
         self.ADDR_CLIENTE = (self.IP, self.PORT_CLIENTE)
-        self.TIMEOUT = 2
-        self.TIMEOUT_SECUNDARIO = 3
+        self.TIMEOUT = 4
+        self.TIMEOUT_SECUNDARIO = 4
         self.BASE_DIR = os.getcwd()
 
     def crear_sockets(self):

@@ -19,6 +19,7 @@ import socket
 from db.connection import conexion
 from clases.administrador_ui import admin_socket_ui
 from clases.administrador_sesion import AdministradorSesion
+from utils.crear_mensaje_emergente import crear_message_box
 import datetime
 
 class PrincipalWindow(Principal,QWidget):
@@ -288,10 +289,10 @@ class PrincipalWindow(Principal,QWidget):
                     window.destroyed.connect(self.ventana_cerrada)
                     window.show()
                 else:
-                    QMessageBox.information(self, 'Selección no válida', respuesta['msg'], QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                    crear_message_box('Selección no válida', respuesta['msg'], 'information').exec_()
                 
             else:
-                QMessageBox.warning(self, "Advertencia", "La ventana ya está abierta.")
+                crear_message_box('Advertencia', 'La ventana ya esta abierta', 'warning').exec_()
 # ////////////////////////// FUNCIONES PAGINA COMPUTADORAS REGISTRADAS //////////////////////////
 
     # FUNCION PARA MANDAR LLAMAR A LA VENTANA DE AGREGAR COMPUS
@@ -333,7 +334,7 @@ class PrincipalWindow(Principal,QWidget):
                 window.destroyed.connect(self.ventana_cerrada)
                 window.show()
             else:
-               QMessageBox.warning(self, "Advertencia", "La ventana ya está abierta.") 
+               crear_message_box('Advertencia', 'La ventana ya esta abierta', 'warning').exec_()
     
     def eliminar_equipo(self):
         seleccionar_fila = self.computadoras_registradas_table.selectedItems()
@@ -353,9 +354,9 @@ class PrincipalWindow(Principal,QWidget):
                 respuesta = admin_socket_ui.escribir_operaciones(json.dumps(peticion))
 
                 if respuesta['success']:
-                    QMessageBox.information(self, 'Eliminacion realizada con éxito', 'El equipo de computo se elimino con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                    crear_message_box('Eliminación realizada con éxito', 'El equipo de cómputo se eliminó con éxito', 'information').exec_()
                 else:
-                    QMessageBox.critical(self, 'Oops... algo sucedio', 'Ocurrio un error al realizar la eliiminación', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                    crear_message_box('Ooops... algo sucedió', 'Ocurrió un error al realizar la eliminación', 'error').exec_()
 
     def habilitar_eliminar_compus(self):
         self.eliminar_compu_btn.setEnabled(True)
@@ -379,7 +380,7 @@ class PrincipalWindow(Principal,QWidget):
             window.destroyed.connect(self.ventana_cerrada)
             window.show()
         else:
-            QMessageBox.warning(self, "Advertencia", "La ventana ya está abierta.")
+            crear_message_box('Advertencia', 'La ventana ya esta abierta', 'warning').exec_()
     
     def configuracion_tabla_admins(self):
             column_headers_tabla_admins = ("id", "nombre", "apellidos", "telefono", "correo", "rol")
@@ -406,7 +407,7 @@ class PrincipalWindow(Principal,QWidget):
                 window.destroyed.connect(self.ventana_cerrada)
                 window.show()
         else:
-            QMessageBox.warning(self, "Advertencia", "La ventana ya está abierta.")
+            crear_message_box('Advertencia', 'La ventana ya esta abierta', 'warning').exec_()
     
     def eliminar_propietario(self):
 
@@ -427,10 +428,10 @@ class PrincipalWindow(Principal,QWidget):
                 respuesta_borrado = admin_socket_ui.escribir_operaciones(json.dumps(peticion))
 
                 if respuesta_borrado['success']:
-                    QMessageBox.information(self, 'Eliminacion', 'El propietario se elimino con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                    crear_message_box('Eliminación', 'El propietario se eliminó con éxito', 'information').exec_()
 
                 else:
-                    QMessageBox.information(self, 'Ooops.. algo ocurrio', 'Hubo algún error al realizar la eliminación', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                    crear_message_box('Ooops... algo ocurrió', 'Hubo algún error al realizar la eliminación', 'information').exec_()
 
     def habilitar_eliminar_propietario(self):
         self.eliminar_admin_btn.setEnabled(True)   
@@ -451,7 +452,7 @@ class PrincipalWindow(Principal,QWidget):
             window.destroyed.connect(self.ventana_cerrada)
             window.show()
         else:
-            QMessageBox.warning(self, "Advertencia", "La ventana ya está abierta.")
+            crear_message_box('Advertencia', 'La ventana ya esta abierta', 'warning').exec_()
 
 
 # ////////////////////////// FUNCIONES PARA LAS PAGINAS //////////////////////////
@@ -477,7 +478,6 @@ class PrincipalWindow(Principal,QWidget):
             numero_serie = admin_socket_ui.obtener_numero_serie()
             admin_socket_ui.get_socket_conectividadadmin().send(numero_serie.encode())
             respuesta = admin_socket_ui.get_socket_conectividadadmin().recv(admin_socket_ui.HEADER).decode(admin_socket_ui.FORMAT)
-            print('Conexión con canal de conectividad')
             print(respuesta)
 
             self.thread_conectividad = threading.Thread(target=self.escuchar_conectividad)

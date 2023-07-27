@@ -3,6 +3,7 @@ from views.AgregarComputadoras import AgregarComputadoras
 from PySide2.QtCore import *
 from PySide2.QtGui import QRegExpValidator
 from clases.administrador_ui import admin_socket_ui
+from utils.crear_mensaje_emergente import crear_message_box
 import json
 
 class AgregarCompusWindow(AgregarComputadoras, QWidget):
@@ -55,15 +56,15 @@ class AgregarCompusWindow(AgregarComputadoras, QWidget):
                     if respuesta['success']:
                         self.nombre_equipo_txt.clear()
                         self.num_serie_txt.clear()
-                        QMessageBox.information(self, 'Registro realizado con éxito', 'El registro se hizo con exito', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                        crear_message_box('Registro realizado con éxito', 'El registro se hizó con éxito', 'information').exec_()
                         self.close()  
 
                     else:
-                        QMessageBox.critical(self, 'Oops, algo ocurrio', respuesta['msg'], QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                        crear_message_box('Ooops... algo ocurrió', respuesta['msg'], 'error').exec_()
                 else:
-                    QMessageBox.warning(self, 'Advertencia', 'Seleccione un rol para el equipo', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
-            else: 
-                QMessageBox.warning(self, 'Advertencia', 'Seleccione un propietario del equipo', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                    crear_message_box('Advertencia', 'Seleccione un rol para el equipo', 'warning').exec_()
+            else:
+                crear_message_box('Advertencia', 'Seleccione un propietario del equipo', 'warning').exec_()
 
 
     def cancelar_registro(self):

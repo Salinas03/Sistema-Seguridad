@@ -12,8 +12,6 @@ salida = False
 
 #Función de dos hilos que corren en el programa
 def manejar_canal_cliente():
-    global salida
-
     #Desactivar el timeout en esta ocasión
     cliente_socket.get_socket_cliente().settimeout(None)
 
@@ -53,16 +51,16 @@ def manejar_canal_cliente():
                     else:
                         print('Instruccion no encontrada')
 
-                except:
+                except socket.error as e:
+                    print(f'Ocurrio un error {e}')
                     mensaje_respuesta = json.dumps({'success': False, 'msg': 'Hubo un error al ejecutar la instrucción mandada'})
                     print(mensaje_respuesta)
                     cliente_socket.get_socket_cliente().send(mensaje_respuesta.encode())
 
-        except socket.error:
-            print('Ocurrió un error en el canal cliente principal')
+        except socket.error as e:
+            print(f'Ocurrió un error en el canal cliente principal {e}')
             cliente_socket.get_socket_cliente().close()
             cliente_socket.get_socket_cliente_secundario().close()
-            salida = True
             break
 
 #Función que permite al servidor saber si el cliente sigue activo
@@ -75,8 +73,8 @@ def manejar_canal_cliente_secundario():
             # print(f'Mensaje del servidor {mensaje}')
             cliente_socket.get_socket_cliente_secundario().send('*'.encode())
 
-        except:
-            print('Ocurrio un error en el canal cliente secunadrio')
+        except socket.error as e:
+            print(f'Ocurrio un error en el canal cliente secunadrio {e}')
             cliente_socket.get_socket_cliente().close()
             cliente_socket.get_socket_cliente_secundario().close()
             global salida
