@@ -72,7 +72,6 @@ def crear_sockets():
         cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         cliente.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-        #CONEXIONES QUE SE GUARDARAN EN ARREGLOS LAS CUALES HAY QUE MANTENER ENCENDIDAS
         notificacion = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         notificacion.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
@@ -424,6 +423,9 @@ def panel_conectividad_admin(conn, addr, numero_serie):
             borrar_administradores_broadcasting(numero_serie)
             borrar_administradores_operacionesbd(numero_serie)
 
+            #Borrado de sesiones del administrador
+            cerrar_sesiones(numero_serie)
+
             #Cerrar las selecciones en caso de que haya computadoras seleccionadas
             cerrar_selecciones(numero_serie, administrador_desconectado)
 
@@ -542,6 +544,9 @@ def panel_base_datos(instruccion):
             data = instruccion['data']
             return EquiposConsultas(conexion()).obtener_equipo_admin_por_nombre_numero_serie(data[0], data[1])
         
+        elif operacion == 'obtener_id_propietario_numero_serie':
+            return EquiposConsultas(conexion()).obtener_propietario_numero_serie(instruccion['numero_serie'])
+        
         else:
             return json.dumps({'success': False, 'msg': 'Operación no encontrada'})
             
@@ -595,21 +600,38 @@ def panel_base_datos(instruccion):
             print('Dentro de LOGIN')
             respuesta_operacion = PropietariosConsultas(conexion()).obtener_propietario(data[0], data[1])
 
-            data = respuesta_operacion['data']
-
-            if data:
-                #Checar si esa sesión ya existe o no existe
-                for sesion in sesiones_administradores:
-                    if sesion.get_id_admin() == data[0]: #ID 
-                        return json.dumps({'success': False, 'msg': 'Ya hay un usuario con esa sesión'})
-
-                #Si no existe crear la sesión de ese administrador de lo contrario mandar un mensaje diciendo que ya existe la sesión
-                sesiones_administradores.append(Administrador(data[0], data[1], data[2],data[3], data[4], data[5]))
-
             print('RESPUESTA LOGIN')
             print(respuesta_operacion)
-            
-            return respuesta_operacion
+
+            respuesta = json.loads(respuesta_operacion)
+
+            if respuesta['success']:
+                #Checar si el administrador existe con el correo y la contraseña
+                data = respuesta['data'][0]
+
+                if data:
+                    #Una vez que sepamos que existe necesitamos checar que sea administrador                
+                    if data[6] == 1:
+                        #Observar si el que esta iniciando sesión corresponde con el rol
+
+                        #Una vez checando si es administrador observamos si no tiene una sesión activa
+                        for sesion in sesiones_administradores:
+                            if sesion.get_id_admin() == data[0]: #ID 
+                                msg = f'Ya hay una sesión con el usuario {data[1]} porfavor intente mas tarde o inicie con otra sesión'
+                                return json.dumps({'success': False, 'msg': msg})
+
+                        #Si no existe crear la sesión de ese administrador de lo contrario mandar un mensaje diciendo que ya existe la sesión
+                        sesion_admin = Administrador(data[0], data[1], data[2],data[3], data[4], data[5], data[6])
+                        sesiones_administradores.append(sesion_admin)
+                        print(f'Sesión iniciada de {sesion_admin.get_nombre_admin()}')
+                        return json.dumps({'success': True, 'data': data})
+                    else:
+                        return json.dumps({'success': False, 'msg': 'Esta tratando de ingresar al servidor con un propietario NO administrativo'})
+                else:
+                    return json.dumps({'success': False, 'msg': 'El correo o la contraseña son incorrectos'})
+
+            else:
+                return respuesta_operacion
 
         elif operacion == 'obtener_propietario_id':
             respuesta_operacion = PropietariosConsultas(conexion()).seleccionar_propietario_id(int(instruccion['id']))
@@ -863,6 +885,22 @@ def cerrar_selecciones(numero_serie, administrador_desconectado):
                         print(seleccionado.get_nombre_host())
             else:
                 print(f'No hay equipos seleccionados por el equipo {administrador_desconectado.get_nombre_host()}')
+
+def cerrar_sesiones(numero_serie):
+    peticion = {
+        'tabla': 'propietarios',
+        'operacion': 'obtener_id_propietario_numero_serie',
+        'numero_serie': numero_serie
+    }
+
+    id_propietario_equipo = panel_base_datos(json.dumps(peticion))
+    for sesion in sesiones_administradores:
+        if sesion.get_id_admin() == id_propietario_equipo:
+            index = sesiones_administradores.index(sesion)
+            del sesiones_administradores[index]
+            break
+
+    print('[CERRADO DE SESIONES]')
 
 def cerrar_consola_seleccion(equipo):
     if equipo.get_consola():
