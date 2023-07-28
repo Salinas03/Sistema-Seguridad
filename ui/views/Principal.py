@@ -45,19 +45,19 @@ class Principal(QMainWindow, object):
         )
         home_icon_path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
-            '../assets/icons/home-3.ico'
+            '../assets/icons/home-cambio-blanco.ico'
         )
         desktop_icon_path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
-            '../assets/icons/desktop.svg'
+            '../assets/icons/desktop-cambio-blanco.ico'
         )
         admin_icon_path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
-            '../assets/icons/administrator-32.ico'
+            '../assets/icons/add-cambio-blanco.ico'
         )
         help_icon_path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
-            '../assets/icons/help-circle.svg'
+            '../assets/icons/question-cambio-blanco.ico'
         )
         arrow_icon_path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
@@ -115,8 +115,22 @@ class Principal(QMainWindow, object):
 "}\n"
 "\n"
 "QPushButton{\n"
-"margin-bottom:10px;\n"
-"}")
+"/*margin-bottom:10px;*/\n"
+"background-color:transparent;\n"
+"border-radius:3px;\n"
+"border: none;\n"
+"padding: 8px 0 8px 0;\n"
+"color: #788596;\n"
+"}\n"
+"\n"
+"QPushButton::hover{\n"
+"background-color:rgba(86,101,115,0.5);\n"
+"}\n"
+"\n"
+"QPushButton::checked{\n"
+"color:#fff;\n"
+"}\n"
+"")
         self.verticalLayout_4 = QVBoxLayout(self.menu_widget)
         self.verticalLayout_4.setSpacing(0)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
