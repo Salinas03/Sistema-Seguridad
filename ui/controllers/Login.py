@@ -77,7 +77,7 @@ class LoginWindow(Login, QWidget):
                                         validacion_secundarios = admin_socket_ui.validacion_canales_secundarios()
                                         if validacion_secundarios['success']:
                                             window = CargaWindow(self, administrador[0], self.close)
-                                            window.setWindowModality(QtCore.Qt.ApplicationModal)
+                                            #window.setWindowModality(QtCore.Qt.ApplicationModal)
                                             window.show()
                                         else:
                                             admin_socket_ui.cerrado_sockets()
