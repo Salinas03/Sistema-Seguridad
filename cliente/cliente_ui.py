@@ -33,8 +33,7 @@ def manejar_canal_cliente():
 
                     elif respuesta_servidor == 'bloquear':
                         cliente_socket.get_socket_cliente().send(json.dumps({'success': True, 'msg': 'Bloqueo de windows realizado exitosamente'}).encode())
-                        print('DIRECCIÓN A BUSCAR:')
-                        print(f'{cliente_socket.BASE_DIR}/comandos/{respuesta_servidor}.bat')
+                        print(f'{os.getcwd()}/comandos/{respuesta_servidor}.bat')
                         os.system(f'{cliente_socket.BASE_DIR}/comandos/{respuesta_servidor}.bat')
 
                     elif respuesta_servidor == 'desbloquear':

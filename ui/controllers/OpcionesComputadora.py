@@ -2,7 +2,7 @@ from PySide2.QtWidgets import QWidget,QMessageBox
 from PySide2 import QtCore
 from views.OpcionesComputadoras import OpcionesComputadora
 from utils.abrir_consola import abrir_consola_ejecutar_script
-import geocoder
+
 import sys
 import webbrowser
 sys.path.append('D:/RedesLA/SistemaSeguridad/ui')
@@ -16,7 +16,6 @@ class OpcionesCompusWindow(OpcionesComputadora, QWidget):
         super().__init__(parent)
         self.setupUi(self)
         self.llenar_etiquetas()
-        self.ubicacion()
         self.consola_btn = self.pushButton_6
         
         self.apagar_equipo_btn.clicked.connect(self.apagar_equipo)
@@ -30,8 +29,6 @@ class OpcionesCompusWindow(OpcionesComputadora, QWidget):
     def llenar_etiquetas(self):
         self.id_lbl.setText(str(self.data[0]))
         self.nombre_lbl.setText(str(self.data[1]))
-        print(type(self.data[2])) 
-        self.ip_txt.setText(str(self.data[2]))
 
     def apagar_equipo(self):
         respuesta = admin_socket_ui.escribir_operaciones('apagar')
@@ -74,21 +71,6 @@ class OpcionesCompusWindow(OpcionesComputadora, QWidget):
         # Abre el enlace en el navegador predeterminado
         webbrowser.open(url)
     
-    def ubicacion(self):
-        g = geocoder.ip(self.data[2])
-
-        myaddress = g.latlng
-
-        if myaddress:
-            latitude = myaddress[0]
-            longitude = myaddress[1]
-
-            print(f'Latitud: {latitude}')
-            print(f'Longitud: {longitude}')
-
-            self.latitud_txt.setText(str(latitude))
-            self.longitud_txt.setText(str(longitude))
-              
     def ventana_cerrada(self):
         self.ventana_abierta = False
         

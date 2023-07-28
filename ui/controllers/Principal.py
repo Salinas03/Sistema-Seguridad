@@ -10,8 +10,7 @@ from controllers.ModificarComputadoras import ModificarEquipoWindow
 from controllers.ModificarPerfil import ModificarPerfilWindow
 from py2_msgboxes import msg_boxes
 from PySide2.QtCore import *
-from PySide2.QtGui import QRegExpValidator, QPixmap, QIcon
-import os
+from PySide2.QtGui import QRegExpValidator
 #TODO Librerias agregadas para la implementación de tablas dinámicas
 import json
 import threading
@@ -76,12 +75,6 @@ class PrincipalWindow(Principal,QWidget):
 
 
         # < --------------------- PAGINA COMPUTADORAS REGISTRADAS --------------------- >
-
-        self.botones_eliminar = [self.eliminar_admin_btn, self.eliminar_compu_btn]
-
-        for button in self.botones_eliminar:
-            self.apply_hover_effect_computadoras(button)
-
         self.eliminar_compu_btn.setEnabled(False)
         # MEDIDAS DEL ANCHO DE LAS TABLAS
         header_computadoras_registradas_table = self.computadoras_registradas_table.horizontalHeader()
@@ -103,17 +96,6 @@ class PrincipalWindow(Principal,QWidget):
         self.computadoras_registradas_table.selectionModel().currentChanged.connect(self.actualizar_estado_boton_compu)
 
         # < --------------------- PAGINA ADMINISTRADORES REGISTRADOS --------------------- >
-
-        # self.original_text = self.agregar_admin_btn.text()
-        # self.agregar_admin_btn.enterEvent = self.on_enter_event
-        # self.agregar_admin_btn.leaveEvent = self.on_leave_event
-
-        self.botones_agregar = [self.agregar_admin_btn, self.agregar_compu_btn]
-
-        for button in self.botones_agregar:
-            # button.enterEvent = lambda event, button = button: self.on_enter_event(event, button)
-            # button.leaveEvent = lambda event, button=button: self.on_leave_event(event, button)
-            self.apply_hover_effect(button)
 
         self.eliminar_admin_btn.setEnabled(False)
         # MEDIDAS DEL ANCHO DE LAS TABLAS
@@ -225,7 +207,7 @@ class PrincipalWindow(Principal,QWidget):
         ###################################################################################################################################
         ###################################################################################################################################
 
-    """ # ////////////////////////// FUNCIONES PAGINA PRINCIPAL TODO//////////////////////////"""
+    # ////////////////////////// FUNCIONES PAGINA PRINCIPAL TODO//////////////////////////
 
     def configuracion_tabla_equipos_activos(self):
         column_headers_tablas_equipos_activos = ('ID','Nombre del equipo', 'Número de serie', 'Propietario del equipo', 'Rol', 'IP')   
@@ -310,37 +292,8 @@ class PrincipalWindow(Principal,QWidget):
                     crear_message_box('Selección no válida', respuesta['msg'], 'information').exec_()
                 
             else:
-
                 crear_message_box('Advertencia', 'La ventana ya esta abierta', 'warning').exec_()
 # ////////////////////////// FUNCIONES PAGINA COMPUTADORAS REGISTRADAS //////////////////////////
-    
-    def apply_hover_effect_computadoras(self, button):
-        button.enterEvent = lambda event, button=button: self.on_enter_event_computadoras(event, button)
-        button.leaveEvent = lambda event, button=button: self.on_leave_event_computadoras(event, button)
-        
-    def on_enter_event_computadoras(self, event, button):
-        image_path = os.path.join(
-            os.path.dirname(os.path.abspath(__file__)),
-            '../assets/files/clear.png'
-        )
-        if os.path.exists(image_path):
-            pixmap = QPixmap(image_path)
-            new_width = button.width() // 2
-            new_height = button.height() // 2
-            pixmap = pixmap.scaled(new_width, new_height, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
-            # Guardamos el texto original en el atributo del botón
-            if not hasattr(button, 'original_text'):
-                button.original_text = button.text()
-
-            button.setIcon(pixmap)
-            button.setIconSize(pixmap.size())
-            button.setText("")  # Configura el texto del botón en una cadena vacía
-
-    def on_leave_event_computadoras(self, event, button):
-         # Volver a mostrar el texto al salir del hover
-        if hasattr(button, 'original_text'):
-            button.setText(button.original_text)  # Restaura el texto original del botón
-        button.setIcon(QIcon())  # Configura un QIcon vacío para eliminar la imagen
 
     # FUNCION PARA MANDAR LLAMAR A LA VENTANA DE AGREGAR COMPUS
     def abrir_agregar_compus(self):
@@ -415,37 +368,9 @@ class PrincipalWindow(Principal,QWidget):
         else:
             self.eliminar_compu_btn.setEnabled(False)   
 
-    """ # ////////////////////////// FUNCIONES PAGINA ADMINISTRADORES REGISTRADOS //////////////////////////"""
+# ////////////////////////// FUNCIONES PAGINA ADMINISTRADORES REGISTRADOS //////////////////////////
 
-    def apply_hover_effect(self, button):
-        button.enterEvent = lambda event, button=button: self.on_enter_event(event, button)
-        button.leaveEvent = lambda event, button=button: self.on_leave_event(event, button)
-        
-    def on_enter_event(self, event, button):
-        image_path = os.path.join(
-            os.path.dirname(os.path.abspath(__file__)),
-            '../assets/files/more.png'
-        )
-        if os.path.exists(image_path):
-            pixmap = QPixmap(image_path)
-            new_width = button.width() // 2
-            new_height = button.height() // 2
-            pixmap = pixmap.scaled(new_width, new_height, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
-            # Guardamos el texto original en el atributo del botón
-            if not hasattr(button, 'original_text'):
-                button.original_text = button.text()
-
-            button.setIcon(pixmap)
-            button.setIconSize(pixmap.size())
-            button.setText("")  # Configura el texto del botón en una cadena vacía
-
-    def on_leave_event(self, event, button):
-         # Volver a mostrar el texto al salir del hover
-        if hasattr(button, 'original_text'):
-            button.setText(button.original_text)  # Restaura el texto original del botón
-        button.setIcon(QIcon())  # Configura un QIcon vacío para eliminar la imagen
-
-    # FUNCION PARA MANDAR LLAMAR LA VENTANA DE AGREGAR ADMIN
+# FUNCION PARA MANDAR LLAMAR LA VENTANA DE AGREGAR ADMIN
     def abrir_agregar_admin(self):
         # CONDICION PARA SABER SI LA VENTANA ESTA ABIERTA
         if not self.ventana_abierta: 
@@ -511,7 +436,7 @@ class PrincipalWindow(Principal,QWidget):
     def habilitar_eliminar_propietario(self):
         self.eliminar_admin_btn.setEnabled(True)   
     
-    """ # ////////////////////////// FUNCIONES PAGINA PERFIL //////////////////////////"""
+# ////////////////////////// FUNCIONES PAGINA PERFIL //////////////////////////
 
     def llenar_campos_administrador(self):
         self.nombre_txt.setText(self.administrador.get_nombre_admin())
@@ -530,7 +455,7 @@ class PrincipalWindow(Principal,QWidget):
             crear_message_box('Advertencia', 'La ventana ya esta abierta', 'warning').exec_()
 
 
-    """ # ////////////////////////// FUNCIONES PARA LAS PAGINAS //////////////////////////"""
+# ////////////////////////// FUNCIONES PARA LAS PAGINAS //////////////////////////
             
     # FUNCION PARA DEFINIR QUE LA VENTANA CAMBIE SU ESTADO A FALSE        
     def ventana_cerrada(self):
@@ -571,7 +496,7 @@ class PrincipalWindow(Principal,QWidget):
         except threading.ThreadError as e:
             print(f'Hubo un error al realizar el cerrado de los HILOS {e}')
 
-    """# ////////////////////////// FUNCIONES PARA ESCUCHAR CAMBIOS EN LA BASE DE DATOS TODO//////////////////////////"""
+# ////////////////////////// FUNCIONES PARA ESCUCHAR CAMBIOS EN LA BASE DE DATOS TODO//////////////////////////
 
     def escuchar_conectividad(self):
         admin_socket_ui.get_socket_conectividadadmin().settimeout(admin_socket_ui.TIMEOUT)

@@ -67,16 +67,17 @@ class LoginWindow(Login, QWidget):
                                 print('[RESPUESTA SERVIDOR]')
                                 print(respuesta_servidor)
 
-                                administrador = respuesta_servidor['data']
+                                if respuesta_servidor['success']:
 
-                                if administrador:
                                     conexion_secundarios = admin_socket_ui.conexiones_canales_secundarios()
                                     print(conexion_secundarios)
                                     if conexion_secundarios['success']:
 
                                         validacion_secundarios = admin_socket_ui.validacion_canales_secundarios()
                                         if validacion_secundarios['success']:
-                                            window = CargaWindow(self, administrador[0], self.close)
+                                            administrador_logueado = respuesta_servidor['data']
+                                            print(administrador_logueado)
+                                            window = CargaWindow(self, administrador_logueado, self.close)
                                             window.setWindowModality(QtCore.Qt.ApplicationModal)
                                             window.show()
                                         else:
@@ -86,8 +87,8 @@ class LoginWindow(Login, QWidget):
                                         admin_socket_ui.cerrado_sockets()
                                         QMessageBox.critical(self, 'Advertencia', 'No se pudo realizar la conexión con los canales secundarios', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
                                 else:
-                                    admin_socket_ui.cerrado_sockets()
-                                    QMessageBox.critical(self, 'Advertencia', 'Correo y/o contraseña no válidos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
+                                    QMessageBox.critical(self, 'Advertencia', respuesta_servidor['msg'], QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
+
                             else: 
                                 QMessageBox.critical(self, 'Error', 'Esta intentando ingresar al servidor como administrador desde una  computadora cliente, acción no válida', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
                         else:

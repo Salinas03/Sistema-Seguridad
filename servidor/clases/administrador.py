@@ -1,11 +1,12 @@
 class Administrador:
-    def __init__(self, id_admin, nombre_admin, apellido_admin, telefono_admin, correo_admin, contrasena_admin):
+    def __init__(self, id_admin, nombre_admin, apellido_admin, telefono_admin, correo_admin, contrasena_admin, rol_propietario):
         self.id_admin = id_admin
         self.nombre_admin = nombre_admin
         self.apellido_admin = apellido_admin
         self.telefono_admin = telefono_admin
         self.correo_admin = correo_admin
         self.contrasena_admin = contrasena_admin
+        self.rol_propietario = rol_propietario
 
     def get_id_admin(self):
         return self.id_admin
@@ -24,3 +25,6 @@ class Administrador:
     
     def get_contrasena_admin(self):
         return self.contrasena_admin
+    
+    def get_id_propietario(self):
+        return self.rol_propietario
