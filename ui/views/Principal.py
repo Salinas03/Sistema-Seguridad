@@ -53,7 +53,7 @@ class Principal(QMainWindow, object):
         )
         admin_icon_path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
-            '../assets/icons/add-cambio-blanco.ico'
+            '../assets/icons/user-4.ico'
         )
         help_icon_path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
@@ -124,7 +124,7 @@ class Principal(QMainWindow, object):
 "}\n"
 "\n"
 "QPushButton::hover{\n"
-"background-color:rgba(86,101,115,0.5);\n"
+"background-color:rgba(186,186,186,0.5);\n"
 "}\n"
 "\n"
 "QPushButton::checked{\n"
