@@ -115,8 +115,22 @@ class Principal(QMainWindow, object):
 "}\n"
 "\n"
 "QPushButton{\n"
-"margin-bottom:10px;\n"
-"}")
+"/*margin-bottom:10px;*/\n"
+"background-color:transparent;\n"
+"border-radius:3px;\n"
+"border: none;\n"
+"padding: 8px 0 8px 0;\n"
+"color: #788596;\n"
+"}\n"
+"\n"
+"QPushButton::hover{\n"
+"background-color:rgba(86,101,115,0.5);\n"
+"}\n"
+"\n"
+"QPushButton::checked{\n"
+"color:#fff;\n"
+"}\n"
+"")
         self.verticalLayout_4 = QVBoxLayout(self.menu_widget)
         self.verticalLayout_4.setSpacing(0)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")

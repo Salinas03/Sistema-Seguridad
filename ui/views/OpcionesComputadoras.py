@@ -59,94 +59,49 @@ class OpcionesComputadora(QMainWindow, object):
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.frame = QFrame(self.centralwidget)
         self.frame.setObjectName(u"frame")
-        self.frame.setStyleSheet(u"QLabel#id_lbl,#nombre_lbl,#latitud_txt,#longitud_txt,#label_2,#label_5,#ip_txt{\n"
+        self.frame.setStyleSheet(u"QLabel#id_lbl,#nombre_lbl{\n"
 "	color: rgb(255, 255, 255);\n"
 "	font: 75 10pt \"MS Shell Dlg 2\";\n"
 "}")
         self.frame.setFrameShape(QFrame.StyledPanel)
         self.frame.setFrameShadow(QFrame.Raised)
-        self.formLayout = QFormLayout(self.frame)
-        self.formLayout.setObjectName(u"formLayout")
+        self.verticalLayout_2 = QVBoxLayout(self.frame)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalSpacer_2 = QSpacerItem(20, 32, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
-        self.formLayout.setItem(0, QFormLayout.SpanningRole, self.verticalSpacer_2)
-
-        self.verticalSpacer_3 = QSpacerItem(20, 33, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.formLayout.setItem(2, QFormLayout.SpanningRole, self.verticalSpacer_3)
-
-        self.nombre_lbl = QLabel(self.frame)
-        self.nombre_lbl.setObjectName(u"nombre_lbl")
-        self.nombre_lbl.setAlignment(Qt.AlignCenter)
-
-        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.nombre_lbl)
-
-        self.verticalSpacer_4 = QSpacerItem(20, 33, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.formLayout.setItem(4, QFormLayout.SpanningRole, self.verticalSpacer_4)
-
-        self.ip_txt = QLabel(self.frame)
-        self.ip_txt.setObjectName(u"ip_txt")
-        self.ip_txt.setAlignment(Qt.AlignCenter)
-
-        self.formLayout.setWidget(5, QFormLayout.SpanningRole, self.ip_txt)
-
-        self.verticalSpacer_5 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.formLayout.setItem(6, QFormLayout.SpanningRole, self.verticalSpacer_5)
-
-        computadora_path = os.path.join(
-            os.path.dirname(os.path.abspath(__file__)),
-            '../assets/files/desktop-opciones.png'
-        )
-
-        self.label = QLabel(self.frame)
-        self.label.setObjectName(u"label")
-        self.label.setPixmap(QPixmap(computadora_path))
-        self.label.setScaledContents(True)
-        self.label.setAlignment(Qt.AlignCenter)
-
-        self.formLayout.setWidget(7, QFormLayout.SpanningRole, self.label)
-
-        self.label_2 = QLabel(self.frame)
-        self.label_2.setObjectName(u"label_2")
-
-        self.formLayout.setWidget(9, QFormLayout.LabelRole, self.label_2)
-
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.formLayout.setItem(8, QFormLayout.LabelRole, self.verticalSpacer)
-
-        self.latitud_txt = QLabel(self.frame)
-        self.latitud_txt.setObjectName(u"latitud_txt")
-        self.latitud_txt.setAlignment(Qt.AlignCenter)
-
-        self.formLayout.setWidget(9, QFormLayout.FieldRole, self.latitud_txt)
-
-        self.verticalSpacer_6 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.formLayout.setItem(10, QFormLayout.LabelRole, self.verticalSpacer_6)
-
-        self.label_5 = QLabel(self.frame)
-        self.label_5.setObjectName(u"label_5")
-
-        self.formLayout.setWidget(11, QFormLayout.LabelRole, self.label_5)
-
-        self.longitud_txt = QLabel(self.frame)
-        self.longitud_txt.setObjectName(u"longitud_txt")
-        self.longitud_txt.setAlignment(Qt.AlignCenter)
-
-        self.formLayout.setWidget(11, QFormLayout.FieldRole, self.longitud_txt)
-
-        self.verticalSpacer_7 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.formLayout.setItem(12, QFormLayout.LabelRole, self.verticalSpacer_7)
+        self.verticalLayout_2.addItem(self.verticalSpacer_2)
 
         self.id_lbl = QLabel(self.frame)
         self.id_lbl.setObjectName(u"id_lbl")
         self.id_lbl.setAlignment(Qt.AlignCenter)
 
-        self.formLayout.setWidget(1, QFormLayout.SpanningRole, self.id_lbl)
+        self.verticalLayout_2.addWidget(self.id_lbl)
+
+        self.verticalSpacer_3 = QSpacerItem(20, 33, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout_2.addItem(self.verticalSpacer_3)
+
+        self.nombre_lbl = QLabel(self.frame)
+        self.nombre_lbl.setObjectName(u"nombre_lbl")
+        self.nombre_lbl.setAlignment(Qt.AlignCenter)
+
+        self.verticalLayout_2.addWidget(self.nombre_lbl)
+
+        self.verticalSpacer_4 = QSpacerItem(20, 33, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout_2.addItem(self.verticalSpacer_4)
+
+        self.label = QLabel(self.frame)
+        self.label.setObjectName(u"label")
+        self.label.setPixmap(QPixmap(u"./ui/assets/files/desktop-opciones.png"))
+        self.label.setScaledContents(True)
+        self.label.setAlignment(Qt.AlignCenter)
+
+        self.verticalLayout_2.addWidget(self.label)
+
+        self.verticalSpacer = QSpacerItem(20, 196, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout_2.addItem(self.verticalSpacer)
 
 
         self.horizontalLayout.addWidget(self.frame)
@@ -284,14 +239,9 @@ class OpcionesComputadora(QMainWindow, object):
 
     def retranslateUi(self, OpcionesComputadora):
         OpcionesComputadora.setWindowTitle(QCoreApplication.translate("OpcionesComputadora", u"Opciones de la computadora", None))
-        self.nombre_lbl.setText("")
-        self.ip_txt.setText("")
-        self.label.setText("")
-        self.label_2.setText(QCoreApplication.translate("OpcionesComputadora", u"Latitud", None))
-        self.latitud_txt.setText("")
-        self.label_5.setText(QCoreApplication.translate("OpcionesComputadora", u"Longitud", None))
-        self.longitud_txt.setText("")
         self.id_lbl.setText("")
+        self.nombre_lbl.setText("")
+        self.label.setText("")
         self.label_3.setText(QCoreApplication.translate("OpcionesComputadora", u"<html><head/><body><p><span style=\" font-weight:600;\">Selecciona la opci\u00f3n a </span></p><p><span style=\" font-weight:600;\">ejecutar</span></p></body></html>", None))
         self.apagar_equipo_btn.setText(QCoreApplication.translate("OpcionesComputadora", u"Apagar equipo", None))
         self.supender_windows_equipo_btn.setText(QCoreApplication.translate("OpcionesComputadora", u"Suspender - bloqueo de windows", None))
