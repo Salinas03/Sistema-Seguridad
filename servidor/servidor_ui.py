@@ -545,6 +545,8 @@ def panel_base_datos(instruccion):
             return EquiposConsultas(conexion()).obtener_equipo_admin_por_nombre_numero_serie(data[0], data[1])
         
         elif operacion == 'obtener_id_propietario_numero_serie':
+            print('Dentro de obtener propietaro por número de serie')
+            print(instruccion['numero_serie'])
             return EquiposConsultas(conexion()).obtener_propietario_numero_serie(instruccion['numero_serie'])
         
         else:
@@ -594,11 +596,11 @@ def panel_base_datos(instruccion):
             return respuesta_operacion
 
         elif operacion == 'login':
-            data = instruccion['data']
+            data_login = instruccion['data']
 
             #Busqueda para ver si ya existe este usuario que esta tratando de loguearse
             print('Dentro de LOGIN')
-            respuesta_operacion = PropietariosConsultas(conexion()).obtener_propietario(data[0], data[1])
+            respuesta_operacion = PropietariosConsultas(conexion()).obtener_propietario(data_login[0], data_login[1])
 
             print('RESPUESTA LOGIN')
             print(respuesta_operacion)
@@ -621,7 +623,7 @@ def panel_base_datos(instruccion):
                                 return json.dumps({'success': False, 'msg': msg})
 
                         #Si no existe crear la sesión de ese administrador de lo contrario mandar un mensaje diciendo que ya existe la sesión
-                        sesion_admin = Administrador(data[0], data[1], data[2],data[3], data[4], data[5], data[6])
+                        sesion_admin = Administrador(data[0], data[1], data[2],data[3], data[4], data[5], data[6], data_login[2])
                         sesiones_administradores.append(sesion_admin)
                         print(f'Sesión iniciada de {sesion_admin.get_nombre_admin()}')
                         return json.dumps({'success': True, 'data': data})
@@ -887,18 +889,14 @@ def cerrar_selecciones(numero_serie, administrador_desconectado):
                 print(f'No hay equipos seleccionados por el equipo {administrador_desconectado.get_nombre_host()}')
 
 def cerrar_sesiones(numero_serie):
-    peticion = {
-        'tabla': 'propietarios',
-        'operacion': 'obtener_id_propietario_numero_serie',
-        'numero_serie': numero_serie
-    }
-
-    id_propietario_equipo = panel_base_datos(json.dumps(peticion))
     for sesion in sesiones_administradores:
-        if sesion.get_id_admin() == id_propietario_equipo:
+        print(f'NÚMERO DE SERIE DE LA SESION {sesion.get_numero_serie()}')
+        if sesion.get_numero_serie() == numero_serie:
             index = sesiones_administradores.index(sesion)
             del sesiones_administradores[index]
             break
+    
+    print(sesiones_administradores)
 
     print('[CERRADO DE SESIONES]')
 

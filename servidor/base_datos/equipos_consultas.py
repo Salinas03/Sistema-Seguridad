@@ -109,12 +109,14 @@ class EquiposConsultas():
         if self.conexion.is_connected():
             try:
                 cursor = self.conexion.cursor()
-                cursor.execute(f'SELECT propietario_equipo FROM equipos WHERE numero_serie_equipo={numero_serie}')
+                print(f'SELECT propietario_equipo FROM equipos WHERE numero_serie_equipo={numero_serie}')
+                query = 'SELECT propietario_equipo FROM equipos WHERE numero_serie_equipo= %s'
+                cursor.execute(query, (numero_serie,))
                 resultado = cursor.fetchall()
                 return json.dumps({'success': True, 'data': resultado})
             except Error as err:
-                print(f'Error al obtener equipo administrador por nombre y número de serie {err}')
-                return json.dumps({'success': False, 'msg': f'Error al obtener el equipo administrador por nombre y número de serie {err}'})
+                print(f'Error al obtener el propietario de equipo administrador por número de serie {err}')
+                return json.dumps({'success': False, 'msg': f'Error al obtener el propietario de equipo administrador por número de serie {err}'})
 
     def insertar_equipo_computo(self, nombre_equipo, num_serie, propietario, rol):
         if self.conexion.is_connected():
