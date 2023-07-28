@@ -61,14 +61,13 @@ class LoginWindow(Login, QWidget):
                                 respuesta_servidor = admin_socket_ui.escribir_operaciones(json.dumps({
                                     'tabla': 'propietarios',
                                     'operacion': 'login',
-                                    'data': [correo, password]
+                                    'data': [correo, password, admin_socket_ui.obtener_numero_serie()]
                                 }))
                                 
                                 print('[RESPUESTA SERVIDOR]')
                                 print(respuesta_servidor)
 
                                 if respuesta_servidor['success']:
-
                                     conexion_secundarios = admin_socket_ui.conexiones_canales_secundarios()
                                     print(conexion_secundarios)
                                     if conexion_secundarios['success']:

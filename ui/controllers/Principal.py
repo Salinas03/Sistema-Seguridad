@@ -394,8 +394,12 @@ class PrincipalWindow(Principal,QWidget):
         self.administradores_tabla.setRowCount(len(data))
         for (index_row, row) in enumerate(data):
             for (index_cell, cell) in enumerate(row):
-                self.administradores_tabla.setItem(index_row, index_cell, QTableWidgetItem(str(cell)))
-    
+                if row[0] != self.administrador.get_id_admin():
+                    self.administradores_tabla.showRow(index_row)
+                    self.administradores_tabla.setItem(index_row, index_cell, QTableWidgetItem(str(cell)))
+                else:
+                    self.administradores_tabla.hideRow(index_row)
+
     def modificar_propietarios(self):
         if not self.ventana_abierta:
             self.ventana_abierta:True # CAMBIO DE LA VENTANA A TRUE 
