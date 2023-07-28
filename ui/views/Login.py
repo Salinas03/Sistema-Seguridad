@@ -31,7 +31,7 @@ class Login(QMainWindow, object):
 
         Login.setStyleSheet(u"\n"
 "QMainWindow#Login{\n"
-"background: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
+"background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #2B3034, stop: 1 #1C4968);\n"
 "}")
         self.centralwidget = QWidget(Login)
         self.centralwidget.setObjectName(u"centralwidget")
