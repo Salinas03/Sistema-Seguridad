@@ -130,14 +130,6 @@ class RecuperarContrasenia(QMainWindow, object):
 
         self.gridLayout_2.addItem(self.verticalSpacer_4, 0, 1, 1, 1)
 
-        self.regresar_login_btn = QPushButton(self.ingresa_correo_widget)
-        self.regresar_login_btn.setObjectName(u"regresar_login_btn")
-        self.regresar_login_btn.setMaximumSize(QSize(30, 16777215))
-        self.regresar_login_btn.setIcon(icon2)
-
-        self.gridLayout_2.addWidget(self.regresar_login_btn, 4, 0, 1, 1)
-
-
         self.verticalLayout.addWidget(self.ingresa_correo_widget)
 
         self.confirma_codigo_widget = QWidget(self.frame)
@@ -265,7 +257,6 @@ class RecuperarContrasenia(QMainWindow, object):
         RecuperarContrasenia.setWindowTitle(QCoreApplication.translate("RecuperarContrasenia", u"Recuperar Contrase\u00f1a", None))
         self.recuperacion_btn.setText(QCoreApplication.translate("RecuperarContrasenia", u"Siguiente", None))
         self.label.setText(QCoreApplication.translate("RecuperarContrasenia", u"Ingresa tu correo ", None))
-        self.regresar_login_btn.setText("")
         self.recuperacion_codigo_btn.setText(QCoreApplication.translate("RecuperarContrasenia", u"Recuperar", None))
         self.label_2.setText(QCoreApplication.translate("RecuperarContrasenia", u"Ingresa el c\u00f3digo de verficiaci\u00f3n", None))
         self.regresar_btn.setText("")

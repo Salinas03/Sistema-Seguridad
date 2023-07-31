@@ -19,6 +19,7 @@ class LoginWindow(Login, QWidget):
     def __init__(self, parent = None):
         super().__init__(parent)
         self.setupUi(self)
+        self.ventana_abierta = False # IDENTIFICACION DE QUE LA VENTANA ESTA CERRADA
 
         # LLAMADO DE INICIO DE SESION                                           # AQUI SE MANDAN LOS DATOS DE LOS TXT
         #self.x = self.ingresar_btn.clicked.connect(lambda:self.iniciar_sesion(self.correo_txt.text(),self.password_txt.text()))
@@ -105,7 +106,14 @@ class LoginWindow(Login, QWidget):
         self.setWindowFlag(Qt.Window)
     
     def abrir_recuperar_password(self):
-        self.close()
-        window = RecuperarPasswordWindow(self)
-        window.show()
-        self.setWindowFlag(Qt.Window)
+        if not self.ventana_abierta:
+            self.ventana_abierta:True
+            window = RecuperarPasswordWindow(self)
+            window.setWindowModality(QtCore.Qt.ApplicationModal)
+            window.destroyed.connect(self.ventana_cerrada)
+            window.show()
+            self.setWindowFlag(Qt.Window)
+
+    # FUNCION PARA DEFINIR QUE LA VENTANA CAMBIE SU ESTADO A FALSE        
+    def ventana_cerrada(self):
+        self.ventana_abierta = False
