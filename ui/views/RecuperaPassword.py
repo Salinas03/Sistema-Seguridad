@@ -25,6 +25,12 @@ class RecuperarContrasenia(QMainWindow, object):
             os.path.dirname(os.path.abspath(__file__)),
             '../assets/icons/LOGO.svg'
         )
+
+        regresar_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../assets/icons/arrow-2.ico'
+        )
+        icon2 = QIcon(regresar_path)
         icon = QIcon(icon_path)
         RecuperarContrasenia.setWindowIcon(icon)
         RecuperarContrasenia.setStyleSheet(u"QPushButton#cambiar_password_btn,#recuperacion_codigo_btn,#recuperacion_btn{\n"
@@ -45,13 +51,13 @@ class RecuperarContrasenia(QMainWindow, object):
 "    color:white;\n"
 "}\n"
 "\n"
-"QPushButton#regresar_btn,#regresar_2_btn{\n"
+"QPushButton#regresar_btn,#regresar_2_btn,#regresar_login_btn{\n"
 "border:none;\n"
 "padding:5px;\n"
 "background:qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);;\n"
 "}\n"
 "\n"
-"QPushButton#regresar_btn:hover,#regresar_2_btn:hover{\n"
+"QPushButton#regresar_btn:hover,#regresar_2_btn:hover,#regresar_login_btn:hover{\n"
 "	background-color: rgb(0, 0, 0);\n"
 "}\n"
 "\n"
@@ -61,8 +67,8 @@ class RecuperarContrasenia(QMainWindow, object):
 "\n"
 "QLineEdit{\n"
 "border:1px solid rgba(0,0,0,0);\n"
-"background:qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B303"
-                        "4, stop:1 #1C4968);\n"
+"background:qlinearg"
+                        "radient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
 "border-radius:10px;\n"
 "border-bottom-color:rgba(255,255,255,255);\n"
 "color:rgb(255,255,255);\n"
@@ -124,6 +130,13 @@ class RecuperarContrasenia(QMainWindow, object):
 
         self.gridLayout_2.addItem(self.verticalSpacer_4, 0, 1, 1, 1)
 
+        self.regresar_login_btn = QPushButton(self.ingresa_correo_widget)
+        self.regresar_login_btn.setObjectName(u"regresar_login_btn")
+        self.regresar_login_btn.setMaximumSize(QSize(30, 16777215))
+        self.regresar_login_btn.setIcon(icon2)
+
+        self.gridLayout_2.addWidget(self.regresar_login_btn, 4, 0, 1, 1)
+
 
         self.verticalLayout.addWidget(self.ingresa_correo_widget)
 
@@ -168,9 +181,7 @@ class RecuperarContrasenia(QMainWindow, object):
         self.regresar_btn = QPushButton(self.confirma_codigo_widget)
         self.regresar_btn.setObjectName(u"regresar_btn")
         self.regresar_btn.setMaximumSize(QSize(30, 16777215))
-        icon = QIcon()
-        icon.addFile(u"./ui/assets/icons/arrow-2.ico", QSize(), QIcon.Normal, QIcon.Off)
-        self.regresar_btn.setIcon(icon)
+        self.regresar_btn.setIcon(icon2)
 
         self.gridLayout_3.addWidget(self.regresar_btn, 4, 0, 1, 1)
 
@@ -230,7 +241,7 @@ class RecuperarContrasenia(QMainWindow, object):
         self.regresar_2_btn = QPushButton(self.cambio_password_widget)
         self.regresar_2_btn.setObjectName(u"regresar_2_btn")
         self.regresar_2_btn.setMaximumSize(QSize(30, 16777215))
-        self.regresar_2_btn.setIcon(icon)
+        self.regresar_2_btn.setIcon(icon2)
 
         self.gridLayout_4.addWidget(self.regresar_2_btn, 6, 0, 1, 1)
 
@@ -254,6 +265,7 @@ class RecuperarContrasenia(QMainWindow, object):
         RecuperarContrasenia.setWindowTitle(QCoreApplication.translate("RecuperarContrasenia", u"Recuperar Contrase\u00f1a", None))
         self.recuperacion_btn.setText(QCoreApplication.translate("RecuperarContrasenia", u"Siguiente", None))
         self.label.setText(QCoreApplication.translate("RecuperarContrasenia", u"Ingresa tu correo ", None))
+        self.regresar_login_btn.setText("")
         self.recuperacion_codigo_btn.setText(QCoreApplication.translate("RecuperarContrasenia", u"Recuperar", None))
         self.label_2.setText(QCoreApplication.translate("RecuperarContrasenia", u"Ingresa el c\u00f3digo de verficiaci\u00f3n", None))
         self.regresar_btn.setText("")
