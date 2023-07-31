@@ -159,13 +159,17 @@ def aceptar_conexiones():
 
             #Se reciben los dos parámetros obligatorios del administrador o cliente para poder
             #verificar si se puede hacer la conexión total con el servidor
-            nombre_host = conn.recv(HEADER).decode(FORMAT)
-            numero_serie = conn.recv(HEADER).decode(FORMAT)
+            data_conexion = json.loads(conn.recv(HEADER).decode(FORMAT))
+            print(data_conexion)
+            nombre_host = data_conexion['nombre_host']
+            numero_serie = data_conexion['numero_serie']
+            tipo_programa = data_conexion['tipo_programa']
+
             print(f'Dispositivo conectado temporalmente: {nombre_host}')
 
             #Hacer validación si el cliente que se conectó esta en la base de datos o no
             #Si esta en la base de datos se determina si es administrador o cliente
-            guardar_conexiones(conn,addr, nombre_host, numero_serie)
+            guardar_conexiones(conn,addr, nombre_host, numero_serie, tipo_programa)
 
         except socket.error as e:
             # conn.send('{"success": false, "msg": "Error al aceptar la conexión :("}'.encode())
@@ -300,7 +304,7 @@ def aceptar_conexiones_cliente():
             conn.send('{"success": false, "msg": "Error al aceptar la conexión en cliente :("}'.encode())
 
 #GUARDAR CONEXIONES DEL SOCKET PRINCIPAL
-def guardar_conexiones(conn, addr, hostname, numero_serie):
+def guardar_conexiones(conn, addr, hostname, numero_serie, tipo_programa):
     #Verificar si el usuario o administrador esta registrado en la base de datos
     resultado = json.loads(EquiposConsultas(conexion()).obtener_equipo_por_nombre_numero_serie(hostname, numero_serie))
 
@@ -324,23 +328,29 @@ def guardar_conexiones(conn, addr, hostname, numero_serie):
             resultado = resultado[0]
 
         if not resultado:
-            equipo_cliente = EquipoConectado(conn, addr, hostname, numero_serie)
-            conexiones_equipos_cliente.append(equipo_cliente)
-            print(f'Conexión con cliente a las {datetime.datetime.now()} :)')
-            conn.send(json.dumps({'success': True, 'msg': 'Vinculación con servidor exitosa :)'}).encode())
+            if tipo_programa == 'administrador':
+                conn.send(json.dumps({'success': False, 'msg': 'Quieres ingresar como administrador desde una computadora cliente, acción denegada'}).encode())
+            else:
+                equipo_cliente = EquipoConectado(conn, addr, hostname, numero_serie)
+                conexiones_equipos_cliente.append(equipo_cliente)
+                print(f'Conexión con cliente a las {datetime.datetime.now()} :)')
+                conn.send(json.dumps({'success': True, 'msg': 'Vinculación con servidor exitosa :)'}).encode())
 
-            #Broadcast function
-            broadcast()
+                #Función de broadcast para refrescar las tablas
+                broadcast()
 
         else:
-            print(f'Administrador {hostname} con la IP {addr} se ha conectado a las {datetime.datetime.now()}')
-            equipo_admin = EquipoConectado(conn, addr, hostname, numero_serie)
-            conexiones_equipos_admin.append(equipo_admin)
+            if tipo_programa == 'cliente':
+                conn.send(json.dumps({'success': False, 'msg':'Quieres entrar como cliente desde una computadora administrativa, acción denegada'}).encode())
+            else:
+                print(f'Administrador {hostname} con la IP {addr} se ha conectado a las {datetime.datetime.now()}')
+                equipo_admin = EquipoConectado(conn, addr, hostname, numero_serie)
+                conexiones_equipos_admin.append(equipo_admin)
 
-            administrador_thread = threading.Thread(target=panel_administrador, args=(conn,equipo_admin))
-            administrador_thread.start()
+                administrador_thread = threading.Thread(target=panel_administrador, args=(conn,equipo_admin))
+                administrador_thread.start()
 
-            enviar_notificacion(f'Administrador {hostname} con la IP {addr} se ha conectado')
+                enviar_notificacion(f'Administrador {hostname} con la IP {addr} se ha conectado')
 
 #PANELES DE SE REDIRIGEN LAS CONEXIONES PARA ADMINISTRAR EL CANAL
 def panel_administrador(conn, administrador):
@@ -428,6 +438,20 @@ def panel_conectividad_admin(conn, addr, numero_serie):
 
             #Cerrar las selecciones en caso de que haya computadoras seleccionadas
             cerrar_selecciones(numero_serie, administrador_desconectado)
+
+            #TEMPORAL: Imprimir los arreglos de las conexiones de los arreglos para observar que se han borrado de manera correcta
+            print('[Conexiones equipos admin]')
+            print(conexiones_equipos_admin)
+            print('[Conexiones conextividad admin]')
+            print(conexiones_conectividad_admin)
+            print('[Conexiones equipos admin notificación]')
+            print(conexiones_equipos_admin_notificacion)
+            print('[Conexiones equipos broadcast]')
+            print(conexiones_equipos_broadcast)
+            print('[Conexiones equipos operacionesBD]')
+            print(conexiones_equipos_operacionesbd)
+            print('[Sesiones administradores]')
+            print(sesiones_administradores)
 
             #Realizar un borrado para esta conexión de conectividad
             conn.close()
@@ -574,7 +598,7 @@ def panel_base_datos(instruccion):
             return respuesta_operacion
 
         elif operacion == 'actualizar_perfil':
-            respuesta_operacion = PropietariosConsultas(conexion()).actualizar_perfil(int(instruccion['id'], instruccion['data']))
+            respuesta_operacion = PropietariosConsultas(conexion()).actualizar_perfil(int(instruccion['id']), instruccion['data'])
             validar = json.loads(respuesta_operacion)
 
             if validar['success']:
@@ -601,6 +625,7 @@ def panel_base_datos(instruccion):
             #Busqueda para ver si ya existe este usuario que esta tratando de loguearse
             print('Dentro de LOGIN')
             respuesta_operacion = PropietariosConsultas(conexion()).obtener_propietario(data_login[0], data_login[1])
+            numero_serie = data_login[2]
 
             print('RESPUESTA LOGIN')
             print(respuesta_operacion)
@@ -609,27 +634,32 @@ def panel_base_datos(instruccion):
 
             if respuesta['success']:
                 #Checar si el administrador existe con el correo y la contraseña
-                data = respuesta['data'][0]
 
-                if data:
+                if respuesta['data']:
+                    data = respuesta['data'][0]
                     #Una vez que sepamos que existe necesitamos checar que sea administrador                
                     if data[6] == 1:
                         #Observar si el que esta iniciando sesión corresponde con el rol
+                        print('WATEFAC SESIONES ADMIN')
+                        print(sesiones_administradores)
 
                         #Una vez checando si es administrador observamos si no tiene una sesión activa
                         for sesion in sesiones_administradores:
                             if sesion.get_id_admin() == data[0]: #ID 
                                 msg = f'Ya hay una sesión con el usuario {data[1]} porfavor intente mas tarde o inicie con otra sesión'
+                                borrar_administradores_numero_serie(numero_serie)
                                 return json.dumps({'success': False, 'msg': msg})
 
                         #Si no existe crear la sesión de ese administrador de lo contrario mandar un mensaje diciendo que ya existe la sesión
-                        sesion_admin = Administrador(data[0], data[1], data[2],data[3], data[4], data[5], data[6], data_login[2])
+                        sesion_admin = Administrador(data[0], data[1], data[2],data[3], data[4], data[5], data[6], numero_serie)
                         sesiones_administradores.append(sesion_admin)
                         print(f'Sesión iniciada de {sesion_admin.get_nombre_admin()}')
                         return json.dumps({'success': True, 'data': data})
                     else:
+                        borrar_administradores_numero_serie(numero_serie)
                         return json.dumps({'success': False, 'msg': 'Esta tratando de ingresar al servidor con un propietario NO administrativo'})
                 else:
+                    borrar_administradores_numero_serie(numero_serie)
                     return json.dumps({'success': False, 'msg': 'El correo o la contraseña son incorrectos'})
 
             else:

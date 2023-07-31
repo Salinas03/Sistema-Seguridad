@@ -21,8 +21,7 @@ class AdministradorSesion:
     def get_correo_admin(self):
         return self.correo_admin
 
-    def actualizar_informacion_admin(self, id_admin, nombre_admin, apellido_admin, tel_admin, correo_admin):
-        self.id_admin = id_admin
+    def actualizar_informacion_admin(self, nombre_admin, apellido_admin, tel_admin, correo_admin):
         self.nombre_admin = nombre_admin
         self.apellido_admin = apellido_admin
         self.tel_admin = tel_admin

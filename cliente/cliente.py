@@ -63,8 +63,15 @@ class ClienteSocket:
     def validacion_conexion(self):
         try:
             numero_de_serie = self.obtener_numero_serie()
-            cliente.send(socket.gethostname().encode())
-            cliente.send(numero_de_serie.encode())
+
+            envio_validacion = {
+                'nombre_host': socket.gethostname(),
+                'numero_serie': numero_de_serie,
+                'tipo_programa': 'cliente'
+            }
+
+            cliente.send(json.dumps(envio_validacion).encode())
+
             respuesta_servidor = json.loads(cliente.recv(self.HEADER).decode(self.FORMAT))
             return respuesta_servidor
         

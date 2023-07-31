@@ -7,8 +7,12 @@ from utils.crear_mensaje_emergente import crear_message_box
 import json
 
 class ModificarPerfilWindow(EditarPerfil, QWidget):
-    def __init__(self,parent = None, _id = None):
-        self._id = _id
+    def __init__(self,parent = None, administrador = None, llenar_campos_administrador = None):
+
+        self.administrador = administrador
+        self._id = self.administrador.get_id_admin()
+        self.llenar_campos_administrador = llenar_campos_administrador
+
         super().__init__(parent)
         self.setupUi(self)
         self.setWindowFlag(Qt.Window)
@@ -72,7 +76,7 @@ class ModificarPerfilWindow(EditarPerfil, QWidget):
 
             peticion = {
                 'tabla': 'propietarios',
-                'operacion':'actualizar',
+                'operacion':'actualizar_perfil',
                 'data':data,
                 'id':self._id
             }
@@ -81,6 +85,8 @@ class ModificarPerfilWindow(EditarPerfil, QWidget):
 
             if respuesta['success']:
                 crear_message_box('Actualización', 'El propietario se actualizó con éxito', 'information').exec_()
+                self.administrador.actualizar_informacion_admin(nombre, apellido, telefono, correo)
+                self.llenar_campos_administrador()
                 self.close()
 
             else:
