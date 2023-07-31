@@ -24,8 +24,6 @@ class RecuperarPasswordWindow(RecuperarContrasenia,QWidget):
         self.regresar_2_btn.clicked.connect(self.mostrar_primera_parte)
         self.regresar_btn.clicked.connect(self.mostrar_primera_parte)
 
-        self.regresar_login_btn.clicked.connect(self.regresar_login)
-
         only_password = QRegExpValidator(QRegExp('^[A-Za-z0-9.@/_&$%!-]{3,50}')) # VALIDACION DE DATOS ALFANUMERICOS DONDE SOLO PUEDE TENER ENTRE 3 Y 100 VALORES
 
         self.nuevo_password_txt.setValidator(only_password)
@@ -116,14 +114,6 @@ class RecuperarPasswordWindow(RecuperarContrasenia,QWidget):
             else:
                 print('No se recibio respuesta')
 
-    def regresar_login(self):
-        from controllers.Login import LoginWindow
-        self.close()
-        window = LoginWindow(self)
-        window.show()
-
-    
-    
     # FUNCION PARA DEFINIR QUE LA VENTANA CAMBIE SU ESTADO A FALSE        
     def ventana_cerrada(self):
         self.ventana_abierta = False
