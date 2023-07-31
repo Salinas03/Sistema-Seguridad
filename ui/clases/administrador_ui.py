@@ -86,8 +86,13 @@ class AdministradorSocketUI:
             numero_de_serie = self.obtener_numero_serie()
 
             #Se envia el hostname de la computadora a su vez con el identificador que en este caso será el número de serie
-            self.administrador.send(socket.gethostname().encode())
-            self.administrador.send(numero_de_serie.encode())
+            envio_validacion = {
+                'nombre_host': socket.gethostname(),
+                'numero_serie': numero_de_serie,
+                'tipo_programa': 'administrador'
+            }
+
+            self.administrador.send(json.dumps(envio_validacion).encode())
 
             #Mensaje de segunda conexión con el servidor
             #Aqui tanto se puede conectar como no se puede conectar
@@ -101,7 +106,7 @@ class AdministradorSocketUI:
             self.notificacion.close()
             self.broadcasting.close()
             self.operacionesbd.close()
-            return {"success": False, "msg": "Error al validar la conexión :("}
+            return {"success": False, "msg": "No se pudo realizar la validación de la conexión correctamente"}
 
     def conexiones_canales_secundarios(self):
         try:
