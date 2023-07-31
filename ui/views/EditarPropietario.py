@@ -43,6 +43,21 @@ class EditarPropietario(QMainWindow, object):
 "\n"
 "QLabel#label,#label_3,#label_4,#label_5,#label_6,#label_8{\n"
 "color:white;\n"
+"}"
+"\n"
+"QPushButton{\n"
+"background-color:transparent;\n"
+"border: 1px solid #bdbdbd;\n"
+"padding:12px;\n"
+"border-radius:15px;\n"
+"color:white;\n"
+"	font: 75 9pt \"MS Shell Dlg 2\";\n"
+"}\n"
+"\n"
+"QPushButton:hover{\n"
+"background-color:#bdbdbd;\n"
+"border: none;\n"
+"color:black;\n"
 "}")
         self.centralwidget = QWidget(EditarPropietario)
         self.centralwidget.setObjectName(u"centralwidget")

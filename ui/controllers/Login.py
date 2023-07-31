@@ -77,7 +77,7 @@ class LoginWindow(Login, QWidget):
                                             administrador_logueado = respuesta_servidor['data']
                                             print(administrador_logueado)
                                             window = CargaWindow(self, administrador_logueado, self.close)
-                                            window.setWindowModality(QtCore.Qt.ApplicationModal)
+                                            #window.setWindowModality(QtCore.Qt.ApplicationModal)
                                             window.show()
                                         else:
                                             admin_socket_ui.cerrado_sockets()

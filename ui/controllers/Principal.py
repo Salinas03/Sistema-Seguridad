@@ -50,7 +50,14 @@ class PrincipalWindow(Principal,QWidget):
         self.user_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_4))
         self.admins_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_5))
 
+        self.home_texto_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_2))
+        self.desktop_texto_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page))
+        self.settings_texto_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_3))
+        self.admins_texto_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_5))
+
         # < --------------------- PAGINA PRINCIPAL --------------------- >
+
+        self.menu_widget.hide()
 
         tabla_de_computadoras_activas = QTableWidget()
         tabla_de_computadoras_activas.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
