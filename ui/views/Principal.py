@@ -127,6 +127,7 @@ class Principal(QMainWindow, object):
 "\n"
 "QPushButton::hover{\n"
 "background-color:rgba(86,101,115,0.5);\n"
+"border-top-left-radius: 20px;\n"
 "}\n"
 "\n"
 "QPushButton::checked{\n"
@@ -210,11 +211,13 @@ class Principal(QMainWindow, object):
 "background-color:transparent;\n"
 "border:none;\n"
 "border-radius:3px;\n"
+"padding: 8px 0 8px 0;\n"
 "text-align:left;\n"
 "color: rgb(255, 255, 255);\n"
 "}\n"
 "QPushButton::hover{\n"
 "background-color:rgba(86,101,115,0.5);\n"
+"border-top-left-radius: 20px;\n"
 "}\n"
 "\n"
 "QPushButton::checked{\n"
@@ -222,7 +225,7 @@ class Principal(QMainWindow, object):
 "}\n"
 "")
         self.verticalLayout_16 = QVBoxLayout(self.menu_desplegable_widget)
-        self.verticalLayout_16.setSpacing(20)
+        self.verticalLayout_16.setSpacing(0)
         self.verticalLayout_16.setObjectName(u"verticalLayout_16")
         self.verticalLayout_16.setContentsMargins(10, 0, 15, 30)
         self.label_18 = QLabel(self.menu_desplegable_widget)

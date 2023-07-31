@@ -50,6 +50,7 @@ class EditarPropietario(QMainWindow, object):
 "border: 1px solid #bdbdbd;\n"
 "padding:12px;\n"
 "border-radius:15px;\n"
+"margin:5px;\n"
 "color:white;\n"
 "	font: 75 9pt \"MS Shell Dlg 2\";\n"
 "}\n"
