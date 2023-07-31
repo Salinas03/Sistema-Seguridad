@@ -1071,8 +1071,8 @@ class Principal(QMainWindow, object):
         Principal.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(Principal)
-        self.pushButton.toggled.connect(self.menu_widget.setVisible)
-        self.pushButton.toggled.connect(self.menu_desplegable_widget.setHidden)
+        self.pushButton.toggled.connect(self.menu_widget.setHidden)
+        self.pushButton.toggled.connect(self.menu_desplegable_widget.setVisible)
         self.home_btn.toggled.connect(self.home_texto_btn.setChecked)
         self.compus_btn.toggled.connect(self.desktop_texto_btn.setChecked)
         self.admins_btn.toggled.connect(self.admins_texto_btn.setChecked)

@@ -57,7 +57,7 @@ class PrincipalWindow(Principal,QWidget):
 
         # < --------------------- PAGINA PRINCIPAL --------------------- >
 
-        self.menu_widget.hide()
+        self.menu_desplegable_widget.hide()
 
         tabla_de_computadoras_activas = QTableWidget()
         tabla_de_computadoras_activas.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
