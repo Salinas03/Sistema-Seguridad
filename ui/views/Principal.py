@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'Principal.ui'
+## Form generated from reading UI file 'Principal - copia.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -23,7 +23,7 @@ class Principal(QMainWindow, object):
         try:
             admin_socket_ui.cerrado_sockets()
             # admin_socket_ui.get_socket_administrador().send('salir'.encode())
-            
+
         except socket.error as e:
             print(f'Ocurrio un error al realizar la salida {e}')
 
@@ -45,19 +45,19 @@ class Principal(QMainWindow, object):
         )
         home_icon_path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
-            '../assets/icons/home-3.ico'
+            '../assets/icons/home-cambio-blanco.ico'
         )
         desktop_icon_path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
-            '../assets/icons/desktop.svg'
+            '../assets/icons/desktop-cambio-blanco.ico'
         )
         admin_icon_path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
-            '../assets/icons/administrator-32.ico'
+            '../assets/icons/user-4.ico'
         )
         help_icon_path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
-            '../assets/icons/help-circle.svg'
+            '../assets/icons/question-cambio-blanco.ico'
         )
         arrow_icon_path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
@@ -88,6 +88,8 @@ class Principal(QMainWindow, object):
         icon5 = QIcon(arrow_icon_path)
         icon6 = QIcon(user_4_path)
         icon7 = QIcon(actualizar_path)
+        icon8 = QIcon(admin_2_path)
+        icon9 = QIcon(column_icon_path)
 
         Principal.setWindowIcon(icon)
 
@@ -115,19 +117,33 @@ class Principal(QMainWindow, object):
 "}\n"
 "\n"
 "QPushButton{\n"
-"margin-bottom:10px;\n"
-"}")
+"/*margin-bottom:10px;*/\n"
+"background-color:transparent;\n"
+"border-radius:3px;\n"
+"border: none;\n"
+"padding: 8px 0 8px 0;\n"
+"color: #788596;\n"
+"}\n"
+"\n"
+"QPushButton::hover{\n"
+"background-color:rgba(86,101,115,0.5);\n"
+"}\n"
+"\n"
+"QPushButton::checked{\n"
+"color:#fff;\n"
+"}\n"
+"")
         self.verticalLayout_4 = QVBoxLayout(self.menu_widget)
         self.verticalLayout_4.setSpacing(0)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.verticalLayout_4.setContentsMargins(5, 0, 5, 10)
+        self.verticalLayout_4.setContentsMargins(5, 0, 5, 21)
         self.verticalLayout_3 = QVBoxLayout()
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.label = QLabel(self.menu_widget)
         self.label.setObjectName(u"label")
         self.label.setMinimumSize(QSize(0, 55))
         self.label.setMaximumSize(QSize(16777215, 50))
-        self.label.setPixmap(QPixmap(column_icon_path))
+        self.label.setPixmap(QPixmap(help_icon_path))
         self.label.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_3.addWidget(self.label)
@@ -179,21 +195,86 @@ class Principal(QMainWindow, object):
 
         self.horizontalLayout.addWidget(self.menu_widget)
 
+        self.menu_desplegable_widget = QWidget(self.frame)
+        self.menu_desplegable_widget.setObjectName(u"menu_desplegable_widget")
+        self.menu_desplegable_widget.setStyleSheet(u"QWidget#menu_desplegable_widget{\n"
+"background: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
+"}\n"
+"\n"
+"QLabel{\n"
+"color: rgb(255, 255, 255);\n"
+"	font: 10pt \"MS Shell Dlg 2\";\n"
+"}\n"
+"\n"
+"QPushButton{\n"
+"background-color:transparent;\n"
+"border:none;\n"
+"border-radius:3px;\n"
+"text-align:left;\n"
+"color: rgb(255, 255, 255);\n"
+"}\n"
+"QPushButton::hover{\n"
+"background-color:rgba(86,101,115,0.5);\n"
+"}\n"
+"\n"
+"QPushButton::checked{\n"
+"color:#fff;\n"
+"}\n"
+"")
+        self.verticalLayout_16 = QVBoxLayout(self.menu_desplegable_widget)
+        self.verticalLayout_16.setSpacing(20)
+        self.verticalLayout_16.setObjectName(u"verticalLayout_16")
+        self.verticalLayout_16.setContentsMargins(10, 0, 15, 30)
+        self.label_18 = QLabel(self.menu_desplegable_widget)
+        self.label_18.setObjectName(u"label_18")
+        self.label_18.setMinimumSize(QSize(0, 55))
+        self.label_18.setMaximumSize(QSize(16777215, 50))
+        self.label_18.setPixmap(QPixmap(help_icon_path))
+        self.label_18.setAlignment(Qt.AlignCenter)
+
+        self.verticalLayout_16.addWidget(self.label_18)
+
+        self.home_texto_btn = QPushButton(self.menu_desplegable_widget)
+        self.home_texto_btn.setObjectName(u"home_texto_btn")
+        self.home_texto_btn.setIcon(icon1)
+
+        self.verticalLayout_16.addWidget(self.home_texto_btn)
+
+        self.desktop_texto_btn = QPushButton(self.menu_desplegable_widget)
+        self.desktop_texto_btn.setObjectName(u"desktop_texto_btn")
+        self.desktop_texto_btn.setIcon(icon2)
+
+        self.verticalLayout_16.addWidget(self.desktop_texto_btn)
+
+        self.admins_texto_btn = QPushButton(self.menu_desplegable_widget)
+        self.admins_texto_btn.setObjectName(u"admins_texto_btn")
+        self.admins_texto_btn.setIcon(icon3)
+
+        self.verticalLayout_16.addWidget(self.admins_texto_btn)
+
+        self.verticalSpacer_13 = QSpacerItem(20, 572, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout_16.addItem(self.verticalSpacer_13)
+
+        self.settings_texto_btn = QPushButton(self.menu_desplegable_widget)
+        self.settings_texto_btn.setObjectName(u"settings_texto_btn")
+        self.settings_texto_btn.setIcon(icon4)
+
+        self.verticalLayout_16.addWidget(self.settings_texto_btn)
+
+
+        self.horizontalLayout.addWidget(self.menu_desplegable_widget)
+
         self.body_widget = QWidget(self.frame)
         self.body_widget.setObjectName(u"body_widget")
-        self.body_widget.setStyleSheet(u"QPushButton#user_btn{\n"
-"background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(20, 47, 78, 219), stop:1 rgba(85, 98, 112, 226));\n"
-"border-radius:5px;\n"
+        self.body_widget.setStyleSheet(u"QPushButton#user_btn,#pushButton{\n"
+"background-color:transparent;\n"
 "}\n"
 "\n"
 "QPushButton#user_btn:hover{\n"
 "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1.5, y2:3, stop:0 #c0c0c0, stop:1 #000000);\n"
-"}\n"
-"\n"
-"QPushButton#user_btn:pressed{\n"
-"padding-left:5px;\n"
-"padding-top:5px;\n"
-"background-color:rgba(105, 118, 132, 200);\n"
+"border:none;\n"
+"border-radius:10px;\n"
 "}\n"
 "\n"
 "QPushButton#guardad_computadora_btn,\n"
@@ -215,8 +296,7 @@ class Principal(QMainWindow, object):
 "}\n"
 "\n"
 "QPushButton#guardad_computadora_btn:hover,\n"
-"#cancelar_regis"
-                        "tro_btn:hover,\n"
+"#cancelar_registro_btn:hover,\n"
 "#modificar_btn:hover,\n"
 "#guardar_btn:hover,\n"
 "#cancelar_btn:hover,\n"
@@ -224,7 +304,8 @@ class Principal(QMainWindow, object):
 "#modificar_admin_btn:hover,\n"
 "#eliminar_admin_btn:hover,\n"
 "#agregar_compu_btn:hover,\n"
-"#modificar_compu_btn:hover,\n"
+"#"
+                        "modificar_compu_btn:hover,\n"
 "#eliminar_compu_btn:hover,\n"
 "#modificar_perfil_btn:hover,\n"
 "#guardar_admin_btn:hover{\n"
@@ -253,39 +334,16 @@ class Principal(QMainWindow, object):
 "color: rgb(140, 140, 140);\n"
 "}\n"
 "\n"
-"QTableWidget#tabla_computadoras_activas::item::selected {\n"
-"        background-color: transparent;  /* Eliminar el color de fondo de resaltado */\n"
-"          /* Cambiar el puntero a predeterminado */\n"
-"        color:black;   \n}"
-"")
-        
-        self.verticalLayout = QVBoxLayout(self.body_widget)
-        self.verticalLayout.setSpacing(0)
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        self.frame_2 = QFrame(self.body_widget)
-        self.frame_2.setObjectName(u"frame_2")
-        self.frame_2.setMinimumSize(QSize(1080, 0))
-        self.frame_2.setMaximumSize(QSize(1080, 50))
-        self.frame_2.setStyleSheet(u"QFrame#frame_2{\n"
-"background: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
-"border-radius:15px;\n"
-"}")
-        self.frame_2.setFrameShape(QFrame.StyledPanel)
-        self.frame_2.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_2 = QHBoxLayout(self.frame_2)
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.user_btn = QPushButton(self.frame_2)
-        self.user_btn.setObjectName(u"user_btn")
-        self.user_btn.setMaximumSize(QSize(50, 16777215))
-        self.user_btn.setStyleSheet(u"")
-        self.user_btn.setIcon(icon6)
-
-        self.horizontalLayout_2.addWidget(self.user_btn)
-
-
-        self.verticalLayout.addWidget(self.frame_2, 0, Qt.AlignHCenter)
-
+"QTableWidget#tabla_computadoras_activas::item:selected {\n"
+"        background-color: none;  /* Eliminar el color de resaltado */\n"
+"        selection-color: none;  /* Eliminar el color de texto de resaltado */\n"
+"        selection-background-color: none;  /* Eliminar el color de fondo de r"
+                        "esaltado */\n"
+"        cursor: default;  /* Cambiar el puntero a predeterminado */\n"
+"    }")
+        self.formLayout = QFormLayout(self.body_widget)
+        self.formLayout.setObjectName(u"formLayout")
+        self.formLayout.setContentsMargins(0, 0, 0, 0)
         self.frame_3 = QFrame(self.body_widget)
         self.frame_3.setObjectName(u"frame_3")
         self.frame_3.setStyleSheet(u"")
@@ -478,7 +536,7 @@ class Principal(QMainWindow, object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1278, 664))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1200, 598))
         self.gridLayout_8 = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_8.setObjectName(u"gridLayout_8")
         self.label_15 = QLabel(self.scrollAreaWidgetContents)
@@ -829,8 +887,8 @@ class Principal(QMainWindow, object):
 
         self.actualizar_btn = QPushButton(self.widget)
         self.actualizar_btn.setObjectName(u"actualizar_btn")
-        # icon6 = QIcon()
-        # icon6.addFile(u"../assets/icons/refresh-cw.svg", QSize(), QIcon.Normal, QIcon.Off)
+        # icon5 = QIcon()
+        # icon5.addFile(u"../assets/icons/refresh-cw.svg", QSize(), QIcon.Normal, QIcon.Off)
         self.actualizar_btn.setIcon(icon7)
 
         self.horizontalLayout_5.addWidget(self.actualizar_btn)
@@ -962,7 +1020,47 @@ class Principal(QMainWindow, object):
         self.horizontalLayout_3.addWidget(self.stackedWidget)
 
 
-        self.verticalLayout.addWidget(self.frame_3)
+        self.formLayout.setWidget(1, QFormLayout.SpanningRole, self.frame_3)
+
+        self.frame_2 = QFrame(self.body_widget)
+        self.frame_2.setObjectName(u"frame_2")
+        sizePolicy.setHeightForWidth(self.frame_2.sizePolicy().hasHeightForWidth())
+        self.frame_2.setSizePolicy(sizePolicy)
+        self.frame_2.setMinimumSize(QSize(1080, 0))
+        self.frame_2.setMaximumSize(QSize(50000, 50))
+        self.frame_2.setStyleSheet(u"QFrame#frame_2{\n"
+"background: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
+"border-radius: 0 0 15px 1px;\n"
+"}")
+        self.frame_2.setFrameShape(QFrame.StyledPanel)
+        self.frame_2.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_2 = QHBoxLayout(self.frame_2)
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.pushButton = QPushButton(self.frame_2)
+        self.pushButton.setObjectName(u"pushButton")
+        self.pushButton.setIcon(icon9)
+        self.pushButton.setCheckable(True)
+
+        self.horizontalLayout_2.addWidget(self.pushButton)
+
+        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_2.addItem(self.horizontalSpacer_4)
+
+        self.user_btn = QPushButton(self.frame_2)
+        self.user_btn.setObjectName(u"user_btn")
+        self.user_btn.setMaximumSize(QSize(50, 16777215))
+        self.user_btn.setStyleSheet(u"")
+        self.user_btn.setIcon(icon3)
+
+        self.horizontalLayout_2.addWidget(self.user_btn)
+
+        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_2.addItem(self.horizontalSpacer_5)
+
+
+        self.formLayout.setWidget(0, QFormLayout.SpanningRole, self.frame_2)
 
 
         self.horizontalLayout.addWidget(self.body_widget)
@@ -973,6 +1071,16 @@ class Principal(QMainWindow, object):
         Principal.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(Principal)
+        self.pushButton.toggled.connect(self.menu_widget.setHidden)
+        self.pushButton.toggled.connect(self.menu_desplegable_widget.setVisible)
+        self.home_btn.toggled.connect(self.home_texto_btn.setChecked)
+        self.compus_btn.toggled.connect(self.desktop_texto_btn.setChecked)
+        self.admins_btn.toggled.connect(self.admins_texto_btn.setChecked)
+        self.home_texto_btn.toggled.connect(self.home_btn.setChecked)
+        self.desktop_texto_btn.toggled.connect(self.compus_btn.setChecked)
+        self.admins_texto_btn.toggled.connect(self.admins_btn.setChecked)
+        self.settings_btn.toggled.connect(self.settings_texto_btn.setChecked)
+        self.settings_texto_btn.toggled.connect(self.settings_btn.setChecked)
 
         self.stackedWidget.setCurrentIndex(4)
 
@@ -987,7 +1095,11 @@ class Principal(QMainWindow, object):
         self.compus_btn.setText("")
         self.admins_btn.setText("")
         self.settings_btn.setText("")
-        self.user_btn.setText("")
+        self.label_18.setText("")
+        self.home_texto_btn.setText(QCoreApplication.translate("Principal", u"Inicio", None))
+        self.desktop_texto_btn.setText(QCoreApplication.translate("Principal", u"Computadoras", None))
+        self.admins_texto_btn.setText(QCoreApplication.translate("Principal", u"Propietarios", None))
+        self.settings_texto_btn.setText(QCoreApplication.translate("Principal", u"Dudas", None))
         self.label_20.setText(QCoreApplication.translate("Principal", u"Computadoras registradas", None))
         ___qtablewidgetitem = self.computadoras_registradas_table.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("Principal", u"ID", None));
@@ -1008,8 +1120,8 @@ class Principal(QMainWindow, object):
         self.label_16.setText("")
         self.label_17.setText("")
         self.label_5.setText(QCoreApplication.translate("Principal", u"Ayuda", None))
-        self.label_15.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p>P\u00e1gina principal</p><p>-Instalar la segunda aplicaci\u00f3n en la computadora que se va a monitorear. </p><p>-Asegurese que ambas aplicaciones cuenten con una conexi\u00f3n a internet, si no, el programa no podra ser utilizado correctamente.</p><p>- Obtener la MAC ADRESS de la computadora que va a ser registrada. </p><p>- Para poder registrar una nueva computadora, se debe registrar primeramente en la secci\u00f3n de agregar computadoras.</p><p>-Si quiere agregar otro comando en la computadoras activas, de doble click en la fila de la computadora seleccionada.</p><p><br/></p><p>Computadoras</p><p>- Si requiere modificar alg\u00fan dato de alguna computadora, de doble click en el dato a modificar.</p><p>- Si se requiere eliminar a una computadora, seleccione la fila y de click en el b\u00f3ton eliminar</p><p><br/></p><p>Propietarios</p><p>- Si requiere modificar alg\u00fan dato de alg\u00fan propietario, de doble click en la fila del dato a modificar.</p><p>- Si se requiere eliminar a"
-                        " un propietario, seleccione la fila y de click en el b\u00f3ton eliminar</p></body></html>", None))
+        self.label_15.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p>P\u00e1gina principal</p><p>-Instalar la segunda aplicaci\u00f3n en la computadora que se va a monitorear. </p><p>-Asegurese que ambas aplicaciones cuenten con una conexi\u00f3n a internet, si no, el programa no podra ser utilizado correctamente.</p><p>- Obtener el n\u00famero de serie de la computadora que va a ser registrada, este n\u00famero sera tomado como dato \u00fanico de los equipos </p><p>de computo y poder distinguirlos con m\u00e1s facilidad.</p><p>- Para poder registrar una nueva computadora, se debe registrar primeramente en la secci\u00f3n de agregar computadoras.</p><p>-Si quiere agregar otro comando en la computadoras activas, de doble click en la fila de la computadora que desea controlar.</p><p><br/></p><p>Computadoras</p><p>- Si requiere modificar alg\u00fan dato de alguna computadora, de doble click en el dato a modificar.</p><p>- Si se requiere eliminar a una computadora, seleccione la fila y de click en el b\u00f3ton eliminar</p><p><br/></p><p>Propietarios</p><p>- S"
+                        "i requiere modificar alg\u00fan dato de alg\u00fan propietario, de doble click en la fila del dato a modificar.</p><p>- Si se requiere eliminar a un propietario, seleccione la fila y de click en el b\u00f3ton eliminar</p></body></html>", None))
         self.label_13.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p><span style=\" font-size:16pt; font-weight:600; color:#ffffff;\">PERFIL ADMINISTRADOR</span></p></body></html>", None))
         self.label_7.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p><span style=\" color:#ffffff;\">Apellidos</span></p></body></html>", None))
         self.label_8.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p><span style=\" color:#ffffff;\">Tel\u00e9fono</span></p></body></html>", None))
@@ -1055,12 +1167,7 @@ class Principal(QMainWindow, object):
         self.label_3.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p><span style=\" font-size:12pt;\">Computadoras </span><span style=\" font-size:12pt; color:#ff0206;\">desactivadas</span></p></body></html>", None))
         ___qtablewidgetitem17 = self.tabla_computadoras_desactivas.horizontalHeaderItem(0)
         ___qtablewidgetitem17.setText(QCoreApplication.translate("Principal", u"ID", None));
-        ___qtablewidgetitem18 = self.tabla_computadoras_desactivas.horizontalHeaderItem(1)
-        ___qtablewidgetitem18.setText(QCoreApplication.translate("Principal", u"Nombre del equipo", None));
-        ___qtablewidgetitem19 = self.tabla_computadoras_desactivas.horizontalHeaderItem(2)
-        ___qtablewidgetitem19.setText(QCoreApplication.translate("Principal", u"N\u00famero de serie", None));
-        ___qtablewidgetitem20 = self.tabla_computadoras_desactivas.horizontalHeaderItem(3)
-        ___qtablewidgetitem20.setText(QCoreApplication.translate("Principal", u"Rol", None));
-        ___qtablewidgetitem21 = self.tabla_computadoras_desactivas.horizontalHeaderItem(4)
-        ___qtablewidgetitem21.setText(QCoreApplication.translate("Principal", u"Rol", None));
+        self.pushButton.setText("")
+        self.user_btn.setText("")
+    # retranslateUi
 

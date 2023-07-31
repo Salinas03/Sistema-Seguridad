@@ -114,8 +114,6 @@ class RecuperarPasswordWindow(RecuperarContrasenia,QWidget):
             else:
                 print('No se recibio respuesta')
 
-    
-    
     # FUNCION PARA DEFINIR QUE LA VENTANA CAMBIE SU ESTADO A FALSE        
     def ventana_cerrada(self):
         self.ventana_abierta = False

@@ -10,7 +10,8 @@ from controllers.ModificarComputadoras import ModificarEquipoWindow
 from controllers.ModificarPerfil import ModificarPerfilWindow
 from py2_msgboxes import msg_boxes
 from PySide2.QtCore import *
-from PySide2.QtGui import QRegExpValidator
+from PySide2.QtGui import QRegExpValidator, QPixmap, QIcon
+import os
 #TODO Librerias agregadas para la implementación de tablas dinámicas
 import json
 import threading
@@ -49,7 +50,14 @@ class PrincipalWindow(Principal,QWidget):
         self.user_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_4))
         self.admins_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_5))
 
+        self.home_texto_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_2))
+        self.desktop_texto_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page))
+        self.settings_texto_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_3))
+        self.admins_texto_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_5))
+
         # < --------------------- PAGINA PRINCIPAL --------------------- >
+
+        self.menu_desplegable_widget.hide()
 
         tabla_de_computadoras_activas = QTableWidget()
         tabla_de_computadoras_activas.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
@@ -75,6 +83,13 @@ class PrincipalWindow(Principal,QWidget):
 
 
         # < --------------------- PAGINA COMPUTADORAS REGISTRADAS --------------------- >
+
+        self.botones_eliminar = [self.eliminar_admin_btn, self.eliminar_compu_btn]
+
+        for button in self.botones_eliminar:
+            self.apply_hover_effect_computadoras(button)
+
+
         self.eliminar_compu_btn.setEnabled(False)
         # MEDIDAS DEL ANCHO DE LAS TABLAS
         header_computadoras_registradas_table = self.computadoras_registradas_table.horizontalHeader()
@@ -96,6 +111,11 @@ class PrincipalWindow(Principal,QWidget):
         self.computadoras_registradas_table.selectionModel().currentChanged.connect(self.actualizar_estado_boton_compu)
 
         # < --------------------- PAGINA ADMINISTRADORES REGISTRADOS --------------------- >
+
+        self.botones_agregar = [self.agregar_admin_btn, self.agregar_compu_btn]
+
+        for button in self.botones_agregar:
+            self.apply_hover_effect(button)
 
         self.eliminar_admin_btn.setEnabled(False)
         # MEDIDAS DEL ANCHO DE LAS TABLAS
@@ -295,6 +315,34 @@ class PrincipalWindow(Principal,QWidget):
                 crear_message_box('Advertencia', 'La ventana ya esta abierta', 'warning').exec_()
 # ////////////////////////// FUNCIONES PAGINA COMPUTADORAS REGISTRADAS //////////////////////////
 
+    def apply_hover_effect_computadoras(self, button):
+        button.enterEvent = lambda event, button=button: self.on_enter_event_computadoras(event, button)
+        button.leaveEvent = lambda event, button=button: self.on_leave_event_computadoras(event, button)
+
+    def on_enter_event_computadoras(self, event, button):
+        image_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../assets/files/clear.png'
+        )
+        if os.path.exists(image_path):
+            pixmap = QPixmap(image_path)
+            new_width = button.width() // 2
+            new_height = button.height() // 2
+            pixmap = pixmap.scaled(new_width, new_height, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
+            # Guardamos el texto original en el atributo del botón
+            if not hasattr(button, 'original_text'):
+                button.original_text = button.text()
+
+            button.setIcon(pixmap)
+            button.setIconSize(pixmap.size())
+            button.setText("")  # Configura el texto del botón en una cadena vacía
+
+    def on_leave_event_computadoras(self, event, button):
+         # Volver a mostrar el texto al salir del hover
+        if hasattr(button, 'original_text'):
+            button.setText(button.original_text)  # Restaura el texto original del botón
+        button.setIcon(QIcon())  # Configura un QIcon vacío para eliminar la imagen
+
     # FUNCION PARA MANDAR LLAMAR A LA VENTANA DE AGREGAR COMPUS
     def abrir_agregar_compus(self):
         # CONDICION PARA SABER SI LA VENTANA ESTA ABIERTA
@@ -369,6 +417,35 @@ class PrincipalWindow(Principal,QWidget):
             self.eliminar_compu_btn.setEnabled(False)   
 
 # ////////////////////////// FUNCIONES PAGINA ADMINISTRADORES REGISTRADOS //////////////////////////
+
+    def apply_hover_effect(self, button):
+        button.enterEvent = lambda event, button=button: self.on_enter_event(event, button)
+        button.leaveEvent = lambda event, button=button: self.on_leave_event(event, button)
+
+    def on_enter_event(self, event, button):
+        image_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../assets/files/more.png'
+        )
+        if os.path.exists(image_path):
+            pixmap = QPixmap(image_path)
+            new_width = button.width() // 2
+            new_height = button.height() // 2
+            pixmap = pixmap.scaled(new_width, new_height, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
+            # Guardamos el texto original en el atributo del botón
+            if not hasattr(button, 'original_text'):
+                button.original_text = button.text()
+
+            button.setIcon(pixmap)
+            button.setIconSize(pixmap.size())
+            button.setText("")  # Configura el texto del botón en una cadena vacía
+
+    def on_leave_event(self, event, button):
+         # Volver a mostrar el texto al salir del hover
+        if hasattr(button, 'original_text'):
+            button.setText(button.original_text)  # Restaura el texto original del botón
+        button.setIcon(QIcon())  # Configura un QIcon vacío para eliminar la imagen
+
 
 # FUNCION PARA MANDAR LLAMAR LA VENTANA DE AGREGAR ADMIN
     def abrir_agregar_admin(self):

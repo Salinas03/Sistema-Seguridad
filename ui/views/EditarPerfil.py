@@ -49,7 +49,21 @@ class EditarPerfil(QMainWindow, object):
 "QLabel{\n"
 "color:white;\n"
 "}\n"
-"")
+"\n"
+"QPushButton{\n"
+"background-color:transparent;\n"
+"border: 1px solid #bdbdbd;\n"
+"padding:12px;\n"
+"border-radius:15px;\n"
+"color:white;\n"
+"	font: 75 9pt \"MS Shell Dlg 2\";\n"
+"}\n"
+"\n"
+"QPushButton:hover{\n"
+"background-color:#bdbdbd;\n"
+"border: none;\n"
+"color:black;\n"
+"}")
         self.frame.setFrameShape(QFrame.StyledPanel)
         self.frame.setFrameShadow(QFrame.Raised)
         self.verticalLayout = QVBoxLayout(self.frame)
