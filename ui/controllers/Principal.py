@@ -528,7 +528,7 @@ class PrincipalWindow(Principal,QWidget):
     def abrir_modificar_perfil(self):
         if not self.ventana_abierta:
             self.ventana_abierta:True # CAMBIO DE LA VENTANA A TRUE 
-            window = ModificarPerfilWindow(self)
+            window = ModificarPerfilWindow(self,self.administrador, self.llenar_campos_administrador)
             window.setWindowModality(QtCore.Qt.ApplicationModal) # BLOQUEO DE LA VENTANA PRINCIPAL
             window.destroyed.connect(self.ventana_cerrada)
             window.show()
