@@ -15,8 +15,8 @@ from clases.validar_json import is_valid_json
 FORMAT = 'utf-8'
 HEADER = 20480
 #HOST = socket.gethostbyname(socket.gethostname())
-HOST = '68.183.143.116'
-# HOST = '165.22.15.159'
+# HOST = '68.183.143.116'
+HOST = '165.22.15.159'
 
 #PUERTOS DE LOS DIFERENTES SOCKETS
 PORT = 5050
@@ -396,6 +396,11 @@ def panel_administrador(conn, administrador):
             elif is_valid_json(operacion):
                 respuesta_operacion = panel_base_datos(operacion)
                 conn.send(respuesta_operacion.encode()) #Respetar el request response
+
+            #Operaciones generales a los clientes, bloqueo y apagado
+            elif operacion == 'apagar' or operacion == 'bloquear':
+                apagar_bloquear_general(operacion)
+                conn.send(json.dumps({'success': True, 'msg': f'Operación general {operacion} realizada con éxito'}))
 
             else:
                 print(f'Salida del administrador {administrador.get_nombre_host()}, Bye bye...')
@@ -841,6 +846,19 @@ def manejar_consola_cliente(conn_cli, conn_admin):
         except socket.error as e:
             print(f'Algo sucedio en la conosola del cliente {e}')
             break
+
+def apagar_bloquear_general(operacion):
+    print(f'[OPERACIÓN GENERAL] {operacion}')
+
+    if conexiones_equipos_cliente:
+        for conexion_cliente in conexiones_equipos_cliente: 
+            try:
+                conexion_cliente.get_direccion().send(operacion.encode())
+            except socket.error as e:
+                print(f'Error al enviar el mensaje de notificación {e} al cliente {conexion_cliente.get_nombre_host()}')
+
+    print('[ENVIO DE INSTRUCCIONES GENERALES]')
+
 
 #FUNCIONES DE BORRADO DE CONEXIONES
 def borrar_administradores_numero_serie(numero_serie):

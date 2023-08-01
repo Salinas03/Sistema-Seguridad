@@ -18,9 +18,11 @@ import os
 
 class Principal(QMainWindow, object):
 
+    bandera_salida = True
 
     def closeEvent(self, event):
         try:
+            self.bandera_salida = False
             admin_socket_ui.cerrado_sockets()
             # admin_socket_ui.get_socket_administrador().send('salir'.encode())
 
