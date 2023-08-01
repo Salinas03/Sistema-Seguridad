@@ -2,12 +2,12 @@ from PySide2.QtWidgets import QWidget,QMessageBox
 from PySide2 import QtCore
 from views.OpcionesComputadoras import OpcionesComputadora
 from utils.abrir_consola import abrir_consola_ejecutar_script
-
 import sys
 import webbrowser
 sys.path.append('D:/RedesLA/SistemaSeguridad/ui')
 from clases.administrador_ui import admin_socket_ui
 from utils.crear_mensaje_emergente import crear_message_box
+import geocoder
 
 class OpcionesCompusWindow(OpcionesComputadora, QWidget):
     def __init__(self, parent = None, data = None):
@@ -16,6 +16,7 @@ class OpcionesCompusWindow(OpcionesComputadora, QWidget):
         super().__init__(parent)
         self.setupUi(self)
         self.llenar_etiquetas()
+        self.coordenadas()
         self.consola_btn = self.pushButton_6
         
         self.apagar_equipo_btn.clicked.connect(self.apagar_equipo)
@@ -29,6 +30,7 @@ class OpcionesCompusWindow(OpcionesComputadora, QWidget):
     def llenar_etiquetas(self):
         self.id_lbl.setText(str(self.data[0]))
         self.nombre_lbl.setText(str(self.data[1]))
+        self.ip_txt.setText(str(self.data[2]))
 
     def apagar_equipo(self):
         respuesta = admin_socket_ui.escribir_operaciones('apagar')
@@ -70,6 +72,21 @@ class OpcionesCompusWindow(OpcionesComputadora, QWidget):
         url = "https://account.microsoft.com/devices"  # Aquí debes especificar la URL que deseas abrir
         # Abre el enlace en el navegador predeterminado
         webbrowser.open(url)
+
+    def coordenadas(self):
+        g = geocoder.ip(self.data[2])
+        myaddress = g.latlng
+
+        if myaddress:
+            latitude = myaddress[0]
+            longitude = myaddress[1]
+
+            self.latitud_txt.setText(str(latitude))
+            print(f'Latitud: {latitude}')
+            self.longitud_txt.setText(str(longitude))
+            print(f'Longitud: {longitude}')
+        else:
+            print('No se pudo obtener la ubicación.')
     
     def ventana_cerrada(self):
         self.ventana_abierta = False

@@ -82,6 +82,11 @@ class Principal(QMainWindow, object):
             '../assets/icons/refresh-ccw.svg'
         )
 
+        pin_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../assets/icons/pin-8-24.ico'
+        )
+
         icon = QIcon(logo_path)
         icon1 = QIcon(home_icon_path)
         icon2 = QIcon(desktop_icon_path)
@@ -92,6 +97,7 @@ class Principal(QMainWindow, object):
         icon7 = QIcon(actualizar_path)
         icon8 = QIcon(admin_2_path)
         icon9 = QIcon(column_icon_path)
+        icon10 = QIcon(pin_path)
 
         Principal.setWindowIcon(icon)
 
@@ -175,6 +181,12 @@ class Principal(QMainWindow, object):
 
         self.verticalLayout_3.addWidget(self.admins_btn)
 
+        self.pin_btn = QPushButton(self.menu_widget)
+        self.pin_btn.setObjectName(u"pin_btn")
+        self.pin_btn.setIcon(icon10)
+
+        self.verticalLayout_3.addWidget(self.pin_btn)
+
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout_3.addItem(self.verticalSpacer)
@@ -257,6 +269,12 @@ class Principal(QMainWindow, object):
 
         self.verticalLayout_16.addWidget(self.admins_texto_btn)
 
+        self.pin_texto_btn = QPushButton(self.menu_desplegable_widget)
+        self.pin_texto_btn.setObjectName(u"pin_texto_btn")
+        self.pin_texto_btn.setIcon(icon10)
+
+        self.verticalLayout_16.addWidget(self.pin_texto_btn)
+
         self.verticalSpacer_13 = QSpacerItem(20, 572, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout_16.addItem(self.verticalSpacer_13)
@@ -274,6 +292,12 @@ class Principal(QMainWindow, object):
         self.body_widget.setObjectName(u"body_widget")
         self.body_widget.setStyleSheet(u"QPushButton#user_btn,#pushButton{\n"
 "background-color:transparent;\n"
+"}\n"
+"\n"
+"QPushButton#pushButton{\n"
+"border:none;\n"
+"text-align:left;\n"
+"color:#788596;\n"
 "}\n"
 "\n"
 "QPushButton#user_btn:hover{\n"
@@ -349,6 +373,49 @@ class Principal(QMainWindow, object):
         self.formLayout = QFormLayout(self.body_widget)
         self.formLayout.setObjectName(u"formLayout")
         self.formLayout.setContentsMargins(0, 0, 0, 0)
+        self.frame_2 = QFrame(self.body_widget)
+        self.frame_2.setObjectName(u"frame_2")
+        sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.frame_2.sizePolicy().hasHeightForWidth())
+        self.frame_2.setSizePolicy(sizePolicy)
+        self.frame_2.setMinimumSize(QSize(1080, 0))
+        self.frame_2.setMaximumSize(QSize(50000, 50))
+        self.frame_2.setStyleSheet(u"QFrame#frame_2{\n"
+"background: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
+"border-radius: 0 0 15px 1px;\n"
+"}")
+        self.frame_2.setFrameShape(QFrame.StyledPanel)
+        self.frame_2.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_2 = QHBoxLayout(self.frame_2)
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.pushButton = QPushButton(self.frame_2)
+        self.pushButton.setObjectName(u"pushButton")
+        self.pushButton.setIcon(icon9)
+        self.pushButton.setCheckable(True)
+
+        self.horizontalLayout_2.addWidget(self.pushButton)
+
+        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_2.addItem(self.horizontalSpacer_4)
+
+        self.user_btn = QPushButton(self.frame_2)
+        self.user_btn.setObjectName(u"user_btn")
+        self.user_btn.setMaximumSize(QSize(50, 16777215))
+        self.user_btn.setStyleSheet(u"")
+        self.user_btn.setIcon(icon6)
+
+        self.horizontalLayout_2.addWidget(self.user_btn)
+
+        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_2.addItem(self.horizontalSpacer_5)
+
+
+        self.formLayout.setWidget(0, QFormLayout.SpanningRole, self.frame_2)
+
         self.frame_3 = QFrame(self.body_widget)
         self.frame_3.setObjectName(u"frame_3")
         self.frame_3.setStyleSheet(u"")
@@ -874,11 +941,29 @@ class Principal(QMainWindow, object):
         self.frame_4.setFrameShape(QFrame.StyledPanel)
         self.frame_4.setFrameShadow(QFrame.Raised)
         self.verticalLayout_6 = QVBoxLayout(self.frame_4)
+        self.verticalLayout_6.setSpacing(0)
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.verticalLayout_6.setContentsMargins(0, 0, 0, 0)
         self.widget = QWidget(self.frame_4)
         self.widget.setObjectName(u"widget")
         self.widget.setMaximumSize(QSize(16777215, 60))
-        self.widget.setStyleSheet(u"")
+        self.widget.setStyleSheet(u"QPushButton#apagar_equipos_btn,#suspender_equipos_btn{\n"
+"padding:5px;\n"
+"border-radius:10px;\n"
+"border:1px solid white;\n"
+"color:white;\n"
+"padding:7px;\n"
+"margin-right:5px;\n"
+"background: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
+"}\n"
+"\n"
+"QPushButton#apagar_equipos_btn:hover,#suspender_equipos_btn:hover{\n"
+"background: qlineargradient(x1:0, y1:0, x2:1 y2:1, stop:0 #251F9B, stop:1 #01A6E1);\n"
+"}\n"
+"\n"
+"QPushButton#apagar_equipos_btn:pressed,#suspender_equipos_btn:pressed{\n"
+"	font: 75 9pt \"MS Shell Dlg 2\";\n"
+"}")
         self.horizontalLayout_5 = QHBoxLayout(self.widget)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.label_2 = QLabel(self.widget)
@@ -886,17 +971,27 @@ class Principal(QMainWindow, object):
 
         self.horizontalLayout_5.addWidget(self.label_2)
 
+        self.actualizar_btn = QPushButton(self.widget)
+        self.actualizar_btn.setObjectName(u"actualizar_btn")
+        self.actualizar_btn.setIcon(icon7)
+
+        self.horizontalLayout_5.addWidget(self.actualizar_btn)
+
         self.horizontalSpacer_2 = QSpacerItem(845, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_5.addItem(self.horizontalSpacer_2)
 
-        self.actualizar_btn = QPushButton(self.widget)
-        self.actualizar_btn.setObjectName(u"actualizar_btn")
-        # icon5 = QIcon()
-        # icon5.addFile(u"../assets/icons/refresh-cw.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.actualizar_btn.setIcon(icon7)
+        self.suspender_equipos_btn = QPushButton(self.widget)
+        self.suspender_equipos_btn.setObjectName(u"suspender_equipos_btn")
+        self.suspender_equipos_btn.setMinimumSize(QSize(110, 50))
 
-        self.horizontalLayout_5.addWidget(self.actualizar_btn)
+        self.horizontalLayout_5.addWidget(self.suspender_equipos_btn)
+
+        self.apagar_equipos_btn = QPushButton(self.widget)
+        self.apagar_equipos_btn.setObjectName(u"apagar_equipos_btn")
+        self.apagar_equipos_btn.setMinimumSize(QSize(110, 50))
+
+        self.horizontalLayout_5.addWidget(self.apagar_equipos_btn)
 
 
         self.verticalLayout_6.addWidget(self.widget)
@@ -977,95 +1072,18 @@ class Principal(QMainWindow, object):
 
         self.horizontalLayout_4.addWidget(self.frame_4)
 
-        self.frame_5 = QFrame(self.page_2)
-        self.frame_5.setObjectName(u"frame_5")
-        self.frame_5.setMaximumSize(QSize(100, 16777215))
-        self.frame_5.setStyleSheet(u"QPushButton#otros_comandos_btn{\n"
-"padding:5px;\n"
-"border-radius:10px;\n"
-"border:1px solid white;\n"
-"color:white;\n"
-"background: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
-"}\n"
-"\n"
-"QPushButton#otros_comandos_btn:hover{\n"
-"background: qlineargradient(x1:0, y1:0, x2:1 y2:1, stop:0 #251F9B, stop:1 #01A6E1);\n"
-"}\n"
-"\n"
-"QPushButton#otros_comandos_btn:pressed{\n"
-"	font: 75 9pt \"MS Shell Dlg 2\";\n"
-"}")
-        self.frame_5.setFrameShape(QFrame.StyledPanel)
-        self.frame_5.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_5 = QVBoxLayout(self.frame_5)
-        self.verticalLayout_5.setSpacing(0)
-        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
-        self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
-        self.verticalSpacer_3 = QSpacerItem(20, 174, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.verticalLayout_5.addItem(self.verticalSpacer_3)
-
-        self.verticalSpacer_8 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.verticalLayout_5.addItem(self.verticalSpacer_8)
-
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.verticalLayout_5.addItem(self.verticalSpacer_2)
-
-        self.verticalSpacer_4 = QSpacerItem(20, 174, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.verticalLayout_5.addItem(self.verticalSpacer_4)
-
-
-        self.horizontalLayout_4.addWidget(self.frame_5)
-
         self.stackedWidget.addWidget(self.page_2)
+        self.page_6 = QWidget()
+        self.page_6.setObjectName(u"page_6")
+        self.widget_12 = QWidget(self.page_6)
+        self.widget_12.setObjectName(u"widget_12")
+        self.widget_12.setGeometry(QRect(380, 250, 120, 80))
+        self.stackedWidget.addWidget(self.page_6)
 
         self.horizontalLayout_3.addWidget(self.stackedWidget)
 
 
         self.formLayout.setWidget(1, QFormLayout.SpanningRole, self.frame_3)
-
-        self.frame_2 = QFrame(self.body_widget)
-        self.frame_2.setObjectName(u"frame_2")
-        sizePolicy.setHeightForWidth(self.frame_2.sizePolicy().hasHeightForWidth())
-        self.frame_2.setSizePolicy(sizePolicy)
-        self.frame_2.setMinimumSize(QSize(1080, 0))
-        self.frame_2.setMaximumSize(QSize(50000, 50))
-        self.frame_2.setStyleSheet(u"QFrame#frame_2{\n"
-"background: qlineargradient(x1:0, y1:0, x2:2.5 y2:1, stop:0 #2B3034, stop:1 #1C4968);\n"
-"border-radius: 0 0 15px 1px;\n"
-"}")
-        self.frame_2.setFrameShape(QFrame.StyledPanel)
-        self.frame_2.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_2 = QHBoxLayout(self.frame_2)
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.pushButton = QPushButton(self.frame_2)
-        self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setIcon(icon9)
-        self.pushButton.setCheckable(True)
-
-        self.horizontalLayout_2.addWidget(self.pushButton)
-
-        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_2.addItem(self.horizontalSpacer_4)
-
-        self.user_btn = QPushButton(self.frame_2)
-        self.user_btn.setObjectName(u"user_btn")
-        self.user_btn.setMaximumSize(QSize(50, 16777215))
-        self.user_btn.setStyleSheet(u"")
-        self.user_btn.setIcon(icon3)
-
-        self.horizontalLayout_2.addWidget(self.user_btn)
-
-        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_2.addItem(self.horizontalSpacer_5)
-
-
-        self.formLayout.setWidget(0, QFormLayout.SpanningRole, self.frame_2)
 
 
         self.horizontalLayout.addWidget(self.body_widget)
@@ -1076,16 +1094,16 @@ class Principal(QMainWindow, object):
         Principal.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(Principal)
+        self.settings_texto_btn.toggled.connect(self.settings_btn.setChecked)
         self.pushButton.toggled.connect(self.menu_widget.setHidden)
         self.pushButton.toggled.connect(self.menu_desplegable_widget.setVisible)
-        self.home_btn.toggled.connect(self.home_texto_btn.setChecked)
-        self.compus_btn.toggled.connect(self.desktop_texto_btn.setChecked)
-        self.admins_btn.toggled.connect(self.admins_texto_btn.setChecked)
         self.home_texto_btn.toggled.connect(self.home_btn.setChecked)
+
         self.desktop_texto_btn.toggled.connect(self.compus_btn.setChecked)
+        self.compus_btn.toggled.connect(self.desktop_texto_btn.setChecked)
         self.admins_texto_btn.toggled.connect(self.admins_btn.setChecked)
-        self.settings_btn.toggled.connect(self.settings_texto_btn.setChecked)
-        self.settings_texto_btn.toggled.connect(self.settings_btn.setChecked)
+        self.home_btn.toggled.connect(self.home_texto_btn.setChecked)
+        self.admins_btn.toggled.connect(self.admins_texto_btn.setChecked)
 
         self.stackedWidget.setCurrentIndex(4)
 
@@ -1099,12 +1117,15 @@ class Principal(QMainWindow, object):
         self.home_btn.setText("")
         self.compus_btn.setText("")
         self.admins_btn.setText("")
+        self.pin_btn.setText("")
         self.settings_btn.setText("")
         self.label_18.setText("")
         self.home_texto_btn.setText(QCoreApplication.translate("Principal", u"Inicio", None))
         self.desktop_texto_btn.setText(QCoreApplication.translate("Principal", u"Computadoras", None))
         self.admins_texto_btn.setText(QCoreApplication.translate("Principal", u"Propietarios", None))
+        self.pin_texto_btn.setText(QCoreApplication.translate("Principal", u"Localizaci\u00f3n", None))
         self.settings_texto_btn.setText(QCoreApplication.translate("Principal", u"Dudas", None))
+        self.pushButton.setText("")
         self.label_20.setText(QCoreApplication.translate("Principal", u"Computadoras registradas", None))
         ___qtablewidgetitem = self.computadoras_registradas_table.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("Principal", u"ID", None));
@@ -1157,6 +1178,10 @@ class Principal(QMainWindow, object):
         self.label_12.setText("")
         self.label_2.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p><span style=\" font-size:12pt;\">Computadoras </span><span style=\" font-size:12pt; color:#00aa00;\">activas</span></p></body></html>", None))
         self.actualizar_btn.setText("")
+        self.suspender_equipos_btn.setText(QCoreApplication.translate("Principal", u"Suspender \n"
+"Computadoras", None))
+        self.apagar_equipos_btn.setText(QCoreApplication.translate("Principal", u"Apagar \n"
+"Computadoras", None))
         ___qtablewidgetitem11 = self.tabla_computadoras_activas.horizontalHeaderItem(0)
         ___qtablewidgetitem11.setText(QCoreApplication.translate("Principal", u"ID", None));
         ___qtablewidgetitem12 = self.tabla_computadoras_activas.horizontalHeaderItem(1)

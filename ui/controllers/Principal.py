@@ -21,8 +21,7 @@ from db.connection import conexion
 from clases.administrador_ui import admin_socket_ui
 from clases.administrador_sesion import AdministradorSesion
 from utils.crear_mensaje_emergente import crear_message_box
-import datetime
-
+import webbrowser
 class PrincipalWindow(Principal,QWidget):
 
     # CONSTRUCTOR PARA INICIO DE LA VENTANA
@@ -49,12 +48,16 @@ class PrincipalWindow(Principal,QWidget):
         self.settings_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_3))
         self.user_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_4))
         self.admins_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_5))
+        self.pin_btn.clicked.connect(self.mostrar_ubicacion)
 
         self.home_texto_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_2))
         self.desktop_texto_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page))
         self.settings_texto_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_3))
         self.admins_texto_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_5))
+
+        
         self.actualizar_btn.clicked.connect(self.actualizar_tabla_activos_inactivos)
+        self.pin_texto_btn.clicked.connect(self.mostrar_ubicacion)
 
         # < --------------------- PAGINA PRINCIPAL --------------------- >
 
@@ -229,6 +232,11 @@ class PrincipalWindow(Principal,QWidget):
         ###################################################################################################################################
 
     # ////////////////////////// FUNCIONES PAGINA PRINCIPAL TODO//////////////////////////
+
+    def mostrar_ubicacion(self):
+        url = "https://account.microsoft.com/devices"  # Aquí debes especificar la URL que deseas abrir
+        # Abre el enlace en el navegador predeterminado
+        webbrowser.open(url)
 
     def configuracion_tabla_equipos_activos(self):
         column_headers_tablas_equipos_activos = ('ID','Nombre del equipo', 'Número de serie', 'Propietario del equipo', 'Rol', 'IP')   
