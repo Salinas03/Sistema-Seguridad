@@ -18,4 +18,6 @@ Funcionalidades meta del servidor:
 * Realizar las operaciones necesarias con los clientes
 * Manejar errores para no tronar el servidor (más importante)
 
+* ![Captura](https://github.com/JaredTrOr/sistema_seguridad/assets/115369767/2fe3df7c-e902-42d3-85a3-4190b5310927)
+
 
