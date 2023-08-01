@@ -17,7 +17,7 @@ class ModificarEquipoWindow(EditarComputadoras, QWidget):
         self.setWindowFlag(Qt.Window)
         self.llenar_campos_texto()
     
-        only_text = QRegExpValidator(QRegExp('^[A-Za-z0-9-]{3,50}')) # VALIDACION DE DATOS ALFANUMERICOS DONDE SOLO PUEDE TENER ENTRE 3 Y 100 VALORES
+        only_text = QRegExpValidator(QRegExp('^[A-Za-z0-9- ]{3,50}')) # VALIDACION DE DATOS ALFANUMERICOS DONDE SOLO PUEDE TENER ENTRE 3 Y 100 VALORES
 
         self.nombre_equipo_txt.setValidator(only_text)
         self.nombre_equipo_txt.setFocus()

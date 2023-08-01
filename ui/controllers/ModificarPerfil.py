@@ -18,7 +18,7 @@ class ModificarPerfilWindow(EditarPerfil, QWidget):
         self.setWindowFlag(Qt.Window)
         self.llenar_campos_texto()
 
-        only_text = QRegExpValidator(QRegExp('^[A-Za-z]{3,50}')) # VALIDACION DE DATOS ALFANUMERICOS DONDE SOLO PUEDE TENER ENTRE 3 Y 100 VALORES
+        only_text = QRegExpValidator(QRegExp('^[A-Za-z ]{3,50}')) # VALIDACION DE DATOS ALFANUMERICOS DONDE SOLO PUEDE TENER ENTRE 3 Y 100 VALORES
         only_number = QRegExpValidator(QRegExp('^[0-9]{0,10}'))
 
         self.nombre_perfil_editar_txt.setValidator(only_text)
