@@ -54,6 +54,9 @@ class PrincipalWindow(Principal,QWidget):
         self.desktop_texto_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page))
         self.settings_texto_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_3))
         self.admins_texto_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_5))
+
+        
+        self.actualizar_btn.clicked.connect(self.actualizar_tabla_activos_inactivos)
         self.pin_texto_btn.clicked.connect(self.mostrar_ubicacion)
 
         # < --------------------- PAGINA PRINCIPAL --------------------- >
@@ -267,6 +270,21 @@ class PrincipalWindow(Principal,QWidget):
 
         except:
             print('Hubo un error al evocar la función de desconexión de internet')
+
+    @QtCore.Slot()
+    def _mostrar_mensaje_desconectividad(self):
+        QMessageBox.critical(
+            self, 'Desconexión del servidor', 'Ocurrió algo con la conexión con el servidor, intente denuevo :)', 
+            QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close
+        ) 
+        self.close()
+
+    def mostrar_mensaje_desconectividad(self):
+        try:
+            QtCore.QMetaObject.invokeMethod(self, '_mostrar_mensaje_desconectividad', Qt.QueuedConnection)
+
+        except:
+            print('Hubo un error al evocar la función de desconexión de conectividad')
 
     def verificar_conexion_internet(self):
         try:
@@ -583,6 +601,13 @@ class PrincipalWindow(Principal,QWidget):
         except threading.ThreadError as e:
             print(f'Hubo un error al realizar el cerrado de los HILOS {e}')
 
+    def actualizar_tabla_activos_inactivos(self):
+        equipos_activos_inactivos = admin_socket_ui.escribir_operaciones('listar')
+        if equipos_activos_inactivos:
+            self.desplegar_datos_equipos_inactivos(equipos_activos_inactivos[0])
+            self.desplegar_datos_equipos_activos(equipos_activos_inactivos[1])
+            crear_message_box('Refrescado de tablas', 'Se han refrescado las tablas exitosamente', 'information').exec_()
+
 # ////////////////////////// FUNCIONES PARA ESCUCHAR CAMBIOS EN LA BASE DE DATOS TODO//////////////////////////
 
     def escuchar_conectividad(self):
@@ -595,6 +620,8 @@ class PrincipalWindow(Principal,QWidget):
 
             except socket.error as e:
                 print(f'Ocurrio un error en el canal de conectividad {e}')
+                if self.bandera_salida:
+                    self.mostrar_mensaje_desconectividad()
                 break
 
         #Cerrar los procesos de los hilos       
