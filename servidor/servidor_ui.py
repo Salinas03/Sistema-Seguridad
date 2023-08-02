@@ -172,8 +172,7 @@ def aceptar_conexiones():
             guardar_conexiones(conn,addr, nombre_host, numero_serie, tipo_programa)
 
         except socket.error as e:
-            # conn.send('{"success": false, "msg": "Error al aceptar la conexión :("}'.encode())
-            print(f'Error al aceptar la conexión {e}')
+            print(f'Error al validar la conexión {e}')
 
 def aceptar_conexiones_conectividad():
     for conexion_conectividad in conexiones_conectividad_admin:
@@ -334,10 +333,13 @@ def guardar_conexiones(conn, addr, hostname, numero_serie, tipo_programa):
                 equipo_cliente = EquipoConectado(conn, addr, hostname, numero_serie)
                 conexiones_equipos_cliente.append(equipo_cliente)
                 print(f'Conexión con cliente a las {datetime.datetime.now()} :)')
-                conn.send(json.dumps({'success': True, 'msg': 'Vinculación con servidor exitosa :)'}).encode())
-
-                #Función de broadcast para refrescar las tablas
-                broadcast()
+                try:
+                    conn.send(json.dumps({'success': True, 'msg': 'Vinculación con servidor exitosa :)'}).encode())
+                    #Función de broadcast para refrescar las tablas
+                    broadcast()
+                except socket.error as e:
+                    print(f'Hubo un error al vincular la conexión con el cliente {e}')
+                    borrar_conexion_cliente_principal(numero_serie)
 
         else:
             if tipo_programa == 'cliente':
@@ -359,7 +361,12 @@ def panel_administrador(conn, administrador):
 
     msg = f"Bienvenido administrador {nombre_host} :)"
     respuesta = json.dumps({"success": True, "msg": msg})
-    conn.send(respuesta.encode(FORMAT))
+
+    try:
+        conn.send(respuesta.encode(FORMAT))
+    except socket.error as e:
+        print(f'Hubo un error al vincular la conexión con el administrador {e}')
+        borrar_administradores_numero_serie(administrador.get_identificador())
                 
     print('Conexión exitosa :)')
     print('A sus ordenes administrador...')
@@ -399,8 +406,8 @@ def panel_administrador(conn, administrador):
 
             #Operaciones generales a los clientes, bloqueo y apagado
             elif operacion == 'apagar' or operacion == 'bloquear':
-                apagar_bloquear_general(operacion)
-                conn.send(json.dumps({'success': True, 'msg': f'Operación general {operacion} realizada con éxito'}))
+                respuesta_operacion = apagar_bloquear_general(operacion)
+                conn.send(respuesta_operacion.encode())
 
             else:
                 print(f'Salida del administrador {administrador.get_nombre_host()}, Bye bye...')
@@ -409,6 +416,7 @@ def panel_administrador(conn, administrador):
                 
         except socket.error as e:
             print(f'EXCPETION [PanelAdministrador]: {e}')
+            borrar_administradores_numero_serie(administrador.get_identificador())
             conn.close()
             break
 
@@ -651,7 +659,7 @@ def panel_base_datos(instruccion):
                         #Una vez checando si es administrador observamos si no tiene una sesión activa
                         for sesion in sesiones_administradores:
                             if sesion.get_id_admin() == data[0]: #ID 
-                                msg = f'Ya hay una sesión con el usuario {data[1]} porfavor intente mas tarde o inicie con otra sesión'
+                                msg = f'Ya hay una sesión con el usuario {data[1]} {data[2]} porfavor intente mas tarde o inicie con otra sesión'
                                 borrar_administradores_numero_serie(numero_serie)
                                 return json.dumps({'success': False, 'msg': msg})
 
@@ -849,16 +857,27 @@ def manejar_consola_cliente(conn_cli, conn_admin):
 
 def apagar_bloquear_general(operacion):
     print(f'[OPERACIÓN GENERAL] {operacion}')
+    
+    nombres_no_enviados = []
 
     if conexiones_equipos_cliente:
         for conexion_cliente in conexiones_equipos_cliente: 
             try:
-                conexion_cliente.get_direccion().send(operacion.encode())
+                conexion_cliente.get_conexion().send(operacion.encode())
             except socket.error as e:
                 print(f'Error al enviar el mensaje de notificación {e} al cliente {conexion_cliente.get_nombre_host()}')
+                nombres_no_enviados.append(conexion_cliente.get_nombre_host())
+
+    else:
+        return json.dumps({'success': False, 'msg': 'No hay equipos clientes a quienes realizar las operaciones :('})
 
     print('[ENVIO DE INSTRUCCIONES GENERALES]')
 
+    if nombres_no_enviados:
+        return json.dumps({'success': False, 'msg': nombres_no_enviados})
+
+    msg = f'Operación general ({operacion}) realizada con éxito'
+    return json.dumps({'success': True, 'msg': msg})
 
 #FUNCIONES DE BORRADO DE CONEXIONES
 def borrar_administradores_numero_serie(numero_serie):
