@@ -59,6 +59,9 @@ class PrincipalWindow(Principal,QWidget):
         self.actualizar_btn.clicked.connect(self.actualizar_tabla_activos_inactivos)
         self.pin_texto_btn.clicked.connect(self.mostrar_ubicacion)
 
+        self.suspender_equipos_btn.clicked.connect(self.suspender_equipos_general)
+        self.apagar_equipos_btn.clicked.connect(self.apagar_equipos_general)
+
         # < --------------------- PAGINA PRINCIPAL --------------------- >
 
         self.menu_desplegable_widget.hide()
@@ -607,6 +610,42 @@ class PrincipalWindow(Principal,QWidget):
             self.desplegar_datos_equipos_inactivos(equipos_activos_inactivos[0])
             self.desplegar_datos_equipos_activos(equipos_activos_inactivos[1])
             crear_message_box('Refrescado de tablas', 'Se han refrescado las tablas exitosamente', 'information').exec_()
+
+    def suspender_equipos_general(self):
+        res = msg_boxes.warning_msg('Advertencia', '¿Estas seguro que quieres suspender todos los equipos?')
+        
+        if res == QMessageBox.Yes:
+            respuesta_servidor = admin_socket_ui.escribir_operaciones('bloquear')
+            print(respuesta_servidor)
+
+            if respuesta_servidor == None:
+                crear_message_box('Error', 'Hubo un error al bloquear los equipos de manera general', 'error').exec_()
+            else:
+                if respuesta_servidor['success']:
+                    crear_message_box('Operación exitosa', respuesta_servidor['msg'], 'information').exec_()
+                else:
+                    if isinstance(respuesta_servidor['msg'], str):
+                        crear_message_box('Advertencia', respuesta_servidor['msg'], 'warning').exec_()
+                    else:
+                        crear_message_box('Advertencia/Error', 'No se pudo realizar el apagado a los siguientes clientes '+respuesta_servidor['msg'], 'error').exec_()
+
+    def apagar_equipos_general(self):
+        res = msg_boxes.warning_msg('Advertencia', '¿Estas seguro que quieres apagar todos los equipos?')
+        
+        if res == QMessageBox.Yes:
+            respuesta_servidor = admin_socket_ui.escribir_operaciones('apagar')
+            print(respuesta_servidor)
+
+            if respuesta_servidor == None:
+                crear_message_box('Error', 'Hubo un error al apagar los equipos de manera general', 'error').exec_()
+            else:
+                if respuesta_servidor['success']:
+                    crear_message_box('Operación exitosa', respuesta_servidor['msg'], 'information').exec_()
+                else:
+                    if isinstance(respuesta_servidor['msg'], str):
+                        crear_message_box('Advertencia', respuesta_servidor['msg'], 'warning').exec_()
+                    else:
+                        crear_message_box('Advertencia/Error', 'No se pudo realizar el apagado a los siguientes clientes '+respuesta_servidor['msg'], 'error').exec_()
 
 # ////////////////////////// FUNCIONES PARA ESCUCHAR CAMBIOS EN LA BASE DE DATOS TODO//////////////////////////
 
