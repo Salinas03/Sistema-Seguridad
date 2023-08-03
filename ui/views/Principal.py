@@ -388,6 +388,10 @@ class Principal(QMainWindow, object):
 "        background-color: transparent;  /* Eliminar el color de fondo de resaltado */\n"
 "          /* Cambiar el puntero a predeterminado */\n"
 "        color:black;   \n}"
+"QTableWidget#tabla_computadoras_desactivas::item::selected {\n"
+"        background-color: transparent;  /* Eliminar el color de fondo de resaltado */\n"
+"          /* Cambiar el puntero a predeterminado */\n"
+"        color:black;   \n}"
 "")
         self.formLayout = QFormLayout(self.body_widget)
         self.formLayout.setObjectName(u"formLayout")
