@@ -42,8 +42,32 @@ class PrincipalWindow(Principal,QWidget):
     ###################################################################################################################################
     ###################################################################################################################################
 
+            # Obtener la lista de botones de tu interfaz gráfica
+        buttons = [
+            self.home_btn, 
+            self.home_texto_btn, 
+            self.compus_btn, 
+            self.desktop_texto_btn, 
+            self.admins_btn, 
+            self.admins_texto_btn, 
+            self.settings_btn, 
+            self.settings_texto_btn,
+            self.pin_btn,
+            self.pin_texto_btn 
+        ]
+
+                   # Hacer que los botones sean checkables
+        for button in buttons:
+            button.setCheckable(True)
+
+            # Conectar eventos clicked de los botones a la función boton_activo
+        for button in buttons:
+            button.clicked.connect(self.boton_activo)
+
         # BOTONES QUE REDIRIGEN A LAS PAGINAS DEL STACKEDWIDGET
         self.home_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_2))
+        self.home_btn.setChecked(True)
+        self.home_btn.setFocus()
         self.compus_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page))
         self.settings_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_3))
         self.user_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_4))
@@ -51,6 +75,7 @@ class PrincipalWindow(Principal,QWidget):
         self.pin_btn.clicked.connect(self.mostrar_ubicacion)
 
         self.home_texto_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_2))
+        self.home_texto_btn.setChecked(True)
         self.desktop_texto_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page))
         self.settings_texto_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_3))
         self.admins_texto_btn.clicked.connect(lambda:self.stackedWidget.setCurrentWidget(self.page_5))
@@ -236,6 +261,18 @@ class PrincipalWindow(Principal,QWidget):
 
     # ////////////////////////// FUNCIONES PAGINA PRINCIPAL TODO//////////////////////////
 
+    def boton_checked(self, checked):
+        if checked:
+            self.home_btn.setFocus()
+
+    def boton_activo(self):
+        sender = self.sender()
+        for button in sender.parent().findChildren(QPushButton):
+            if button is not sender:
+                button.setChecked(False)
+            else:
+                button.setChecked(True)
+                
     def mostrar_ubicacion(self):
         url = "https://account.microsoft.com/devices"  # Aquí debes especificar la URL que deseas abrir
         # Abre el enlace en el navegador predeterminado
