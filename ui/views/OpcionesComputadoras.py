@@ -292,9 +292,9 @@ class OpcionesComputadora(QMainWindow, object):
         self.longitud_txt.setText("")
         self.id_lbl.setText("")
         self.label_3.setText(QCoreApplication.translate("OpcionesComputadora", u"<html><head/><body><p><span style=\" font-weight:600;\">Selecciona la opci\u00f3n a </span></p><p><span style=\" font-weight:600;\">ejecutar</span></p></body></html>", None))
-        self.apagar_equipo_btn.setText(QCoreApplication.translate("OpcionesComputadora", u"Apagar equipo", None))
-        self.supender_windows_equipo_btn.setText(QCoreApplication.translate("OpcionesComputadora", u"Suspender - bloqueo de windows", None))
-        self.localizacion_btn.setText(QCoreApplication.translate("OpcionesComputadora", u"Localizaci\u00f3n", None))
-        self.pushButton_6.setText(QCoreApplication.translate("OpcionesComputadora", u"T\u00e9rmial de comandos", None))
+        self.apagar_equipo_btn.setText(QCoreApplication.translate("OpcionesComputadora", u"Apagar equipo de computo", None))
+        self.supender_windows_equipo_btn.setText(QCoreApplication.translate("OpcionesComputadora", u"Bloquear equipo de computo", None))
+        self.localizacion_btn.setText(QCoreApplication.translate("OpcionesComputadora", u"Localizaci\u00f3n de equipo de computo", None))
+        self.pushButton_6.setText(QCoreApplication.translate("OpcionesComputadora", u"T\u00e9rminal de comandos", None))
     # retranslateUi
 

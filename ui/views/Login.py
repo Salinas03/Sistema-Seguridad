@@ -26,7 +26,15 @@ class Login(QMainWindow, object):
             os.path.dirname(os.path.abspath(__file__)),
             '../assets/icons/LOGO.svg'
         )
+
+        eye_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../assets/icons/eye-3-24.ico'
+        )
+
+
         icon = QIcon(icon_path)
+        icon2 = QIcon(eye_path)
         Login.setWindowIcon(icon)
 
         Login.setStyleSheet(u"\n"
@@ -70,6 +78,11 @@ class Login(QMainWindow, object):
 "color:rgb(255,255,255);\n"
 "padding-bottom:7px;\n"
 "}\n"
+"\n"
+"QPushButton{\n"
+"	background-color: transparent;\n"
+"   border:none;"
+"}\n"
 "")
         self.frame_body.setFrameShape(QFrame.StyledPanel)
         self.frame_body.setFrameShadow(QFrame.Raised)
@@ -78,6 +91,7 @@ class Login(QMainWindow, object):
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.gridLayout_3.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout = QVBoxLayout()
+        self.verticalLayout.setSpacing(10)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.label_2 = QLabel(self.frame_body)
         self.label_2.setObjectName(u"label_2")
@@ -105,14 +119,32 @@ class Login(QMainWindow, object):
 
         self.verticalLayout.addWidget(self.label_3)
 
-        self.password_txt = QLineEdit(self.frame_body)
+        self.widget = QWidget(self.frame_body)
+        self.widget.setObjectName(u"widget")
+        self.formLayout = QFormLayout(self.widget)
+        self.formLayout.setObjectName(u"formLayout")
+        self.formLayout.setHorizontalSpacing(0)
+        self.formLayout.setVerticalSpacing(0)
+        self.formLayout.setContentsMargins(0, 0, 0, 0)
+        self.password_txt = QLineEdit(self.widget)
         self.password_txt.setObjectName(u"password_txt")
         self.password_txt.setMinimumSize(QSize(400, 0))
         self.password_txt.setMaximumSize(QSize(300, 16777215))
         self.password_txt.setFont(font)
         self.password_txt.setEchoMode(QLineEdit.Password)
 
-        self.verticalLayout.addWidget(self.password_txt)
+        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.password_txt)
+
+        self.pushButton = QPushButton(self.widget)
+        self.pushButton.setObjectName(u"pushButton")
+        self.pushButton.setIcon(icon2)
+        self.pushButton.setCheckable(False)
+        self.pushButton.setChecked(False)
+
+        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.pushButton)
+
+
+        self.verticalLayout.addWidget(self.widget)
 
 
         self.gridLayout_3.addLayout(self.verticalLayout, 0, 0, 1, 1)
@@ -163,7 +195,7 @@ class Login(QMainWindow, object):
         font1.setPointSize(10)
         font1.setBold(False)
         font1.setItalic(False)
-        font1.setWeight(9)
+        font1.setWeight(50)
         self.ingresar_btn.setFont(font1)
         self.ingresar_btn.setStyleSheet(u"")
 
@@ -204,6 +236,7 @@ class Login(QMainWindow, object):
         self.correo_txt.setPlaceholderText(QCoreApplication.translate("Login", u"Correo", None))
         self.label_3.setText(QCoreApplication.translate("Login", u"<html><head/><body><p><span style=\" font-size:14pt; color:#ffffff;\">Contrase\u00f1a</span></p></body></html>", None))
         self.password_txt.setPlaceholderText(QCoreApplication.translate("Login", u"Contrase\u00f1a", None))
+        self.pushButton.setText("")
         self.ingresar_btn.setText(QCoreApplication.translate("Login", u"Ingresar", None))
         self.label_4.setText("")
         self.recuperar_contrasenia_btn.setText(QCoreApplication.translate("Login", u"Se me olvido la contrase\u00f1a", None))
