@@ -8,6 +8,7 @@ sys.path.append('D:/RedesLA/SistemaSeguridad/ui')
 from clases.administrador_ui import admin_socket_ui
 from utils.crear_mensaje_emergente import crear_message_box
 import geocoder
+from py2_msgboxes import msg_boxes
 
 class OpcionesCompusWindow(OpcionesComputadora, QWidget):
     def __init__(self, parent = None, data = None):
@@ -33,28 +34,32 @@ class OpcionesCompusWindow(OpcionesComputadora, QWidget):
         self.ip_txt.setText(str(self.data[2]))
 
     def apagar_equipo(self):
-        respuesta = admin_socket_ui.escribir_operaciones('apagar')
-        print(respuesta)
-        if respuesta['success']:
-            crear_message_box('Apagado', 'Se realizó la función del apagado de manera correcta', 'information')
-            self.close()
-        else:
-            crear_message_box('Ooops... Algo ocurrió', 'Hubo un fallo al realizar el apagado del equipo, puede que el equipo se haya desconectado', 'error')
+        res = msg_boxes.warning_msg('Advertencia','¿Seguro que desea apagar el equipo de computo?')
+        if res == QMessageBox.Yes:
+            respuesta = admin_socket_ui.escribir_operaciones('apagar')
+            print(respuesta)
+            if respuesta['success']:
+                crear_message_box('Apagado', 'Se realizó la función del apagado de manera correcta', 'information')
+                self.close()
+            else:
+                crear_message_box('Ooops... Algo ocurrió', 'Hubo un fallo al realizar el apagado del equipo, puede que el equipo se haya desconectado', 'error')
 
-            #Bandera indicando que ya no va a aplicar la funcionalidad de otro mensaje de salir en el evento de cerrado, porque ya automaticamente esta cayendo en la excepcinon entonces no hace falta que vuelva a enviar salir al servidor de loc contrario se saldria del panel del administrador por lo tanto ya no funciona el panel
-            self.bandera = False
-            self.close() 
+                #Bandera indicando que ya no va a aplicar la funcionalidad de otro mensaje de salir en el evento de cerrado, porque ya automaticamente esta cayendo en la excepcinon entonces no hace falta que vuelva a enviar salir al servidor de loc contrario se saldria del panel del administrador por lo tanto ya no funciona el panel
+                self.bandera = False
+                self.close() 
 
     def suspender_windows(self):
-        respuesta = admin_socket_ui.escribir_operaciones('bloquear')
-        print(respuesta)
-        if respuesta['success']:
-            crear_message_box('Suspender', 'Se realizó la función de suspensión de windows de manera exitosa', 'information').exec_()
-            self.close()
-        else:
-            crear_message_box('Ooops... Algo ocurrió', 'Hubo un fallo al suspender el equipo, puede que el equipo se haya desconectado', 'error')
-            self.bandera = False
-            self.close()
+        res = msg_boxes.warning_msg('Advertencia','¿Seguro que desea bloquear el equipo de computo?')
+        if res == QMessageBox.Yes:
+            respuesta = admin_socket_ui.escribir_operaciones('bloquear')
+            print(respuesta)
+            if respuesta['success']:
+                crear_message_box('Suspender', 'Se realizó la función de suspensión de windows de manera exitosa', 'information').exec_()
+                self.close()
+            else:
+                crear_message_box('Ooops... Algo ocurrió', 'Hubo un fallo al suspender el equipo, puede que el equipo se haya desconectado', 'error')
+                self.bandera = False
+                self.close()
 
     def abrir_consola(self):
         respuesta = admin_socket_ui.escribir_operaciones('consola')
