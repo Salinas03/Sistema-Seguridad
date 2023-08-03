@@ -36,6 +36,8 @@ class LoginWindow(Login, QWidget):
         self.password_txt.setValidator(only_password)
 
         self.recuperar_contrasenia_btn.clicked.connect(self.abrir_recuperar_password)
+        self.pushButton.clicked.connect(self.cambio_visible_password)
+        self.correo_txt.setFocus()
      
     # FUNCION PARA EL INICIO DE SESION
     def iniciar_sesion(self):
@@ -76,7 +78,7 @@ class LoginWindow(Login, QWidget):
                                         administrador_logueado = respuesta_servidor['data']
                                         print(administrador_logueado)
                                         window = CargaWindow(self, administrador_logueado, self.close)
-                                        window.setWindowModality(QtCore.Qt.ApplicationModal)
+                                        #window.setWindowModality(QtCore.Qt.ApplicationModal)
                                         window.show()
                                     else:
                                         admin_socket_ui.cerrado_sockets()
@@ -109,6 +111,12 @@ class LoginWindow(Login, QWidget):
             window.destroyed.connect(self.ventana_cerrada)
             window.show()
             self.setWindowFlag(Qt.Window)
+    
+    def cambio_visible_password(self):
+        if self.password_txt.echoMode() == QLineEdit.Password:
+            self.password_txt.setEchoMode(QLineEdit.Normal)
+        else:
+            self.password_txt.setEchoMode(QLineEdit.Password)
 
     # FUNCION PARA DEFINIR QUE LA VENTANA CAMBIE SU ESTADO A FALSE        
     def ventana_cerrada(self):

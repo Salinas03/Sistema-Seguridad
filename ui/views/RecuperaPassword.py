@@ -194,11 +194,13 @@ class RecuperarContrasenia(QMainWindow, object):
 
         self.nuevo_password_txt = QLineEdit(self.cambio_password_widget)
         self.nuevo_password_txt.setObjectName(u"nuevo_password_txt")
+        self.nuevo_password_txt.setEchoMode(QLineEdit.Password)
 
         self.gridLayout_4.addWidget(self.nuevo_password_txt, 2, 1, 1, 1)
 
         self.confirmar_nuevo_password_txt = QLineEdit(self.cambio_password_widget)
         self.confirmar_nuevo_password_txt.setObjectName(u"confirmar_nuevo_password_txt")
+        self.confirmar_nuevo_password_txt.setEchoMode(QLineEdit.Password)
 
         self.gridLayout_4.addWidget(self.confirmar_nuevo_password_txt, 4, 1, 1, 1)
 
