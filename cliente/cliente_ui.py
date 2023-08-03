@@ -91,6 +91,11 @@ def manejar_comandos_consola():
                 print('Dentro del if de salir')
                 break
 
+            if comando == 'apagar' or 'bloquear':
+                msg = f'Operación {comando} realizada con éxito'
+                cliente_socket.get_socket_cliente().send(json.dumps({'success': True, 'msg': msg}).encode())
+                os.system(f'{cliente_socket.BASE_DIR}/comandos/{comando}.bat')
+
             if comando[:2] == 'cd':
                 try:
                     os.chdir(comando[3:])
