@@ -153,6 +153,7 @@ def aceptar_conexiones():
         try:
             conn, addr = servidor.accept() #Linea que bloquea el flujo del programa
             servidor.setblocking(1) #Evita el tiempo de espera de las conexiones, (el servidor no se cierra)
+            print(f'Conexión con equipo temporal :O')
 
             #Conexión temporal establecida para obtener información del cliente que se conecto
             conn.send('{"success": true, "msg": "Conexión temporal establecida..." }'.encode())
@@ -864,6 +865,8 @@ def apagar_bloquear_general(operacion):
         for conexion_cliente in conexiones_equipos_cliente: 
             try:
                 conexion_cliente.get_conexion().send(operacion.encode())
+                respuesta_servidor = conexion_cliente.get_conexion().recv(HEADER).decode(FORMAT)
+                print(respuesta_servidor)
             except socket.error as e:
                 print(f'Error al enviar el mensaje de notificación {e} al cliente {conexion_cliente.get_nombre_host()}')
                 nombres_no_enviados.append(conexion_cliente.get_nombre_host())
