@@ -197,7 +197,12 @@ class PrincipalWindow(Principal,QWidget):
 
         #RENDERIZADO DE TABLAS POR MEDIO DE PETICIONES ------------------------------------------------------
         self.bandera_internet = True
-        self.conectar_canal_conectividad()
+        # self.conectar_canal_conectividad()
+
+        #Crear hilo de conectividad
+        self.thread_conectividad = threading.Thread(target=self.escuchar_conectividad)
+        self.thread_conectividad.daemon = True
+        self.thread_conectividad.start()
 
         #Crear hilo de notificaciones
         self.thread_notificacion = threading.Thread(target=self.escuchar_notificaciones)
@@ -621,7 +626,7 @@ class PrincipalWindow(Principal,QWidget):
 
     def conectar_canal_conectividad(self):
         try:
-            #Conectar 
+            #Conectar con socket de conectividad
             admin_socket_ui.get_socket_conectividadadmin().connect(admin_socket_ui.ADDR_CONA)
 
             #Enviar numero de serie

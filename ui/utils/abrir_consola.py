@@ -53,9 +53,4 @@ def abrir_consola_ejecutar_script(consola):
             admin_socket_ui.get_socket_administrador().send('salir'.encode())
             conn_subproceso.close()
             break
-    
-    #Esperar el proceso
-    # proceso_consola.wait()
-
-    # #Cerrar la consola una vez el proceso se haya realizado
     subprocess.Popen(['taskkill', '/F', '/IM', 'cmd.exe'])
