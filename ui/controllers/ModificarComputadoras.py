@@ -22,8 +22,6 @@ class ModificarEquipoWindow(EditarComputadoras, QWidget):
         self.nombre_equipo_txt.setValidator(only_text)
         self.nombre_equipo_txt.setFocus()
         self.num_serie_txt.setValidator(only_text)
-        # self.propietario_equipo_txt.setValidator(propietario_text)
-        # self.rol_txt.setValidator(rol)
 
         self.x = self.modificar_compu_btn.clicked.connect(self.editar_compus)
         self.y = self.cancelar_registro_btn.clicked.connect(self.cancelar_registro)

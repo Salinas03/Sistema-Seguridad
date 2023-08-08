@@ -23,9 +23,7 @@ class ModificarPropietarioWindow(EditarPropietario,QWidget):
         self.nombre_propietario_txt.setFocus()
         self.apellido_propietario_txt.setValidator(only_text)
         self.telefono_propietario_txt.setValidator(only_number)
-        # self.rol_propietario_txt.setValidator(rol)
 
-        #self.editar_admin_btn.clicked.connect(self.editar_propietario)
         self.agregar_admin_btn.clicked.connect(self.editar_propietario)
         self.cancelar_admin_btn.clicked.connect(self.cerrar_ventana)
 

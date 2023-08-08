@@ -232,7 +232,7 @@ class Principal(QMainWindow, object):
 "background-color:transparent;\n"
 "border:none;\n"
 "border-radius:3px;\n"
-"padding: 8px 0 8px 8px;\n"
+"padding: 8px 0 8px 5px;\n"
 "text-align:left;\n"
 "color: rgb(255, 255, 255);\n"
 "}\n"
