@@ -4,9 +4,6 @@ from PySide2.QtCore import *
 from PySide2 import QtCore
 from controllers.Principal import PrincipalWindow
 
-
- 
-
 COUNTER = 0
 
 class CargaWindow(Carga,QWidget):
@@ -27,8 +24,6 @@ class CargaWindow(Carga,QWidget):
 
         self.timer.start(35)
 
-        
-    
 
     def progreso(self):
         global COUNTER

@@ -35,11 +35,6 @@ class AgregarpropietarioWindow(AgregarPropietario,QWidget):
         self.password_propietario_txt.setValidator(only_password)
         self.confirma_contrasenia_txt.setValidator(only_password)
 
-        # self.rol_propietario_txt.setValidator(rol)
-
-        # LLAMADO DE LA FUNCION AGREGAR propietario Y ENVIO DE LOS DATOS DE LOS TXT 
-        self.agregar_admin_btn.clicked.connect(self.agregar_propietario)
-        self.y = self.cancelar_admin_btn.clicked.connect(self.cancelar_registro)
 
         # LLAMADO DE LA FUNCION AGREGAR propietario Y ENVIO DE LOS DATOS DE LOS TXT 
         self.agregar_admin_btn.clicked.connect(self.agregar_propietario)

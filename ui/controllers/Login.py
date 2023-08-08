@@ -22,7 +22,6 @@ class LoginWindow(Login, QWidget):
         self.ventana_abierta = False # IDENTIFICACION DE QUE LA VENTANA ESTA CERRADA
 
         # LLAMADO DE INICIO DE SESION                                           # AQUI SE MANDAN LOS DATOS DE LOS TXT
-        #self.x = self.ingresar_btn.clicked.connect(lambda:self.iniciar_sesion(self.correo_txt.text(),self.password_txt.text()))
         self.ingresar_btn.clicked.connect(self.iniciar_sesion)
 
         # VALIDACIÓN DE DATOS EN LOS QLineEdit
