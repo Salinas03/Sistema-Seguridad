@@ -59,35 +59,41 @@ class LoginWindow(Login, QWidget):
                         print(respuesta['msg'])
                         respuesta = admin_socket_ui.validacion_conexion()
                         if respuesta['success']:
-                            respuesta_servidor = admin_socket_ui.escribir_operaciones(json.dumps({
-                                'tabla': 'propietarios',
+                            #Operación del inicio de sesión que crea la sesión, conexión y validación con canales secundarios
+                            respuesta_servidor = admin_socket_ui.escribir_operacion_inicio_sesion(json.dumps({
                                 'operacion': 'login',
                                 'data': [correo, password, admin_socket_ui.obtener_numero_serie()]
                             }))
-                                
+
+                            #Checar si no da un NONE
                             print('[RESPUESTA SERVIDOR]')
                             print(respuesta_servidor)
-                            if respuesta_servidor['success']:
-                                conexion_secundarios = admin_socket_ui.conexiones_canales_secundarios()
-                                print(conexion_secundarios)
-                                if conexion_secundarios['success']:
-                                        
-                                    validacion_secundarios = admin_socket_ui.validacion_canales_secundarios()
-                                    if validacion_secundarios['success']:
-                                        administrador_logueado = respuesta_servidor['data']
-                                        print(administrador_logueado)
-                                        window = CargaWindow(self, administrador_logueado, self.close)
-                                        #window.setWindowModality(QtCore.Qt.ApplicationModal)
-                                        window.show()
+
+                            if respuesta_servidor is not None:
+                                if respuesta_servidor['success']:
+                                    conexion_secundarios = admin_socket_ui.conexiones_canales_secundarios()
+                                    print(conexion_secundarios)
+                                    if conexion_secundarios['success']:
+                                            
+                                        validacion_secundarios = admin_socket_ui.validacion_canales_secundarios()
+                                        if validacion_secundarios['success']:
+                                            administrador_logueado = respuesta_servidor['data']
+                                            print(administrador_logueado)
+                                            window = CargaWindow(self, administrador_logueado, self.close)
+                                            #window.setWindowModality(QtCore.Qt.ApplicationModal)
+                                            window.show()
+                                        else:
+                                            admin_socket_ui.cerrado_sockets()
+                                            QMessageBox.critical(self, 'Advertencia', 'No se pudo realizar la validación con los canales secundarios', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
                                     else:
                                         admin_socket_ui.cerrado_sockets()
-                                        QMessageBox.critical(self, 'Advertencia', 'No se pudo realizar la validación con los canales secundarios', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
+                                        QMessageBox.critical(self, 'Advertencia', 'No se pudo realizar la conexión con los canales secundarios', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
                                 else:
                                     admin_socket_ui.cerrado_sockets()
-                                    QMessageBox.critical(self, 'Advertencia', 'No se pudo realizar la conexión con los canales secundarios', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
+                                    QMessageBox.critical(self, 'Advertencia', respuesta_servidor['msg'], QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
                             else:
-                                admin_socket_ui.cerrado_sockets()
-                                QMessageBox.critical(self, 'Advertencia', respuesta_servidor['msg'], QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
+                                QMessageBox.critical(self, 'Advertencia', 'Hubo un error al realizar el inicio de sesión', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
+
                         else:
                             QMessageBox.critical(self, 'Advertencia', respuesta['msg'], QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
                     else:

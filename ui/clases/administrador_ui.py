@@ -30,6 +30,12 @@ class AdministradorSocketUI:
         self.operacionesbd = None
         self.conectividad_admin = None
 
+        self.addresses_secundarios = [self.ADDR_NOT, self.ADDR_BROAD, self.ADDR_BD, self.ADDR_CONA]
+
+        #Arreglos en donde se guardan los sockets secundarios y donde se van guardando las conexiones ya realizadas
+        self.canales_secundarios = [] 
+        self.conexiones_secundarios = []
+
     def crear_sockets(self):
         #Creación de sockets, uno para atender el panel de administración y otro para manejar las notificaciones y listados
         try:
@@ -109,51 +115,75 @@ class AdministradorSocketUI:
             return {"success": False, "msg": "No se pudo realizar la validación de la conexión correctamente"}
 
     def conexiones_canales_secundarios(self):
-        try:
-            self.notificacion.connect(self.ADDR_NOT) 
-            self.broadcasting.connect(self.ADDR_BROAD)
-            self.operacionesbd.connect(self.ADDR_BD)
+        #Hacer el arreglo de los canales secundarios ya craedos
+        self.canales_secundarios = [self.notificacion, self.broadcasting, self.operacionesbd, self.conectividad_admin]
 
-            return {'success': True, 'msg': 'Conexión con canales secundarios exitosa'}
-        except:
-            self.notificacion.close()
-            self.broadcasting.close()
-            self.operacionesbd.close()
-            self.administrador.send(' '.encode())
+        #Realizar las conexiones con los canales secundarios
+        for i, canal in enumerate(self.canales_secundarios):
+            try:
+                canal.connect(self.addresses_secundarios[i])
+                # self.conexiones_secundarios.append(canal)
+            except socket.error as e:
+                print(f'Error al conectar con el socket {self.addresses_secundarios[i]}, [ERROR]:{e}')
+
+        #Recibir el mensaje de confirmación de las conexiones realizadas
+        try:
+            respuesta_servidor = json.loads(self.administrador.recv(self.HEADER).decode(self.FORMAT))
+            return respuesta_servidor
+        except socket.error as e:
+            print(f'Hubo un error al conectar con los canales secundarios {e}')
             return {'success': False, 'msg': 'Error al conectar con los canales secundarios'}
 
     def validacion_canales_secundarios(self):
+        #Obtener el número de serie para realizar la validación de las conexiones secundarias
+        numero_serie = self.obtener_numero_serie()
+
+        #Enviar los números de series a
+        for i, conexion_secundario in enumerate(self.canales_secundarios):
+            try:
+                conexion_secundario.send(numero_serie.encode())
+            except socket.error as e:
+                print(f'Error al conectar con el socket {self.addresses_secundarios[i]}, [ERROR]:{e}')
 
         try:
-            numero_serie = self.obtener_numero_serie()
-
-            self.notificacion.send(numero_serie.encode())
-            respuesta = self.notificacion.recv(self.HEADER).decode(self.FORMAT)
-            print(respuesta)
-
-            self.broadcasting.send(numero_serie.encode())
-            respuesta = self.broadcasting.recv(self.HEADER).decode(self.FORMAT)
-            print(respuesta)
-
-            self.operacionesbd.send(numero_serie.encode())
-            respuesta = self.operacionesbd.recv(self.HEADER).decode(self.FORMAT)
-            print(respuesta)
-
-            return {'success': True, 'msg': 'Validación con canales secundarios'}
-        except:
-            return {'success': False, 'msg': 'Error al validar los canales secundarios'}
-
-    def escribir_operaciones(self, operacion):
-        try:
-            self.administrador.send(operacion.encode())
             respuesta_servidor = json.loads(self.administrador.recv(self.HEADER).decode(self.FORMAT))
             return respuesta_servidor
+        except:
+            return {'success': False, 'msg': 'Hubo un error al realizar la validación de los canales secundarios'}
+
+    def escribir_operaciones(self, operacion):
+        self.administrador.settimeout(None)
+        try:
+            self.administrador.send(operacion.encode())
+        except socket.error as e:
+            print(f'Error al enviar el mensaje desde el administrador {e}')
+            return None
+        
+        try:
+            respuesta_servidor = json.loads(self.administrador.recv(self.HEADER).decode(self.FORMAT))
+            return respuesta_servidor
+        except socket.error as e:
+            print(f'Error al recibir el mensaje del servidor {e}')
+            return None
+        
+    def escribir_operacion_inicio_sesion(self, operacion):
+        self.administrador.settimeout(self.TIMEOUT)
+
+        try:
+            self.administrador.send(operacion.encode())
         except socket.error as e:
             print(f'Error al enviar el mensaje desde el administrador {e}')
             # self.administrador.close()
             # self.notificacion.close()
             # self.broadcasting.close()
             # self.operacionesbd.close()
+            return None
+        
+        try:
+            respuesta_servidor = json.loads(self.administrador.recv(self.HEADER).decode(self.FORMAT))
+            return respuesta_servidor
+        except socket.error as e:
+            print(f'Error al recibir el mensaje del servidor {e}')
             return None
    
     def get_socket_administrador(self):
