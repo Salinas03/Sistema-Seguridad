@@ -33,7 +33,8 @@ class AgregarCompusWindow(AgregarComputadoras, QWidget):
         rol = self.rol_cmbx.currentIndex()
 
         if equipo == '' or numSerie == '' or rol == None:
-            QMessageBox.warning(self, 'Error', 'Por favor de poner datos validos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+            crear_message_box('Error','Favor de escribir los datos válidos','warning').exec_()
+            #QMessageBox.warning(self, 'Error', 'Por favor de poner datos validos', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
 
         else:
             valor_rol = None

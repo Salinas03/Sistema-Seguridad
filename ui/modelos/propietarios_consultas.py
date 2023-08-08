@@ -20,10 +20,7 @@ class Propietario:
     def insertar_propietario(self, nombre, apellido, telefono, correo, password, rol):
         if self.conexion.is_connected():
             try:
-                # cursor = self.conexion.cursor()
-                # cursor.execute(f'INSERT INTO propietarios (id_propietarios,nombre_propietario,apellido_propietario,telefono_propietario,correo_propietario,contrasena_propietario,rol) VALUES (%s,%s,%s,%s,%s,%s,%s)')
                 cursor = self.conexion.cursor()
-                # cursor.execute(f'INSERT INTO propietarios (id_propietarios, nombre_propietario, apellido_propietario, telefono_propietario, correo_propietario, contrasena_propietario, rol) VALUES  ("{nombre}", "{apellido}"," {telefono}", "{correo}", "{password}", {rol})')
                 sql = "INSERT INTO propietarios (nombre_propietario,apellido_propietario,telefono_propietario,correo_propietario,contrasena_propietario,rol) VALUES (%s,%s,%s,%s,%s,%s)"
                 val = (f"{nombre}",f"{apellido}",f"{telefono}",f"{correo}",f"{password}",f"{rol}")
                 cursor.execute(sql, val)
@@ -83,9 +80,7 @@ class Propietario:
             sql = f'SELECT id_propietarios,nombre_propietario,apellido_propietario,telefono_propietario,correo_propietario,rol FROM propietarios WHERE id_propietarios = {id_propietarios}'
             cursor.execute(sql)
             resultado = cursor.fetchall()  # Obtener los resultados de la consulta
-            #cursor.close()  # Cerrar el cursor después de obtener los resultados
             return resultado
-            #self.conexion.commit()
         except Error as err:
             print(f'Error al intentar la conexion {err}')
 
@@ -95,11 +90,9 @@ class Propietario:
             sql = f'SELECT id_propietarios FROM propietarios WHERE correo_propietario = %s'
             cursor.execute(sql, [correo])
             resultado = cursor.fetchone()  # Obtener los resultados de la consulta
-            #cursor.close()  # Cerrar el cursor después de obtener los resultados
             if resultado:
                 id_propietario = resultado[0]
                 return id_propietario
-            #self.conexion.commit()
         except Error as err:
             print(f'Error al intentar la conexion {err}')
 
@@ -121,9 +114,7 @@ class Propietario:
             sql = f'SELECT nombre_propietario,apellido_propietario,telefono_propietario,correo_propietario FROM propietarios WHERE id_propietarios = {id_propietarios}'
             cursor.execute(sql)
             resultado = cursor.fetchall()  # Obtener los resultados de la consulta
-            #cursor.close()  # Cerrar el cursor después de obtener los resultados
             return resultado
-            #self.conexion.commit()
         except Error as err:
             print(f'Error al intentar la conexion {err}')
 
@@ -133,9 +124,7 @@ class Propietario:
             sql = f'SELECT nombre_propietario FROM propietarios WHERE id_propietarios = {id_propietarios}'
             cursor.execute(sql)
             resultado = cursor.fetchall()  # Obtener los resultados de la consulta
-            #cursor.close()  # Cerrar el cursor después de obtener los resultados
             return resultado
-            #self.conexion.commit()
         except Error as err:
             print(f'Error al intentar la conexion {err}')
 
@@ -145,9 +134,7 @@ class Propietario:
             sql = f'SELECT * FROM propietarios WHERE correo_propietario = %s'
             cursor.execute(sql, (correo,))
             resultado = cursor.fetchall()  # Obtener los resultados de la consulta
-            #cursor.close()  # Cerrar el cursor después de obtener los resultados
             return {'success': True, 'data': resultado}
-            #self.conexion.commit()
         except Error as err:
             return {'success': False, 'msg': 'Hubo un error al hacer la consulta'}
     
@@ -164,11 +151,3 @@ class Propietario:
             except Error as err:
                 return {'success': False, 'msg':'Hubo un error al realizar la modificación'}
 
-  
-    
-
-
-            
-        
-
-    

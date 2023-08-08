@@ -173,7 +173,7 @@ class PrincipalWindow(Principal,QWidget):
 
         self.llenar_campos_administrador()
 
-        email = QRegExpValidator(QRegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@(?:gmail|hotmail|msn|yahoo|outlook|live|[.]{1,1})+(?:com|com.mx|net|org|edu|gov|mil|biz|info|name|museum|coop|aero|xxx|[a-zA-Z]{2})$"))
+        email = QRegExpValidator(QRegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"))
         only_text = QRegExpValidator(QRegExp('^[A-Za-z]{3,50}')) # VALIDACION DE DATOS ALFANUMERICOS DONDE SOLO PUEDE TENER ENTRE 3 Y 100 VALORES
         only_number = QRegExpValidator(QRegExp('^[0-9]{0,10}'))
         
@@ -279,9 +279,14 @@ class PrincipalWindow(Principal,QWidget):
                 button.setChecked(True)
                 
     def mostrar_ubicacion(self):
-        url = "https://account.microsoft.com/devices"  # Aquí debes especificar la URL que deseas abrir
-        # Abre el enlace en el navegador predeterminado
-        webbrowser.open(url)
+        resp = msg_boxes.precaucion_msg('ADVERTENCIA','¿Desea buscar las ubicación de algún dispositivo?')
+        resp2 = msg_boxes.precaucion_msg('ADVERTENCIA','Recuerda que para obtener la localizacion de un equipo de cómputo debes conocer el correo y al contraseña con la cual se inicio la computadora (Windows)')
+
+        if resp == QMessageBox.Yes:
+            if resp2 == QMessageBox.Yes:
+                url = "https://account.microsoft.com/devices"  # Aquí debes especificar la URL que deseas abrir
+                # Abre el enlace en el navegador predeterminado
+                webbrowser.open(url)
 
     def configuracion_tabla_equipos_activos(self):
         column_headers_tablas_equipos_activos = ('ID','Nombre del equipo', 'Número de serie', 'Propietario del equipo', 'Rol', 'IP')   
@@ -654,7 +659,7 @@ class PrincipalWindow(Principal,QWidget):
             crear_message_box('Refrescado de tablas', 'Se han refrescado las tablas exitosamente', 'information').exec_()
 
     def suspender_equipos_general(self):
-        res = msg_boxes.warning_msg('Advertencia', '¿Estas seguro que quieres suspender todos los equipos?')
+        res = msg_boxes.precaucion_msg('Advertencia', '¿Estas seguro que quieres suspender todos los equipos?')
         
         if res == QMessageBox.Yes:
             respuesta_servidor = admin_socket_ui.escribir_operaciones('bloquear')
@@ -672,7 +677,7 @@ class PrincipalWindow(Principal,QWidget):
                         crear_message_box('Advertencia/Error', 'No se pudo realizar el apagado a los siguientes clientes '+respuesta_servidor['msg'], 'error').exec_()
 
     def apagar_equipos_general(self):
-        res = msg_boxes.warning_msg('Advertencia', '¿Estas seguro que quieres apagar todos los equipos?')
+        res = msg_boxes.precaucion_msg('Advertencia', '¿Estas seguro que quieres apagar todos los equipos?')
         
         if res == QMessageBox.Yes:
             respuesta_servidor = admin_socket_ui.escribir_operaciones('apagar')
@@ -696,7 +701,6 @@ class PrincipalWindow(Principal,QWidget):
         while True:
             try:
                 mensaje = admin_socket_ui.get_socket_conectividadadmin().recv(admin_socket_ui.HEADER).decode(admin_socket_ui.FORMAT)
-                # print(f'Mensaje del servidor {mensaje} {datetime.datetime.now()}')
                 admin_socket_ui.get_socket_conectividadadmin().send('*'.encode())
 
             except socket.error as e:

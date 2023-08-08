@@ -8,7 +8,7 @@ class AdministradorSocketUI:
         self.FORMAT = "utf-8"
         self.HEADER = 20480
         # self.IP = '68.183.143.116'
-        self.IP = '165.22.15.159'
+        # self.IP = '165.22.15.159'
         # self.IP = '165.22.0.170'
         #self.IP = socket.gethostbyname(socket.gethostname())
         self.PORT = 5050
@@ -21,7 +21,7 @@ class AdministradorSocketUI:
         self.ADDR_BROAD = (self.IP, self.PORT_BROAD)
         self.ADDR_BD = (self.IP, self.PORT_BD)
         self.ADDR_CONA = (self.IP, self.PORT_CONA)
-        self.TIMEOUT = 4
+        self.TIMEOUT = 3
         
         #Variables de sockets
         self.administrador = None
@@ -115,7 +115,6 @@ class AdministradorSocketUI:
             return {"success": False, "msg": "No se pudo realizar la validación de la conexión correctamente"}
 
     def conexiones_canales_secundarios(self):
-
         #Hacer el arreglo de los canales secundarios ya craedos
         self.canales_secundarios = [self.notificacion, self.broadcasting, self.operacionesbd, self.conectividad_admin]
 
