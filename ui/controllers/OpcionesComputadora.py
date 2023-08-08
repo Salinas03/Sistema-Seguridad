@@ -27,7 +27,6 @@ class OpcionesCompusWindow(OpcionesComputadora, QWidget):
 
         self.ventana_abierta = False # IDENTIFICACION DE QUE LA VENTANA ESTA CERRADA
 
-
     def llenar_etiquetas(self):
         self.id_lbl.setText(str(self.data[0]))
         self.nombre_lbl.setText(str(self.data[1]))
