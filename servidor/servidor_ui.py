@@ -52,7 +52,7 @@ sesiones_administradores = []
 #CONFIGURACIÓN INICIAL DE SOCKETS
 def crear_sockets():
     try:
-        #VARIABLES GLOBALES DE LOS SOCKETS
+        #Sockets que se utilizan a lo largo del servidor
         global servidor
         global conectividad_admin
         global notificacion
@@ -60,7 +60,7 @@ def crear_sockets():
         global operacionesbd
         global cliente
 
-        #CREACIÓN DE DE SOCKETS
+        #Creación de la instancia de los sockets
         servidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         servidor.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
@@ -79,12 +79,12 @@ def crear_sockets():
         operacionesbd = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         operacionesbd.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-    except socket.error as err:
-        print(f'Error a la hora de crear el socket... /n {err}')
+    except socket.error as e:
+        print(f'[CrearSockets]: Error a la hora de crear los sockets {e}')
 
 def vincular_sockets():
     try:
-        #CONEXIÓN DE SOCKETS CREADOS ANTERIORMENTE
+        #Vinculación de sockets con su respectiva IP y puerto
         servidor.bind(ADDR)
         conectividad_admin.bind(ADDR_CONA)
         notificacion.bind(ADDR_NOTI)
@@ -92,7 +92,7 @@ def vincular_sockets():
         operacionesbd.bind(ADDR_BD)
         cliente.bind(ADDR_CLIEN)
         
-        #ABRIR LOS SOCKETS Y ESCUCHAR LAS PETICIONES DE LAS CONEXIONES
+        #Vincular los sockets en modo (listening) para empezar a realizar conexiones en (aceptar_conexiones)
         servidor.listen()
         conectividad_admin.listen()
         cliente.listen()
@@ -100,6 +100,7 @@ def vincular_sockets():
         broadcasting.listen()
         operacionesbd.listen()
 
+        #Menajes de feedback de levantado de servidor correctoo
         print(f'SERVIDOR {HOST} corriendo en el puerto {PORT}')
         print(f'CONECTIVIDAD {HOST} corriendo en el puerto {PORT_CONA}')
         print(f'NOTIFICACION {HOST} corriendo en el puerto {PORT_NOTI}')
@@ -107,22 +108,28 @@ def vincular_sockets():
         print(f'USUARIO {HOST} corriendo en el puerto {PORT_CLIEN}')
         print(f'OPERACIONESBD {HOST} corriendo en el puerto {PORT_BD}')
 
-        #CREACIÓN DE HILOS DE LOS SOCKETS PARA ESCUCHAR LAS CONEXIONES
+        #Creación de hilos para correr los procesos de aceptación de conexiones y conexiones secundarias de los clientes
+        aceptar_conexiones_thread = threading.Thread(target=aceptar_conexiones)
+        aceptar_conexiones_thread.start()
+
         cliente_thread = threading.Thread(target=aceptar_conexiones_cliente)
         cliente_thread.start()
 
-        #SETUP PARA CONECTAR CON CANALES SECUNDARIOS
+        #Variable el cual guarda los sockets secundarios del administrador para su futuro uso en las funciones de (conectar_canales_secundarios) y (validacion_canales_secundarios)
         global canales_secundarios
-
         canales_secundarios = [notificacion, broadcasting, operacionesbd, conectividad_admin]
 
     except socket.error as err:
-        print(f'Error al enlazar el socket... /n {err}')
-        print('Intentando denuevo...')
+        print(f'[VincularSockets]: Error al enlazar el socket... /n {err}')
+        print('[VincularSockets]: Intentando denuevo...')
+
+        #Cerrado de conexiones
         servidor.close()
+        conectividad_admin.close()
         notificacion.close()
         broadcasting.close()
         operacionesbd.close()
+        cliente.close()
 
 def cerrar():
     servidor.close()
@@ -130,52 +137,62 @@ def cerrar():
     cliente.close()
     broadcasting.close()
 
-#ACEPTACIÓN DE CONEXIONES PRINCIPALES, (ADMINISTRADOR, CONECTIVIDAD, CLIENTE)
+#ACEPTACIÓN DE CONEXIONES (principal y conexiones de clientes secundarias)
 def aceptar_conexiones():
-    #Cerrar todas las conexiones al iniciar el servidor
+    #Cerrar todas las conexiones al iniciar el servidor en caso de que haya una.
     for conexion_equipo  in conexiones_equipos_cliente:
         conexion_equipo.get_conexion().close()
 
     for conexion_admin in conexiones_equipos_admin:
         conexion_admin.get_conexion().close()
 
-    #Borrar los datos de las conexiónes y direcciones
+    #Borrar los datos de las conexiónes y direcciones principales de cliente y administradores
     del conexiones_equipos_cliente[:]
     del conexiones_equipos_admin[:]
+
+    #Ciclo infinito el cual atiende el recibimiento de las conexiones
     while True:
         try:
-            conn, addr = servidor.accept() #Linea que bloquea el flujo del programa
+            conn, addr = servidor.accept() #Linea que bloquea el flujo del programa y acepta las conexiones ya sean clientes o administrativas
             servidor.setblocking(1) #Evita el tiempo de espera de las conexiones, (el servidor no se cierra)
-            print(f'Conexión con el equipo de manera temporal')
+            print(f'[AceptarConexiones]: Conexión con el equipo de manera temporal con la IP {addr}')
 
+        except socket.error as e:
+            print(f'[AceptarConexiones]: Error al aceptar la conexión {e}')
+
+        try:
             #Conexión temporal establecida para obtener información del cliente que se conecto
             conn.send('{"success": true, "msg": "Conexión temporal establecida..." }'.encode())
 
-            #Se reciben los dos parámetros obligatorios del administrador o cliente para poder
-            #verificar si se puede hacer la conexión total con el servidor
+            #Se reciben los datos los cuales permiten realizar la validación para observar si se puede realizar la conexión con el servidor 
+            # ya sea cliente o administrador
             data_conexion = json.loads(conn.recv(HEADER).decode(FORMAT))
-            print(data_conexion)
             nombre_host = data_conexion['nombre_host']
             numero_serie = data_conexion['numero_serie']
             tipo_programa = data_conexion['tipo_programa']
 
-            print(f'Dispositivo conectado temporalmente: {nombre_host}')
-
-            #Hacer validación si el cliente que se conectó esta en la base de datos o no
-            #Si esta en la base de datos se determina si es administrador o cliente
-            guardar_conexiones(conn,addr, nombre_host, numero_serie, tipo_programa)
+            print(f'[AceptarConexiones]: Dispositivo conectado temporalmente: {nombre_host}')
 
         except socket.error as e:
-            print(f'Error al validar la conexión {e}')
+            print(f'[AceptarConexiones]: Error al realizar el envío de información con el cliente conectado temporalmente {e}')
+
+        try:
+            #Función la cual observa si el equipo se esta conectando es un cliente , un administrador o un equipo que no existe en los registros
+            #Aqui es donde se redirecciona cada equipo con su respectivo panel o funcionalidad
+            guardar_conexiones(conn,addr, nombre_host, numero_serie, tipo_programa)
+        except socket.error as e:
+            print(f'[AceptarConexiones]: Hubo un error al realizar el guardado de conexiones {e}')
 
 def aceptar_conexiones_cliente():
+    #Borrado de conexiones de canales secundarios en caso de que haya conexiones abiertas al iniciar el servidor
     for conexion_canal_cliente in conexiones_equipos_cliente_secundario:
         conexion_canal_cliente[0].close()
-
+    
     del conexiones_equipos_cliente_secundario[:]
 
     while True:
         try:
+            #Realizar conexión con los canales secundarios
             conn, addr = cliente.accept()
             cliente.setblocking(1)
 
@@ -185,151 +202,172 @@ def aceptar_conexiones_cliente():
             #Mensaje de verificación de que se ha conectado y enviado el número de serie
             conn.send('{"success": true, "msg": "Se realizó la conexión con el canal secundario"}'.encode())
 
-            print(f'NÚMERO DE SERIE DE CONEXIÓN SECUNDARIA {numero_serie}')
+            print(f'[AceptarConexionesCliente]: Número de serie de conexión secundaria {numero_serie}')
 
+            #Guardar las conexiones de los equipos clientes secundarios            
             conexiones_equipos_cliente_secundario.append((conn, addr))
 
             #Creación del hilo de panel de cliente el cual verifica la conectividad con el (CLIENTE/SERVIDOR)
             panel_cliente_thread = threading.Thread(target=panel_cliente, args=(conn, addr, numero_serie))
             panel_cliente_thread.start()
-        except:
-            print('Hubo un error al conectar con el canal de cliente')
+        except socket.error as e:
+            print(f'[AceptarConexionesCliente]: Hubo un error al conectar con el canal de cliente {e}')
             borrar_conexion_cliente_secundario(conn)
             conn.send('{"success": false, "msg": "Error al aceptar la conexión en cliente :("}'.encode())
 
-#CONEXIÓN CON CANALES SECUNDARIOS DEL ADMINISTRADOR
-def conectar_canales_secundarios():
-    #Aceptar las conexiones de los canales secundarios e irlas guardando en un arreglo
-    conexiones_canales_secundarios = []
-
-    #Realizar el recibimiento de las conexiones de los canales secundarios e irlas guardando en un arreglo de arreglos
-    #Si una de las conexiones falla en llegar se romperá el ciclo
-    for i, canal_secundario in enumerate(canales_secundarios):
-        try:
-            canal_secundario.settimeout(TIMEOUT)
-            conn, addr = canal_secundario.accept()
-            canal_secundario.setblocking(1)
-            conexiones_canales_secundarios.append([conn, addr])        
-        except socket.error as e:
-            print(f'Error al aceptar la conexión con el socket número {i}, [ERROR]: {e}')
-            break
-
-    #Verificar si las conexiones realizadas son iguales a los tres sockets secundarios
-    if len(canales_secundarios) != len(conexiones_canales_secundarios):
-        #Si no se realizan todas las conexiones de manera correcta borrar las conexiones
-        print('No se realizaron todas las conexiones secundarias de manera correcta...')
-        del conexiones_canales_secundarios[:]
-        return {'success': False, 'msg': 'No se realizaron todas las conexiones secundarias de manera correcta...'}
-    
-    #Si las conexiones realizadas son las mismas que los tres sockets se regresa el diccionario con las conexiones para despues validarlas
-    return {'success': True, 'msg': 'Se realizó la conexión con los tres canales secundarios de manera exitosa', 'conexiones': conexiones_canales_secundarios}
-
-def validacion_canales_secundarios(conexiones_canales_secundarios):
-    #Arreglo de los números de serie
-    lista_numeros_serie  = []
-
-    #Ir recibiendo los números de serie de las conexiones ya realizadas
-    for i, conexion_secundario in enumerate(conexiones_canales_secundarios):
-        try:
-            numero_serie = conexion_secundario[0].recv(HEADER).decode(FORMAT)
-            lista_numeros_serie.append(numero_serie)
-
-        except socket.error as e:
-            print(f'Error al recibir el número de serie de la conexión número {i}, [ERROR]: {e}')
-            break
-
-    #Verificar si los tres números de serie han llegado correctamnete
-    if len(lista_numeros_serie) != len(conexiones_canales_secundarios):
-        print('No se recibieron todos los números de serie de los canales secundarios...')
-        del conexiones_canales_secundarios[:]
-        return {'success': False, 'msg': 'No se recibieron todos los números de serie de los canales secundarios...'} 
-
-    #Añadir los números de serie en las conexiones [conn,addr] para realizar ahora si el guardado de la conexión de manera correcta
-    for i, conexion in enumerate(conexiones_canales_secundarios):
-
-        #Remover los timeouts
-        conexion[0].settimeout(None)
-        conexion.append(lista_numeros_serie[i])
-
-    #Guardar las conexiones en sus respectivos arreglos de conexiones
-    conexiones_equipos_admin_notificacion.append(conexiones_canales_secundarios[0])
-    conexiones_equipos_broadcast.append(conexiones_canales_secundarios[1])
-    conexiones_equipos_operacionesbd.append(conexiones_canales_secundarios[2])
-    return {'success': True, 'msg': 'Se realizó la conexión con los canales secundarios de manera efectiva'} 
-
 #GUARDAR CONEXIONES DEL SOCKET PRINCIPAL
 def guardar_conexiones(conn, addr, hostname, numero_serie, tipo_programa):
+
     #Verificar si el usuario o administrador esta registrado en la base de datos
     resultado = json.loads(EquiposConsultas(conexion()).obtener_equipo_por_nombre_numero_serie(hostname, numero_serie))
 
+    #Obtener su data si es que existe
     resultado = resultado['data']
     if resultado:
         resultado = resultado[0]
 
     #Si no existe la computadora dentro de la base de datos se hace la denegación de la conexión
     if not resultado:
-        print(f'Se denegó la entrada a {hostname}')
-        conn.send('{"success": false, "msg": "Conexión denegada >:/"}'.encode())
+        print(f'[GuardarConexiones]: Se denegó la entrada a {hostname}')
+        conn.send('{"success": false, "msg": "Conexión denegada >:|"}'.encode())
         conn.close()
 
+        #Envío de mensaje de notificación para notificar a los equipos administradores conectados que se intento realizar una conexión desconocida
         enviar_notificacion(f'Un dispositivo con la IP {addr} y número de serie {numero_serie} intento entrar al canal sin permisos')
+
         #Realizar un método para guardar estas conexiones intrusivas en algún otro lado TODO
-    
     else:
         #Verificar si el dispositivo que se esta conectando es un administrador o un usuario dependiendo de la tabla SQL
         resultado = json.loads(EquiposConsultas(conexion()).obtener_equipo_admin_por_nombre_numero_serie(hostname, numero_serie))
 
+        #Obtener sus datos de la consulta
         resultado = resultado['data']
         if resultado:
             resultado = resultado[0]
 
         #Caso en donde la computadora conectada es cliente
         if not resultado:
+            #Observar que el tipo de programa que se este ejecutando corresponda con el tipo de equipo que se este conectando
             if tipo_programa == 'administrador':
-                conn.send(json.dumps({'success': False, 'msg': 'Quieres ingresar como administrador desde una computadora cliente, acción denegada'}).encode())
+                conn.send(json.dumps({'success': False, 'msg': 'Quieres ingresar como administrador desde una computadora cliente, acción denegada >:|'}).encode())
             else:
+                #Crear el objeto de equipo conectado el cual guarda información acerca de la computadora conectada
                 equipo_cliente = EquipoConectado(conn, addr, hostname, numero_serie)
+
+                #Guardado de conexión de cliente en su respectivo arreglo
                 conexiones_equipos_cliente.append(equipo_cliente)
-                print(f'Conexión con cliente a las {datetime.datetime.now()} :)')
+                print(f'[GuardarConexiones]: Conexión con cliente a las {datetime.datetime.now()} :)')
+
                 try:
-                    conn.send(json.dumps({'success': True, 'msg': 'Vinculación con servidor exitosa :)'}).encode())
-                    #Función de broadcast para refrescar las tablas
-                    # enviar_notificacion(f'Cliente {hostname} con la IP {addr} se ha conectado')
+                    conn.send(json.dumps({'success': True, 'msg': 'Vinculación de cliente con servidor exitosa :)'}).encode())
+
+                    #Funciones de broadcast, para refrescar tablas y para notificar a los administradores que se ha realizado una conexión con el cliente
+                    enviar_notificacion(f'Cliente {hostname} con la IP {addr} se ha conectado')
                     broadcast()
                 except socket.error as e:
-                    print(f'Hubo un error al vincular la conexión con el cliente {e}')
+                    #Si se falla el enviar el mensaje de confirmación quiere decir que se ha perdido la conexión con el equipo, por lo tanto se borra su conexión
+                    print(f'[GuardarConexiones]: Hubo un error al vincular la conexión con el cliente {e}')
                     borrar_conexion_cliente_principal(numero_serie)
 
         #Caso en donde la computadora conectada es administrativa
         else:
+            #Observar que el tipo de programa que se este ejecutando corresponda con el tipo de equipo que se este conectando
             if tipo_programa == 'cliente':
-                conn.send(json.dumps({'success': False, 'msg':'Quieres entrar como cliente desde una computadora administrativa, acción denegada'}).encode())
+                conn.send(json.dumps({'success': False, 'msg':'Quieres entrar como cliente desde una computadora administrativa, acción denegada >:|'}).encode())
             else:
-                print(f'Administrador {hostname} con la IP {addr} se ha conectado a las {datetime.datetime.now()}')
+                print(f'[GuardarConexiones]: Administrador {hostname} con la IP {addr} se ha conectado a las {datetime.datetime.now()}')
                 equipo_admin = EquipoConectado(conn, addr, hostname, numero_serie)
+
+                #Crear conexión principal
                 conexiones_equipos_admin.append(equipo_admin)
 
-                administrador_thread = threading.Thread(target=panel_administrador, args=(conn,equipo_admin))
-                administrador_thread.start()
+                #Ir directamente al inicio de sesión y despues al panel del administrador después de pasar todas las validaciones, en caso que no se haya lograda la correcta validación
+                #simplemente se rompera el flujo y no seguira la funcionalidad del servidor
+                try:
+                    conn.send(json.dumps({'success': True, 'msg': 'Vinculación de administrador con servidor exitosa :)'}).encode())
+                    iniciar_sesion(equipo_admin)
+                except socket.error as e:
+                    print(f'[GuardarConexiones]: Hubo un error al vincular la conexión con el administrador {e}')
+                    borrar_administradores_numero_serie(numero_serie)
 
-                enviar_notificacion(f'Administrador {hostname} con la IP {addr} se ha conectado')
+#CONEXIÓN CON CANALES SECUNDARIOS DEL ADMINISTRADOR
+def conectar_canales_secundarios():
+    #Aceptar las conexiones de los canales secundarios e irlas guardando en un arreglo
+    conexiones_canales_secundarios = [] #Arreglo que guarda conexiones realizadas
+
+    #Realizar el recibimiento de las conexiones de los canales secundarios e irlas guardando en un arreglo de arreglos
+    #Si una de las conexiones falla en conectarse debido al TIMEOUT se rompe el ciclo
+    for i, canal_secundario in enumerate(canales_secundarios):
+        try:
+            canal_secundario.settimeout(TIMEOUT)
+            conn, addr = canal_secundario.accept() #Se realiza la aceptación de conexiones
+            canal_secundario.setblocking(1)
+            conexiones_canales_secundarios.append([conn, addr])        
+        except socket.error as e:
+            print(f'[ConectarCanalesSecundarios]: Error al aceptar la conexión con el socket número {i}, [ERROR]: {e}')
+            break
+
+    #Verificar si las conexiones realizadas son iguales a las cuatro canales secundarios
+    if len(canales_secundarios) != len(conexiones_canales_secundarios):
+        #Si no se realizan todas las conexiones de manera correcta borrar las se borra las conexiones de canales secundarios y se regresa un False
+        print('[ConectarCanalesSecundarios]: No se realizaron todas las conexiones secundarias de manera correcta...')
+
+        del conexiones_canales_secundarios[:]
+        return {'success': False, 'msg': 'No se realizaron todas las conexiones secundarias de manera correcta...'}
+    
+    #Si las conexiones realizadas son las mismas que los cuatro sockets se regresa el diccionario con las conexiones para despues validarlas
+    return {'success': True, 'msg': 'Se realizó la conexión con los cuatro canales secundarios de manera exitosa', 'conexiones': conexiones_canales_secundarios}
+
+def validacion_canales_secundarios(conexiones_canales_secundarios):
+    #Arreglo para guardar los números de serie
+    lista_numeros_serie  = []
+
+    #Ir recibiendo los números de serie de las conexiones ya realizadas que se guardan en el arreglo de conexiones_canales_secundarios
+    for i, conexion_secundario in enumerate(conexiones_canales_secundarios):
+        try:
+            #Recibir el número de serie y guardarlo en el arreglo
+            conexion_secundario[0].settimeout(TIMEOUT)
+            numero_serie = conexion_secundario[0].recv(HEADER).decode(FORMAT)
+
+            lista_numeros_serie.append(numero_serie)
+
+        except socket.error as e:
+            #Si hay un fallo en alguno de los recibimientos se rompe el ciclo
+            print(f'[ValidacionCanalesSecundarios]: Error al recibir el número de serie de la conexión número {i}, [ERROR]: {e}')
+            break
+
+    print('[ValidacionCanalesSecundarios]: Lista de números de serie ->')
+    print(lista_numeros_serie)
+
+    #Verificar si los cuatro números de serie llegaron de manera correcta, se compara los números de serie y las conexiones
+    if len(lista_numeros_serie) != len(conexiones_canales_secundarios):
+        print('[ValidacionCanalesSecundarios]: No se recibieron todos los números de serie de los canales secundarios...')
+
+        #Cerrar las conexiones
+
+        del conexiones_canales_secundarios[:]
+        return {'success': False, 'msg': 'No se recibieron todos los números de serie de los canales secundarios...'} 
+
+
+    #Añadir los números de serie en las conexiones [conn,addr] para realizar ahora si el guardado de la conexión de manera correcta
+    for i, conexion in enumerate(conexiones_canales_secundarios):
+        #Remover el TIMEOUT de 3 segundos
+        conexion[0].settimeout(None)
+        conexion.append(lista_numeros_serie[i])
+
+    #Guardar las conexiones en sus respectivos arreglos de conexiones a excepción del de conectividad
+    conexiones_equipos_admin_notificacion.append(conexiones_canales_secundarios[0]) #notificación
+    conexiones_equipos_broadcast.append(conexiones_canales_secundarios[1])  #broadcasting
+    conexiones_equipos_operacionesbd.append(conexiones_canales_secundarios[2]) #operacionesbd
+    return {'success': True, 'msg': 'Se realizó la validación con los canales secundarios de manera efectiva'} 
 
 #PANELES DE SE REDIRIGEN LAS CONEXIONES PARA ADMINISTRAR EL CANAL
-def panel_administrador(conn, administrador):
+def panel_administrador(administrador):
 
-    nombre_host = administrador.get_nombre_host()
-
-    msg = f"Bienvenido administrador {nombre_host} :)"
-    respuesta = json.dumps({"success": True, "msg": msg})
-
-    try:
-        conn.send(respuesta.encode(FORMAT))
-    except socket.error as e:
-        print(f'Hubo un error al vincular la conexión con el administrador {e}')
-        borrar_administradores_numero_serie(administrador.get_identificador())
-                
-    print('Conexión exitosa :)')
-    print('A sus ordenes administrador...')
+    #Obtener variable de conexión del objeto del administrador y nombre de host
+    conn = administrador.get_conexion()
+    
+    print('[PanelAdministrador]: Conexión con el panel administrador')
 
     while True:
         try:
@@ -337,7 +375,7 @@ def panel_administrador(conn, administrador):
             #Esperar instrucción de la computadora administradora
             operacion = conn.recv(HEADER).decode(FORMAT, errors='ignore') #Línea que bloque el código
 
-            #Realizar operaciones de administrador
+            #Realizar operaciones del administradro (listar, seleccionar, consultas, apagado y bloqueo general, excepcion)
             if operacion == 'listar':
                 equipos = listar_equipos()
                 conn.send(equipos.encode())
@@ -361,14 +399,8 @@ def panel_administrador(conn, administrador):
 
             #Operaciones con la base de datos
             elif is_valid_json(operacion):
-                peticion = json.loads(operacion)
-
-                if peticion['operacion'] == 'login':
-                    #Dentro del inicio de sesión se crea la sesión y conecta y valida los canales secundarios
-                    iniciar_sesion(peticion, conn)
-                else:
-                    respuesta_operacion = panel_base_datos(operacion)
-                    conn.send(respuesta_operacion.encode()) #Respetar el request response
+                respuesta_operacion = panel_base_datos(operacion)
+                conn.send(respuesta_operacion.encode()) #Respetar el request response
 
             #Operaciones generales a los clientes, bloqueo y apagado
             elif operacion == 'apagar' or operacion == 'bloquear':
@@ -376,19 +408,15 @@ def panel_administrador(conn, administrador):
                 conn.send(respuesta_operacion.encode())
 
             else:
-                print(f'Salida del administrador {administrador.get_nombre_host()}, Bye bye...')
-                conn.close()
-                break
+                print(f'[PanelAdministrador] No se encontro la instrucción a ejecutar')       
+                break         
 
         except socket.error as e:
-            print(f'EXCPETION [PanelAdministrador]: {e}')
-            borrar_administradores_numero_serie(administrador.get_identificador())
-            cerrar_sesiones(administrador.get_identificador())
-            conn.close()
+            print(f'[PanelAdministrador]: Error en el panel administrativo {e}')
             break
 
-def panel_conectividad_admin(conn, addr, numero_serie):
-    print(f'Entró {numero_serie} al panel de conectividad de administrador')
+def panel_conectividad_admin(conn, numero_serie):
+    print(f'[PanelConectividadAdmin]: Entró {numero_serie} al panel de conectividad de administrador')
     conn.settimeout(TIMEOUT)
 
     while True:
@@ -398,11 +426,11 @@ def panel_conectividad_admin(conn, addr, numero_serie):
             conn.recv(HEADER).decode(FORMAT)
 
         except socket.error as e:
-            print(f'EXCEPTION [PanelConectividad]: {e}')
+            print(f'[PanelConectividadAdmin]: Error de excepción {e}')
 
             #Realizar borrado del canal principal
             administrador_desconectado = borrar_administradores_numero_serie(numero_serie)
-            print(f'Administrador {administrador_desconectado.get_nombre_host()} desconectado por panel de conectividad')
+            print(f'[PanelConectividadAdmin]: Administrador {administrador_desconectado.get_nombre_host()} desconectado por panel de conectividad')
 
             #Enviar notificación a los administradores de la desconexión
             enviar_notificacion(f'Administrador {administrador_desconectado.get_nombre_host()} desconectado')
@@ -420,17 +448,17 @@ def panel_conectividad_admin(conn, addr, numero_serie):
             cerrar_selecciones(numero_serie, administrador_desconectado)
 
             #TEMPORAL: Imprimir los arreglos de las conexiones de los arreglos para observar que se han borrado de manera correcta
-            print('[Conexiones equipos admin]')
+            print('[PanelConectividadAdmin]: Conexiones equipos admin')
             print(conexiones_equipos_admin)
-            print('[Conexiones conextividad admin]')
+            print('[PanelConectividadAdmin]: Conexiones conextividad admin')
             print(conexiones_conectividad_admin)
-            print('[Conexiones equipos admin notificación]')
+            print('[PanelConectividadAdmin]: Conexiones equipos admin notificación')
             print(conexiones_equipos_admin_notificacion)
-            print('[Conexiones equipos broadcast]')
+            print('[PanelConectividadAdmin]: Conexiones equipos broadcast')
             print(conexiones_equipos_broadcast)
-            print('[Conexiones equipos operacionesBD]')
+            print('[PanelConectividadAdmin]: Conexiones equipos operacionesBD')
             print(conexiones_equipos_operacionesbd)
-            print('[Sesiones administradores]')
+            print('[PanelConectividadAdmin]: Sesiones administradores')
             print(sesiones_administradores)
 
             #Realizar un borrado para esta conexión de conectividad
@@ -438,7 +466,7 @@ def panel_conectividad_admin(conn, addr, numero_serie):
             break
         
 def panel_cliente(conn, addr, numero_serie):
-    print(f'Entró {numero_serie} al panel de cliente secundario.')
+    print(f'[PanelCliente]: Entró {numero_serie} al panel de cliente secundario.')
     conn.settimeout(TIMEOUT)
 
     while True:
@@ -448,7 +476,7 @@ def panel_cliente(conn, addr, numero_serie):
             conn.recv(HEADER).decode(FORMAT)
 
         except ConnectionResetError:         
-            print(f'Hubo un error al recibir el mensaje en el panel del cliente (ConnectionReset) {datetime.datetime.now()}')
+            print(f'[PanelCliente]: Hubo un error al recibir el mensaje en el panel del cliente (ConnectionReset) {datetime.datetime.now()}')
             borrar_conexion_cliente_principal(numero_serie)
             borrar_conexion_cliente_secundario(conn)
             enviar_notificacion(f'Usuario {addr} se ha desconectado')
@@ -457,7 +485,7 @@ def panel_cliente(conn, addr, numero_serie):
             break
 
         except socket.timeout:
-            print(f'Hubo un error al recibir el mensaje en el panel del cliente (Timeout) {datetime.datetime.now()}')
+            print(f'[PanelCliente]: Hubo un error al recibir el mensaje en el panel del cliente (Timeout) {datetime.datetime.now()}')
             borrar_conexion_cliente_principal(numero_serie)
             borrar_conexion_cliente_secundario(conn)
             enviar_notificacion(f'Usuario {addr} se ha desconectado')
@@ -466,7 +494,7 @@ def panel_cliente(conn, addr, numero_serie):
             break
 
         except:
-            print(f'Hubo un error al recibir el mensaje en el panel del cliente (Exception) {datetime.datetime.now()}')
+            print(f'[PanelCliente]: Hubo un error al recibir el mensaje en el panel del cliente (Exception) {datetime.datetime.now()}')
             borrar_conexion_cliente_principal(numero_serie)
             borrar_conexion_cliente_secundario(conn)
             enviar_notificacion(f'Usuario {addr} se ha desconectado')
@@ -475,86 +503,132 @@ def panel_cliente(conn, addr, numero_serie):
             break
 
 #INICIO DE LA SESIÓN DEL ADMINISTRADOR ASI COMO CONEXIÓN CON CANALES SECUNDARIOS
-def iniciar_sesion(operacion, conn):
-    data_login = operacion['data']
+def iniciar_sesion(equipo_admin):
+    print('[InicioSesion]: Dentro del inicio de sesión')
 
-    #Busqueda para ver si ya existe este usuario que esta tratando de loguearse
-    print('Dentro de LOGIN')
-    respuesta_operacion = PropietariosConsultas(conexion()).obtener_propietario(data_login[0], data_login[1])
+    #Obtener la conexión del objeto del equipo administrador
+    conn = equipo_admin.get_conexion()
+    conn.settimeout(TIMEOUT)
+
+    #Recibir la operación del administrador (LOGIN) con los datos para realizar la validación
+    operacion = json.loads(conn.recv(HEADER).decode(FORMAT))
+    
+    #Guardar los datos para hacer el login en esta variable y también guardar el número de serie
+    print(operacion)
+    data_login = operacion['data']
     numero_serie = data_login[2]
 
-    print('RESPUESTA LOGIN')
+    #Busqueda para ver si ya existe este usuario que esta tratando de loguearse
+    print('[InicioSesion]: Antes de realizar la consulta de obtener propietario (login)')
+    respuesta_operacion = PropietariosConsultas(conexion()).obtener_propietario(data_login[0], data_login[1])
+
+    print('[InicioSesion]: Respuesta de la operación de la consulta')
     print(respuesta_operacion)
 
+    #Cargar el archivo JSON que me trae de la consulta para convertirlo en diccionario y accesar a sus propiedades
     respuesta = json.loads(respuesta_operacion)
-
+    
+    #Verificar si la operación realizada fue realizada con éxito
     if respuesta['success']:
-        #Checar si el administrador existe con el correo y la contraseña
 
+        #Verificar si el administrador existe, de lo contrario o la contraseña o el email son incorrectos
         if respuesta['data']:
-            data = respuesta['data'][0]
-            #Una vez que sepamos que existe necesitamos checar que sea administrador                
-            if data[6] == 1:
-                #Observar si el que esta iniciando sesión corresponde con el rol
-                print('Sesiones administrativas')
-                print(sesiones_administradores)
 
-                #Una vez checando si es administrador observamos si no tiene una sesión activa
+            #Si si existe el administrador obtenemos sus datos, los datos se encuentran en la posición 0 de la propiedad data
+            data = respuesta['data'][0]
+
+            #Una vez que sepamos que existe el registro en la BD validamos que sea un administrador mas no un cliente                
+            if data[6] == 1:
+
+                #Una vez verificando que en efecto corresponde a un administrador válido se observa si no hay una sesión activa con ese propietario
                 for sesion in sesiones_administradores:
+
+                    #Comparar el ID del admin del objeto que se creo con el ID del de la base de datos
                     if sesion.get_id_admin() == data[0]: #ID 
                         msg = f'Ya hay una sesión con el usuario {data[1]} {data[2]} porfavor intente mas tarde o inicie con otra sesión'
                         print(msg)
                         borrar_administradores_numero_serie(numero_serie)
 
                         try: conn.send(json.dumps({'success': False, 'msg': msg}).encode())
-                        except socket.error as e: print(f'Error al enviar el mensaje de que ya existe una sesión {e}')
+                        except socket.error as e: print(f'[InicioSesion]: Error al enviar el mensaje de que ya existe una sesión {e}')
                         return
                     
                 #Si no existe crear la sesión de ese administrador de lo contrario mandar un mensaje diciendo que ya existe la sesión
                 sesion_admin = Administrador(data[0], data[1], data[2],data[3], data[4], data[5], data[6], numero_serie)
                 sesiones_administradores.append(sesion_admin)
-                print(f'Sesión iniciada de {sesion_admin.get_nombre_admin()}')
+                print(f'[InicioSesion]: Sesión iniciada del administrador {sesion_admin.get_nombre_admin()} {sesion_admin.get_apellido_admin()}')
 
-                #Envío de mensaje de la creación de la sesión
+                #Envío de feedback para hacer saber al administrador que se ha iniciado sesión correctamente
                 try: 
                     conn.send(json.dumps({'success': True, 'data': data}).encode())
                 except socket.error as e: 
+                    #Si falla el envío del mensaje se hace el borrado de la conexión principal y de la sesión y se retorna la función
                     borrar_administradores_numero_serie(numero_serie)
                     cerrar_sesiones(numero_serie)
-                    print(f'Error al enviar el mensaje de confirmación de la creación de la sesión {e}')
+                    print(f'[InicioSesion]: Error al enviar el mensaje de confirmación de la creación de la sesión {e}')
                     return
 
-                #Una vez iniciada la sesión se realiza la conexión con los canales secundarios
+                #[CONEXIÓN CON CANALES SECUNDARIOS]
+                #Una vez iniciada la sesión se realiza la conexión con los cuatro canales secundarios
                 respuesta_conexiones_secundarias = conectar_canales_secundarios()
 
+                print('[InicioSesion]: Respuesta de conexiones secundarias')
+                print(respuesta_conexiones_secundarias)
+
+                #Verificar si las conexiones con los canales secundarios se hizo correctamente
                 if respuesta_conexiones_secundarias['success']:
+                    
+                    #Guardar las conexiones realizadas de (conectar_canales_secundarios) en un arreglo
                     conexiones_canales_secundarios = respuesta_conexiones_secundarias['conexiones']
+
+                    #Quitar la propiedad de conexiones ya que se tiene que enviar el feedback de las conexiones correctas pero no se pueden enviar las conexiones
                     respuesta_conexiones_secundarias.pop('conexiones', None)
 
+                    #Envío de mensaje de feedback que indica la conexión correcta de los canales
                     try: 
                         conn.send(json.dumps(respuesta_conexiones_secundarias).encode())
-                        print('Envío de mensaje de conexiones secundarias :)')
+                        print('[InicioSesion]: Envío de mensaje de conexiones secundarias :)')
                     except socket.error as e: 
+                        #En caso de que no se envie se borra toda conexión y se retorna
                         borrar_administradores_numero_serie(numero_serie)
                         cerrar_sesiones(numero_serie)
-                        print(f'Error al enviar el mensaje de las conexiones secundarias {e}')
+                        print(f'[InicioSesion]: Error al enviar el mensaje de las conexiones secundarias {e}')
+                        return
 
-                    #Una vez obtenidas las conexiones que se realizaron de manera efectiva toca validarlas recibiendo el número de serie
+                    #Una vez obtenidas las conexiones que se realizaron de manera efectiva toca validarlas recibiendo el número de serie para identificarlas
                     respuesta_validacion = validacion_canales_secundarios(conexiones_canales_secundarios)
 
+                    print('[InicioSesion] Respuesta validación canales secundarios')
+                    print(respuesta_validacion)
+
+                    #Verificar si se realizó la validación de los canales secundarios de manera correcta
                     if respuesta_validacion['success']:
+
                         #Borrar la conexión principal, las sesiones y los canales secundarios en caso de que no se haya enviado el mensaje exitosamente
                         try:
                             #Envío de respuesta de canales secundarios conectados
                             conn.send(json.dumps(respuesta_validacion).encode())
-                            print('Envío de mensaje de validación de conexines secundarias')
+                            print('[InicioSesion]: Envío de mensaje de validación de conexiones secundarias')
 
-                            #Creación de hilo para panel de conectividad, agarra la conexión de conectividad, esta se encuentra en la posición 4 del arreglo
+                            #Restablecer el TIMEOUT denuevo a None para evitar el timeout en este socket
+                            conn.settimeout(None)
+
+                            #Creación de hilo para panel de conectividad, la conexión de conectividad se encuentra en la posición 4 del arreglo
                             con_conectividad = conexiones_canales_secundarios[3]
+                            print(f'[InicioSesion]: Arreglo de parametros del panel de conectividad ADDR={con_conectividad[1]} NUMERO_SERIE={con_conectividad[2]}')
 
-                            #Creación de hilo, se le pasa (conexión, address, número de serie)
-                            panel_conectividad_thread = threading.Thread(target=panel_conectividad_admin, args=(con_conectividad[0], con_conectividad[1], con_conectividad[2]))
+                            #Creación de hilo de panel de administrador donde se realizan todas las operaciones principales (listado, selección, consultas)
+                            #Se le envía el objeto del equipo admin
+                            administrador_thread = threading.Thread(target=panel_administrador, args=(equipo_admin,))
+                            administrador_thread.start()
+
+                            #Creación de hilo para monitorear conectividad de administrador, se le pasa (conexión, número de serie)
+                            panel_conectividad_thread = threading.Thread(target=panel_conectividad_admin, args=(con_conectividad[0], con_conectividad[2]))
                             panel_conectividad_thread.start()
+
+                            print(f'[InicioSesion]: Inicio de sesión exitoso con el equipo {equipo_admin.get_nombre_host()}')
+                            #Envío de notificación de que ha iniciado sesión un administrador
+                            enviar_notificacion(f'Administrador {equipo_admin.get_nombre_host()} con la IP {equipo_admin.get_direccion()} se ha conectado')
 
                         except socket.error as e:
                             borrar_administradores_numero_serie(numero_serie)
@@ -563,35 +637,40 @@ def iniciar_sesion(operacion, conn):
                             borrar_administradores_broadcasting(numero_serie)
                             borrar_administradores_operacionesbd(numero_serie)
                             borrar_conectividad_administradores(conn)
-                            print(f'Hubo un error al enviar el mensaje de respuesta de la validación de los canales secundarios {e}')
+                            print(f'[InicioSesion]: Hubo un error al enviar el mensaje de respuesta de la validación de los canales secundarios {e}')
                     else:
+                        #Si no se obtuvieron todos los números de serie de igual manera se tiene que borrar sesión principal y sesión
                         borrar_administradores_numero_serie(numero_serie)
                         cerrar_sesiones(numero_serie)
                         try: conn.send(json.dumps(respuesta_conexiones_secundarias).encode())
-                        except socket.error as e: print(f'Error al renviar la respuesta de los canales secundarios {e}')
+                        except socket.error as e: print(f'[InicioSesion]: Error al renviar la respuesta de los canales secundarios {e}')
                 else:
+                    #Si no se realizaron correctamente las conexiones se borra la principal y se cierra la sesión creada
                     borrar_administradores_numero_serie(numero_serie)
                     cerrar_sesiones(numero_serie)
                     try: conn.send(json.dumps(respuesta_conexiones_secundarias).encode())
-                    except socket.error as e: print(f'Error al renviar la respuesta de la validación de los canales secundarios {e}')
+                    except socket.error as e: print(f'[InicioSesion]: Error al renviar la respuesta de la validación de los canales secundarios {e}')
             else:
+                #Condición else en donde se esta tratando de ingresar con un propietario cliente
                 borrar_administradores_numero_serie(numero_serie)
                 try: conn.send(json.dumps({'success': False, 'msg': 'Esta tratando de ingresar al servidor con un propietario NO administrativo'}).encode())
-                except socket.error as e: print(f'Error al enviar el mensaje de propietario NO administrativo {e}')
+                except socket.error as e: print(f'[InicioSesion]: Error al enviar el mensaje de propietario NO administrativo {e}')
         else:
+            #Condicion else donde no se encontro un administrador con esos datos
             borrar_administradores_numero_serie(numero_serie)
             try: conn.send(json.dumps({'success': False, 'msg': 'El correo o la contraseña son incorrectos'}).encode())
-            except socket.error as e: print(f'Error al enviar el mensaje de correo o contraseña incorrecta {e}')
+            except socket.error as e: print(f'[InicioSesion]: Error al enviar el mensaje de correo o contraseña incorrecta {e}')
     else:
+        #Condición else en donde salto un fallo parar realizar la consulta de la BD
         borrar_administradores_numero_serie(numero_serie)
-        try:conn.send(respuesta_operacion.encode())   
-        except socket.error as e: print(f'Error al enviar el mensaje de error de la respuesta de la consula {e}')
+        try:conn.send(respuesta_operacion.encode())   #Enviar mensaje de feedback al administrador
+        except socket.error as e: print(f'[InicioSesion]: Error al enviar el mensaje de error de la respuesta de la consula {e}')
 
 #PANELES DE ADMINISTRACIÓN QUE SE EJECUTAN DEPENDIENDO DE CIERTA OPERACIÓN EN EL PANEL DEL ADMINISTRADOR
 def panel_base_datos(instruccion): 
     instruccion = json.loads(instruccion)
     operacion = instruccion['operacion']
-    print(instruccion)
+    print(f'[PanelBaseDatos]: {instruccion}')
 
     if instruccion['tabla'] == 'equipos':
         if operacion == 'insertar':
@@ -662,8 +741,6 @@ def panel_base_datos(instruccion):
             return EquiposConsultas(conexion()).obtener_equipo_admin_por_nombre_numero_serie(data[0], data[1])
         
         elif operacion == 'obtener_id_propietario_numero_serie':
-            print('Dentro de obtener propietaro por número de serie')
-            print(instruccion['numero_serie'])
             return EquiposConsultas(conexion()).obtener_propietario_numero_serie(instruccion['numero_serie'])
         
         else:
@@ -735,7 +812,7 @@ def listar_equipos():
     if conexiones_equipos_cliente_mostrar:
         del conexiones_equipos_cliente_mostrar[:]
 
-    print('CONEXIONES EQUIPOS CLIENTE')
+    print('[ListarEquipos]: Conexiones con equipos cliente')
     print(conexiones_equipos_cliente)
 
     for i, conexion_equipo in enumerate(conexiones_equipos_cliente[:]):
@@ -747,11 +824,11 @@ def listar_equipos():
             conexion_equipo.get_conexion().send(' '.encode())
             conexion_equipo.get_conexion().recv(HEADER)
             bandera = True
-            print('Se envio el mensaje de verificación de conectividad [ListarEquipos]')
+            print('[ListarEquipos]: Se envio el mensaje de verificación de conectividad')
         except socket.error as e:
             index = conexiones_equipos_cliente.index(conexion_equipo)
             del conexiones_equipos_cliente[index] #Borrar la conexion del cliente en esa posición en caso de que no haya respuesta
-            print(f'NO se envio el mensaje de verificación (Exception) {e}')
+            print(f'[ListarEquipos]: NO se envio el mensaje de verificación {e}')
             continue
         
         if bandera:
@@ -771,14 +848,14 @@ def listar_equipos():
 
     equipos = [equipos_inactivos, conexiones_equipos_cliente_mostrar]
     equipos = json.dumps(equipos)
-    print('[EQUIPOS ACTIVOS]')
+    print('[ListarEquipos]: Equipos Activos')
     print(conexiones_equipos_cliente_mostrar)
-    print('[EQUIPOS INACTIVOS]')
+    print('[ListarEquipos]: Equipos Inactivos')
     print(equipos_inactivos)
     return equipos
 
 def conectar_con_equipo(operacion):
-    print('[CONECTAR CON EQUIPO]')
+    print('[ConectarConEquipo]: Dentro de conectar con equipo')
     try: 
         cadena = operacion.replace('seleccionar', '').strip().split(',')
         posicion = int(cadena[0])
@@ -798,22 +875,22 @@ def conectar_con_equipo(operacion):
         objeto_cliente_seleccionado.set_seleccionado(True)
         objeto_cliente_seleccionado.set_seleccion_numero_serie(seleccionador)
 
-        print(f'Selección con el usuario {posicion}:{objeto_cliente_seleccionado.get_nombre_host()} por el equipo con el número de serie {seleccionador}')
+        print(f'[ConectarConEquipo]: Selección con el usuario {posicion}:{objeto_cliente_seleccionado.get_nombre_host()} por el equipo con el número de serie {seleccionador}')
         return objeto_cliente_seleccionado
     
     except:
-        print('Selección no válida :/')
+        print('[ConectarConEquipo]: Selección no válida :/')
         return None
     
 def manejar_operaciones_seleccion(cliente_seleccionado, conn_admin):
     #Tomar la instrucción del administrador
-    print('Dentro de manejar operaciones...')
+    print('[ManejarOperacionesSeleccion]: Dentro de manejar operaciones')
     
     # Verificar si esta en el req/res de la consola o de las operaciones normales
     while True:
         try:
             operacion = conn_admin.recv(HEADER).decode(FORMAT)
-            print(f'Operación a realizar {operacion}')
+            print(f'[ManejarOperacionesSeleccion]: Operación a realizar {operacion}')
 
             #Operación de salir de la selección
             if operacion == 'salir':
@@ -822,8 +899,8 @@ def manejar_operaciones_seleccion(cliente_seleccionado, conn_admin):
                 cliente_seleccionado.set_seleccionado(False)
                 cliente_seleccionado.set_seleccion_numero_serie('')
 
-                print('Cambio de selección a False')
-                print('Se salio de la selección')
+                print('[ManejarOperacionesSeleccion]: Cambio de selección a False')
+                print('[ManejarOperacionesSeleccion]: Se salio de la selección')
                 conn_admin.send(json.dumps({'success': True, 'msg': 'Se realizó la salida de selección con éxito'}).encode()) 
                 break
 
@@ -832,7 +909,7 @@ def manejar_operaciones_seleccion(cliente_seleccionado, conn_admin):
                 cliente_seleccionado.get_conexion().send(operacion.encode())
                 cliente_seleccionado.set_consola(True)
                 manejar_consola_cliente(cliente_seleccionado, conn_admin)
-                print('Se salio de la consola en el servidor')
+                print('[ManejarOperacionesSeleccion]: Se salio de la consola en el servidor')
 
             #Realizar operaciones de suspensión de computadora o apagado
             else:
@@ -841,24 +918,24 @@ def manejar_operaciones_seleccion(cliente_seleccionado, conn_admin):
 
                 #Obtener respuesta del cliente
                 respuesta_cliente = cliente_seleccionado.get_conexion().recv(HEADER).decode(FORMAT)
-                print('Respuesta cliente')
+                print('[ManejarOperacionesSeleccion]: Respuesta cliente')
                 print(respuesta_cliente)
 
                 #Enviar la respuesta cdel cliente al administrador
                 conn_admin.send(respuesta_cliente.encode())
 
         except socket.error as e:
-            print(f'Error al enviar el comando {e}')
+            print(f'[ManejarOperacionesSeleccion]: Error al enviar el comando {e}')
             conn_admin.send(json.dumps({'success': False, 'msg': 'Hubo un error al realizar la operación al equipo'}).encode())
             break
 
 def manejar_consola_cliente(conn_cli, conn_admin):
-    print('[MANEJAR CONSOLA admin/servidor/cliente]')
+    print('[ManejarConsolaCliente]: admin/servidor/cliente]')
     while True:
         try:
             #Recibir el prompt de la consola la primera vez y despúes esperar las salidas de la consola del cliente
             respuesta_cliente = conn_cli.get_conexion().recv(HEADER).decode(FORMAT)
-            print('Respuesta cliente')
+            print('[ManejarConsolaCliente]: Respuesta cliente')
             print(respuesta_cliente)
 
             #Enviar salida del cliente al administrador
@@ -866,7 +943,7 @@ def manejar_consola_cliente(conn_cli, conn_admin):
 
             #Esperar nueva instrucción del administrador para el cliente
             instruccion_admin = conn_admin.recv(HEADER).decode(FORMAT)
-            print('Instrucción del administrador al cliente')
+            print('[ManejarConsolaCliente]: Instrucción del administrador al cliente')
             print(instruccion_admin)
 
             if instruccion_admin == 'salir':
@@ -880,17 +957,17 @@ def manejar_consola_cliente(conn_cli, conn_admin):
             try:
                 conn_cli.get_conexion().send(instruccion_admin.encode())
             except socket.error as e:
-                print(f'Desconexión del cliente: {e}')
+                print(f'[ManejarConsolaCliente]: Desconexión del cliente: {e}')
                 #Enviar mensaje de desconexión al administrador
                 conn_admin.send('desconectado'.encode())
                 break
 
         except socket.error as e:
-            print(f'Algo sucedio en la conosola del cliente {e}')
+            print(f'[ManejarConsolaCliente]: Algo sucedio en la conosola del cliente {e}')
             break
 
 def apagar_bloquear_general(operacion):
-    print(f'[OPERACIÓN GENERAL] {operacion}')
+    print(f'[ApagarBloquearGeneral]: Operación a realizar {operacion}')
     
     nombres_no_enviados = []
 
@@ -901,13 +978,13 @@ def apagar_bloquear_general(operacion):
                 respuesta_servidor = conexion_cliente.get_conexion().recv(HEADER).decode(FORMAT)
                 print(respuesta_servidor)
             except socket.error as e:
-                print(f'Error al enviar el mensaje de notificación {e} al cliente {conexion_cliente.get_nombre_host()}')
+                print(f'[ApagarBloquearGeneral]: Error al enviar el mensaje de notificación {e} al cliente {conexion_cliente.get_nombre_host()}')
                 nombres_no_enviados.append(conexion_cliente.get_nombre_host())
 
     else:
         return json.dumps({'success': False, 'msg': 'No hay equipos clientes a quienes realizar las operaciones :('})
 
-    print('[ENVIO DE INSTRUCCIONES GENERALES]')
+    print('[ApagarBloquearGeneral]: Envío de instrucciones generales')
 
     if nombres_no_enviados:
         return json.dumps({'success': False, 'msg': nombres_no_enviados})
@@ -917,12 +994,24 @@ def apagar_bloquear_general(operacion):
 
 #FUNCIONES DE BORRADO DE CONEXIONES
 def borrar_administradores_numero_serie(numero_serie):
+    print('[BorrarAdministradoresNumeroSerie]: Dentro del borrado de administradores')
+    print('[BorrarAdministradoresNumeroSerie]: Arreglo de conexiones de equipos admin')
+    print(conexiones_equipos_admin)
+
     for conexion_admin in conexiones_equipos_admin:
+
+        print(f'[BorrarAdministradoresNumeroSerie]: Número de serie del parametro {numero_serie}')
+        print(f'[BorrarAdministradoresNumeroSerie]: Número de serie de la conexión {conexion_admin.get_identificador()}')
+
         if conexion_admin.get_identificador() == numero_serie:
+            print('[BorrarAdministradoresNumeroSerie]: Dentro de la condición de borrado')
             index = conexiones_equipos_admin.index(conexion_admin)
             del conexiones_equipos_admin[index]
-            print('[BORRADO DE ADMINISTRADORES ACTIVOS POR NUMERO DE SERIE]')
+            print('[BorrarAdministradoresNumeroSerie]: Operación realizada')
+            print(conexiones_equipos_admin)
             return conexion_admin
+
+        print('[BorrarAdministradoresNumerosSerie]: Nunca entro dentro de la condición')
         
 def borrar_conectividad_administradores(conn):
     for conexion_conectividad in conexiones_conectividad_admin[:]:
@@ -930,14 +1019,14 @@ def borrar_conectividad_administradores(conn):
             index = conexiones_conectividad_admin.index(conexion_conectividad)
             del conexiones_conectividad_admin[index]
 
-    print('[BORRADO DE CONEXIONES DE CONECTIVIDAD ADMINISTRADOR]')
+    print('[BorrarConectividadAdministradores]: Operación realizada')
 
 def borrar_administradores_notificacion(numero_serie):
     for conexion_admin_notificacion in conexiones_equipos_admin_notificacion:
         if conexion_admin_notificacion[2] == numero_serie:
             index = conexiones_equipos_admin_notificacion.index(conexion_admin_notificacion)
             del conexiones_equipos_admin_notificacion[index]
-            print('[BORRADO DE CONEXIONES DE NOTIFICACIÓN]')
+            print('[BorrarAdministradoresNotificacion]: Operación realizada')
             return conexion_admin_notificacion[1]
         
 def borrar_administradores_broadcasting(numero_serie):
@@ -945,7 +1034,7 @@ def borrar_administradores_broadcasting(numero_serie):
         if conexion_broadcast[2] == numero_serie:
             index = conexiones_equipos_broadcast.index(conexion_broadcast)
             del conexiones_equipos_broadcast[index]
-            print('[BORRADO DE CONEXIONES BROADCASTING]')
+            print('[BorrarAdministradoresBroadcasting] Operación realizada')
             return conexion_broadcast
         
 def borrar_administradores_operacionesbd(numero_serie):
@@ -953,7 +1042,7 @@ def borrar_administradores_operacionesbd(numero_serie):
         if conexion_operacionbd[2] == numero_serie:
             index = conexiones_equipos_operacionesbd.index(conexion_operacionbd)
             del conexiones_equipos_operacionesbd[index]
-            print('[BORRADO DE CONEXIONES OPERACIONESBD]')
+            print('[BorrarAdministradoresOperacionesBD]: Operación realizada')
             return conexion_operacionbd
 
 def borrar_conexion_cliente_principal(numero_serie):
@@ -962,7 +1051,7 @@ def borrar_conexion_cliente_principal(numero_serie):
                 index = conexiones_equipos_cliente.index(conexion_equipo)
                 del conexiones_equipos_cliente[index]
     
-    print('[BORRADO DE CONEXIONES CLIENTE PRINCIPAL]')
+    print('[BorrarConexionClientePrincipal]')
     
 def borrar_conexion_cliente_secundario(conn):    
     for conexion_equipo_secundario in conexiones_equipos_cliente_secundario[:]:
@@ -970,7 +1059,7 @@ def borrar_conexion_cliente_secundario(conn):
             index = conexiones_equipos_cliente_secundario.index(conexion_equipo_secundario)
             del conexiones_equipos_cliente_secundario[index]
 
-    print('[BORRADO DE CONEXIONES CLIENTE SECUNDARIO]')
+    print('[BorrarConexionClienteSecundario]: Operación realizada')
 
 def cerrar_selecciones(numero_serie, administrador_desconectado):
     if conexiones_equipos_cliente:
@@ -984,16 +1073,16 @@ def cerrar_selecciones(numero_serie, administrador_desconectado):
                     equipo_seleccionado[0].set_seleccionado(False)
                     equipo_seleccionado[0].set_seleccion_numero_serie('')
                     cerrar_consola_seleccion(equipo_seleccionado[0])
-                    print(f'RESETEO DE SELECCIÓN DEL EQUIPO {equipo_seleccionado[0].get_nombre_host()}')
+                    print(f'[CerrarSelecciones]: Reseteo de selección del equipo{equipo_seleccionado[0].get_nombre_host()}')
                 else:
                     for seleccionado in equipo_seleccionado:
                         print(seleccionado.get_nombre_host())
             else:
-                print(f'No hay equipos seleccionados por el equipo {administrador_desconectado.get_nombre_host()}')
+                print(f'[CerrarSelecciones]: No hay equipos seleccionados por el equipo {administrador_desconectado.get_nombre_host()}')
 
 def cerrar_sesiones(numero_serie):
     for sesion in sesiones_administradores:
-        print(f'NÚMERO DE SERIE DE LA SESION {sesion.get_numero_serie()}')
+        print(f'[CerrarSesiones]: Número de serie de la sesión {sesion.get_numero_serie()}')
         if sesion.get_numero_serie() == numero_serie:
             index = sesiones_administradores.index(sesion)
             del sesiones_administradores[index]
@@ -1001,17 +1090,17 @@ def cerrar_sesiones(numero_serie):
     
     print(sesiones_administradores)
 
-    print('[CERRADO DE SESIONES]')
+    print('[CerrarSesiones]: Operación realizada')
 
 def cerrar_consola_seleccion(equipo):
     if equipo.get_consola():
         try:
             equipo.get_conexion().send('salir'.encode())
             equipo.set_consola(False)
-            print(f'RESETEO DE CONSOLA EQUIPO {equipo.get_nombre_host()}')
+            print(f'[CerrarConsolaSeleccion]: Reseteo de consola de equipo {equipo.get_nombre_host()}')
         except socket.error as e:
-            print(f'No se pudo enviar el mensaje de salida de consola [desconexión administrador] {e}')
-            print('Intentando denuevo...')
+            print(f'[CerrarConsolaSeleccion]: No se pudo enviar el mensaje de salida de consola [desconexión administrador] {e}')
+            print('[CerrarConsolaSeleccion]: Intentando denuevo...')
             
             try:
                 equipo.get_conexion().send('salir'.encode())
@@ -1020,23 +1109,23 @@ def cerrar_consola_seleccion(equipo):
 
 #FUNCIONALIDADES BROADCAST QUE SE ENVIAN A TODOS LOS ADMINISTRADORES
 def enviar_notificacion(mensaje):
-    print('[NOTIFICACIÓN]')
+    print('[EnviarNotificación]: Dentro de enviar notificación')
     
     if conexiones_equipos_admin:
         for conexion_admin_notificacion in conexiones_equipos_admin_notificacion: 
             try:
                 conexion_admin_notificacion[0].send(f'{mensaje}'.encode())
             except socket.error as e:
-                print(f'Error al enviar el mensaje de notificación {e}')
+                print(f'[EnviarNotificación]: Error al enviar el mensaje de notificación {e}')
 
-    print('[ENVIO DE NOTIFICACIONES]')
+    print('[EnviarNotificacion]: Se realizó el envío de notificaciones')
 
 def broadcast():
-    print('[BROADCASTING]')
+    print('[Broadcast] Dentro de broadcast')
     equipos_activos_inactivos = listar_equipos()
 
     if conexiones_equipos_admin:
-        print('[Conexiones equipos broadcast]')
+        print('[Broadcast]: Conexiones equipos broadcast')
         for broadcast in conexiones_equipos_broadcast:
             print(broadcast[2])
 
@@ -1044,10 +1133,10 @@ def broadcast():
             try:
                 conexion_broadcast[0].send(equipos_activos_inactivos.encode())
             except (socket.error) as e:
-                print(f'Error al enviar el mensaje de broadcast {e}')
+                print(f'[Broadcast]: Error al enviar el mensaje de broadcast {e}')
     
         
-    print('[ENVIO DE BROADCAST]')
+    print('[Broadcast]: Envío de broadcast')
 
 def refrescar_tabla_equipos():
     peticion_equipos = {
@@ -1064,7 +1153,7 @@ def refrescar_tabla_equipos():
     }
 
     if conexiones_equipos_admin:
-        print('[Conexiones equipos operacionesBD]')
+        print('[RefrescarTablaEquipos]: Conexiones equipos operacionesBD')
         for operacionbd in conexiones_equipos_operacionesbd:
             print(operacionbd[2])
             
@@ -1072,9 +1161,9 @@ def refrescar_tabla_equipos():
             try:
                 conexion_operacionesbd[0].send(json.dumps(respuesta).encode())
             except (socket.error) as e:
-                print(f'Error al enviar el mensaje de refrescar tablas {e}')
+                print(f'[RefrescarTablaEquipos]: Error al enviar el mensaje de refrescar tablas {e}')
 
-    print('[REFRESCADO TABLA EQUIPOS]')
+    print('[RefrescadoTablaEquipos]: Operación realizada')
     
 def refrescar_tabla_propietarios():
     peticion_propietarios = {
@@ -1096,11 +1185,10 @@ def refrescar_tabla_propietarios():
                 conexion_operacionesbd[0].send(json.dumps(respuesta).encode())
 
     except:
-        print('Error al refrescar las tablas de propietarios')
+        print('[RefrescarTablaPropietarios]: Error al refrescar las tablas de propietarios')
 
-    print('[REFRESCADO TABLA PROPIETARIOS]')
+    print('[RefrescarTablaPropietarios]: Operación realizada')
 
 atexit.register(cerrar)
 crear_sockets()
 vincular_sockets()
-aceptar_conexiones()
