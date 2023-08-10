@@ -227,6 +227,8 @@ class PrincipalWindow(Principal,QWidget):
 
         #Obtener por primera vez los equipos activos e inactivos
         equipos_activos_inactivos = admin_socket_ui.escribir_operaciones('listar')
+        print(equipos_activos_inactivos)
+        print(equipos_activos_inactivos)
 
         if equipos_activos_inactivos:
             self.desplegar_datos_equipos_inactivos(equipos_activos_inactivos[0])

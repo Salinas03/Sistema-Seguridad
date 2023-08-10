@@ -149,6 +149,7 @@ class AdministradorSocketUI:
 
         try:
             respuesta_servidor = json.loads(self.administrador.recv(self.HEADER).decode(self.FORMAT))
+            print(respuesta_servidor)
             return respuesta_servidor
         except:
             return {'success': False, 'msg': 'Hubo un error al realizar la validación de los canales secundarios'}
