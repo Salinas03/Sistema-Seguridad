@@ -38,10 +38,10 @@ class OpcionesCompusWindow(OpcionesComputadora, QWidget):
             respuesta = admin_socket_ui.escribir_operaciones('apagar')
             print(respuesta)
             if respuesta['success']:
-                crear_message_box('Apagado', 'Se realizó la función del apagado de manera correcta', 'information')
+                crear_message_box('Apagado', 'Se realizó la función del apagado de manera correcta', 'information').exec_()
                 self.close()
             else:
-                crear_message_box('Ooops... Algo ocurrió', 'Hubo un fallo al realizar el apagado del equipo, puede que el equipo se haya desconectado', 'error')
+                crear_message_box('Ooops... Algo ocurrió', 'Hubo un fallo al realizar el apagado del equipo, puede que el equipo se haya desconectado', 'error').exec_()
 
                 #Bandera indicando que ya no va a aplicar la funcionalidad de otro mensaje de salir en el evento de cerrado, porque ya automaticamente esta cayendo en la excepcinon entonces no hace falta que vuelva a enviar salir al servidor de loc contrario se saldria del panel del administrador por lo tanto ya no funciona el panel
                 self.bandera = False
@@ -56,7 +56,7 @@ class OpcionesCompusWindow(OpcionesComputadora, QWidget):
                 crear_message_box('Suspender', 'Se realizó la función de suspensión de windows de manera exitosa', 'information').exec_()
                 self.close()
             else:
-                crear_message_box('Ooops... Algo ocurrió', 'Hubo un fallo al suspender el equipo, puede que el equipo se haya desconectado', 'error')
+                crear_message_box('Ooops... Algo ocurrió', 'Hubo un fallo al suspender el equipo, puede que el equipo se haya desconectado', 'error').exec_()
                 self.bandera = False
                 self.close()
 
@@ -68,7 +68,7 @@ class OpcionesCompusWindow(OpcionesComputadora, QWidget):
             abrir_consola_ejecutar_script(consola)
             print('Proceso realizado')
         else:
-            crear_message_box('Ooops... Algo ocurrió', 'Hubo un fallo al abrir la consola del equipo, puede que el equipo se haya desconectado', 'error')
+            crear_message_box('Ooops... Algo ocurrió', 'Hubo un fallo al abrir la consola del equipo, puede que el equipo se haya desconectado', 'error').exec_()
             self.bandera = False
             self.close()
     

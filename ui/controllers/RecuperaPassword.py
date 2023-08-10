@@ -5,6 +5,7 @@ from utils.correo import *
 from utils.correo import verificacion
 from db.connection import conexion
 from modelos.propietarios_consultas import Propietario
+from utils.crear_mensaje_emergente import crear_message_box
 
 from PySide2.QtCore import * 
 
@@ -55,10 +56,12 @@ class RecuperarPasswordWindow(RecuperarContrasenia,QWidget):
                 self.codigo_recuperacion_txt.setFocus()
                 return self.codigo_verificacion
             else:
-                QMessageBox.critical(self, 'Oops, algo ocurrio', 'No se pudo enviar el correo de verificacion, intente de nuevo', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                crear_message_box('Oops, algo ocurrio','No se pudo enviar el correo de verificacion, intente de nuevo','critical').exec_()
+                #QMessageBox.critical(self, 'Oops, algo ocurrio', 'No se pudo enviar el correo de verificacion, intente de nuevo', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
                 return None
         else:
-            QMessageBox.critical(self, 'Error', 'Introduzca un correo en el campo de texto', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+            crear_message_box('Error','Introduzca un correo en el campo de texto','critical').exec_()
+            #QMessageBox.critical(self, 'Error', 'Introduzca un correo en el campo de texto', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
             return None
           
     # pasar a la tercera parte 
@@ -67,16 +70,19 @@ class RecuperarPasswordWindow(RecuperarContrasenia,QWidget):
         if codigo is not None:
             codigo_txt = self.codigo_recuperacion_txt.text() 
             if codigo_txt == '':
-                QMessageBox.warning(self, 'Error', 'Por favor de poner el codigo de verificación', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                crear_message_box('Error','Por favor de poner el codigo de verificación','warning').exec_()
+                #QMessageBox.warning(self, 'Error', 'Por favor de poner el codigo de verificación', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
             else:
                 if verificacion(codigo_txt, codigo): 
-                    QMessageBox.information(self, 'Codigo correcto', 'El codigo de verificacion es valido', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                    crear_message_box('Codigo correcto','El codigo de verificacion es valido','information').exec_()
+                    #QMessageBox.information(self, 'Codigo correcto', 'El codigo de verificacion es valido', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
                     self.ingresa_correo_widget.hide()
                     self.confirma_codigo_widget.hide()
                     self.cambio_password_widget.show()
                     self.nuevo_password_txt.setFocus()
                 else:
-                    QMessageBox.warning(self, 'Advertencia', 'El codigo que ingreso no es valido', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                    crear_message_box('Advertencia','El codigo que ingreso no es valido', 'warning').exec_()
+                    #QMessageBox.warning(self, 'Advertencia', 'El codigo que ingreso no es valido', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
                     self.close()
     
     
@@ -100,14 +106,17 @@ class RecuperarPasswordWindow(RecuperarContrasenia,QWidget):
         print(correo)
 
         if nuevo_password == '' or confirmar_password == '':
-            QMessageBox.warning(self, 'Error', 'Ingresa la contraseña', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+            crear_message_box('Error','Ingresa la contraseña','warning').exec_()
+            #QMessageBox.warning(self, 'Error', 'Ingresa la contraseña', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
 
         elif nuevo_password != confirmar_password:
-             QMessageBox.warning(self, 'Error', 'Las contraseñas no coinciden', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+            crear_message_box('Error','Las contraseñas no coinciden','warning').exec_()
+             #QMessageBox.warning(self, 'Error', 'Las contraseñas no coinciden', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
         else:
             respuesta = Propietario(conexion()).actualizar_contrasena_propietario(nuevo_password, correo)
             if respuesta['success']:
-                QMessageBox.information(self, 'Actualización', 'La recuperación de la contraseña fue existosa', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                crear_message_box('Actualizacion','La recuperación de la contraseña fue existosa','information').exec_()
+                # QMessageBox.information(self, 'Actualización', 'La recuperación de la contraseña fue existosa', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
                 self.close()
                 window = LoginWindow(self)
                 window.show()

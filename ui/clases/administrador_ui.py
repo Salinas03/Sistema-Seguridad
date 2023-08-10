@@ -129,6 +129,7 @@ class AdministradorSocketUI:
         #Recibir el mensaje de confirmación de las conexiones realizadas
         try:
             respuesta_servidor = json.loads(self.administrador.recv(self.HEADER).decode(self.FORMAT))
+            print('[Respuesta servidor] : ',respuesta_servidor)
             return respuesta_servidor
         except socket.error as e:
             print(f'Hubo un error al conectar con los canales secundarios {e}')
@@ -142,6 +143,7 @@ class AdministradorSocketUI:
         for i, conexion_secundario in enumerate(self.canales_secundarios):
             try:
                 conexion_secundario.send(numero_serie.encode())
+                print('[Número serie] : ', numero_serie)
             except socket.error as e:
                 print(f'Error al conectar con el socket {self.addresses_secundarios[i]}, [ERROR]:{e}')
 
