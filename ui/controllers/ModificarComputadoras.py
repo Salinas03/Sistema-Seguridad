@@ -1,7 +1,5 @@
 from PySide2.QtWidgets import *
 from views.EditarEquipo import EditarComputadoras
-from db.connection import conexion
-from modelos.equipos_consultas import Equipo
 from PySide2.QtCore import Qt, QRegExp
 from PySide2.QtGui import QRegExpValidator
 from clases.administrador_ui import admin_socket_ui

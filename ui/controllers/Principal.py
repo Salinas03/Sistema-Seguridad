@@ -1,6 +1,6 @@
 # IMPORTACION DE LA LIBRERIAS A OCUPAR
 from PySide2.QtWidgets import *
-from PySide2 import QtCore, QtGui
+from PySide2 import QtCore
 from views.Principal import Principal
 from controllers.AgregarAdmin import AgregarpropietarioWindow
 from controllers.AgregarCompus import AgregarCompusWindow
@@ -17,11 +17,12 @@ import json
 import threading
 import time
 import socket
-from db.connection import conexion
 from clases.administrador_ui import admin_socket_ui
 from clases.administrador_sesion import AdministradorSesion
 from utils.crear_mensaje_emergente import crear_message_box
 import webbrowser
+
+
 class PrincipalWindow(Principal,QWidget):
 
     # CONSTRUCTOR PARA INICIO DE LA VENTANA
@@ -287,6 +288,8 @@ class PrincipalWindow(Principal,QWidget):
                 url = "https://account.microsoft.com/devices"  # Aquí debes especificar la URL que deseas abrir
                 # Abre el enlace en el navegador predeterminado
                 webbrowser.open(url)
+        else:
+            QMessageBox.close()
 
     def configuracion_tabla_equipos_activos(self):
         column_headers_tablas_equipos_activos = ('ID','Nombre del equipo', 'Número de serie', 'Propietario del equipo', 'Rol', 'IP')   
