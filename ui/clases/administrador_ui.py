@@ -8,7 +8,7 @@ class AdministradorSocketUI:
         self.FORMAT = "utf-8"
         self.HEADER = 20480
         # self.IP = '68.183.143.116'
-        # self.IP = '165.22.15.159'
+        self.IP = '165.22.15.159'
         # self.IP = '165.22.0.170'
         #self.IP = socket.gethostbyname(socket.gethostname())
         self.PORT = 5050
@@ -147,6 +147,7 @@ class AdministradorSocketUI:
 
         try:
             respuesta_servidor = json.loads(self.administrador.recv(self.HEADER).decode(self.FORMAT))
+            print(respuesta_servidor)
             return respuesta_servidor
         except:
             return {'success': False, 'msg': 'Hubo un error al realizar la validación de los canales secundarios'}
