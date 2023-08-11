@@ -33,7 +33,8 @@ class PropietariosConsultas:
         if self.conexion.is_connected():
             try:
                 cursor = self.conexion.cursor()
-                cursor.execute(f'SELECT id_propietarios,nombre_propietario,apellido_propietario,telefono_propietario,correo_propietario,rol FROM propietarios')
+                # cursor.execute(f'SELECT id_propietarios,nombre_propietario,apellido_propietario,telefono_propietario,correo_propietario,rol FROM propietarios')
+                cursor.execute(f"SELECT id_propietarios,nombre_propietario,apellido_propietario,telefono_propietario,correo_propietario, CASE WHEN rol = 1 THEN 'administrador' WHEN rol = 0 THEN 'cliente' END as rol FROM propietarios ORDER BY rol DESC")
                 resultado = cursor.fetchall()
                 return json.dumps({'success': True, 'data': resultado})
             except Error as err:
