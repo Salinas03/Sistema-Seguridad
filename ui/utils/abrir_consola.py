@@ -11,7 +11,7 @@ def abrir_consola_ejecutar_script(consola):
     sock.listen()
 
     #Abrir una nueva ventana de consola ejecutar el script
-    script_path = f'{os.getcwd()}/ui/utils/manejar_consola.py'
+    script_path = f'{os.getcwd()}/utils/manejar_consola.py'
     proceso_consola = subprocess.Popen(['start', 'cmd', '/k', 'python', script_path], shell=True)
 
     #Aceptar la conexión con el subproceso

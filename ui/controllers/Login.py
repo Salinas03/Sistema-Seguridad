@@ -84,10 +84,12 @@ class LoginWindow(Login, QWidget):
                                             window.show()
                                         else:
                                             admin_socket_ui.cerrado_sockets()
-                                            QMessageBox.critical(self, 'Advertencia', 'No se pudo realizar la validación con los canales secundarios', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
+                                            QMessageBox.critical(self, 'Advertencia', 'No se pudo realizar la validación con los canales secundarios', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                                            self.close() 
                                     else:
                                         admin_socket_ui.cerrado_sockets()
-                                        QMessageBox.critical(self, 'Advertencia', 'No se pudo realizar la conexión con los canales secundarios', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
+                                        QMessageBox.critical(self, 'Advertencia', 'No se pudo realizar la conexión con los canales secundarios', QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close)
+                                        self.close() 
                                 else:
                                     admin_socket_ui.cerrado_sockets()
                                     QMessageBox.critical(self, 'Advertencia', respuesta_servidor['msg'], QMessageBox.StandardButton.Close,QMessageBox.StandardButton.Close) 
