@@ -32,6 +32,7 @@ ADDR_CLIEN = (HOST, PORT_CLIEN)
 ADDR_BD = (HOST, PORT_BD)
 ADDR_CONA = (HOST, PORT_CONA)
 TIMEOUT = 3
+MESSAGE_TIMEOUT = 5
 TIME_TO_SEND_MESSAGES = 2
 
 #ARREGLOS DE CONEXIONES CON EL SERVIDOR
@@ -302,6 +303,7 @@ def conectar_canales_secundarios():
             canal_secundario.settimeout(TIMEOUT)
             conn, addr = canal_secundario.accept() #Se realiza la aceptación de conexiones
             canal_secundario.setblocking(1)
+            print(f'Conexión con el canal {i}')
             conexiones_canales_secundarios.append([conn, addr])        
         except socket.error as e:
             print(f'[ConectarCanalesSecundarios]: Error al aceptar la conexión con el socket número {i}, [ERROR]: {e}')
@@ -328,7 +330,7 @@ def validacion_canales_secundarios(conexiones_canales_secundarios):
             #Recibir el número de serie y guardarlo en el arreglo
             conexion_secundario[0].settimeout(TIMEOUT)
             numero_serie = conexion_secundario[0].recv(HEADER).decode(FORMAT)
-
+            
             lista_numeros_serie.append(numero_serie)
 
         except socket.error as e:
@@ -417,7 +419,7 @@ def panel_administrador(administrador):
 
 def panel_conectividad_admin(conn, numero_serie):
     print(f'[PanelConectividadAdmin]: Entró {numero_serie} al panel de conectividad de administrador')
-    conn.settimeout(TIMEOUT)
+    conn.settimeout(MESSAGE_TIMEOUT)
 
     while True:
         try:
@@ -467,7 +469,7 @@ def panel_conectividad_admin(conn, numero_serie):
         
 def panel_cliente(conn, addr, numero_serie):
     print(f'[PanelCliente]: Entró {numero_serie} al panel de cliente secundario.')
-    conn.settimeout(TIMEOUT)
+    conn.settimeout(MESSAGE_TIMEOUT)
 
     while True:
         try:    
@@ -646,6 +648,7 @@ def iniciar_sesion(equipo_admin):
                         except socket.error as e: print(f'[InicioSesion]: Error al renviar la respuesta de los canales secundarios {e}')
                 else:
                     #Si no se realizaron correctamente las conexiones se borra la principal y se cierra la sesión creada
+                    print(f'[InicioSesion]: Cayó en la excepción de conexiones con canales')
                     borrar_administradores_numero_serie(numero_serie)
                     cerrar_sesiones(numero_serie)
                     try: conn.send(json.dumps(respuesta_conexiones_secundarias).encode())

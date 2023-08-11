@@ -702,7 +702,7 @@ class PrincipalWindow(Principal,QWidget):
 # ////////////////////////// FUNCIONES PARA ESCUCHAR CAMBIOS EN LA BASE DE DATOS TODO//////////////////////////
 
     def escuchar_conectividad(self):
-        admin_socket_ui.get_socket_conectividadadmin().settimeout(admin_socket_ui.TIMEOUT)
+        admin_socket_ui.get_socket_conectividadadmin().settimeout(admin_socket_ui.MESSAGE_TIMEOUT)
         while True:
             try:
                 mensaje = admin_socket_ui.get_socket_conectividadadmin().recv(admin_socket_ui.HEADER).decode(admin_socket_ui.FORMAT)
