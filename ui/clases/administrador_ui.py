@@ -7,8 +7,8 @@ class AdministradorSocketUI:
         # 165.22.15.159
         self.FORMAT = "utf-8"
         self.HEADER = 20480
-        # self.IP = '68.183.143.116'
-        self.IP = '165.22.15.159'
+        self.IP = '68.183.143.116'
+        # self.IP = '165.22.15.159'
         # self.IP = '165.22.0.170'
         #self.IP = socket.gethostbyname(socket.gethostname())
         self.PORT = 5050
@@ -122,10 +122,14 @@ class AdministradorSocketUI:
         #Realizar las conexiones con los canales secundarios
         for i, canal in enumerate(self.canales_secundarios):
             try:
+
+                canal.settimeout(self.TIMEOUT)
                 canal.connect(self.addresses_secundarios[i])
+                print(f'Conexion con {self.addresses_secundarios[i]}')
                 # self.conexiones_secundarios.append(canal)
             except socket.error as e:
                 print(f'Error al conectar con el socket {self.addresses_secundarios[i]}, [ERROR]:{e}')
+                break
 
         #Recibir el mensaje de confirmación de las conexiones realizadas
         try:
@@ -147,10 +151,16 @@ class AdministradorSocketUI:
                 print('[Número serie] : ', numero_serie)
             except socket.error as e:
                 print(f'Error al conectar con el socket {self.addresses_secundarios[i]}, [ERROR]:{e}')
+                break
 
         try:
             respuesta_servidor = json.loads(self.administrador.recv(self.HEADER).decode(self.FORMAT))
             print(respuesta_servidor)
+
+            if respuesta_servidor['success']:
+                for i in range(3):
+                    self.canales_secundarios[i].settimeout(None)
+
             return respuesta_servidor
         except:
             return {'success': False, 'msg': 'Hubo un error al realizar la validación de los canales secundarios'}
