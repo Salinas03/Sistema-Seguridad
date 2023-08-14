@@ -303,7 +303,7 @@ def conectar_canales_secundarios():
             canal_secundario.settimeout(TIMEOUT)
             conn, addr = canal_secundario.accept() #Se realiza la aceptación de conexiones
             canal_secundario.setblocking(1)
-            print(f'Conexión con el canal {i}')
+            print(f'Conexión con el canal {i} {canal_secundario.getsockname()[1]}')
             conexiones_canales_secundarios.append([conn, addr])        
         except socket.error as e:
             print(f'[ConectarCanalesSecundarios]: Error al aceptar la conexión con el socket número {i}, [ERROR]: {e}')
@@ -575,7 +575,6 @@ def iniciar_sesion(equipo_admin):
                 respuesta_conexiones_secundarias = conectar_canales_secundarios()
 
                 print('[InicioSesion]: Respuesta de conexiones secundarias')
-                print(respuesta_conexiones_secundarias)
 
                 #Verificar si las conexiones con los canales secundarios se hizo correctamente
                 if respuesta_conexiones_secundarias['success']:
