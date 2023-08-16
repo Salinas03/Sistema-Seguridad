@@ -294,7 +294,7 @@ class PrincipalWindow(Principal,QWidget):
             QMessageBox.close()
 
     def configuracion_tabla_equipos_activos(self):
-        column_headers_tablas_equipos_activos = ('Área','Característica','Nombre del equipo', 'Número de serie', 'Propietario del equipo', 'Rol', 'IP')   
+        column_headers_tablas_equipos_activos = ('Área', 'Características','Nombre del equipo', 'Número de serie', 'Propietario del equipo', 'Rol', 'IP')   
         self.tabla_computadoras_activas.setColumnCount(len(column_headers_tablas_equipos_activos))
         self.tabla_computadoras_activas.setHorizontalHeaderLabels(column_headers_tablas_equipos_activos)
         self.tabla_computadoras_activas.setSelectionMode(QAbstractItemView.SingleSelection)
@@ -302,7 +302,7 @@ class PrincipalWindow(Principal,QWidget):
         self.tabla_computadoras_activas.verticalHeader().setVisible(False) # Ocultar el header vertical
 
     def configuracion_tabla_equipos_inactivos(self):
-        column_headers_tabla_equipos_inactivos = ('Área','Característica','Nombre del equipo', 'Número de serie', 'Propietario del equipo', 'Rol')
+        column_headers_tabla_equipos_inactivos = ('Área', 'Características','Nombre del equipo', 'Número de serie', 'Propietario del equipo', 'Rol')
         self.tabla_computadoras_desactivas.setColumnCount(len(column_headers_tabla_equipos_inactivos))
         self.tabla_computadoras_desactivas.setHorizontalHeaderLabels(column_headers_tabla_equipos_inactivos)
 

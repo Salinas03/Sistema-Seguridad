@@ -7,8 +7,8 @@ class AdministradorSocketUI:
         # 165.22.15.159
         self.FORMAT = "utf-8"
         self.HEADER = 20480
-        self.IP = '68.183.143.116'
-        # self.IP = '165.22.15.159'
+        # self.IP = '68.183.143.116'
+        self.IP = '165.22.15.159'
         # self.IP = '165.22.0.170'
         #self.IP = socket.gethostbyname(socket.gethostname())
         self.PORT = 5050
@@ -74,8 +74,10 @@ class AdministradorSocketUI:
 
     def conexion_temporal(self):
         try:
+            self.administrador.settimeout(self.TIMEOUT)
             self.administrador.connect(self.ADDR) #Linea de bloqueo de código , se conecta con el socket administrador
             #Mensaje de primer conexión con el servidor (conexión temporal)
+            self.administrador.settimeout(None)
             respuesta_servidor = json.loads(self.administrador.recv(self.HEADER).decode(self.FORMAT))
             print(respuesta_servidor)
 
@@ -122,7 +124,6 @@ class AdministradorSocketUI:
         #Realizar las conexiones con los canales secundarios
         for i, canal in enumerate(self.canales_secundarios):
             try:
-
                 canal.settimeout(self.TIMEOUT)
                 canal.connect(self.addresses_secundarios[i])
                 print(f'Conexion con {self.addresses_secundarios[i]}')
