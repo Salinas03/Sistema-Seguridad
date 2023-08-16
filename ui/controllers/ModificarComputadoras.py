@@ -18,7 +18,7 @@ class ModificarEquipoWindow(EditarComputadoras, QWidget):
         only_text = QRegExpValidator(QRegExp('^[A-Za-z0-9- ]{3,50}')) # VALIDACION DE DATOS ALFANUMERICOS DONDE SOLO PUEDE TENER ENTRE 3 Y 100 VALORES
 
         self.nombre_equipo_txt.setValidator(only_text)
-        self.nombre_equipo_txt.setFocus()
+        self.area_equipo_txt.setFocus()
         self.num_serie_txt.setValidator(only_text)
 
         self.x = self.modificar_compu_btn.clicked.connect(self.editar_compus)
@@ -39,6 +39,8 @@ class ModificarEquipoWindow(EditarComputadoras, QWidget):
                 #Llenado de datos con los datos de propietario por ID
                 self.nombre_equipo_txt.setText(equipo[1])
                 self.num_serie_txt.setText(equipo[2])
+                self.area_equipo_txt.setText(equipo[5])
+                self.caracteristica_equipo_txt.setText(equipo[6])
                 indice = self.establecer_indices_combobox(equipo[3])
                 self.edita_propietario_cmbx.setCurrentIndex(indice)
 
@@ -71,12 +73,14 @@ class ModificarEquipoWindow(EditarComputadoras, QWidget):
             return True
     
     def editar_compus(self):
+        area = self.area_equipo_txt.text()
+        caracteristica = self.caracteristica_equipo_txt.text()
         equipo = self.nombre_equipo_txt.text()
         numSerie = self.num_serie_txt.text()
         propietario = self.edita_propietario_cmbx.currentText().split('.')[0]
         rol = self.edita_rol_cmbx.currentIndex()
 
-        if equipo == '' or numSerie == '':
+        if equipo == '' or numSerie == '' or area == '' or caracteristica == '': 
             crear_message_box('Error', 'Favor de escribir datos válidos', 'warning').exec_()
 
         else:
@@ -94,7 +98,7 @@ class ModificarEquipoWindow(EditarComputadoras, QWidget):
                         'tabla': 'equipos',
                         'operacion': 'actualizar',
                         'id': self._id,
-                        'data': [equipo,numSerie,propietario,valor_rol]
+                        'data': [equipo,numSerie,propietario,valor_rol, area, caracteristica]
                     }
                      
                     respuesta = admin_socket_ui.escribir_operaciones(json.dumps(peticion))

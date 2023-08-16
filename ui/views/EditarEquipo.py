@@ -135,8 +135,6 @@ class EditarComputadoras(QMainWindow, object):
 
         self.edita_propietario_cmbx = QComboBox(self.frame_2)
         self.edita_propietario_cmbx.setObjectName(u"edita_propietario_cmbx")
-        self.edita_propietario_cmbx = QComboBox(self.frame_2)
-        self.edita_propietario_cmbx.setObjectName(u"edita_propietario_cmbx")
         self.edita_propietario_cmbx.addItem('')
         if self.propietarios['success']:
             for _ in range(len(self.propietarios['data'])):
@@ -158,9 +156,7 @@ class EditarComputadoras(QMainWindow, object):
 
         self.gridLayout_3.addWidget(self.label_12, 4, 0, 1, 1)
 
-        self.edita_rol_cmbx = QComboBox(self.frame_2)
-        self.edita_rol_cmbx.setObjectName(u"edita_rol_cmbx")
-                #Combobox de ROL
+        #Combobox de ROL
         self.edita_rol_cmbx = QComboBox(self.frame_2)
         self.edita_rol_cmbx.setObjectName(u"edita_rol_cmbx")
         self.edita_rol_cmbx.addItem('')
@@ -251,6 +247,7 @@ class EditarComputadoras(QMainWindow, object):
         self.caracteristica_equipo_txt.setPlaceholderText(QCoreApplication.translate("EditarComputadoras", u"Caracter\u00edstica del equipo", None))
         self.cancelar_registro_btn.setText(QCoreApplication.translate("EditarComputadoras", u"Cancelar", None))
         self.modificar_compu_btn.setText(QCoreApplication.translate("EditarComputadoras", u"Modificar", None))
+    # retranslateUi
 
         self.edita_propietario_cmbx.setItemText(0, QCoreApplication.translate('Seleccionar', u'Selecciona un rol', None))
 
@@ -264,5 +261,3 @@ class EditarComputadoras(QMainWindow, object):
         self.edita_rol_cmbx.setItemText(1, QCoreApplication.translate("ActualizarComputadoras", u"Administrador", None))
         self.edita_rol_cmbx.setItemText(2, QCoreApplication.translate("ActualizarComputadoras", u"Cliente", None))
         # self.edita_rol_cmbx.setCurrentIndex(1)
-    
-
