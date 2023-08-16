@@ -34,7 +34,7 @@ class Principal(QMainWindow, object):
     def setupUi(self, Principal):
         if not Principal.objectName():
             Principal.setObjectName(u"Principal")
-        Principal.resize(1388, 813)
+        Principal.resize(1434, 771)
         Principal.setStyleSheet(u"QMainWindow#Principal{\n"
 "	background-color: rgb(231, 231, 231);\n"
 "}")
@@ -150,7 +150,7 @@ class Principal(QMainWindow, object):
         self.verticalLayout_4 = QVBoxLayout(self.menu_widget)
         self.verticalLayout_4.setSpacing(0)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.verticalLayout_4.setContentsMargins(5, 0, 0, 21)
+        self.verticalLayout_4.setContentsMargins(5, 0, 5, 21)
         self.verticalLayout_3 = QVBoxLayout()
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.label = QLabel(self.menu_widget)
@@ -206,7 +206,7 @@ class Principal(QMainWindow, object):
         self.settings_btn = QPushButton(self.menu_widget)
         self.settings_btn.setObjectName(u"settings_btn")
         self.settings_btn.setIcon(icon4)
-        self.settings_btn.setCheckable(True)
+        self.settings_btn.setCheckable(False)
         self.settings_btn.setAutoExclusive(False)
 
         self.verticalLayout_2.addWidget(self.settings_btn)
@@ -501,16 +501,29 @@ class Principal(QMainWindow, object):
         self.frame_11.setFrameShadow(QFrame.Raised)
         self.verticalLayout_13 = QVBoxLayout(self.frame_11)
         self.verticalLayout_13.setObjectName(u"verticalLayout_13")
-        self.label_20 = QLabel(self.frame_11)
+        self.widget_14 = QWidget(self.frame_11)
+        self.widget_14.setObjectName(u"widget_14")
+        self.formLayout_3 = QFormLayout(self.widget_14)
+        self.formLayout_3.setObjectName(u"formLayout_3")
+        self.label_20 = QLabel(self.widget_14)
         self.label_20.setObjectName(u"label_20")
         font = QFont()
         font.setPointSize(12)
         font.setBold(True)
         font.setWeight(75)
         self.label_20.setFont(font)
-        self.label_20.setAlignment(Qt.AlignCenter)
+        self.label_20.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
 
-        self.verticalLayout_13.addWidget(self.label_20)
+        self.formLayout_3.setWidget(0, QFormLayout.LabelRole, self.label_20)
+
+        self.actualizar_tabla_equipos_btn = QPushButton(self.widget_14)
+        self.actualizar_tabla_equipos_btn.setObjectName(u"actualizar_tabla_equipos_btn")
+        self.actualizar_tabla_equipos_btn.setIcon(icon7)
+
+        self.formLayout_3.setWidget(0, QFormLayout.FieldRole, self.actualizar_tabla_equipos_btn)
+
+
+        self.verticalLayout_13.addWidget(self.widget_14, 0, Qt.AlignLeft)
 
         self.computadoras_registradas_table = QTableWidget(self.frame_11)
         if (self.computadoras_registradas_table.columnCount() < 5):
@@ -632,7 +645,7 @@ class Principal(QMainWindow, object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1200, 598))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1158, 958))
         self.gridLayout_8 = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_8.setObjectName(u"gridLayout_8")
         self.label_15 = QLabel(self.scrollAreaWidgetContents)
@@ -839,12 +852,25 @@ class Principal(QMainWindow, object):
         self.frame_13.setFrameShadow(QFrame.Raised)
         self.verticalLayout_7 = QVBoxLayout(self.frame_13)
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
-        self.label_21 = QLabel(self.frame_13)
+        self.widget_13 = QWidget(self.frame_13)
+        self.widget_13.setObjectName(u"widget_13")
+        self.formLayout_2 = QFormLayout(self.widget_13)
+        self.formLayout_2.setObjectName(u"formLayout_2")
+        self.label_21 = QLabel(self.widget_13)
         self.label_21.setObjectName(u"label_21")
         self.label_21.setFont(font)
-        self.label_21.setAlignment(Qt.AlignCenter)
+        self.label_21.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
 
-        self.verticalLayout_7.addWidget(self.label_21)
+        self.formLayout_2.setWidget(0, QFormLayout.LabelRole, self.label_21)
+
+        self.actualizar_tabla_propietarios_btn = QPushButton(self.widget_13)
+        self.actualizar_tabla_propietarios_btn.setObjectName(u"actualizar_tabla_propietarios_btn")
+        self.actualizar_tabla_propietarios_btn.setIcon(icon7)
+
+        self.formLayout_2.setWidget(0, QFormLayout.FieldRole, self.actualizar_tabla_propietarios_btn)
+
+
+        self.verticalLayout_7.addWidget(self.widget_13, 0, Qt.AlignLeft)
 
         self.administradores_tabla = QTableWidget(self.frame_13)
         if (self.administradores_tabla.columnCount() < 6):
@@ -1153,7 +1179,9 @@ class Principal(QMainWindow, object):
         self.pin_texto_btn.setText(QCoreApplication.translate("Principal", u"Localizaci\u00f3n", None))
         self.settings_texto_btn.setText(QCoreApplication.translate("Principal", u"Dudas", None))
         self.pushButton.setText("")
-        self.label_20.setText(QCoreApplication.translate("Principal", u"TABLA DE COMPUTADORAS REGISTRADAS", None))
+        self.user_btn.setText("")
+        self.label_20.setText(QCoreApplication.translate("Principal", u"Tabla computadoras registradas", None))
+        self.actualizar_tabla_equipos_btn.setText("")
         ___qtablewidgetitem = self.computadoras_registradas_table.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("Principal", u"ID", None));
         ___qtablewidgetitem1 = self.computadoras_registradas_table.horizontalHeaderItem(1)
@@ -1184,7 +1212,8 @@ class Principal(QMainWindow, object):
         self.cerrar_sesion_btn_2.setText(QCoreApplication.translate("Principal", u"Cerrar Sesi\u00f3n", None))
         self.modificar_perfil_btn.setText(QCoreApplication.translate("Principal", u"Modificar \n"
 "informaci\u00f3n", None))
-        self.label_21.setText(QCoreApplication.translate("Principal", u"TABLA DE PROPIETARIOS REGISRADOS", None))
+        self.label_21.setText(QCoreApplication.translate("Principal", u"Tabla propietarios registrados", None))
+        self.actualizar_tabla_propietarios_btn.setText("")
         ___qtablewidgetitem5 = self.administradores_tabla.horizontalHeaderItem(0)
         ___qtablewidgetitem5.setText(QCoreApplication.translate("Principal", u"id", None));
         ___qtablewidgetitem6 = self.administradores_tabla.horizontalHeaderItem(1)
@@ -1222,7 +1251,7 @@ class Principal(QMainWindow, object):
         ___qtablewidgetitem15.setText(QCoreApplication.translate("Principal", u"Rol", None));
         ___qtablewidgetitem16 = self.tabla_computadoras_activas.horizontalHeaderItem(5)
         ___qtablewidgetitem16.setText(QCoreApplication.translate("Principal", u"IP", None));
-        self.label_3.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p><span style=\" font-size:12pt;\">Computadoras </span><span style=\" font-size:12pt; color:#ff0206;\">inactivas</span></p></body></html>", None))
+        self.label_3.setText(QCoreApplication.translate("Principal", u"<html><head/><body><p><span style=\" font-size:12pt;\">Computadoras </span><span style=\" font-size:12pt; color:#ff0206;\">desactivadas</span></p></body></html>", None))
         ___qtablewidgetitem17 = self.tabla_computadoras_desactivas.horizontalHeaderItem(0)
         ___qtablewidgetitem17.setText(QCoreApplication.translate("Principal", u"ID", None));
         self.pushButton.setText("")

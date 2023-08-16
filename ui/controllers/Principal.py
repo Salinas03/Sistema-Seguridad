@@ -283,15 +283,11 @@ class PrincipalWindow(Principal,QWidget):
                 
     def mostrar_ubicacion(self):
         resp = msg_boxes.precaucion_msg('ADVERTENCIA','¿Desea buscar las ubicación de algún dispositivo?')
-        resp2 = msg_boxes.precaucion_msg('ADVERTENCIA','Recuerda que para obtener la localizacion de un equipo de cómputo debes conocer el correo y al contraseña con la cual se inicio la computadora (Windows)')
 
         if resp == QMessageBox.Yes:
-            if resp2 == QMessageBox.Yes:
                 url = "https://account.microsoft.com/devices"  # Aquí debes especificar la URL que deseas abrir
                 # Abre el enlace en el navegador predeterminado
                 webbrowser.open(url)
-        else:
-            QMessageBox.close()
 
     def configuracion_tabla_equipos_activos(self):
         column_headers_tablas_equipos_activos = ('Área', 'Características','Nombre del equipo', 'Número de serie', 'Propietario del equipo', 'Rol', 'IP')   
