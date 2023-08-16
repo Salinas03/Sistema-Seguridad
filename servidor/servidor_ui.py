@@ -15,6 +15,7 @@ from clases.validar_json import is_valid_json
 FORMAT = 'utf-8'
 HEADER = 20480
 HOST = '165.22.15.159'
+# HOST = '68.183.143.116'
 
 #PUERTOS DE LOS DIFERENTES SOCKETS
 PORT = 5050
@@ -303,7 +304,7 @@ def conectar_canales_secundarios():
             canal_secundario.settimeout(TIMEOUT)
             conn, addr = canal_secundario.accept() #Se realiza la aceptación de conexiones
             canal_secundario.setblocking(1)
-            print(f'Conexión con el canal {i} {canal_secundario.getsockname()[1]}')
+            print(f'Conexión con el canal {i}')
             conexiones_canales_secundarios.append([conn, addr])        
         except socket.error as e:
             print(f'[ConectarCanalesSecundarios]: Error al aceptar la conexión con el socket número {i}, [ERROR]: {e}')
@@ -337,6 +338,13 @@ def validacion_canales_secundarios(conexiones_canales_secundarios):
             #Si hay un fallo en alguno de los recibimientos se rompe el ciclo
             print(f'[ValidacionCanalesSecundarios]: Error al recibir el número de serie de la conexión número {i}, [ERROR]: {e}')
             break
+
+        except UnicodeDecodeError as e:
+            print(f'[ValidacionCanalesSecundarios]: La data recibida no es válida para decodificar a utf-8, ERROR: {e}')
+            break
+
+        except: 
+            print('[ValidacionCanalesSecundarios]: Except desconocida la recibir los numeros de serie')
 
     print('[ValidacionCanalesSecundarios]: Lista de números de serie ->')
     print(lista_numeros_serie)
@@ -575,6 +583,7 @@ def iniciar_sesion(equipo_admin):
                 respuesta_conexiones_secundarias = conectar_canales_secundarios()
 
                 print('[InicioSesion]: Respuesta de conexiones secundarias')
+                print(respuesta_conexiones_secundarias)
 
                 #Verificar si las conexiones con los canales secundarios se hizo correctamente
                 if respuesta_conexiones_secundarias['success']:
@@ -766,6 +775,8 @@ def panel_base_datos(instruccion):
 
             if validar['success']:
                 refrescar_tabla_propietarios()
+                refrescar_tabla_equipos()
+                broadcast()
 
             return respuesta_operacion
 
@@ -775,6 +786,8 @@ def panel_base_datos(instruccion):
 
             if validar['success']:
                 refrescar_tabla_propietarios()
+                refrescar_tabla_equipos()
+                broadcast()
 
             return respuesta_operacion
 

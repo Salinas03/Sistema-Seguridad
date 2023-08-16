@@ -11,7 +11,7 @@ class EquiposConsultas():
             try:
                 cursor = self.conexion.cursor()
                 # cursor.execute(f"SELECT * FROM equipos")
-                cursor.execute(f"SELECT e.id_equipo, e.nombre_equipo, e.numero_serie_equipo, CONCAT(p.nombre_propietario, ' ', p.apellido_propietario) as propietario_equipo,CASE WHEN e.rol = 1 THEN 'administrador'WHEN e.rol = 0 THEN'cliente' END as rol FROM equipos as e JOIN propietarios as p ON e.propietario_equipo = p.id_propietarios ORDER BY e.rol DESC")
+                cursor.execute(f"SELECT e.area_equipo, e.caracteristica_equipo , e.nombre_equipo, e.numero_serie_equipo, CONCAT(p.nombre_propietario, ' ', p.apellido_propietario) as propietario_equipo,CASE WHEN e.rol = 1 THEN 'administrador'WHEN e.rol = 0 THEN'cliente' END as rol FROM equipos as e JOIN propietarios as p ON e.propietario_equipo = p.id_propietarios ORDER BY e.rol DESC")
                 resultado = cursor.fetchall()
                 return json.dumps({'success': True, 'data': resultado})
             except Error as err:
@@ -23,7 +23,7 @@ class EquiposConsultas():
             try:
                 cursor = self.conexion.cursor()
                 # cursor.execute(f"SELECT * FROM equipos WHERE rol={0}")
-                cursor.execute(f"SELECT e.id_equipo, e.nombre_equipo, e.numero_serie_equipo, CONCAT(p.nombre_propietario, ' ', p.apellido_propietario) as propietario_equipo,CASE WHEN e.rol = 1 THEN 'administrador'WHEN e.rol = 0 THEN'cliente' END as rol FROM equipos as e JOIN propietarios as p ON e.propietario_equipo = p.id_propietarios WHERE e.rol={0} ORDER BY e.rol DESC")
+                cursor.execute(f"SELECT e.area_equipo, e.caracteristica_equipo, e.nombre_equipo, e.numero_serie_equipo, CONCAT(p.nombre_propietario, ' ', p.apellido_propietario) as propietario_equipo,CASE WHEN e.rol = 1 THEN 'administrador'WHEN e.rol = 0 THEN'cliente' END as rol FROM equipos as e JOIN propietarios as p ON e.propietario_equipo = p.id_propietarios WHERE e.rol={0} ORDER BY e.rol DESC")
                 resultado = cursor.fetchall()
                 return json.dumps({'success': True, 'data': resultado})
             except Error as err:
