@@ -14,7 +14,8 @@ from clases.validar_json import is_valid_json
 #VARIABLES GLOBALES PARA LA CONFIGURACIÓN DE SOCKETS
 FORMAT = 'utf-8'
 HEADER = 20480
-HOST = '165.22.15.159'
+# HOST = '165.22.15.159'
+HOST = '68.183.143.116'
 
 #PUERTOS DE LOS DIFERENTES SOCKETS
 PORT = 5050
@@ -337,6 +338,13 @@ def validacion_canales_secundarios(conexiones_canales_secundarios):
             #Si hay un fallo en alguno de los recibimientos se rompe el ciclo
             print(f'[ValidacionCanalesSecundarios]: Error al recibir el número de serie de la conexión número {i}, [ERROR]: {e}')
             break
+
+        except UnicodeDecodeError as e:
+            print(f'[ValidacionCanalesSecundarios]: La data recibida no es válida para decodificar a utf-8, ERROR: {e}')
+            break
+
+        except: 
+            print('[ValidacionCanalesSecundarios]: Except desconocida la recibir los numeros de serie')
 
     print('[ValidacionCanalesSecundarios]: Lista de números de serie ->')
     print(lista_numeros_serie)
@@ -767,6 +775,8 @@ def panel_base_datos(instruccion):
 
             if validar['success']:
                 refrescar_tabla_propietarios()
+                refrescar_tabla_equipos()
+                broadcast()
 
             return respuesta_operacion
 
@@ -776,6 +786,8 @@ def panel_base_datos(instruccion):
 
             if validar['success']:
                 refrescar_tabla_propietarios()
+                refrescar_tabla_equipos()
+                broadcast()
 
             return respuesta_operacion
 

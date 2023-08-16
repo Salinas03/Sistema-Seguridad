@@ -51,9 +51,10 @@ class EditarComputadoras(QMainWindow, object):
 "padding:7px;\n"
 "}\n"
 "\n"
-"QLabel#label,#label_10,#label_11,#label_12,#label_13{\n"
+"QLabel{\n"
 "color:white;\n"
-"}""\n"
+"}\n"
+"\n"
 "QPushButton{\n"
 "background-color:transparent;\n"
 "border: 1px solid #bdbdbd;\n"
@@ -104,6 +105,7 @@ class EditarComputadoras(QMainWindow, object):
 
         self.frame_2 = QFrame(self.frame)
         self.frame_2.setObjectName(u"frame_2")
+        self.frame_2.setStyleSheet(u"")
         self.frame_2.setFrameShape(QFrame.StyledPanel)
         self.frame_2.setFrameShadow(QFrame.Raised)
         self.gridLayout_3 = QGridLayout(self.frame_2)
@@ -117,43 +119,22 @@ class EditarComputadoras(QMainWindow, object):
         font1.setWeight(75)
         self.label_10.setFont(font1)
 
-        self.gridLayout_3.addWidget(self.label_10, 0, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.label_10, 2, 0, 1, 1)
 
         self.nombre_equipo_txt = QLineEdit(self.frame_2)
         self.nombre_equipo_txt.setObjectName(u"nombre_equipo_txt")
         font2 = QFont()
-        font2.setPointSize(12)
+        font2.setFamily(u"MS Shell Dlg 2")
+        font2.setPointSize(10)
+        font2.setBold(False)
+        font2.setItalic(False)
+        font2.setWeight(9)
         self.nombre_equipo_txt.setFont(font2)
 
-        self.gridLayout_3.addWidget(self.nombre_equipo_txt, 0, 1, 1, 1)
+        self.gridLayout_3.addWidget(self.nombre_equipo_txt, 2, 1, 1, 1)
 
-        self.label_11 = QLabel(self.frame_2)
-        self.label_11.setObjectName(u"label_11")
-        self.label_11.setMinimumSize(QSize(0, 50))
-        self.label_11.setFont(font1)
-
-        self.gridLayout_3.addWidget(self.label_11, 1, 0, 1, 1)
-
-        self.num_serie_txt = QLineEdit(self.frame_2)
-        self.num_serie_txt.setObjectName(u"num_serie_txt")
-        self.num_serie_txt.setFont(font2)
-
-        self.gridLayout_3.addWidget(self.num_serie_txt, 1, 1, 1, 1)
-
-        self.label_12 = QLabel(self.frame_2)
-        self.label_12.setObjectName(u"label_12")
-        self.label_12.setMinimumSize(QSize(0, 50))
-        self.label_12.setFont(font1)
-
-        self.gridLayout_3.addWidget(self.label_12, 2, 0, 1, 1)
-
-        self.label_13 = QLabel(self.frame_2)
-        self.label_13.setObjectName(u"label_13")
-        self.label_13.setMinimumSize(QSize(0, 50))
-        self.label_13.setFont(font1)
-
-        self.gridLayout_3.addWidget(self.label_13, 3, 0, 1, 1)
-
+        self.edita_propietario_cmbx = QComboBox(self.frame_2)
+        self.edita_propietario_cmbx.setObjectName(u"edita_propietario_cmbx")
         self.edita_propietario_cmbx = QComboBox(self.frame_2)
         self.edita_propietario_cmbx.setObjectName(u"edita_propietario_cmbx")
         self.edita_propietario_cmbx.addItem('')
@@ -161,16 +142,67 @@ class EditarComputadoras(QMainWindow, object):
             for _ in range(len(self.propietarios['data'])):
                 self.edita_propietario_cmbx.addItem("")
 
-        self.gridLayout_3.addWidget(self.edita_propietario_cmbx, 2, 1, 1, 1)
+        self.gridLayout_3.addWidget(self.edita_propietario_cmbx, 4, 1, 1, 1)
 
-        #Combobox de ROL
+        self.label_11 = QLabel(self.frame_2)
+        self.label_11.setObjectName(u"label_11")
+        self.label_11.setMinimumSize(QSize(0, 50))
+        self.label_11.setFont(font1)
+
+        self.gridLayout_3.addWidget(self.label_11, 3, 0, 1, 1)
+
+        self.label_12 = QLabel(self.frame_2)
+        self.label_12.setObjectName(u"label_12")
+        self.label_12.setMinimumSize(QSize(0, 50))
+        self.label_12.setFont(font1)
+
+        self.gridLayout_3.addWidget(self.label_12, 4, 0, 1, 1)
+
+        self.edita_rol_cmbx = QComboBox(self.frame_2)
+        self.edita_rol_cmbx.setObjectName(u"edita_rol_cmbx")
+                #Combobox de ROL
         self.edita_rol_cmbx = QComboBox(self.frame_2)
         self.edita_rol_cmbx.setObjectName(u"edita_rol_cmbx")
         self.edita_rol_cmbx.addItem('')
         self.edita_rol_cmbx.addItem('')
         self.edita_rol_cmbx.addItem('')
 
-        self.gridLayout_3.addWidget(self.edita_rol_cmbx, 3, 1, 1, 1)
+        self.gridLayout_3.addWidget(self.edita_rol_cmbx, 5, 1, 1, 1)
+
+        self.label_13 = QLabel(self.frame_2)
+        self.label_13.setObjectName(u"label_13")
+        self.label_13.setMinimumSize(QSize(0, 50))
+        self.label_13.setFont(font1)
+
+        self.gridLayout_3.addWidget(self.label_13, 5, 0, 1, 1)
+
+        self.num_serie_txt = QLineEdit(self.frame_2)
+        self.num_serie_txt.setObjectName(u"num_serie_txt")
+        self.num_serie_txt.setFont(font2)
+
+        self.gridLayout_3.addWidget(self.num_serie_txt, 3, 1, 1, 1)
+
+        self.label_2 = QLabel(self.frame_2)
+        self.label_2.setObjectName(u"label_2")
+        self.label_2.setFont(font1)
+
+        self.gridLayout_3.addWidget(self.label_2, 0, 0, 1, 1)
+
+        self.label_3 = QLabel(self.frame_2)
+        self.label_3.setObjectName(u"label_3")
+        self.label_3.setFont(font1)
+
+        self.gridLayout_3.addWidget(self.label_3, 1, 0, 1, 1)
+
+        self.area_equipo_txt = QLineEdit(self.frame_2)
+        self.area_equipo_txt.setObjectName(u"area_equipo_txt")
+
+        self.gridLayout_3.addWidget(self.area_equipo_txt, 0, 1, 1, 1)
+
+        self.caracteristica_equipo_txt = QLineEdit(self.frame_2)
+        self.caracteristica_equipo_txt.setObjectName(u"caracteristica_equipo_txt")
+
+        self.gridLayout_3.addWidget(self.caracteristica_equipo_txt, 1, 1, 1, 1)
 
 
         self.verticalLayout.addWidget(self.frame_2)
@@ -210,12 +242,16 @@ class EditarComputadoras(QMainWindow, object):
         self.label_10.setText(QCoreApplication.translate("EditarComputadoras", u"Nombre del equipo", None))
         self.nombre_equipo_txt.setPlaceholderText(QCoreApplication.translate("EditarComputadoras", u"Nombre del equipo", None))
         self.label_11.setText(QCoreApplication.translate("EditarComputadoras", u"N\u00famero de serie", None))
-        self.num_serie_txt.setPlaceholderText(QCoreApplication.translate("EditarComputadoras", u"N\u00famero de serie", None))
         self.label_12.setText(QCoreApplication.translate("EditarComputadoras", u"Propietario del equipo", None))
         self.label_13.setText(QCoreApplication.translate("EditarComputadoras", u"Rol", None))
+        self.num_serie_txt.setPlaceholderText(QCoreApplication.translate("EditarComputadoras", u"N\u00famero de serie", None))
+        self.label_2.setText(QCoreApplication.translate("EditarComputadoras", u"\u00c1rea", None))
+        self.label_3.setText(QCoreApplication.translate("EditarComputadoras", u"Caracter\u00edstica", None))
+        self.area_equipo_txt.setPlaceholderText(QCoreApplication.translate("EditarComputadoras", u"\u00c1rea del equipo", None))
+        self.caracteristica_equipo_txt.setPlaceholderText(QCoreApplication.translate("EditarComputadoras", u"Caracter\u00edstica del equipo", None))
         self.cancelar_registro_btn.setText(QCoreApplication.translate("EditarComputadoras", u"Cancelar", None))
         self.modificar_compu_btn.setText(QCoreApplication.translate("EditarComputadoras", u"Modificar", None))
-        
+
         self.edita_propietario_cmbx.setItemText(0, QCoreApplication.translate('Seleccionar', u'Selecciona un rol', None))
 
          #Desplegar la información
