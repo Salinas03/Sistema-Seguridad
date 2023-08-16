@@ -434,7 +434,7 @@ class PrincipalWindow(Principal,QWidget):
 
     # FUNCION PARA COLOCAR LAF CONFIGURACIONES PARA LA TABLA 
     def configuracion_tabla_compus(self):
-        column_headers_tabla_compus = ('Área', 'Carterísticas','Nombre de equipo', 'Número de serie', 'Propietario del equipo', 'Rol')
+        column_headers_tabla_compus = ('Área','Característica','Nombre de equipo', 'Número de serie', 'Propietario del equipo', 'Rol')
         self.computadoras_registradas_table.setColumnCount(len(column_headers_tabla_compus))
         self.computadoras_registradas_table.setHorizontalHeaderLabels(column_headers_tabla_compus)
 
