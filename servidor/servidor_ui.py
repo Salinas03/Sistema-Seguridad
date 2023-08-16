@@ -706,7 +706,7 @@ def panel_base_datos(instruccion):
                 return json.dumps({'success': False, 'msg': 'Ocurrió un error al realizar la inserción'})
 
             #Realizar la inserción
-            respuesta_operacion = EquiposConsultas(conexion()).insertar_equipo_computo(nombre_equipo, numero_serie, data[2], data[3])
+            respuesta_operacion = EquiposConsultas(conexion()).insertar_equipo_computo(nombre_equipo, numero_serie, data[2], data[3], data[4], data[5])
             validar = json.loads(respuesta_operacion)
 
             if validar['success']:

@@ -125,6 +125,9 @@ class AgregarComputadoras(QMainWindow, object):
 
         self.propietario_cmbx = QComboBox(self.frame_2)
         self.propietario_cmbx.addItem("")
+        if self.propietarios['success']:
+            for _ in range(len(self.propietarios['data'])):
+                self.propietario_cmbx.addItem("")
         self.propietario_cmbx.setObjectName(u"propietario_cmbx")
 
         self.gridLayout_3.addWidget(self.propietario_cmbx, 4, 1, 1, 1)
@@ -238,8 +241,8 @@ class AgregarComputadoras(QMainWindow, object):
 
         self.label_10.setText(QCoreApplication.translate("AgregarComputadoras", u"Nombre del equipo", None))
         self.rol_cmbx.setItemText(0, QCoreApplication.translate("AgregarComputadoras", u"Selecciona un rol", None))
-        self.rol_cmbx.setItemText(1, QCoreApplication.translate("AgregarComputadoras", u"Administrador - 1", None))
-        self.rol_cmbx.setItemText(2, QCoreApplication.translate("AgregarComputadoras", u"Usuario - 0", None))
+        self.rol_cmbx.setItemText(1, QCoreApplication.translate("AgregarComputadoras", u"Administrador", None))
+        self.rol_cmbx.setItemText(2, QCoreApplication.translate("AgregarComputadoras", u"Cliente", None))
 
         self.nombre_equipo_txt.setPlaceholderText(QCoreApplication.translate("AgregarComputadoras", u"Nombre del equipo", None))
         self.label_11.setText(QCoreApplication.translate("AgregarComputadoras", u"N\u00famero de serie", None))

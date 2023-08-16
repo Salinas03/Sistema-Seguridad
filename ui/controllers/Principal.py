@@ -111,7 +111,6 @@ class PrincipalWindow(Principal,QWidget):
         header_computadoras_inactivas_tabla.setSectionResizeMode(header_computadoras_inactivas_tabla.Stretch)
         self.configuracion_tabla_equipos_inactivos()
         
-        #TODO Pensar como realizar la selección de computadoras
         self.tabla_computadoras_activas.itemDoubleClicked.connect(self.abrir_opciones_computadora)
 
 
@@ -430,7 +429,7 @@ class PrincipalWindow(Principal,QWidget):
 
     # FUNCION PARA COLOCAR LAF CONFIGURACIONES PARA LA TABLA 
     def configuracion_tabla_compus(self):
-        column_headers_tabla_compus = ('Área','Característica','Nombre de equipo', 'Número de serie', 'Propietario del equipo', 'Rol')
+        column_headers_tabla_compus = ('ID', 'Área','Característica','Nombre de equipo', 'Número de serie', 'Propietario del equipo', 'Rol')
         self.computadoras_registradas_table.setColumnCount(len(column_headers_tabla_compus))
         self.computadoras_registradas_table.setHorizontalHeaderLabels(column_headers_tabla_compus)
 
@@ -451,7 +450,6 @@ class PrincipalWindow(Principal,QWidget):
             seleccionar_fila = self.computadoras_registradas_table.selectedItems()
             if seleccionar_fila:
                 id_equipo = seleccionar_fila[0].text()
-                
                 window = ModificarEquipoWindow(self,id_equipo)
                 window.setWindowModality(QtCore.Qt.ApplicationModal) # BLOQUEO DE LA VENTANA PRINCIPAL
                 window.destroyed.connect(self.ventana_cerrada)

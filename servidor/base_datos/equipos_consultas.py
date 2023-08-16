@@ -11,7 +11,7 @@ class EquiposConsultas():
             try:
                 cursor = self.conexion.cursor()
                 # cursor.execute(f"SELECT * FROM equipos")
-                cursor.execute(f"SELECT e.area_equipo, e.caracteristica_equipo , e.nombre_equipo, e.numero_serie_equipo, CONCAT(p.nombre_propietario, ' ', p.apellido_propietario) as propietario_equipo,CASE WHEN e.rol = 1 THEN 'administrador'WHEN e.rol = 0 THEN'cliente' END as rol FROM equipos as e JOIN propietarios as p ON e.propietario_equipo = p.id_propietarios ORDER BY e.rol DESC")
+                cursor.execute(f"SELECT e.id_equipo, e.area_equipo, e.caracteristica_equipo , e.nombre_equipo, e.numero_serie_equipo, CONCAT(p.nombre_propietario, ' ', p.apellido_propietario) as propietario_equipo,CASE WHEN e.rol = 1 THEN 'administrador'WHEN e.rol = 0 THEN'cliente' END as rol FROM equipos as e JOIN propietarios as p ON e.propietario_equipo = p.id_propietarios ORDER BY e.rol DESC")
                 resultado = cursor.fetchall()
                 return json.dumps({'success': True, 'data': resultado})
             except Error as err:
@@ -120,12 +120,12 @@ class EquiposConsultas():
                 print(f'Error al obtener el propietario de equipo administrador por número de serie {err}')
                 return json.dumps({'success': False, 'msg': f'Error al obtener el propietario de equipo administrador por número de serie {err}'})
 
-    def insertar_equipo_computo(self, nombre_equipo, num_serie, propietario, rol):
+    def insertar_equipo_computo(self, nombre_equipo, num_serie, propietario, rol, area, caracteristica):
         if self.conexion.is_connected():
             try:
                 cursor= self.conexion.cursor()
-                sql = "INSERT INTO equipos (nombre_equipo,numero_serie_equipo,propietario_equipo,rol) VALUES (%s,%s,%s,%s)"
-                val = (f"{nombre_equipo}",f"{num_serie}",f"{propietario}",f"{rol}")
+                sql = "INSERT INTO equipos (nombre_equipo,numero_serie_equipo,propietario_equipo,rol,area_equipo, caracteristica_equipo) VALUES (%s,%s,%s,%s,%s,%s)"
+                val = (f"{nombre_equipo}",f"{num_serie}",f"{propietario}",f"{rol}",f"{area}",f"{caracteristica}")
                 cursor.execute(sql, val)
                 self.conexion.commit()
                 return json.dumps({'success': True, 'msg': 'Se realizó la inserción correctamente'})
@@ -137,7 +137,7 @@ class EquiposConsultas():
         if self.conexion.is_connected():
             try:
                 cursor = self.conexion.cursor()
-                sql = f'UPDATE equipos SET nombre_equipo = %s,numero_serie_equipo = %s,propietario_equipo=%s,rol=%s WHERE id_equipo={id_equipo}'
+                sql = f'UPDATE equipos SET nombre_equipo = %s,numero_serie_equipo = %s,propietario_equipo=%s,rol=%s, area_equipo=%s, caracteristica_equipo=%s WHERE id_equipo={id_equipo}'
                 cursor.execute(sql, data)
                 self.conexion.commit()
                 return json.dumps({'success': True, 'msg': 'Se realizó la actualización correctamente'})

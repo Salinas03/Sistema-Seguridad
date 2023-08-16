@@ -15,13 +15,15 @@ class AgregarCompusWindow(AgregarComputadoras, QWidget):
         # VALIDACIÓN DE DATOS EN LOS QLineEdit
         only_text = QRegExpValidator(QRegExp('^[A-Za-z0-9- ]{3,50}')) # VALIDACION DE DATOS ALFANUMERICOS DONDE SOLO PUEDE TENER ENTRE 3 
         self.nombre_equipo_txt.setValidator(only_text)
-        self.nombre_equipo_txt.setFocus()
+        self.area_equipo_txt.setFocus()
         self.num_serie_txt.setValidator(only_text)
 
         self.x = self.guardar_compu_btn.clicked.connect(self.agregar_compus)
         self.y = self.cancelar_registro_btn.clicked.connect(self.cancelar_registro)
 
     def agregar_compus(self):
+        area = self.area_equipo_txt.text()
+        caracteristica = self.caracteristica_equipo_txt.text()
         equipo = self.nombre_equipo_txt.text()
         numSerie = self.num_serie_txt.text()
 
@@ -46,10 +48,11 @@ class AgregarCompusWindow(AgregarComputadoras, QWidget):
 
             if id_propietario is not None:
                 if valor_rol is not None:
+                    print([equipo, numSerie, id_propietario, valor_rol, area, caracteristica]    )
                     objeto_insertar = {
                         'tabla': 'equipos',
                         'operacion': 'insertar',
-                        'data': [equipo, numSerie, id_propietario, valor_rol]     
+                        'data': [equipo, numSerie, id_propietario, valor_rol, area, caracteristica]     
                     }
 
                     respuesta = admin_socket_ui.escribir_operaciones(json.dumps(objeto_insertar))
