@@ -14,8 +14,8 @@ from clases.validar_json import is_valid_json
 #VARIABLES GLOBALES PARA LA CONFIGURACIÓN DE SOCKETS
 FORMAT = 'utf-8'
 HEADER = 20480
-HOST = '165.22.15.159'
-# HOST = '68.183.143.116'
+# HOST = '165.22.15.159'
+HOST = '68.183.143.116'
 
 #PUERTOS DE LOS DIFERENTES SOCKETS
 PORT = 5050
@@ -853,7 +853,7 @@ def listar_equipos():
             #Obtener los equipos de cómputo inactivos y activos
             for x, equipo_computo in enumerate(equipos_computo):
 
-                if conexion_equipo.get_nombre_host() == equipo_computo[1]: #equipo_computo[1] = nombre_host
+                if conexion_equipo.get_nombre_host() == equipo_computo[2]: #equipo_computo[1] = nombre_host
                     equipos_inactivos[x] = None
 
                     equipo = list(equipo_computo) #Convertir la tupla de los equipos en un arreglo
