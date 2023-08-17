@@ -168,22 +168,31 @@ def aceptar_conexiones():
 
             #Se reciben los datos los cuales permiten realizar la validación para observar si se puede realizar la conexión con el servidor 
             # ya sea cliente o administrador
-            data_conexion = json.loads(conn.recv(HEADER).decode(FORMAT))
-            nombre_host = data_conexion['nombre_host']
-            numero_serie = data_conexion['numero_serie']
-            tipo_programa = data_conexion['tipo_programa']
+            data = conn.recv(HEADER).decode(FORMAT)
 
-            print(f'[AceptarConexiones]: Dispositivo conectado temporalmente: {nombre_host}')
+            print('[AceptarConexiones] Información recibida del dispositivo conectado:')
+            print(data)
+
+            if data.strip():  # Checar si la data recibida no esta vacia
+                data_conexion = json.loads(data)
+                nombre_host = data_conexion['nombre_host']
+                numero_serie = data_conexion['numero_serie']
+                tipo_programa = data_conexion['tipo_programa']
+
+                print(f'[AceptarConexiones]: Dispositivo conectado temporalmente: {nombre_host}')
+
+                try:
+                    #Función la cual observa si el equipo se esta conectando es un cliente , un administrador o un equipo que no existe en los registros
+                    #Aqui es donde se redirecciona cada equipo con su respectivo panel o funcionalidad
+                    guardar_conexiones(conn,addr, nombre_host, numero_serie, tipo_programa)
+                except socket.error as e:
+                    print(f'[AceptarConexiones]: Hubo un error al realizar el guardado de conexiones {e}')
+
+            else:
+                print(f'[AceptarConexiones]: La información recibida no es válida')
 
         except socket.error as e:
             print(f'[AceptarConexiones]: Error al realizar el envío de información con el cliente conectado temporalmente {e}')
-
-        try:
-            #Función la cual observa si el equipo se esta conectando es un cliente , un administrador o un equipo que no existe en los registros
-            #Aqui es donde se redirecciona cada equipo con su respectivo panel o funcionalidad
-            guardar_conexiones(conn,addr, nombre_host, numero_serie, tipo_programa)
-        except socket.error as e:
-            print(f'[AceptarConexiones]: Hubo un error al realizar el guardado de conexiones {e}')
 
 def aceptar_conexiones_cliente():
     #Borrado de conexiones de canales secundarios en caso de que haya conexiones abiertas al iniciar el servidor
