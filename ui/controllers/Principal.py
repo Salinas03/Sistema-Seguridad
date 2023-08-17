@@ -190,6 +190,8 @@ class PrincipalWindow(Principal,QWidget):
 
         self.modificar_perfil_btn.clicked.connect(self.abrir_modificar_perfil) # LLAMADO PARA LA MODIFICACION DE LOS DATOS DEL PERFIL
         self.cerrar_sesion_btn_2.clicked.connect(self.cerrar_sesion) # LLAMADO PARA CERRAR SESION 
+        self.actualizar_tabla_equipos_btn.clicked.connect(self.actualizar_tabla_equipos)
+        self.actualizar_tabla_propietarios_btn.clicked.connect(self.actualizar_tabla_propietarios)
         
         # < --------------------- PAGINA EN GENERAL --------------------- >
         
@@ -610,6 +612,21 @@ class PrincipalWindow(Principal,QWidget):
 
 
 # ////////////////////////// FUNCIONES PARA LAS PAGINAS //////////////////////////
+
+    def actualizar_tabla_equipos(self):
+        respuesta = admin_socket_ui.escribir_operaciones('refrescar_equipos')
+        if respuesta:
+            crear_message_box('Refrescado de tablas', 'Se han refrescado las tabla de los equipos exitosamente', 'information').exec_()
+        else:
+            crear_message_box('Error al refrescar', 'Hubo un error al refrescar la tabla de los equipos', 'error').exec_()
+
+
+    def actualizar_tabla_propietarios(self):
+        respuesta = admin_socket_ui.escribir_operaciones('refrescar_propietarios')
+        if respuesta:
+            crear_message_box('Refrescado de tablas', 'Se han refrescado las tabla de los propietarios exitosamente', 'information').exec_()
+        else:
+            crear_message_box('Error al refrescar', 'Hubo un error al refrescar la tabla de los propietarios', 'error').exec_()
             
     # FUNCION PARA DEFINIR QUE LA VENTANA CAMBIE SU ESTADO A FALSE        
     def ventana_cerrada(self):

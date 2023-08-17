@@ -417,6 +417,14 @@ def panel_administrador(administrador):
                 respuesta_operacion = apagar_bloquear_general(operacion)
                 conn.send(respuesta_operacion.encode())
 
+            elif operacion == 'refrescar_equipos':
+                refrescar_tabla_equipos()
+                conn.send(json.dumps({'success': True, 'msg': 'Refrescado de la tabla de los equipos de cómputo se ha realizado con éxito'}).encode())
+
+            elif operacion == 'refrescar_propietarios':
+                refrescar_tabla_propietarios()
+                conn.send(json.dumps({'success': True, 'msg': 'Refrescado de la tabla de los propietarios se ha realizado con éxito'}).encode())
+
             else:
                 print(f'[PanelAdministrador] No se encontro la instrucción a ejecutar')       
                 break         
